@@ -119,6 +119,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Created by https://www.gitignore.io/api/virtualenv
+
 ### VirtualEnv ###
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
@@ -133,5 +135,7 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
+
+# End of https://www.gitignore.io/api/virtualenv
 
 # End of https://www.gitignore.io/api/django
