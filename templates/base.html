@@ -1,0 +1,97 @@
+{% load static %}
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>{% block title %}{% endblock %}｜ヲタピック</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <link href="{% static 'css/simple-line-icons.css '%}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
+    type="text/css">
+
+  <link href="{% static 'css/bootstrap-ex.min.css '%}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-light bg-light static-top navbar-expand-lg">
+    <a class="navbar-brand" href={% url 'top:top' %}
+      style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain; height: 50px; width: 170px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+      <form class="form-inline my-2 my-lg-0">
+        <ul class="navbar-nav mr-0">
+          <li class="nav-item">
+            <a class="nav-link mr-3" href="#howto">つかい方</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mr-3" href={% url 'top:support' %}>サポート</a>
+          </li>
+        </ul>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <!-- Sub searcher -->
+  <section class="call-to-action text-white text-center mt-3">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <h2 class="mb-4">アイドルブログ専用・画像保存ツール</h2>
+        </div>
+        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+          <form>
+            <div class="form-row">
+              <div class="col-12 col-md-9 mb-2 mb-md-0">
+                <input class="form-control form-control-lg" placeholder="Search">
+              </div>
+              <div class="col-12 col-md-3">
+                <button type="submit" class="btn btn-block btn-lg btn-success">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer bg-light">
+    <div class="h-100 text-center my-auto">
+      <p class="text-muted small mb-4 mb-lg-0">Copyright &copy; <a href="http://proative.net"
+          target="_blank">PROATIVE</a> 2019 All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="{% static 'jquery.min.js' %}"></script>
+  <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+
+</html>

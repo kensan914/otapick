@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}検索結果{% endblock %}
+
+{% block content %}
+  <!-- Masthead -->
+  <header class="call-to-action text-white text-center">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <h1>
+            検索結果
+          </h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Result -->
+  <div class="container text-muted">
+    <div class="card my-5">
+      <div class="card-header">
+        <h3>小林 由依</h3>
+      </div>
+      <div class="card-body">
+        欅坂46「小林 由依」の記事一覧を表示します。
+        <table class="table text-left table-striped mt-4 mb-0">
+          <thead>
+            <tr>
+              <th scope="col">タイトル</th>
+              <th scope="col">投稿日</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a target="_blank"
+                  href="https://www.keyakizaka46.com/s/k46o/diary/detail/31817?ima=0000&cd=member">短めですが☆彡</a></td>
+              <td>2019.12.04</td>
+              <td><button class="btn btn-outline-info" type="submit">選択</button></td>
+            </tr>
+            <tr>
+              <td><a target="_blank"
+                  href="https://www.keyakizaka46.com/s/k46o/diary/detail/31750?ima=0000&cd=member">雑誌祭り☆彡</a></td>
+              <td>2019.11.29</td>
+              <td><button class="btn btn-outline-info" type="submit">選択</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mx-auto mt-4" style="width: 300px;">
+          <nav aria-label="...">
+            <ul class="pagination">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">前へ</a>
+              </li>
+              <li class="page-item active" aria-current="page"><a class="page-link" href="#">1 <span
+                    class="sr-only">(現位置)</span></a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">次へ</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
