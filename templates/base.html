@@ -39,7 +39,7 @@
       <form class="form-inline my-2 my-lg-0">
         <ul class="navbar-nav mr-0">
           <li class="nav-item">
-            <a class="nav-link mr-3" href="#howto">つかい方</a>
+            <a class="nav-link mr-3" href={% url 'top:top' %}#howto>つかい方</a>
           </li>
           <li class="nav-item">
             <a class="nav-link mr-3" href={% url 'top:support' %}>サポート</a>
@@ -89,8 +89,8 @@
     </div>
   </footer>
 
-  <script src="{% static 'js/jquery.min.js' %}"></script>
-  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+{#  <script src="{% static 'js/jquery.min.js' %}"></script>#}
+{#  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>#}
   {% block extra_js %}{% endblock %}
 </body>
 
