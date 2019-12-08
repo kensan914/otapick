@@ -120,6 +120,6 @@ dmypy.json
 .pyre/
 
 # venv
-/otapick_env
+/otapick_env/
 
 # End of https://www.gitignore.io/api/django
