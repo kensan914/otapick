@@ -45,7 +45,9 @@
             <a class="nav-link mr-3" href={% url 'top:support' %}>サポート</a>
           </li>
         </ul>
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+{#          <input class="form-control form-control-lg" name={{ form.search_text }}#}
+
         <button class="btn btn-outline-info my-2 my-sm-0" type="submit">
           <i class="fas fa-search"></i>
         </button>
@@ -67,7 +69,7 @@
           <form>
             <div class="form-row">
               <div class="col-12 col-md-9 mb-2 mb-md-0">
-                <input class="form-control form-control-lg" placeholder="Search">
+                <input class="form-control form-control-lg" placeholder="Search" name="q">
               </div>
               <div class="col-12 col-md-3">
                 <button type="submit" class="btn btn-block btn-lg btn-success">
@@ -89,8 +91,98 @@
     </div>
   </footer>
 
+
+  <!-- SerchResultModal -->
+  {% if input == 'name' %}
+    <div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="searchResultModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="searchResultModalLabel">
+                {% if class == '403' %}検索結果{% endif %}
+                {% if class == 'oneMemberHit' %}1人のメンバーがヒットしました。{% endif %}
+                {% if class == 'someMembersHit' %}{{ memberList|length }}人のメンバーがヒットしました。{% endif %}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              {% if class == '403' %}「{{ searchText }}」に一致する情報は見つかりませんでした。{% endif %}
+              {% if class == 'oneMemberHit' %}
+                  <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                          {% for member in memberList %}
+                              <td>{{ member.full_kanji }}({% if member.group_id == '1' %}欅坂46{% elif member.group_id == '2' %}日向坂46{% endif %})</td>
+                          {% endfor %}
+                        </tr>
+                    </tbody>
+                  </table>
+                  記事一覧を表示します。
+              {% endif %}
+              {% if class == 'someMembersHit' %}
+                  該当するメンバーを選択してください。
+                  <table class="table table-striped">
+                    <tbody>
+                        {% for member in memberList %}
+                            <tr>
+                                <td>{{ member.full_kanji }}({% if member.group_id == '1' %}欅坂46{% elif member.group_id == '2' %}日向坂46{% endif %})</td>
+                                <td><a class="btn btn-primary" href={% url 'blogSearch:searchByMembers' %}?group={{ member.group_id }}&ct={{ member.id }} role="button">選択</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+              {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              {% if class == 'oneMemberHit' %}
+                  {% for member in memberList %}
+                      <a class="btn btn-primary" href={% url 'blogSearch:searchByMembers' %}?group={{ member.group_id }}&ct={{ member.id }} role="button">選択</a>
+                  {% endfor %}
+              {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if input == 'url' and class == '403' %}
+      <!-- unjustURLModal -->
+        <div class="modal fade" id="unjustURLModal" tabindex="-1" role="dialog" aria-labelledby="unjustURLModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="unjustURLModalLabel">検索結果</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                不当なURLが入力されました。
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  {% endif %}
+
 {#  <script src="{% static 'js/jquery.min.js' %}"></script>#}
 {#  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>#}
+
+  <script>
+    $(window).on('load',function(){
+        {% if input == 'name' %}
+            $('#searchResultModal').modal('show');
+        {% endif %}
+        {% if input == 'url' and class == '403' %}
+            $('#unjustURLModal').modal('show');
+        {% endif %}
+    });
+  </script>
   {% block extra_js %}{% endblock %}
 </body>
 
