@@ -39,7 +39,7 @@ def searchTextClassifier(searchText):
 
     else:
         result['input'] = 'name'
-        fin = open('courpus/memberList.txt', 'rt', encoding='utf-8')
+        fin = open('static/courpus/memberList.txt', 'rt', encoding='utf-8')
         lines = fin.readlines()
         fin.close()
         matchMembers = []
@@ -48,16 +48,18 @@ def searchTextClassifier(searchText):
         for line in lines:
             if searchText in line:
                 pvsMatchMember = {}
+                line = line.replace('\n', '')
                 for key, val in zip(keyList, list(line.split(' '))):
                     pvsMatchMember[key] = val
                 matchMembers.append(pvsMatchMember)
         if len(matchMembers) == 1:
-            result['class'] = 'oneHit'
+            result['class'] = 'oneMemberHit'
             result['memberList'] = matchMembers
             return result
         elif len(matchMembers) > 1:
-            result['class'] = 'multipleHit'
+            result['class'] = 'someMembersHit'
             result['memberList'] = matchMembers
             return result
 
-    return 0
+    result['class'] = '403'
+    return result
