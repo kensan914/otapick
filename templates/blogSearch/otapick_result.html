@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}検索結果{% endblock %}
+{% block title %}
+    {% if name %}{{ name }}{% endif %}({% if group == '1' %}欅坂46{% elif group == '2' %}日向坂46{% endif %})
+    の検索結果
+{% endblock %}
 
 {% block content %}
   <!-- Masthead -->
@@ -21,10 +24,13 @@
   <div class="container text-muted">
     <div class="card my-5">
       <div class="card-header">
-        <h3>小林 由依</h3>
+        <h3>
+            {% if name %}{{ name }}{% endif %}
+        </h3>
       </div>
       <div class="card-body">
-        欅坂46「小林 由依」の記事一覧を表示します。
+          {% if name %}{{ name }}{% endif %}({% if group == '1' %}欅坂46{% elif group == '2' %}日向坂46{% endif %})
+          の記事一覧を表示します。
         <table class="table text-left table-striped mt-4 mb-0">
           <thead>
             <tr>

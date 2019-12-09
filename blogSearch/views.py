@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views import View
-from blogSearch.scripts.classifier import searchTextClassifier
+from blogSearch.scripts.searchTextClassifier import searchTextClassifier
+from blogSearch.scripts.idToNameConverter import idToNameConverter
 
 
 class ResultByBlogsView(View):
@@ -26,7 +27,13 @@ byBlogs = ResultByBlogsView.as_view()
 class ResultByMembersView(View):
     def get(self, request, *args, **kwargs):
         inputText = request.GET.get('q')
-        context = {}
+        group = request.GET.get('group')
+        ct = request.GET.get('ct')
+        context = {
+            'group': group,
+            'ct': ct,
+            'name': idToNameConverter(ct, group)
+        }
         if inputText:
             result = searchTextClassifier(inputText)
             if result['input'] == 'url':

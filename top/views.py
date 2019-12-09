@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from blogSearch.scripts.classifier import searchTextClassifier
+from blogSearch.scripts.searchTextClassifier import searchTextClassifier
 
 
 class TopView(View):
@@ -16,7 +16,6 @@ class TopView(View):
                     return render(request, 'blogSearch/otapick_result2.html', result)
                 elif result['class'] == 'searchByMembers':
                     return render(request, 'blogSearch/otapick_result.html', result)
-            print (result)
             return render(request, 'top/otapick_top.html', result)
         return render(request, 'top/otapick_top.html', context)
 
