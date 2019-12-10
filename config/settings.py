@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'top.apps.TopConfig',
-    'blogSearch.apps.BlogsearchConfig',
+    'search.apps.BlogsearchConfig',
     'imgSaver.apps.ImgsaverConfig',
     'bootstrap4',
 ]
@@ -89,6 +89,7 @@ DATABASES = {
         'PASSWORD': 'gin-TK46',
         'HOST': 'localhost',
         'PORT': '3306',
+        'ATOMIC_REQUESTS': True,
     }
 }
 
