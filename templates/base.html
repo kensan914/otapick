@@ -128,7 +128,7 @@
                         {% for member in memberList %}
                             <tr>
                                 <td>{{ member.full_kanji }}({% if member.group_id == '1' %}欅坂46{% elif member.group_id == '2' %}日向坂46{% endif %})</td>
-                                <td><a class="btn btn-primary" href={% url 'blogSearch:searchByMembers' %}?group={{ member.group_id }}&ct={{ member.id }} role="button">選択</a></td>
+                                <td><a class="btn btn-primary" href={% url 'search:searchByMembers' %}?group={{ member.group_id }}&ct={{ member.id }} role="button">選択</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -139,7 +139,7 @@
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               {% if class == 'oneMemberHit' %}
                   {% for member in memberList %}
-                      <a class="btn btn-primary" href={% url 'blogSearch:searchByMembers' %}?group={{ member.group_id }}&ct={{ member.id }} role="button">選択</a>
+                      <a class="btn btn-primary" href={% url 'search:searchByMembers' %}?group={{ member.group_id }}&ct={{ member.id }} role="button">選択</a>
                   {% endfor %}
               {% endif %}
           </div>
