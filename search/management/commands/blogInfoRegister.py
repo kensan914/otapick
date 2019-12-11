@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 from urllib.parse import urlparse
 from django.core.management.base import BaseCommand
+from django.db.models import Q
 from ...models import Member, Blog
 import urllib3
 from bs4 import BeautifulSoup
@@ -17,7 +18,7 @@ class Command(BaseCommand):
         sleepTime = 3
         upLimit = 100
 
-        for member in Member.objects.all():
+        for member in Member.objects.filter(ct='11'):
             if member.belonging_group_id == 1:
                 base_url = 'http://www.keyakizaka46.com/s/k46o/diary/member/list?ima=0000&ct=' + member.ct + '&page='
             else:
@@ -27,7 +28,7 @@ class Command(BaseCommand):
             http = urllib3.PoolManager()
             print('start scraping blog written by ' + member.full_kanji)
             for page in range(upLimit):
-                print('now scraping page', page, '...')
+                print('now scraping page', page + 1, '...')
 
                 url = base_url + str(page)
                 r = http.request('GET', url)
@@ -40,17 +41,23 @@ class Command(BaseCommand):
 
                 for blog in blogs:
                     title_tag = blog.select_one('h3 > a')
+                    if self.textCleaner(title_tag.text) == '🍧欅共和国2019開催決定🍉':
+                        print(len(blogs))
+                        continue
+                    if self.textCleaner(title_tag.text) == 'ヒット祈願!':
+                        print('hello')
                     bottomul_tag = blog.select_one('div.box-bottom > ul')
                     bottomli_tags = bottomul_tag.select('li')
                     postdate_tag = bottomli_tags[0]
                     blog_url = bottomli_tags[1].find('a').get('href')
 
-                    Blog.objects.create(
-                        blog_ct=self.extractBlog_ct(blog_url),
-                        title=self.textCleaner(title_tag.text),
-                        post_date=self.datetimeConverter(postdate_tag.text),
-                        writer=member,
-                    )
+                    if not Blog.objects.filter(blog_ct=self.extractBlog_ct(blog_url)).exists():
+                        Blog.objects.create(
+                            blog_ct=self.extractBlog_ct(blog_url),
+                            title=self.textCleaner(title_tag.text),
+                            post_date=self.datetimeConverter(postdate_tag.text),
+                            writer=member,
+                        )
 
                 time.sleep(sleepTime)
 
