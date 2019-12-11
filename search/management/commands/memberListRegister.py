@@ -19,9 +19,9 @@ class Command(BaseCommand):
             for key, val in zip(keyList, list(line.split(' '))):
                 member[key] = val
 
-            if Member.objects.filter(ct=int(member['id']), belonging_group_id=int(member['group_id'])).exist():
+            if not Member.objects.filter(ct=member['id'], belonging_group_id=int(member['group_id'])).exists():
                 Member.objects.create(
-                    ct=int(member['id']),
+                    ct=member['id'],
                     last_kanji=member['last_kanji'],
                     first_kanji=member['first_kanji'],
                     full_kanji=member['full_kanji'],
@@ -30,3 +30,4 @@ class Command(BaseCommand):
                     full_kana=member['full_kana'],
                     belonging_group_id=int(member['group_id'])
                 )
+                print(member['full_kanji'], 'is registered!')

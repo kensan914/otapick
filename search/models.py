@@ -18,7 +18,7 @@ class Member(models.Model):
         db_table = 'member'
         unique_together = ('ct', 'belonging_group')
 
-    ct = models.IntegerField(verbose_name='ct')
+    ct = models.CharField(verbose_name='ct', max_length=10)
     last_kanji = models.CharField(verbose_name='姓_漢', max_length=10)
     first_kanji = models.CharField(verbose_name='名_漢', max_length=10)
     full_kanji = models.CharField(verbose_name='氏名_漢', max_length=20)
@@ -37,8 +37,8 @@ class Blog(models.Model):
 
     blog_ct = models.IntegerField(verbose_name='ブログID', unique=True)
     title = models.CharField(verbose_name='タイトル', max_length=100)
-    text = models.TextField(verbose_name='本文', max_length=10000)
-    post_date = models.DateField(verbose_name='投稿日')
+    # text = models.TextField(verbose_name='本文', max_length=10000)
+    post_date = models.DateTimeField(verbose_name='投稿日')
     writer = models.ForeignKey(Member, verbose_name='メンバー', on_delete=models.PROTECT)
 
     def __str__(self):
