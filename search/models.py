@@ -36,8 +36,8 @@ class Blog(models.Model):
         db_table = 'blog'
 
     blog_ct = models.IntegerField(verbose_name='ブログID', unique=True)
-    title = models.CharField(verbose_name='タイトル', max_length=100)
-    # text = models.TextField(verbose_name='本文', max_length=10000)
+    title = models.CharField(verbose_name='タイトル', max_length=1000)
+    # text = models.TextField(verbose_name='本文', max_length=100000)
     post_date = models.DateTimeField(verbose_name='投稿日')
     writer = models.ForeignKey(Member, verbose_name='メンバー', on_delete=models.PROTECT)
 
