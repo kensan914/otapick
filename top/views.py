@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
-from search.scripts.searchTextClassifier import searchTextClassifier
+from search.scripts.firstClassifier import firstClassifier
 
 
 class BaseView(View):
@@ -10,15 +10,22 @@ class BaseView(View):
     def get(self, request, *args, **kwargs):
         inputText = request.GET.get('q')
         if inputText:
-            result = searchTextClassifier(inputText)
+            result = firstClassifier(inputText)
             if result['input'] == 'url':
                 if result['class'] == 'detail':
-                    return render(request, 'imgSaver/otapick_save.html', result)
+                    return redirect('imgSaver:download', group_id=result['group_id'], blog_ct=result['blog_ct'])
+                elif result['class'] == 'searchByLatest':
+                    return redirect('search:searchByLatest', group_id=result['group_id'])
                 elif result['class'] == 'searchByBlogs':
-                    return render(request, 'search/otapick_searchByBlogs.html', result)
+                    response = redirect('search:searchByBlogs', group_id=result['group_id'])
+                    response['location'] += '?page=' + str(result['page'])
+                    return response
                 elif result['class'] == 'searchByMembers':
-                    return render(request, 'search/otapick_searchByMembers.html', result)
-            return render(request, self.html_path, result)
+                    response = redirect('search:searchByMembers', group_id=result['group_id'], ct=result['ct'])
+                    response['location'] += '?page=' + str(result['page'])
+                    return response
+            elif result['input'] == 'name':
+                return redirect('search:searchMember', searchText=result['searchText'])
         return render(request, self.html_path, self.context)
 
 

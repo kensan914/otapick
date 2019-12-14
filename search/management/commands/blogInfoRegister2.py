@@ -20,7 +20,7 @@ class Command(BaseCommand):
         f.close()
         soup = BeautifulSoup(html)
 
-        blogs = soup.select('div.box-main > article')
+        blogs = soup.select('article')
 
         for blog in blogs:
             title_tag = blog.select_one('h3 > a')

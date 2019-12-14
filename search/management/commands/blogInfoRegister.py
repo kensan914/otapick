@@ -18,8 +18,8 @@ class Command(BaseCommand):
         sleepTime = 3
         upLimit = 100
 
-        for member in Member.objects.filter(ct='11'):
-            if member.belonging_group_id == 1:
+        for member in Member.objects.filter(ct='12', belonging_group__group_id=1):
+            if member.belonging_group__group_id == 1:
                 base_url = 'http://www.keyakizaka46.com/s/k46o/diary/member/list?ima=0000&ct=' + member.ct + '&page='
             else:
                 base_url = 'https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000&ct=' + member.ct + '&page='
@@ -34,18 +34,13 @@ class Command(BaseCommand):
                 r = http.request('GET', url)
                 soup = BeautifulSoup(r.data, 'html.parser')
 
-                blogs = soup.select('div.box-main > article')
+                blogs = soup.select('article')
                 if not bool(blogs):
                     print("finished!!")
                     break
 
                 for blog in blogs:
                     title_tag = blog.select_one('h3 > a')
-                    if self.textCleaner(title_tag.text) == '🍧欅共和国2019開催決定🍉':
-                        print(len(blogs))
-                        continue
-                    if self.textCleaner(title_tag.text) == 'ヒット祈願!':
-                        print('hello')
                     bottomul_tag = blog.select_one('div.box-bottom > ul')
                     bottomli_tags = bottomul_tag.select('li')
                     postdate_tag = bottomli_tags[0]
