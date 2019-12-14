@@ -1,5 +1,7 @@
 # coding=utf-8
 from urllib.parse import urlparse
+from django.db.models import Q
+from ..models import Member
 
 
 def searchTextClassifier(searchText):
@@ -39,19 +41,9 @@ def searchTextClassifier(searchText):
 
     else:
         result['input'] = 'name'
-        fin = open('static/courpus/memberList.txt', 'rt', encoding='utf-8')
-        lines = fin.readlines()
-        fin.close()
         matchMembers = []
-        keyList = ['id', 'last_kanji', 'first_kanji', 'full_kanji', 'last_gana', 'first_gana', 'full_gana', 'filename',
-                   'group_id']
-        for line in lines:
-            if searchText in line:
-                pvsMatchMember = {}
-                line = line.replace('\n', '')
-                for key, val in zip(keyList, list(line.split(' '))):
-                    pvsMatchMember[key] = val
-                matchMembers.append(pvsMatchMember)
+        for member in Member.objects.filter(Q(full_kana__icontains=searchText) | Q(full_kanji__icontains=searchText)):
+            matchMembers.append(member)
         if len(matchMembers) == 1:
             result['class'] = 'oneMemberHit'
             result['memberList'] = matchMembers

@@ -4,5 +4,5 @@ from . import views
 
 app_name = 'imgSaver'
 urlpatterns = [
-    path('', views.save, name='download'),
+    path('/<int:group_id>/<int:detail>', views.save, name='download'),
 ]
