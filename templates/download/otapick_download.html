@@ -73,8 +73,8 @@
                           <div class="row">
                             <div class="mx-auto image-box" style="position: relative; cursor : pointer;">
                               <div class="thumbnail img-thumbnail"
-                                style="background-size: cover; background: url('{{ MEDIA_URL }}{{image.picture}}') center;"
-                                id="img{{ blog_image.order }}">
+                                style="background: url({{ blog_image.picture.url }});background-size: cover;
+                                        background-position: center;" id="img{{ blog_image.order }}">
                               </div>
                               <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb{{ blog_image.order }}"
                                 onchange="checkFunc(this.id)" />
@@ -83,87 +83,6 @@
                         </div>
                   {% endfor %}
               {% endif %}
-
-
-{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
-{#              <div class="row">#}
-{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
-{#                  <div class="thumbnail img-thumbnail"#}
-{#                    style="background: url('img/kanemura/mob5auhWo.jpg');background-size: cover; background-position: center;"#}
-{#                    id="img1">#}
-{#                  </div>#}
-{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb1"#}
-{#                    onchange="checkFunc(this.id)" />#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
-{#              <div class="row">#}
-{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
-{#                  <div class="thumbnail img-thumbnail"#}
-{#                    style="background: url('img/kanemura/mob7CW96k.jpg');background-size: cover;" id="img2">#}
-{#                  </div>#}
-{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb2"#}
-{#                    onchange="checkFunc(this.id)" />#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
-{#              <div class="row">#}
-{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
-{#                  <div class="thumbnail img-thumbnail"#}
-{#                    style="background: url('img/kanemura/mob7ELwQI.jpg');background-size: cover;" id="img3">#}
-{#                  </div>#}
-{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb3"#}
-{#                    onchange="checkFunc(this.id)" />#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
-{#              <div class="row">#}
-{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
-{#                  <div class="thumbnail img-thumbnail"#}
-{#                    style="background: url('img/kanemura/mobBCaCeY.jpg');background-size: cover;" id="img4">#}
-{#                  </div>#}
-{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb4"#}
-{#                    onchange="checkFunc(this.id)" />#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
-{#              <div class="row">#}
-{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
-{#                  <div class="thumbnail img-thumbnail"#}
-{#                    style="background: url('img/kanemura/mobBmJUY6.jpg');background-size: cover;" id="img5">#}
-{#                  </div>#}
-{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb5"#}
-{#                    onchange="checkFunc(this.id)" />#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
-{#              <div class="row">#}
-{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
-{#                  <div class="thumbnail img-thumbnail"#}
-{#                    style="background: url('img/kanemura/mobbX7obw.jpg');background-size: cover; background-position: center;"#}
-{#                    id="img6">#}
-{#                  </div>#}
-{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb6"#}
-{#                    onchange="checkFunc(this.id)" />#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
-{#              <div class="row">#}
-{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
-{#                  <div class="thumbnail img-thumbnail"#}
-{#                    style="background: url('img/kanemura/mobr3NhUW.jpg');background-size: cover;" id="img7">#}
-{#                  </div>#}
-{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb7"#}
-{#                    onchange="checkFunc(this.id)" />#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
           </div>
         </div>
       </div>
@@ -190,7 +109,10 @@
     </div>
   </div>
 
+{% endblock %}
+
 {% block extra_js %}
+
   <script>
     function checkFunc(id) {
       const idNum = id.replace(/[^0-9]/g, '');
@@ -203,8 +125,9 @@
 
     $(function () {
       $('div.thumbnail').on('click', function () {
-        var id = $(this).attr("id");
-        const idNum = id.replace(/[^0-9]/g, '');
+          const id = $(this).attr("id");
+          const idNum = id.replace(/[^0-9]/g, '');
+
         if (!$(this).is('.checked')) {
           $(this).addClass('checked');
           $('.save_img_checkbox#cb' + idNum).prop("checked", true);
@@ -225,10 +148,9 @@
       });
     });
 
-    // ページ遷移確認
     $(function () {
-      var changeForm = true;
-      $(window).on('beforeunload', function () {
+        let changeForm = true;
+        $(window).on('beforeunload', function () {
         if (changeForm) return '保存が完了していません。このページを離れます。';
       });
       $('.save_button').on('click', function () {
@@ -237,5 +159,4 @@
     });
 
   </script>
-{% endblock %}
 {% endblock %}
