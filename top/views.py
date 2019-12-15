@@ -13,7 +13,7 @@ class BaseView(View):
             result = firstClassifier(inputText)
             if result['input'] == 'url':
                 if result['class'] == 'detail':
-                    return redirect('imgSaver:download', group_id=result['group_id'], blog_ct=result['blog_ct'])
+                    return redirect('download:download', group_id=result['group_id'], blog_ct=result['blog_ct'])
                 elif result['class'] == 'searchByLatest':
                     return redirect('search:searchByLatest', group_id=result['group_id'])
                 elif result['class'] == 'searchByBlogs':

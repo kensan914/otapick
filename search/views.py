@@ -1,5 +1,4 @@
 from django.db.models import Q
-
 from top.views import BaseView
 from django.views import generic
 from .models import Member, Blog
