@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}画像保存{% endblock %}
+
+{% block extra_css %}
+<!-- 最後にminして -->
+  <link rel="stylesheet" href="{% static 'css/test.css' %}">
+{% endblock %}
+
+{% block content %}
+  <!-- Masthead -->
+  <header class="call-to-action text-white text-center">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <h1>
+            画像保存
+          </h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Save -->
+  <div class="container text-muted">
+    <div class="card my-5">
+      <div class="card-header">
+        <div class="row">
+          <h3 class="ml-3">保存</h3>
+          <div class="ml-auto" style="width: 110px;">
+            <div class="btn-group">
+              <button type="button" class="btn btn-info save_button">保存</button>
+              <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item save_button" href="../top/otapick_top.html">選択保存</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item save_button" href="../top/otapick_top.html">すべて保存</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="jumbotron jumbotron-fluid py-4">
+          <div class="container">
+              {% if blog %}
+            <h4 class="">{{ blog.title }}</h4>
+            <p>{{ blog.writer.last_kanji }} {{ blog.writer.first_kanji }}</p>
+              {% endif %}
+            <hr class="mb-2">
+            <div class="ml-auto" style="width: 130px;">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="allCheck">
+                <label class="custom-control-label" for="allCheck">すべて選択</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row text-center">
+
+            <!-- imgとcbのid設定注意 -->
+              {% if blog_images %}
+                  {% for blog_image in blog_images %}
+                      <div class="col-6 col-md-4 col-lg-3 mb-5">
+                          <div class="row">
+                            <div class="mx-auto image-box" style="position: relative; cursor : pointer;">
+                              <div class="thumbnail img-thumbnail"
+                                style="background-size: cover; background: url('{{ MEDIA_URL }}{{image.picture}}') center;"
+                                id="img{{ blog_image.order }}">
+                              </div>
+                              <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb{{ blog_image.order }}"
+                                onchange="checkFunc(this.id)" />
+                            </div>
+                          </div>
+                        </div>
+                  {% endfor %}
+              {% endif %}
+
+
+{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
+{#              <div class="row">#}
+{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
+{#                  <div class="thumbnail img-thumbnail"#}
+{#                    style="background: url('img/kanemura/mob5auhWo.jpg');background-size: cover; background-position: center;"#}
+{#                    id="img1">#}
+{#                  </div>#}
+{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb1"#}
+{#                    onchange="checkFunc(this.id)" />#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
+{#              <div class="row">#}
+{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
+{#                  <div class="thumbnail img-thumbnail"#}
+{#                    style="background: url('img/kanemura/mob7CW96k.jpg');background-size: cover;" id="img2">#}
+{#                  </div>#}
+{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb2"#}
+{#                    onchange="checkFunc(this.id)" />#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
+{#              <div class="row">#}
+{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
+{#                  <div class="thumbnail img-thumbnail"#}
+{#                    style="background: url('img/kanemura/mob7ELwQI.jpg');background-size: cover;" id="img3">#}
+{#                  </div>#}
+{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb3"#}
+{#                    onchange="checkFunc(this.id)" />#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
+{#              <div class="row">#}
+{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
+{#                  <div class="thumbnail img-thumbnail"#}
+{#                    style="background: url('img/kanemura/mobBCaCeY.jpg');background-size: cover;" id="img4">#}
+{#                  </div>#}
+{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb4"#}
+{#                    onchange="checkFunc(this.id)" />#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
+{#              <div class="row">#}
+{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
+{#                  <div class="thumbnail img-thumbnail"#}
+{#                    style="background: url('img/kanemura/mobBmJUY6.jpg');background-size: cover;" id="img5">#}
+{#                  </div>#}
+{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb5"#}
+{#                    onchange="checkFunc(this.id)" />#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
+{#              <div class="row">#}
+{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
+{#                  <div class="thumbnail img-thumbnail"#}
+{#                    style="background: url('img/kanemura/mobbX7obw.jpg');background-size: cover; background-position: center;"#}
+{#                    id="img6">#}
+{#                  </div>#}
+{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb6"#}
+{#                    onchange="checkFunc(this.id)" />#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="col-6 col-md-4 col-lg-3 mb-5">#}
+{#              <div class="row">#}
+{#                <div class="mx-auto image-box" style="position: relative; cursor : pointer;">#}
+{#                  <div class="thumbnail img-thumbnail"#}
+{#                    style="background: url('img/kanemura/mobr3NhUW.jpg');background-size: cover;" id="img7">#}
+{#                  </div>#}
+{#                  <input class="save_img_checkbox" style="position: absolute;" type="checkbox" id="cb7"#}
+{#                    onchange="checkFunc(this.id)" />#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="mx-auto" style="width: 135px;">
+          <div class="row">
+            <button type="button" class="btn btn-outline-info mr-3">戻る</button>
+            <div class="btn-group">
+              <button type="button" class="btn btn-info save_button">保存</button>
+              <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item save_button" href="../top/otapick_top.html">選択保存</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item save_button" href="../top/otapick_top.html">すべて保存</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% block extra_js %}
+  <script>
+    function checkFunc(id) {
+      const idNum = id.replace(/[^0-9]/g, '');
+      if (!$('.save_img_checkbox#cb' + idNum).prop("checked")) {
+        $('div.thumbnail#img' + idNum).removeClass('checked');
+      } else {
+        $('div.thumbnail#img' + idNum).addClass('checked');
+      }
+    }
+
+    $(function () {
+      $('div.thumbnail').on('click', function () {
+        var id = $(this).attr("id");
+        const idNum = id.replace(/[^0-9]/g, '');
+        if (!$(this).is('.checked')) {
+          $(this).addClass('checked');
+          $('.save_img_checkbox#cb' + idNum).prop("checked", true);
+        } else {
+          $(this).removeClass('checked')
+          $('.save_img_checkbox#cb' + idNum).prop("checked", false);
+        }
+      });
+
+      $('#allCheck').on('click', function () {
+        if (!$(this).prop("checked")) {
+          $('div.thumbnail').removeClass('checked');
+          $('.save_img_checkbox').prop("checked", false);
+        } else {
+          $('div.thumbnail').addClass('checked');
+          $('.save_img_checkbox').prop("checked", true);
+        }
+      });
+    });
+
+    // ページ遷移確認
+    $(function () {
+      var changeForm = true;
+      $(window).on('beforeunload', function () {
+        if (changeForm) return '保存が完了していません。このページを離れます。';
+      });
+      $('.save_button').on('click', function () {
+        changeForm = false;
+      });
+    });
+
+  </script>
+{% endblock %}
+{% endblock %}

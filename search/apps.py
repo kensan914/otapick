@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class BlogsearchConfig(AppConfig):
+class SearchConfig(AppConfig):
     name = 'search'

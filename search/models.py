@@ -34,8 +34,9 @@ class Member(models.Model):
 class Blog(models.Model):
     class Meta:
         db_table = 'blog'
+        unique_together = ('blog_ct', 'writer')
 
-    blog_ct = models.IntegerField(verbose_name='ブログID', unique=True)
+    blog_ct = models.IntegerField(verbose_name='ブログID')
     title = models.CharField(verbose_name='タイトル', max_length=1000)
     # text = models.TextField(verbose_name='本文', max_length=100000)
     post_date = models.DateTimeField(verbose_name='投稿日')
