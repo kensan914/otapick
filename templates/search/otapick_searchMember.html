@@ -1,76 +1,72 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {% if member %}{{ member.full_kanji }}{% endif %}({% if group == '1' %}欅坂46{% elif group == '2' %}日向坂46{% endif %})
-    の検索結果
+メンバー検索
 {% endblock %}
 
 {% block content %}
-  <!-- Masthead -->
-  <header class="call-to-action text-white text-center">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-9 mx-auto">
-          <h1>
-            検索結果
-          </h1>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Result -->
-  <!-- <div class="container text-muted">
-    <div class="card my-5">
-      <div class="card-header">
-        <h3>メンバー検索</h3>
-      </div>
-      <div class="card-body">
-        "わたなべ"(3件)
-        <table class="table text-left table-striped mt-4 mb-0">
-          <thead>
-            <tr>
-              <th scope="col">名前</th>
-              <th scope="col">所属グループ</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>渡辺 梨加</td>
-              <td>欅坂46</td>
-              <td><button class="btn btn-outline-info">選択</button></td>
-            </tr>
-            <tr>
-              <td>渡邉 理佐</td>
-              <td>欅坂46</td>
-              <td><button class="btn btn-outline-info" type="submit">選択</button></td>
-            </tr>
-            <tr>
-              <td>渡邉 美穂</td>
-              <td>日向坂46</td>
-              <td><button class="btn btn-outline-info" type="submit">選択</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div> -->
-
-  <!-- Result notFound -->
-  <div class="container text-muted">
-    <div class="card my-5">
-      <div class="card-header">
-        <h3>メンバー検索</h3>
-      </div>
-      <div class="card-body">
-        <div class="alert alert-danger" role="alert">
-          条件に一致するメンバーは見つかりませんでした。
-        </div>
-        "わたなへ"(0件)
-        
+<!-- Masthead -->
+<header class="call-to-action text-white text-center">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-9 mx-auto">
+        <h1>
+          検索結果
+        </h1>
       </div>
     </div>
   </div>
+</header>
+
+<!-- Result -->
+{% if object_list %}
+<div class="container text-muted">
+  <div class="card my-5">
+    <div class="card-header">
+      <h3>メンバー検索</h3>
+    </div>
+    <div class="card-body">
+      "{% if searchText %}{{ searchText }}{% endif %}"({{ object_list|length }}件)
+      <table class="table text-left table-striped mt-4 mb-0">
+        <thead>
+          <tr>
+            <th scope="col" style="width:40%">名前</th>
+            <th scope="col" style="width:35%">所属グループ</th>
+            <th scope="col" style="width:30%; text-align: center; vertical-align: middle;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in object_list %}
+          <tr>
+            <td>{{ member.last_kanji }} {{ member.first_kanji }}</td>
+            <td>{{ member.belonging_group.name }}</td>
+            <td>
+              <a class="btn btn-outline-info"
+                href="{% url 'search:searchByMembers' member.belonging_group.group_id member.ct %}" role="button">選択</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<!-- Result notFound -->
+<div class="container text-muted">
+  <div class="card my-5">
+    <div class="card-header">
+      <h3>メンバー検索</h3>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-danger" role="alert">
+        条件に一致するメンバーは見つかりませんでした。
+      </div>
+      "{% if searchText %}{{ searchText }}{% endif %}"({{ object_list|length }}件)
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}

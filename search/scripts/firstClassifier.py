@@ -17,7 +17,8 @@ def firstClassifier(searchText):
             first_result['group_id'] = 2
             if len(splitO) > 3:
                 return urlClassifier(first_result, splitO, query_set)
-
+        first_result['class'] = '404'
+        return first_result
     else:
         first_result['input'] = 'name'
         return first_result
@@ -33,7 +34,7 @@ def urlClassifier(result, splitO, query_set):
         return result
     elif len(splitO) == 5 and splitO[3] == 'member' and splitO[4] == 'list':
         if 'page' in query_set:
-            result['page'] = query_set['page'] + 1
+            result['page'] = int(query_set['page'][0]) + 1
         else:
             result['page'] = 1
         if 'ct' in query_set:
@@ -41,4 +42,7 @@ def urlClassifier(result, splitO, query_set):
             result['class'] = 'searchByMembers'
         else:
             result['class'] = 'searchByBlogs'
+        return result
+    else:
+        result['class'] = '404'
         return result

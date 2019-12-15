@@ -17,13 +17,16 @@ class BaseView(View):
                 elif result['class'] == 'searchByLatest':
                     return redirect('search:searchByLatest', group_id=result['group_id'])
                 elif result['class'] == 'searchByBlogs':
-                    response = redirect('search:searchByBlogs', group_id=result['group_id'])
-                    response['location'] += '?page=' + str(result['page'])
-                    return response
+                    return redirect('search:searchByBlogs', group_id=result['group_id'], page=result['page'])
+                    # response = redirect('search:searchByBlogs', group_id=result['group_id'])
+                    # response['location'] += '?page=' + str(result['page'])
+                    # return response
                 elif result['class'] == 'searchByMembers':
                     response = redirect('search:searchByMembers', group_id=result['group_id'], ct=result['ct'])
                     response['location'] += '?page=' + str(result['page'])
                     return response
+                else:
+                    return redirect('search:searchUnjustURL')
             elif result['input'] == 'name':
                 return redirect('search:searchMember', searchText=result['searchText'])
         return render(request, self.html_path, self.context)
