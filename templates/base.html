@@ -48,7 +48,7 @@
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
 {#          <input class="form-control form-control-lg" name={{ form.search_text }}#}
 {#       <a class="btn btn-outline-info my-2 my-sm-0" href="{% url 'top:top' %}" role="button"><i class="fas fa-search"></i></a>#}
-        <button class="btn btn-outline-info my-2 my-sm-0" type="submit" onclick="location.href={% url 'top:top' %}">
+        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">
           <i class="fas fa-search"></i>
         </button>
       </form>
@@ -69,13 +69,13 @@
           <form>
             <div class="form-row">
               <div class="col-12 col-md-9 mb-2 mb-md-0">
-                <input class="form-control form-control-lg" placeholder="Search" name="q" onClick="location.href={% url 'top:top' %}">
+                <input class="form-control form-control-lg" placeholder="Search" name="q">
               </div>
               <div class="col-12 col-md-3">
-{#                  <button class="btn btn-block btn-lg btn-success" type="submit" onclick="location.href={% url 'top:top' %}">#}
-{#                    <i class="fas fa-search"></i>#}
-{#                </button>#}
-                  <a class="btn btn-block btn-lg btn-success" href="{% url 'top:top' %}" role="button"><i class="fas fa-search"></i></a>
+                  <button class="btn btn-block btn-lg btn-success" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+{#                  <a class="btn btn-block btn-lg btn-success" href="{% url 'top:top' %}" role="button"><i class="fas fa-search"></i></a>#}
               </div>
 
             </div>

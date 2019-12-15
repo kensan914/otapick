@@ -1,49 +1,67 @@
-from django.shortcuts import render
-from search.scripts.searchTextClassifier import searchTextClassifier
+from django.db.models import Q
+
 from top.views import BaseView
 from django.views import generic
 from .models import Member, Blog
 
 
-class SearchByLatestView(BaseView, generic.ListView):
+class SearchByLatestView(generic.ListView, BaseView):
     template_name = html_path = 'search/otapick_searchByBlogs.html'
     model = Blog
-    paginate_by = 20
+    paginate_by = 10
+
+    def get(self, request, *args, **kwargs):
+        if self.request.GET.get('q'):
+            return BaseView.get(self, self.request)
+        else:
+            return generic.ListView.get(self, self.request)
 
     def get_context_data(self, **kwargs):
-        if self.request.GET.get('q'):
-            super().get(self.request)
         context = super().get_context_data(**kwargs)
         group_id = self.kwargs.get('group_id')
         searchByLatestCtx = {
             'isLatest': True,
             'group_id': group_id,
+            'hit': True,
         }
         context.update(searchByLatestCtx)
         return context
+
+    def get_queryset(self):
+        group_id = self.kwargs.get('group_id')
+        members = Member.objects.filter(belonging_group__group_id=group_id)
+        return Blog.objects.filter(writer__in=members).order_by('-post_date')
 
 
 searchByLatest = SearchByLatestView.as_view()
 
 
-class SearchByBlogsView(BaseView, generic.ListView):
+class SearchByBlogsView(generic.ListView, BaseView):
     template_name = html_path = 'search/otapick_searchByBlogs.html'
     model = Blog
     paginate_by = 20
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
         if self.request.GET.get('q'):
-            super().get(self.request)
+            return BaseView.get(self, self.request)
+        else:
+            return generic.ListView.get(self, self.request)
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # page = self.request.GET.get('page')
         group_id = self.kwargs.get('group_id')
         searchByBlogsCtx = {
             'isLatest': False,
-            # 'page': page,
             'group_id': group_id,
+            'hit': True,
         }
         context.update(searchByBlogsCtx)
         return context
+
+    def get_queryset(self):
+        group_id = self.kwargs.get('group_id')
+        members = Member.objects.filter(belonging_group__group_id=group_id)
+        return Blog.objects.filter(writer__in=members).order_by('-post_date')
 
 
 searchByBlogs = SearchByBlogsView.as_view()
@@ -54,9 +72,13 @@ class SearchByMembersView(generic.ListView, BaseView):
     model = Blog
     paginate_by = 20
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
         if self.request.GET.get('q'):
-            super(generic.ListView).get(self.request)
+            return BaseView.get(self, self.request)
+        else:
+            return generic.ListView.get(self, self.request)
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         group_id = self.kwargs.get('group_id')
         ct = self.kwargs.get('ct')
@@ -72,16 +94,48 @@ class SearchByMembersView(generic.ListView, BaseView):
     def get_queryset(self):
         group_id = self.kwargs.get('group_id')
         ct = self.kwargs.get('ct')
-        return Blog.objects.filter(writer=Member.objects.get(ct=ct, belonging_group__group_id=int(group_id)))
+        member = Member.objects.get(ct=ct, belonging_group__group_id=int(group_id))
+        return Blog.objects.filter(writer=member).order_by('-post_date')
 
 
 searchByMembers = SearchByMembersView.as_view()
 
 
-class SearchMemberView(BaseView, generic.ListView):
+class SearchMemberView(generic.ListView, BaseView):
     html_path = template_name = 'search/otapick_searchMember.html'
     model = Member
     paginate_by = 20
 
+    def get(self, request, *args, **kwargs):
+        if self.request.GET.get('q'):
+            return BaseView.get(self, self.request)
+        else:
+            return generic.ListView.get(self, self.request)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        searchText = self.kwargs.get('searchText')
+        searchMemberCtx = {
+            'searchText': searchText,
+        }
+        context.update(searchMemberCtx)
+        return context
+
+    def get_queryset(self):
+        searchText = self.kwargs.get('searchText')
+        match_members = Member.objects.filter(Q(full_kanji__icontains=searchText) | Q(full_kana__icontains=searchText))
+        return match_members.order_by('belonging_group__group_id', 'full_kana')
+
 
 searchMember = SearchMemberView.as_view()
+
+
+class SearchUnjustURLView(BaseView):
+    html_path = 'search/otapick_searchByBlogs.html'
+
+    def get(self, request, *args, **kwargs):
+        self.context['hit'] = False
+        return super().get(self.request)
+
+
+searchUnjustURL = SearchUnjustURLView.as_view()
