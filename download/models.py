@@ -24,3 +24,15 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.publisher.blog_ct) + '/' + str(self.order)
+
+
+class Progress(models.Model):
+    class Meta:
+        db_table = 'progress'
+
+    num = models.IntegerField(verbose_name='進捗', default=0, null=True)
+    ready = models.BooleanField(default=False)
+    target = models.OneToOneField(Blog, verbose_name='対象ブログ', on_delete=models.CASCADE, null=True, unique=True)
+
+    def __str__(self):
+        return self.target.title

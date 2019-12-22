@@ -50,7 +50,7 @@
               <td><a class="btn btn-outline-info" target="_blank"
                   href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
                   role="button">確認</a></td>
-              <td><a class="btn btn-info" href="#" role="button">選択</a></td>
+              <td><a class="btn btn-info" href="{% url 'download:download' group_id blog.blog_ct %}" role="button">選択</a></td>
             </tr>
           {% endfor %}
         </tbody>
