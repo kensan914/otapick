@@ -1,0 +1,175 @@
+[33mcommit 941696c20ba73049e2ec2c5f34a1b878d4ef3f6d[m[33m ([m[1;36mHEAD -> [m[1;32m'download'[m[33m)[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Thu Dec 26 00:48:12 2019 +0900
+
+    'front'
+
+[33mcommit 6cf86dbc582b1351705ef2cfa5e68d82f3517248[m[33m ([m[1;31morigin/download[m[33m)[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 23 04:37:12 2019 +0900
+
+    complete download
+
+[33mcommit 2f1f53b184a2dd75300dd632e2960166ead23153[m[33m ([m[1;31morigin/tackle_byBlogs[m[33m, [m[1;32mtackle_byBlogs[m[33m)[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 16 03:34:32 2019 +0900
+
+    complete download page
+
+[33mcommit 43285deb60f14db3965e424f6abbffa226f93469[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 16 00:30:22 2019 +0900
+
+    image downloader
+
+[33mcommit 24b45f5d44e693dd7c507689abac6b7b821fbac3[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Sun Dec 15 20:32:23 2019 +0900
+
+    complete search
+
+[33mcommit d654acb54e29ad22304f14e02c83f92dfeaafb67[m[33m ([m[1;31morigin/blogInfoDB[m[33m, [m[1;32mblogInfoDB[m[33m)[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Sun Dec 15 05:08:05 2019 +0900
+
+    complete searceByMembers
+
+[33mcommit a99b2703b305fa1268511aff0463658db30730e0[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Thu Dec 12 03:43:24 2019 +0900
+
+    'debug'
+
+[33mcommit 19a3dccc59fbc7e3e0fe1c8af03369b6211e5e9b[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Thu Dec 12 02:25:03 2019 +0900
+
+    make blogInfoRegister
+
+[33mcommit 5ed54d1839d820f64b8002693e3e6699c81b471b[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Wed Dec 11 04:21:43 2019 +0900
+
+    make databases
+
+[33mcommit f21580fc0ea27f284ba9d1bfe9ca80805a47a6cd[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Tue Dec 10 23:44:47 2019 +0900
+
+    can use mysql
+
+[33mcommit 0c28bedf5edd34fc580b790fb60d5f6757ff36da[m
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Tue Dec 10 03:03:44 2019 +0900
+
+    title of otapick_result.html
+
+[33mcommit e00bcfaa7d0795f3215cf1aecad2095cc8d542c0[m
+Merge: acdfe62 63ac59f
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Tue Dec 10 00:49:46 2019 +0900
+
+    Merge pull request #4 from kensan914/serch_form
+    
+    make serch form
+
+[33mcommit 63ac59f2353554fffcfac42a1c63d6c34de07a61[m[33m ([m[1;31morigin/serch_form[m[33m, [m[1;32mserch_form[m[33m)[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Tue Dec 10 00:48:40 2019 +0900
+
+    make serch form
+
+[33mcommit acdfe626f8f7d7a19f2aaef68040907248ae1926[m
+Merge: 6a7a7a0 531dcb0
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Mon Dec 9 07:55:12 2019 +0900
+
+    Merge pull request #3 from kensan914/serch_form
+    
+    Serch form
+
+[33mcommit 531dcb09c78f7f82eca55583a9e169c917ec7b99[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 9 07:54:36 2019 +0900
+
+    remove env
+
+[33mcommit afce9fbe35eba964f8e31f0327a06dc6f7a94075[m
+Merge: 1ecab65 78c01c8
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 9 07:39:01 2019 +0900
+
+    Merge branch 'serch_form'
+
+[33mcommit 78c01c8a9663c6ca701b45cbab5b5b3ac666ac67[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 9 07:36:01 2019 +0900
+
+    make classifier
+
+[33mcommit 6a7a7a009baa604e45af1b36ffdb7080cf39df96[m
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Mon Dec 9 03:45:14 2019 +0900
+
+    link howto
+
+[33mcommit 1ecab65958fd2b9d32dec8b1ad40b8654d17dfcc[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 9 02:56:17 2019 +0900
+
+    'little'
+
+[33mcommit 2580da4b5285f4a543fb7fb8eb1a3abf8f437d8f[m
+Merge: 2061829 1c70a8b
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Mon Dec 9 02:51:51 2019 +0900
+
+    Merge branch 'master' of https://github.com/kensan914/otapick
+
+[33mcommit 2061829ec2745ce98e2a0a1eaa1d0520b7c55ea0[m
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Mon Dec 9 02:51:03 2019 +0900
+
+    change link tag of base.html
+
+[33mcommit 1c70a8bf24550f20ceb4dbf411db6620668ba70c[m
+Merge: ddee8fd 9a40c28
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Mon Dec 9 02:22:36 2019 +0900
+
+    Merge pull request #2 from kensan914/test
+    
+    remove env
+
+[33mcommit 9a40c28c4e90a0d837b07eb0a857b52412dc418b[m[33m ([m[1;31morigin/test[m[33m, [m[1;32mtest[m[33m)[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 9 02:21:46 2019 +0900
+
+    remove env
+
+[33mcommit ddee8fd01ab139daa163504c2fba09140b218e23[m
+Merge: 5e3d798 0bce39e
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Mon Dec 9 02:17:14 2019 +0900
+
+    Merge pull request #1 from kensan914/test
+    
+    env
+
+[33mcommit 0bce39ecfd399ddb6dc681c4ca761bef1c3ffaef[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 9 02:15:55 2019 +0900
+
+    env
+
+[33mcommit 5e3d798fdb7f4ec0ceef2a859466cd6d9e42c3c3[m
+Author: kensan914 <52157596+kensan914@users.noreply.github.com>
+Date:   Mon Dec 9 01:36:41 2019 +0900
+
+    set python env
+
+[33mcommit 4e8c1bc22720868b62c949c65f362c2881e03930[m
+Author: toriumi <ken.tennis914@gmail.com>
+Date:   Mon Dec 9 00:22:39 2019 +0900
+
+    'init'
