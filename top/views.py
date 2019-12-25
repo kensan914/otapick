@@ -5,7 +5,9 @@ from search.scripts.firstClassifier import firstClassifier
 
 class BaseView(View):
     html_path = 'top/otapick_top.html'
-    context = {}
+    context = {
+        'group': 'keyaki',
+    }
 
     def get(self, request, *args, **kwargs):
         inputText = request.GET.get('q')

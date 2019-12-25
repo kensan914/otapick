@@ -4,6 +4,7 @@
 
 {% block content %}
   <!-- Masthead -->
+  <div class="{{ group }}">
   <header class="call-to-action text-white text-center">
     <div class="overlay"></div>
     <div class="container">
@@ -19,6 +20,7 @@
       </div>
     </div>
   </header>
+  </div>
 
   <div class="container text-muted">
 
@@ -190,10 +192,11 @@
         </div>
       </div>
       <div class="card-footer">
-        <a class="btn btn-info" data-toggle="collapse" href="#collapse_keyaki" role="button" aria-expanded="false"
-          aria-controls="collapse_keyaki">
-          全て表示
-        </a>
+        <div class="search_btn">
+          <a class="btn keyaki" data-toggle="collapse" href="#collapse_keyaki" role="button" aria-expanded="false" aria-controls="collapse_keyaki">
+            全て表示
+          </a>
+        </div>
       </div>
     </div>
 
@@ -327,10 +330,12 @@
         </div>
       </div>
       <div class="card-footer">
-        <a class="btn btn-info" data-toggle="collapse" href="#collapse_hinata" role="button" aria-expanded="false"
+        <div class="search_btn">
+          <a class="btn hinata" data-toggle="collapse" href="#collapse_hinata" role="button" aria-expanded="false"
           aria-controls="collapse_hinata">
-          全て表示
-        </a>
+            全て表示
+          </a>
+        </div>
       </div>
     </div>
 

@@ -16,10 +16,11 @@
     right: 10px;
 }
 
-div.thumbnail.checked {
-    /* border: 6px solid rgb(205, 243, 255); */
-    /* box-sizing: border-box; */
-    box-shadow: 0 0 30px rgb(0, 195, 255);
+.keyaki div.thumbnail.checked {
+    box-shadow: 0 0 30px #32cd32;
+}
+.hinata div.thumbnail.checked {
+    box-shadow: 0 0 30px #8eeeff;
 }
 
 div.thumbnail.checked + .save_img_checkbox {
