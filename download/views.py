@@ -8,6 +8,7 @@ from .models import Image, Progress
 from django.http import HttpResponse
 import zipfile
 import user_agents
+from search.scripts.css_classConverter import css_classConverter
 
 
 class DownloadView(BaseView):
@@ -50,6 +51,7 @@ class DownloadView(BaseView):
             'blog': blog,
             'group_id': group_id,
             'blog_ct': blog_ct,
+            'group': css_classConverter(group_id),
         }
         if Image.objects.filter(publisher=blog).exists():
             blog_images = Image.objects.filter(publisher=blog).order_by('order')

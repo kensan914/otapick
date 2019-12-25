@@ -16,26 +16,28 @@
     <link href="{% static 'css/bootstrap-ex.min.css'%}" rel="stylesheet">
 </head>
 <body>
-    <div class="position-absolute h-100 w-100 m-0 d-flex align-items-center justify-content-center">
-        <div class="container text-center">
-            <img src="{% static 'img/otapick.png' %}" class="img-fluid mb-5 col-lg-5 col-md-8 col-8" alt="Responsive image">
-            <h3>「{% if title %}{{ title }}{% endif %}」に含まれる画像を取得中です。</h3>
-            <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" id="progress" role="progressbar"
-                    aria-valuenow="{{ progress.num }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.num }}%">
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="position-absolute h-100 w-100 m-0 d-flex align-items-center justify-content-center">
+    <div class="container text-center">
+      <h2 class="ml-5">Now Loading...</h2>
 
-{#    #}
-{#    <div class="container mt-5">#}
-{#        {% if not progress.num >= 100 %}#}
-{#          <div class="progress">#}
-{#            <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress" role="progressbar" aria-valuenow="{{ progress.num }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.num }}%"></div>#}
-{#          </div>#}
-{#        {% endif %}#}
-{#    </div>#}
+      <div class="write_box">
+        <div class="img-wrap">
+          <img src="{% static 'img/otapick_logo_back.png' %}" class="img-fluid mb-5 col-lg-5 col-md-8 col-11"
+               alt="Responsive image">
+        </div>
+
+        <div class="img-wrap-before">
+        </div>
+      </div>
+
+      <h3>「{% if title %}{{ title }}{% endif %}」に含まれる画像を取得中です。</h3>
+      <div class="progress">
+        <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="{{ progress.num }}"
+             aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.num }}%">
+        </div>
+      </div>
+    </div>
+  </div>
 
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>

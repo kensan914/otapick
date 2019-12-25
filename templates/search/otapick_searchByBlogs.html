@@ -11,54 +11,75 @@
 
 {% block content %}
 <!-- Masthead -->
-<header class="call-to-action text-white text-center">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-9 mx-auto">
-        <h1>
-          検索結果
-        </h1>
+  <div class="{{ group }}">
+    <header class="call-to-action text-white text-center">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-9 mx-auto">
+            <h1>
+              検索結果
+            </h1>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
   </div>
-</header>
 
 {% if hit %}
 <!-- Result -->
 <div class="container text-muted">
-  <div class="card my-5">
+  <div class="card mt-5 mb-3">
     <div class="card-header">
       <h3>記事一覧</h3>
     </div>
     <div class="card-body">
       入力されたURLから複数の記事が検出されました。
-      <table class="table text-left table-striped mt-4 mb-0">
-        <thead>
-          <tr>
-            <th scope="col" style="width:40%">タイトル</th>
-            <th scope="col" style="width:20%">メンバー</th>
-            <th scope="col" style="width:16%">投稿日</th>
-            <th scope="col" style="width:12%"></th>
-            <th scope="col" style="width:12%"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for blog in object_list  %}
-          <tr>
-            <td>{{ blog.title }}</td>
-            <td>{{ blog.writer.full_kanji }}</td>
-            <td>{{ blog.post_date|date:"y/n/j" }}</td>
-            <td><a class="btn btn-outline-info" target="_blank"
-                href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
-                role="button">確認</a></td>
-            <td><a class="btn btn-info" href="#" role="button">選択</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
     </div>
   </div>
+    <div class="container mt-2 mb-5">
+      <div class="row">
+        {% for blog in object_list %}
+        <div class="col-sm-6 col-lg-4 mb-4">
+          <div class="otapick_card_back">
+            <div class="otapick_card {{ group }}">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ blog.title }}</h5>
+                  <div class="row">
+                    <p class="card-text ml-3">{{ blog.writer.full_kanji }}</p>
+                    <p class="card-text ml-3">{{ blog.post_date|date:"y/n/j" }}</p>
+                  </div>
+                  <div class="row mx-auto" style="width: 180px;">
+                    <div class="outline">
+                      {% if group_id == 1 %}
+                      <a class="btn {{ group }}" target="_blank"
+                         href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                         role="button">
+                        <span>確認</span>
+                      </a>
+                      {% elif group_id == 2 %}
+                      <a class="btn {{ group }}" target="_blank"
+                         href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                         role="button">
+                        <span>確認</span>
+                      </a>
+                      {% endif %}
+                    </div>
+                    <div class="rounded ml-3">
+                      <a class="btn {{ group }}" href="{% url 'download:download' group_id blog.blog_ct %}" role="button">
+                        <span>選択</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
 </div>
 
 {% else %}

@@ -12,171 +12,186 @@
   <meta name="author" content="">
 
   <title>{% block title %}{% endblock %}｜ヲタピック</title>
-    {% bootstrap_css %}
-    {% bootstrap_javascript jquery='full' %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript jquery='full' %}
 
-  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-  <link href="{% static 'css/simple-line-icons.css'%}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+        integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <link href="{% static 'css/simple-line-icons.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
-    type="text/css">
+        type="text/css">
 
-  <link href="{% static 'css/bootstrap-ex.min.css'%}" rel="stylesheet">
-    {% block extra_css %}{% endblock %}
+  <link href="{% static 'css/bootstrap-ex.min.css' %}" rel="stylesheet">
+  {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
-  <!-- Navigation -->
-  <nav class="navbar navbar-light bg-light static-top navbar-expand-lg">
-    <a class="navbar-brand" href={% url 'top:top' %}
-      style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain; height: 50px; width: 170px;"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-      <form class="form-inline my-2 my-lg-0">
-        <ul class="navbar-nav mr-0">
-          <li class="nav-item">
-            <a class="nav-link mr-3" href={% url 'top:top' %}#howto>つかい方</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link mr-3" href={% url 'top:support' %}>サポート</a>
-          </li>
-        </ul>
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
-{#          <input class="form-control form-control-lg" name={{ form.search_text }}#}
-{#       <a class="btn btn-outline-info my-2 my-sm-0" href="{% url 'top:top' %}" role="button"><i class="fas fa-search"></i></a>#}
-        <button class="btn btn-outline-info my-2 my-sm-0" type="submit">
+<!-- Navigation -->
+<nav class="navbar navbar-light bg-light static-top navbar-expand-lg">
+  <a class="navbar-brand" href="{% url 'top:top' %}"
+     style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
+             height: 50px; width: 170px;"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <form class="form-inline my-2 my-lg-0">
+      <ul class="navbar-nav mr-5 mr-sm-0">
+        <li class="nav-item">
+          <a class="nav-link mr-3" href={% url 'top:top' %}#howto>つかい方</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link mr-3" href={% url 'top:support' %}>サポート</a>
+        </li>
+      </ul>
+      <input class="col-10 form-control col-sm-5" type="search" placeholder="Search" aria-label="Search" name="q">
+      <div class="search_btn_min">
+        <button type="submit" class="btn my-0 px-3 ml-1 ml-xs-5 {{ group }}">
           <i class="fas fa-search"></i>
         </button>
-      </form>
-    </div>
-  </nav>
+      </div>
+    </form>
+  </div>
+</nav>
 
-  {% block content %}{% endblock %}
+{% block content %}{% endblock %}
 
-  <!-- Sub searcher -->
-  <section class="call-to-action text-white text-center mt-3">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-9 mx-auto">
-          <h2 class="mb-4">アイドルブログ専用・画像保存ツール</h2>
-        </div>
-        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-          <form>
-            <div class="form-row">
-              <div class="col-12 col-md-9 mb-2 mb-md-0">
-                <input class="form-control form-control-lg" placeholder="Search" name="q">
-              </div>
-              <div class="col-12 col-md-3">
-                  <button class="btn btn-block btn-lg btn-success" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-{#                  <a class="btn btn-block btn-lg btn-success" href="{% url 'top:top' %}" role="button"><i class="fas fa-search"></i></a>#}
-              </div>
-
+<!-- Sub searcher -->
+<div class={{ group }}>
+<section class="call-to-action text-white text-center mt-3">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-9 mx-auto">
+        <h2 class="mb-4">アイドルブログ専用・画像保存ツール</h2>
+      </div>
+      <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+        <form>
+          <div class="form-row">
+            <div class="col-12 col-md-9 mb-2 mb-md-0">
+              <input class="form-control form-control-lg" placeholder="Search" name="q">
             </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer bg-light">
-    <div class="h-100 text-center my-auto">
-      <p class="text-muted small mb-4 mb-lg-0">Copyright &copy; <a href="http://proative.net"
-          target="_blank">PROATIVE</a> 2019 All rights reserved.</p>
-    </div>
-  </footer>
-
-
-  <!-- SerchResultModal -->
-  {% if input == 'name' %}
-    <div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="searchResultModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="searchResultModalLabel">
-                {% if class == '403' %}検索結果{% endif %}
-                {% if class == 'oneMemberHit' %}1人のメンバーがヒットしました。{% endif %}
-                {% if class == 'someMembersHit' %}{{ memberList|length }}人のメンバーがヒットしました。{% endif %}
-            </h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-              {% if class == '403' %}「{{ searchText }}」に一致する情報は見つかりませんでした。{% endif %}
-              {% if class == 'oneMemberHit' %}
-                  <table class="table table-striped">
-                    <tbody>
-                        <tr>
-                          {% for member in memberList %}
-                              <td>{{ member.full_kanji }}({% if member.belonging_group.group_id == 1 %}欅坂46{% elif member.belonging_group.group_id == 2 %}日向坂46{% endif %})</td>
-                          {% endfor %}
-                        </tr>
-                    </tbody>
-                  </table>
-                  記事一覧を表示します。
-              {% endif %}
-              {% if class == 'someMembersHit' %}
-                  該当するメンバーを選択してください。
-                  <table class="table table-striped">
-                    <tbody>
-                        {% for member in memberList %}
-                            <tr>
-                                <td>{{ member.full_kanji }}({% if member.belonging_group.group_id == 1 %}欅坂46{% elif member.belonging_group.group_id == 2 %}日向坂46{% endif %})</td>
-                                <td><a class="btn btn-primary" href={% url 'search:searchByMembers' %}?group={{ member.belonging_group.group_id }}&ct={{ member.ct }} role="button">選択</a></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                  </table>
-              {% endif %}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              {% if class == 'oneMemberHit' %}
-                  {% for member in memberList %}
-                      <a class="btn btn-primary" href={% url 'search:searchByMembers' %}?group={{ member.belonging_group.group_id }}&ct={{ member.ct }} role="button">選択</a>
-                  {% endfor %}
-              {% endif %}
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
-  {% if input == 'url' and class == '403' %}
-      <!-- unjustURLModal -->
-        <div class="modal fade" id="unjustURLModal" tabindex="-1" role="dialog" aria-labelledby="unjustURLModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="unjustURLModalLabel">検索結果</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+            <div class="col-12 col-md-3">
+              <div class="search_btn">
+                <button type="submit" class="btn btn-block btn-lg {{ group }}">
+                  <i class="fas fa-search"></i>
                 </button>
-              </div>
-              <div class="modal-body">
-                不当なURLが入力されました。
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
-        </div>
-  {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- Footer -->
+<footer class="footer bg-light">
+  <div class="h-100 text-center my-auto">
+    <p class="text-muted small mb-4 mb-lg-0">Copyright &copy; <a href="http://proative.net"
+                                                                 target="_blank">PROATIVE</a> 2019 All rights reserved.
+    </p>
+  </div>
+</footer>
+
+
+<!-- SerchResultModal -->
+{#{% if input == 'name' %}#}
+{#  <div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="searchResultModalLabel"#}
+{#       aria-hidden="true">#}
+{#    <div class="modal-dialog" role="document">#}
+{#      <div class="modal-content">#}
+{#        <div class="modal-header">#}
+{#          <h5 class="modal-title" id="searchResultModalLabel">#}
+{#            {% if class == '403' %}検索結果{% endif %}#}
+{#            {% if class == 'oneMemberHit' %}1人のメンバーがヒットしました。{% endif %}#}
+{#            {% if class == 'someMembersHit' %}{{ memberList|length }}人のメンバーがヒットしました。{% endif %}#}
+{#          </h5>#}
+{#          <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#            <span aria-hidden="true">&times;</span>#}
+{#          </button>#}
+{#        </div>#}
+{#        <div class="modal-body">#}
+{#          {% if class == '403' %}「{{ searchText }}」に一致する情報は見つかりませんでした。{% endif %}#}
+{#          {% if class == 'oneMemberHit' %}#}
+{#            <table class="table table-striped">#}
+{#              <tbody>#}
+{#              <tr>#}
+{#                {% for member in memberList %}#}
+{#                  <td>{{ member.full_kanji }}({% if member.belonging_group.group_id == 1 %}#}
+{#                    欅坂46{% elif member.belonging_group.group_id == 2 %}日向坂46{% endif %})#}
+{#                  </td>#}
+{#                {% endfor %}#}
+{#              </tr>#}
+{#              </tbody>#}
+{#            </table>#}
+{#            記事一覧を表示します。#}
+{#          {% endif %}#}
+{#          {% if class == 'someMembersHit' %}#}
+{#            該当するメンバーを選択してください。#}
+{#            <table class="table table-striped">#}
+{#              <tbody>#}
+{#              {% for member in memberList %}#}
+{#                <tr>#}
+{#                  <td>{{ member.full_kanji }}({% if member.belonging_group.group_id == 1 %}#}
+{#                    欅坂46{% elif member.belonging_group.group_id == 2 %}日向坂46{% endif %})#}
+{#                  </td>#}
+{#                  <td><a class="btn btn-primary"#}
+{#                         href={% url 'search:searchByMembers' %}?group={{ member.belonging_group.group_id }}&ct={{ member.ct }}#}
+{#                         role="button">選択</a></td>#}
+{#                </tr>#}
+{#              {% endfor %}#}
+{#              </tbody>#}
+{#            </table>#}
+{#          {% endif %}#}
+{#        </div>#}
+{#        <div class="modal-footer">#}
+{#          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#          {% if class == 'oneMemberHit' %}#}
+{#            {% for member in memberList %}#}
+{#              <a class="btn btn-primary"#}
+{#                 href={% url 'search:searchByMembers' %}?group={{ member.belonging_group.group_id }}&ct={{ member.ct }}#}
+{#                 role="button">選択</a>#}
+{#            {% endfor %}#}
+{#          {% endif %}#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#{% endif %}#}
+
+{#{% if input == 'url' and class == '403' %}#}
+{#  <!-- unjustURLModal -->#}
+{#  <div class="modal fade" id="unjustURLModal" tabindex="-1" role="dialog" aria-labelledby="unjustURLModalLabel"#}
+{#       aria-hidden="true">#}
+{#    <div class="modal-dialog" role="document">#}
+{#      <div class="modal-content">#}
+{#        <div class="modal-header">#}
+{#          <h5 class="modal-title" id="unjustURLModalLabel">検索結果</h5>#}
+{#          <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#            <span aria-hidden="true">&times;</span>#}
+{#          </button>#}
+{#        </div>#}
+{#        <div class="modal-body">#}
+{#          不当なURLが入力されました。#}
+{#        </div>#}
+{#        <div class="modal-footer">#}
+{#          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#{% endif %}#}
 
 {#  <script src="{% static 'js/jquery.min.js' %}"></script>#}
 {#  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>#}
 
-  <script>
-    $(window).on('load',function(){
+<script>
+    $(window).on('load', function () {
         {% if input == 'name' %}
             $('#searchResultModal').modal('show');
         {% endif %}
@@ -186,8 +201,8 @@
     });
 
 
-  </script>
-  {% block extra_js %}{% endblock %}
+</script>
+{% block extra_js %}{% endblock %}
 </body>
 
 </html>

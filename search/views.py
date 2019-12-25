@@ -2,6 +2,7 @@ from django.db.models import Q
 from top.views import BaseView
 from django.views import generic
 from .models import Member, Blog
+from .scripts.css_classConverter import css_classConverter
 
 
 class SearchByLatestView(generic.ListView, BaseView):
@@ -22,6 +23,7 @@ class SearchByLatestView(generic.ListView, BaseView):
             'isLatest': True,
             'group_id': group_id,
             'hit': True,
+            'group': css_classConverter(group_id),
         }
         context.update(searchByLatestCtx)
         return context
@@ -53,6 +55,7 @@ class SearchByBlogsView(generic.ListView, BaseView):
             'isLatest': False,
             'group_id': group_id,
             'hit': True,
+            'group': css_classConverter(group_id),
         }
         context.update(searchByBlogsCtx)
         return context
@@ -82,10 +85,13 @@ class SearchByMembersView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         ct = self.kwargs.get('ct')
         member = Member.objects.get(ct=ct, belonging_group__group_id=int(group_id))
+        order_format = self.request.GET.get('sort')
         searchByMembersCtx = {
             'group_id': group_id,
             'ct': ct,
             'member': member,
+            'group': css_classConverter(group_id),
+            'order_format': order_format
         }
         context.update(searchByMembersCtx)
         return context
@@ -94,6 +100,10 @@ class SearchByMembersView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         ct = self.kwargs.get('ct')
         member = Member.objects.get(ct=ct, belonging_group__group_id=int(group_id))
+        if self.request.GET.get('sort'):
+            order_format = self.request.GET.get('sort')
+            if order_format == 'older_post':
+                return Blog.objects.filter(writer=member).order_by('post_date')
         return Blog.objects.filter(writer=member).order_by('-post_date')
 
 
@@ -116,6 +126,7 @@ class SearchMemberView(generic.ListView, BaseView):
         searchText = self.kwargs.get('searchText')
         searchMemberCtx = {
             'searchText': searchText,
+            'group': 'keyaki',
         }
         context.update(searchMemberCtx)
         return context
