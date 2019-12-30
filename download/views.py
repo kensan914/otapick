@@ -47,11 +47,13 @@ class DownloadView(BaseView):
         if user_agent.is_mobile:
             self.html_path = "download/otapick_download_mobile.html"
 
+        group = css_classConverter(group_id)
+        self.request.session['group'] = group
         self.context = {
             'blog': blog,
             'group_id': group_id,
             'blog_ct': blog_ct,
-            'group': css_classConverter(group_id),
+            'group': group,
         }
         if Image.objects.filter(publisher=blog).exists():
             blog_images = Image.objects.filter(publisher=blog).order_by('order')
@@ -72,7 +74,7 @@ class DownloadView(BaseView):
 
         zip_name = 'otapick_' + str(group_id) + '_' + str(blog_ct) + '.zip'
         response['Content-Disposition'] = 'attachment; filename=' + zip_name
-        print(response)
+        # print(response)
         return response
 
 

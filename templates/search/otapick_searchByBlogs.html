@@ -29,69 +29,73 @@
 {% if hit %}
 <!-- Result -->
 <div class="container text-muted">
-  <div class="card mt-5 mb-3">
-    <div class="card-header">
-      <h3>記事一覧</h3>
-    </div>
-    <div class="card-body">
-      入力されたURLから複数の記事が検出されました。
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card mt-5 mb-3">
+        <div class="card-body">
+          <h3>記事一覧</h3>
+          入力されたURLから複数の記事が検出されました。
+        </div>
+      </div>
     </div>
   </div>
-    <div class="container mt-2 mb-5">
-      <div class="row">
-        {% for blog in object_list %}
-        <div class="col-sm-6 col-lg-4 mb-4">
-          <div class="otapick_card_back">
-            <div class="otapick_card {{ group }}">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">{{ blog.title }}</h5>
-                  <div class="row">
-                    <p class="card-text ml-3">{{ blog.writer.full_kanji }}</p>
-                    <p class="card-text ml-3">{{ blog.post_date|date:"y/n/j" }}</p>
+  <div class="container mt-2 mb-5">
+    <div class="row">
+      {% for blog in object_list %}
+      <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="otapick_card_back">
+          <div class="otapick_card {{ group }}">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{ blog.title }}</h5>
+                <div class="row">
+                  <p class="card-text ml-3">{{ blog.writer.full_kanji }}</p>
+                  <p class="card-text ml-3">{{ blog.post_date|date:"y/n/j" }}</p>
+                </div>
+                <div class="row mx-auto" style="width: 180px;">
+                  <div class="outline">
+                    {% if group_id == 1 %}
+                    <a class="btn {{ group }}" target="_blank"
+                       href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                       role="button">
+                      <span>確認</span>
+                    </a>
+                    {% elif group_id == 2 %}
+                    <a class="btn {{ group }}" target="_blank"
+                       href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                       role="button">
+                      <span>確認</span>
+                    </a>
+                    {% endif %}
                   </div>
-                  <div class="row mx-auto" style="width: 180px;">
-                    <div class="outline">
-                      {% if group_id == 1 %}
-                      <a class="btn {{ group }}" target="_blank"
-                         href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
-                         role="button">
-                        <span>確認</span>
-                      </a>
-                      {% elif group_id == 2 %}
-                      <a class="btn {{ group }}" target="_blank"
-                         href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
-                         role="button">
-                        <span>確認</span>
-                      </a>
-                      {% endif %}
-                    </div>
-                    <div class="rounded ml-3">
-                      <a class="btn {{ group }}" href="{% url 'download:download' group_id blog.blog_ct %}" role="button">
-                        <span>選択</span>
-                      </a>
-                    </div>
+                  <div class="rounded ml-3">
+                    <a class="btn {{ group }}" href="{% url 'download:download' group_id blog.blog_ct %}" role="button">
+                      <span>選択</span>
+                    </a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {% endfor %}
       </div>
+      {% endfor %}
     </div>
+  </div>
 </div>
 
 {% else %}
 <!-- Result notFound -->
 <div class="container text-muted">
-  <div class="card my-5">
-    <div class="card-header">
-      <h3>URL検索</h3>
-    </div>
-    <div class="card-body">
-      <div class="alert alert-danger" role="alert">
-        不当なURLが入力されました。
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card my-5">
+        <div class="card-body">
+          <h3 class="mb-4">URL検索</h3>
+          <div class="alert alert-danger" role="alert">
+            不当なURLが入力されました。
+          </div>
+        </div>
       </div>
     </div>
   </div>

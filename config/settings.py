@@ -27,7 +27,7 @@ SECRET_KEY = 'ucj1y2hviu26_^lzxp0n=ct-qvcp%5w%aih6r=-!$znlm$g(#+'
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['192.168.11.3', ' localhost ', ' 0.0.0.0 ']
+ALLOWED_HOSTS = ['192.168.11.5', ' localhost ', ' 0.0.0.0 ']
 
 
 # Application definition

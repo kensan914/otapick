@@ -7,11 +7,16 @@
 {% block extra_css %}
 <!-- 最後にminして -->
   <link rel="stylesheet" href="{% static 'css/test.css' %}">
+  <style>
+  .ui-autocomplete{
+    z-index: 1051;
+  }
+  </style>
 {% endblock %}
 
 {% block content %}
   <!-- Masthead -->
-  <div class="{{ group }}">
+<div class="{{ group }}">
   <header class="call-to-action text-white text-center">
     <div class="overlay"></div>
     <div class="container">
@@ -24,10 +29,12 @@
       </div>
     </div>
   </header>
-  </div>
+</div>
 
   <!-- Download -->
   <div class="container text-muted">
+  <div class="otapick_card_back_left">
+      <div class="otapick_card_left {{ group }}">
     <div class="card my-5">
 
     {% if blog_images %}
@@ -50,7 +57,7 @@
                 <div class="dropdown-menu">
                   <button type="submit" class="dropdown-item save_button">選択保存</button>
                   <div class="dropdown-divider"></div>
-                  <button type="submit" class="dropdown-item save_button" id="allDownload2">すべて保存</button>
+                  <button type="submit" class="dropdown-item save_button" id="allDownload">すべて保存</button>
                 </div>
               </div>
             </div>
@@ -108,11 +115,11 @@
       </div>
 
       <div class="card-footer">
-        <div class="mx-auto" style="width: 135px;">
+        <div class="mx-auto" style="width: 150px;">
           <div class="row">
             <div class="outline">
-              <a href="javascript:history.back()" class="btn {{ group }} mr-3" style="border-radius: 12px; width: 50px; background-repeat: no-repeat">
-                <span style="border-radius: 10px; background: #f5f5f5;">戻る</span>
+              <a href="javascript:history.back()" class="btn {{ group }} mr-3" style="">
+                <span style="">戻る</span>
               </a>
             </div>
             <div class="btn-group">
@@ -175,14 +182,17 @@
         </div>
       </div>
     </div>
-
     <div class="card-footer text-center">
-      <div class="search_btn">
-        <a href="javascript:history.back()" class="btn {{ group }} mr-3">戻る</a>
+      <div class="outline">
+        <a class="btn {{ group }} mr-3" href="javascript:history.back()" role="button">
+          <span>戻る</span>
+        </a>
       </div>
     </div>
     {% endif %}
-    </div>
+  </div>
+</div>
+  </div>
   </div>
 
     <!-- Modal -->
@@ -199,10 +209,10 @@
           <p style="color: gray;">-{{ blog.writer.last_kanji }} {{ blog.writer.first_kanji }}の他のブログを探す場合は
             <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}">こちら</a>。
           </p>
-          <form>
+          <form autocomplete="off">
             <div class="form-row">
               <div class="col-10 mb-2 mb-0">
-                <input class="form-control" placeholder="Search" name="q">
+                <input class="form-control autocomplete" placeholder="Search" name="q">
               </div>
               <div class="col-2">
                 <div class="search_btn_min col-xs-12">
