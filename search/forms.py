@@ -1,4 +1,6 @@
 from django import forms
+import bootstrap_datepicker_plus as datetimepicker
+from search.scripts.searchViewFunc import kw_placeholder
 
 
 class SearchForm(forms.Form):
@@ -13,5 +15,39 @@ class SearchForm(forms.Form):
 
         return search_text
 
-    # def clean(self):
 
+class NarrowingForm(forms.Form):
+    keyword = forms.CharField(
+        label='キーワード',
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': '例)'+kw_placeholder(), 'class': 'form-control form-control-sm mb-3'}
+        ),
+    )
+
+    post = forms.CharField(
+        label='投稿月',
+        required=False,
+        widget=datetimepicker.DatePickerInput(
+            format='%Y-%m',
+            attrs={'class': 'form-control form-control-sm'},
+            options={
+                'locale': 'ja',
+            }
+        ),
+    )
+
+    def clean_keyword(self):
+        keyword = self.cleaned_data['keyword']
+        return keyword
+
+    def clean_post(self):
+        post = self.cleaned_data['post']
+        return post
+
+    def clean(self):
+        keyword = self.cleaned_data['keyword']
+        post = self.cleaned_data['post']
+        if not keyword and not post:
+            raise forms.ValidationError("一文字以上入力してください。")

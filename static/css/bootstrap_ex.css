@@ -1,0 +1,457 @@
+body {
+    font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700
+}
+
+.keyaki header.masthead {
+    position: relative;
+    background: url('../img/main_background.jpg') no-repeat center center;
+    background-size: cover;
+    padding-top: 8rem;
+    padding-bottom: 8rem
+}
+
+.hinata header.masthead {
+    position: relative;
+    background: url('../img/main_background2.jpg') no-repeat center center;
+    background-size: cover;
+    padding-top: 8rem;
+    padding-bottom: 8rem
+}
+
+header.masthead .overlay {
+    position: absolute;
+    background-color: #212529;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: .3
+}
+
+header.masthead h1 {
+    font-size: 2rem
+}
+
+@media(min-width:768px) {
+    header.masthead {
+        padding-top: 12rem;
+        padding-bottom: 12rem
+    }
+    header.masthead h1 {
+        font-size: 3rem
+    }
+}
+
+.showcase .showcase-text {
+    padding: 3rem
+}
+
+.showcase .showcase-img {
+    min-height: 30rem;
+    background-size: cover
+}
+
+@media(min-width:768px) {
+    .showcase .showcase-text {
+        padding: 7rem
+    }
+}
+
+.features-icons {
+    padding-top: 7rem;
+    padding-bottom: 7rem
+}
+
+.features-icons .features-icons-item {
+    max-width: 20rem
+}
+
+.features-icons .features-icons-item .features-icons-icon {
+    height: 7rem
+}
+
+.features-icons .features-icons-item .features-icons-icon i {
+    font-size: 4.5rem
+}
+
+.features-icons .features-icons-item:hover .features-icons-icon i {
+    font-size: 5rem
+}
+
+.testimonials {
+    padding-top: 7rem;
+    padding-bottom: 7rem
+}
+
+.testimonials .testimonial-item {
+    max-width: 18rem
+}
+
+.testimonials .testimonial-item img {
+    max-width: 12rem;
+    box-shadow: 0 5px 5px 0 #adb5bd
+}
+
+.keyaki .call-to-action {
+    position: relative;
+    background: url('../img/main_background.jpg') no-repeat center center;
+    background-size: cover;
+    padding-top: 7rem;
+    padding-bottom: 7rem
+}
+
+.hinata .call-to-action {
+    position: relative;
+    background: url('../img/main_background2.jpg') no-repeat center center;
+    background-size: cover;
+    padding-top: 7rem;
+    padding-bottom: 7rem
+}
+
+.call-to-action .overlay {
+    position: absolute;
+    background-color: #212529;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: .3
+}
+
+footer.footer {
+    padding-top: 4rem;
+    padding-bottom: 4rem
+}
+
+.share .row div {
+    text-align: center;
+    padding: 3px
+}
+
+.share .row {
+    padding: 5px
+}
+
+.sharebtns div {
+    border-radius: 5px
+}
+
+.sharebtns a {
+    display: block;
+    color: #fff;
+    padding: 5px
+}
+
+.twitterbtn {
+    background-color: #009ef5
+}
+
+.facebookbtn {
+    background-color: #3b539a
+}
+
+.linebtn {
+    background-color: #00c300
+}
+
+.pocketbtn {
+    background-color: #ee4056
+}
+
+.background-info {
+    background-repeat: no-repeat
+}
+
+.search_btn .btn {
+    padding: 9px
+}
+
+.search_btn .btn, .search_btn_min .btn {
+    flex: 1 1 auto;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: #fff;
+    border-radius: 10px
+}
+
+.search_btn_min .btn {
+    padding: 6px;
+    box-shadow: 0 0 5px #eee
+}
+
+.rounded .btn {
+    padding: 6px;
+    background-size: 200% auto;
+    border-radius: 40px;
+    height: 40px;
+    width: 5pc
+}
+
+.rounded .btn, .save_btn .btn {
+    flex: 1 1 auto;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    color: #fff
+}
+
+.save_btn .btn {
+    padding: 8px;
+    background-size: cover;
+    background-repeat: no-repeat
+}
+
+.rounded .btn:hover, .search_btn .btn:hover, .search_btn_min .btn:hover {
+    background-position: right center
+}
+
+.save_btn .keyaki:hover {
+    background-image: linear-gradient(#57d362, #b372d8) !important
+}
+
+.save_btn .hinata:hover {
+    background-image: linear-gradient(#73bfcc, #b372d8) !important
+}
+
+.rounded .keyaki, .search_btn .keyaki, .search_btn_min .keyaki {
+    background-image: linear-gradient(to right, #65f671 0, #d185fd 51%, #65f671 100%) !important
+}
+
+.rounded .hinata, .search_btn .hinata, .search_btn_min .hinata {
+    background-image: linear-gradient(to right, #8eeeff 0, #d185fd 50%, #8eeeff 100%) !important
+}
+
+.save_btn .keyaki {
+    background-image: linear-gradient(#65f671, #d185fd) !important
+}
+
+.save_btn .hinata {
+    background-image: linear-gradient(#8eeeff, #d185fd) !important
+}
+
+.outline .btn {
+    border-radius: 40px;
+    height: 40px;
+    letter-spacing: 1px;
+    margin: 0 auto;
+    padding: 1px;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+    width: 5pc;
+    z-index: 1;
+    background-size: 100% auto;
+}
+
+.outline .btn:hover {
+    color: #fff
+}
+
+.outline .btn span {
+    align-items: center;
+    background: #fff;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    transition: background 0.5s ease;
+    width: 100%
+}
+
+.outline .btn:hover span {
+    background: transparent !important
+}
+
+.outline .keyaki {
+    background-image: linear-gradient(to right, #65f671 0, #d185fd 100%);
+    color: #008d0c
+}
+
+.outline .hinata {
+    background-image: linear-gradient(to right, #8eeeff 0, #d185fd 100%);
+    color: #006ba8
+}
+
+.otapick_card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
+    transition: 0.3s;
+    border-radius: 4px
+}
+
+.otapick_card>.card {
+    border-radius: 0 0 4px 4px / 0 0 4px 4px;
+    position: relative;
+    top: 3px
+}
+
+.otapick_card_back>.keyaki {
+    background-image: linear-gradient(to right, #65f671 30%, #d185fd 100%)
+}
+
+.otapick_card_back>.hinata {
+    background-image: linear-gradient(to right, #8eeeff 30%, #d185fd 100%)
+}
+
+.otapick_card_left {
+    box-shadow: 4px 1px 8px 0 rgba(0, 0, 0, .2);
+    transition: 0.3s;
+    border-radius: 4px
+}
+
+.otapick_card_left>.card {
+    border-radius: 0 4px 4px 0;
+    position: relative;
+    left: 3px
+}
+
+.otapick_card_back_left>.keyaki {
+    background-image: linear-gradient(to bottom, #65f671 30%, #d185fd 100%)
+}
+
+.otapick_card_back_left>.hinata {
+    background-image: linear-gradient(to bottom, #8eeeff 30%, #d185fd 100%)
+}
+
+.page_btn .keyaki {
+    background-image: linear-gradient(#65f671, #d185fd) !important
+}
+
+.page_btn .hinata {
+    background-image: linear-gradient(#8eeeff, #d185fd) !important
+}
+
+.progress .progress-bar {
+    background: linear-gradient(-45deg, #d185fd, #8eeeff, #d185fd, #47ff56);
+    background-size: 400% 400%;
+    animation: gradient_frame 3s ease infinite
+}
+
+@keyframes gradient_frame {
+    0% {
+        background-position: 0 50%
+    }
+    50% {
+        background-position: 100% 50%
+    }
+    100% {
+        background-position: 0 50%
+    }
+}
+
+.write_box {
+    position: relative;
+    overflow: hidden;
+    padding-top: 25px
+}
+
+.img-wrap {
+    animation: img-fadeout 1.8s cubic-bezier(0.4, 0, 0.2, 1)infinite;
+    padding: 6px
+}
+
+@keyframes img-fadeout {
+    0% {
+        opacity: 1
+    }
+    40% {
+        filter: none;
+        opacity: 1
+    }
+    100% {
+        opacity: 0;
+        filter: drop-shadow(0 0 30px #999)
+    }
+}
+
+.img-wrap-before {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    animation: img-write 1.8s cubic-bezier(0.4, 0, 0.2, 1)infinite;
+    background: url('../img/afterwriting.png');
+    background-size: cover;
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    z-index: 1
+}
+
+@keyframes img-write {
+    0% {
+        transform: translateX(0);
+    }
+    55% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+{#autocomplete design#}
+/* 各リスト項目のパディング設定 */
+.ui-menu .ui-menu-item-wrapper {
+    position: relative; padding: 3px 1em 3px .4em;
+}
+/* リスト全体の背景 */
+.ui-widget-content {
+    border: 1px solid #666!important;
+    background: white!important;
+    color: black!important;
+}
+/* リスト hover 時のカラー */
+.ui-state-active {
+    border: none!important;
+    background: silver!important;
+    font-weight: bold!important;
+    color: white!important;
+}
+
+.ui-autocomplete{
+    z-index: 1051;
+}
+
+.notFoundBox {
+    width: 100%;
+    height: 0;
+    padding-top: 46.6666666667%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+}
+.image_box {
+    width: 300px;
+    height: 300px;
+    position: relative;
+}
+.thumbnail {
+    background-repeat: no-repeat;
+    width: 210px;
+    height: 210px;
+    padding: 11px;
+    background-color: #FFFFFF;
+    box-shadow: 0 3px 18px -4px rgba(0, 0, 0, 0.8);
+}
+.save_img_checkbox {
+    top: 10px;
+    right: 10px;
+}
+
+.keyaki div.thumbnail.checked {
+    box-shadow: 0 0 30px #06cd00;
+}
+.hinata div.thumbnail.checked {
+    box-shadow: 0 0 30px #00c8ff;
+}
+
+div.thumbnail.checked + .save_img_checkbox {
+    display: block;
+}

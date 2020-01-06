@@ -30,10 +30,10 @@
           </h4>
         </div>
         <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-          <form>
+          <form autocomplete="off">
             <div class="form-row">
               <div class="col-12 col-md-9 mb-2 mb-md-0">
-                <input class="form-control form-control-lg" placeholder="Search" name="q">
+                <input class="form-control form-control-lg autocomplete" placeholder="Search" name="q">
               </div>
               <div class="col-12 col-md-3">
                 <div class="search_btn">
@@ -55,7 +55,7 @@
     <div class="row">
       <div class="sharebtns col-3">
         <div class="twitterbtn">
-          <a href="http://twitter.com/share?url=サイトのurl&text=ツイートに表示する文章&via=ツイッターのアカウント名" target="_blank">Twitter</a>
+          <a href="http://twitter.com/share?url=サイトのurl&text=アイドルブログ専用・画像保存ツール" target="_blank">Twitter</a>
         </div>
       </div>
 
@@ -67,7 +67,7 @@
 
       <div class="sharebtns col-3">
         <div class="linebtn">
-          <a href="http://line.me/R/msg/text/?投稿する文章とサイトのurl" target="_new">LINE</a>
+          <a href="http://line.me/R/msg/text/?アイドルブログ専用・画像保存ツール(サイトのURL)" target="_new">LINE</a>
         </div>
       </div>
 
@@ -89,10 +89,11 @@
         </div>
         <div class="col-lg-6 order-lg-1">
           <div class="p-4">
-            <h2>ブログから保存したい画像を選びます。</h2>
+            <h2>公式ブログから保存したい画像を選びます。</h2>
             <p>
-              是非そのブログのURLを控えておいてください。最も少ないステップで推しメンの画像を保存できます。PC,スマートフォンなど様々なデバイスでご利用いただけます。<br>
-              対応のブログは<a href={% url 'top:support' %}>こちら</a>から確認できます。
+              保存したい画像が見つかりましたら、そのページのURLをコピーしておいてください。
+              そのページに複数のブログ情報が含まれていても構いませんが、最も少ないステップで画像を保存するには「個別ページ」であることが推奨されます。
+              <br>現在サポート中のブログは<a href={% url 'top:support' %}>こちら</a>からご確認ください 。
             </p>
           </div>
         </div>
@@ -104,16 +105,37 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-6 mr-0 mr-lg-0">
-          <div data-aos="fade-right">
-            <img class="img-fluid intro_img" src="{% static 'img/preview2.jpeg' %}" alt="">
-          </div>
+          <img class="img-fluid intro_img" src="{% static 'img/preview2.jpeg' %}" alt="">
         </div>
         <div class="col-lg-6">
           <div class="p-4">
             <h2>検索にかけます。</h2>
             <p>
-              準備しておいたURLを当サイトの検索バーにそのまま貼り付けてください。名前を検索して記事を探すことも可能です。
-              その際、メンバーの名前は漢字でもひらがなでも構いません。
+              先ほどのURLを当サイトの検索バーにそのまま貼り付けてください。そのページに含まれるブログを検出します。また、メンバーの名前からブログを探すことも可能です。
+              その際、メンバーの名前は漢字でもひらがなでも構いません。<br>
+              {% if group == 'keyaki' %}<a href="{% url 'search:memberList' %}?group=1">こちら</a>
+              {% elif group == 'hinata' %}<a href="{% url 'search:memberList' %}?group=2">こちら</a>{% endif %}
+              からメンバーを選択して探すことも可能です。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 order-lg-2">
+          <img class="img-fluid intro_img" src="{% static 'img/preview3.png' %}" alt=""
+          style="background-image: url('{% static 'img/intro_back3.png' %}');">
+        </div>
+        <div class="col-lg-6 order-lg-1">
+          <div class="p-4">
+            <h2>保存しましょう。【PC】</h2>
+            <p>
+              任意の画像を一枚から選択して保存することも出来ますし、全ての画像を一度に保存することも出来ます。画像はzipファイルとしてダウンロードされます。<br>
+              推奨ブラウザ<i class="fas fa-hand-point-right"></i>Chrome、Firefox、Safari、Microsoft Edgeの最新バージョン。また、Internet Explorerは対応しておりません。ご了承ください。
             </p>
           </div>
         </div>
@@ -124,15 +146,17 @@
   <section>
     <div class="container mb-5">
       <div class="row align-items-center">
-        <div class="col-lg-6 order-lg-2">
-          <img class="img-fluid intro_img" src="{% static 'img/preview3.png' %}" alt=""
-          style="background-image: url('{% static 'img/intro_back2.png' %}');">
+        <div class="col-lg-6 mr-0 mr-lg-0">
+          <img class="img-fluid intro_img" src="{% static 'img/preview4.png' %}" alt=""
+            style="background-image: url('{% static 'img/intro_back4.png' %}');">
         </div>
-        <div class="col-lg-6 order-lg-1">
+        <div class="col-lg-6">
           <div class="p-4">
-            <h2>保存しましょう。</h2>
+            <h2>保存しましょう。【スマホ】</h2>
             <p>
-            任意の画像を選択して保存することも出来ますし、全ての画像を一度に保存することも出来ます。
+              画像が一覧表示されるのでブラウザごとの画像保存方法(通常は画像の長押し)に従いダウンロードを行ってください。<br>
+              推奨ブラウザ<i class="fas fa-hand-point-right"></i>Chrome、Firefox、Safariの最新バージョン。
+              <br>※PCスマホ問わず、画像を多く含んだブログの場合、画像の取得に10秒程度お時間がかかる可能性がございます。ご了承ください。
             </p>
           </div>
         </div>

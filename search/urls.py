@@ -8,5 +8,8 @@ urlpatterns = [
     path('list/<int:group_id>/<int:page>/', views.searchByBlogs, name='searchByBlogs'),
     path('list/unjust/', views.searchUnjustURL, name='searchUnjustURL'),
     path('member/blog/<int:group_id>/<str:ct>/', views.searchByMembers, name='searchByMembers'),
+    path('member/', views.memberList, name='memberList'),
     path('member/<str:searchText>/', views.searchMember, name='searchMember'),
+    path('member/unjust', views.searchUnjustMember, name='searchUnjustMember'),
+    path('autocomplete_name/', views.autocomplete, name='autocomplete'),
 ]

@@ -4,7 +4,16 @@
 
 {% block title %}
 {% if member %}{{ member.full_kanji }}{% endif %}({% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %})
-の記事一覧
+のブログ一覧
+{% endblock %}
+
+{% block extra_css %}
+  <!-- tempusdominus-bootstrap-4(css) -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" />
+  {% if not isMobile %}
+    {{ form.media }}
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -37,34 +46,128 @@
             {% if member %}{{ member.full_kanji }}{% endif %}
           </h3>
           <hr>
-          {% if member %}{{ member.full_kanji }}{% endif %}({% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %})
-          のブログ一覧を表示します。
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="row justify-content-between">
-      <div class="col-7">
-        <p>検索結果（<b>{{ page_obj.paginator.count }}</b>件）</p>
-      </div>
-      <div class="col-5 text-right">
-        <div class="btn-group" style="border: solid 1px silver; border-radius: 5%">
-          <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {% if order_format == 'older_post' %}
-              <i class="fas fa-sort"></i> 古い順
-            {% else %}
-              <i class="fas fa-sort"></i> 新着順
-            {% endif %}
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=newer_post">新着順</a>
-            <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=older_post">古い順</a>
+          <div class="row mx-2">
+            <div class="">
+              {% if member %}{{ member.full_kanji }}{% endif %}({% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %})
+              のブログ一覧を表示します。
+            </div>
+            <div class="row ml-2">
+              {% if narrowing_keyword %}
+                {% if group == 'keyaki' %}
+                  <span class="badge badge-success mr-2" style="background-color: limegreen">"{{ narrowing_keyword }}"</span>
+                {% elif group == 'hinata' %}
+                  <span class="badge badge-success mr-2" style="background-color: deepskyblue">"{{ narrowing_keyword }}"</span>
+                {% endif %}
+              {% endif %}
+              {% if narrowing_post %}
+                <span class="badge badge-success" style="background-color: mediumorchid">{{ narrowing_post.year }}/{{ narrowing_post.month }}
+                {% if narrowing_post.day %}/{{ narrowing_post.day }}{% endif %}</span>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="container mb-3">
+    <div class="row justify-content-between">
+      <div class="col-12 col-md-7">
+        <div class="">検索結果（<b>{{ page_obj.paginator.count }}</b>件）：{{ page_obj.number }}ページ目</div>
+      </div>
+      <div class="col-12 col-md-5 mt-2 mt-md-0">
+        <div class="row">
+          <button class="btn btn-light ml-auto mr-3" type="button" data-toggle="collapse" data-target="#narrowing"
+                  aria-expanded="false" aria-controls="narrowing" style="border: solid 1px silver; border-radius: 5%; background-color: #F4F3F3">
+            <i class="fas fa-search"></i> 絞り込み
+          </button>
+
+          <div class="btn-group mr-1" style="border: solid 1px silver; border-radius: 5%">
+            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% if order_format == 'older_post' %}
+                <i class="fas fa-sort"></i> 古い順
+              {% else %}
+                <i class="fas fa-sort"></i> 新着順
+              {% endif %}
+            </button>
+            <div class="dropdown-menu">
+              {% if narrowing_keyword and narrowing_post %}
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=newer_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=older_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
+              {% elif narrowing_keyword %}
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=newer_post&keyword={{ narrowing_keyword }}">新着順</a>
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=older_post&keyword={{ narrowing_keyword }}">古い順</a>
+              {% elif narrowing_post %}
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=newer_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=older_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
+              {% else %}
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=newer_post">新着順</a>
+                <a class="dropdown-item" href="{% url 'search:searchByMembers' group_id ct %}?sort=older_post">古い順</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="collapse mt-2" id="narrowing">
+      <div class="card card-body">
+        {% if narrowing_keyword and narrowing_post %}
+        <form action="{% url 'search:searchByMembers' group_id ct %}?sort={{ order_format }}&keyword={{ narrowing_keyword }}&year={{ narrowing_post.year }}&month={{ narrowing_post.month }}{% if narrowing_post.day %}&day={{ narrowing_post.day }}{% endif %}"
+              method="POST" autocomplete="off">
+        {% elif narrowing_keyword %}
+          <form action="{% url 'search:searchByMembers' group_id ct %}?sort={{ order_format }}&keyword={{ narrowing_keyword }}" method="POST">
+        {% elif narrowing_post %}
+          <form action="{% url 'search:searchByMembers' group_id ct %}?sort={{ order_format }}&year={{ narrowing_post.year }}&month={{ narrowing_post.month }}{% if narrowing_post.day %}&day={{ narrowing_post.day }}{% endif %}"
+                method="POST">
+        {% else %}
+          <form action="{% url 'search:searchByMembers' group_id ct %}?sort={{ order_format }}" method="POST">
+        {% endif %}
+
+          {% csrf_token %}
+          <h5 class="mb-3"><b>絞り込み</b></h5>
+
+          {% if isMobile %}
+          <div class="form-group row mx-2">
+            <label for="keyword_form" class="col-md-2 col-form-label col-form-label-sm">キーワード</label>
+            <div class="col-md-10">
+              <input type="search" class="form-control form-control-sm" id="keyword_form" placeholder="例){{ kw_placeholder }}" name="keyword">
+            </div>
+          </div>
+          <div class="form-group row mx-2">
+            <label for="month_picker" class="col-md-2 col-form-label col-form-label-sm">投稿月</label>
+            <div class="col-md-10">
+              <input type="month" class="form-control form-control-sm" value="" id="month_picker" name="post">
+            </div>
+          </div>
+
+          {% else %}
+          <div class="form-group row mx-2">
+            {% for field in form %}
+              <label for="{{ field.name }}" class="col-md-2 col-form-label col-form-label-sm">{{ field.label }}</label>
+              <div class="col-md-10">
+                  {{ field }}
+              </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <hr>
+          <div class="row">
+            <a class="btn btn-light rounded-pill ml-auto mr-3" href="{% url 'search:searchByMembers' group_id ct %}"
+                    style="border: solid 1px silver; border-radius: 5%; background-color: #F4F3F3; color: dimgray">
+              条件を解除
+            </a>
+
+            <div class="rounded mr-4">
+              <button class="btn {{ group }}" type="submit">
+                <span>適用</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% if object_list|length > 0  %}
   <div class="container mt-2 mb-5">
     <div class="row">
       {% for blog in object_list %}
@@ -108,50 +211,57 @@
       {% endfor %}
     </div>
   </div>
-
-
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 offset-md-3 py-2">
-            <nav aria-label="...">
-              <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                  <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" style="color:gray;">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
-                  </li>
-                {%endif %}
-                {% for num in page_obj.paginator.page_range %}
-                  {% if page_obj.number == num %}
-                    <li class="page-item active">
-                      <div class="page_btn" style="height: 100%;">
-                        <a class="page-link {{ group }}" href="" style="border: transparent; height: 101%;">{{ num }}</a>
-                      </div>
-                    </li>
-                  {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}" style="color:gray;">{{ num }}</a></li>
-                  {% endif %}
-                {% endfor %}
-                {% if page_obj.has_next %}
-                  <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" style="color:gray;">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
-                  </li>
-                {% endif %}
-              </ul>
-            </nav>
-          </div>
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 py-2">
+        <nav aria-label="...">
+          <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" style="color:gray;">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            {%endif %}
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <li class="page-item active">
+                  <div class="page_btn" style="height: 100%;">
+                    <a class="page-link {{ group }}" href="" style="border: transparent; height: 101%;">{{ num }}</a>
+                  </div>
+                </li>
+              {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}" style="color:gray;">{{ num }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" style="color:gray;">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
+  {% else %}
+    <div class="container">
+      <div class="alert alert-danger" role="alert">
+        条件に一致するブログが見つかりませんでした。条件を解除する場合は<a href="{% url 'search:searchByMembers' group_id ct %}">こちら</a>。
+      </div>
+      <div class="row justify-content-center">
+        <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/blogNotFound.png' %});"></div>
+      </div>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'js/responsive-paginate.js' %}"></script>
+
 <script>
   $(document).ready(function () {
     $(".pagination").rPage();
