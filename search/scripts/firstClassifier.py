@@ -17,11 +17,10 @@ def firstClassifier(searchText):
             first_result['group_id'] = 2
             if len(splitO) > 3:
                 return urlClassifier(first_result, splitO, query_set)
-        first_result['class'] = '404'
+        first_result['class'] = 'unjustURL'
         return first_result
     else:
-        first_result['input'] = 'name'
-        return first_result
+        return nameClassifier(first_result)
 
 
 def urlClassifier(result, splitO, query_set):
@@ -42,7 +41,27 @@ def urlClassifier(result, splitO, query_set):
             result['class'] = 'searchByMembers'
         else:
             result['class'] = 'searchByBlogs'
+        if 'dy' in query_set:
+            result['dy'] = query_set['dy'][0]
+        else:
+            result['dy'] = None
         return result
     else:
-        result['class'] = '404'
+        result['class'] = 'unjustURL'
         return result
+
+def nameClassifier(result):
+    result['input'] = 'name'
+    if '/' in result['searchText']:
+        result['class'] = 'unjustMember'
+    else:
+        result['class'] = 'appropriate'
+    return result
+
+def dy_insert_hyphen(dy_text):
+    dy = ''
+    if len(dy_text) >= 6:
+        dy += dy_text[0:4] + '-' + dy_text[4:6]
+        if len(dy_text) == 8:
+            dy += '-' + dy_text[6:8]
+    return dy

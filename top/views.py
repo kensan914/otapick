@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from search.scripts.firstClassifier import firstClassifier
+from search.scripts.firstClassifier import firstClassifier, dy_insert_hyphen
 
 
 class BaseView(View):
@@ -17,15 +17,24 @@ class BaseView(View):
                 elif result['class'] == 'searchByLatest':
                     return redirect('search:searchByLatest', group_id=result['group_id'])
                 elif result['class'] == 'searchByBlogs':
-                    return redirect('search:searchByBlogs', group_id=result['group_id'], page=result['page'])
+                    response = redirect('search:searchByBlogs', group_id=result['group_id'], page=result['page'])
+                    if result['dy']:
+                        response['location'] += '?dy=' + result['dy']
+                    return response
                 elif result['class'] == 'searchByMembers':
                     response = redirect('search:searchByMembers', group_id=result['group_id'], ct=result['ct'])
                     response['location'] += '?page=' + str(result['page'])
+                    if result['dy']:
+                        dy = dy_insert_hyphen(result['dy'])
+                        response['location'] += '&post=' + dy
                     return response
                 else:
                     return redirect('search:searchUnjustURL')
             elif result['input'] == 'name':
-                return redirect('search:searchMember', searchText=result['searchText'])
+                if result['class'] == 'appropriate':
+                    return redirect('search:searchMember', searchText=result['searchText'])
+                else:
+                    return redirect('search:searchUnjustMember')
         else:
             self.context['group'] = request.session.get('group', 'keyaki')
             return render(request, self.html_path, self.context)

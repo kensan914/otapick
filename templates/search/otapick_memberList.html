@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
-メンバー検索
+メンバーリスト
 {% endblock %}
 
 {% block extra_css %}
@@ -43,7 +45,7 @@
                 <div class="row justify-content-between">
                   <h3 class="col-md-6 col-12">メンバーリスト</h3>
                   <div class="form-row col-md-6 col-12 justify-content-center">
-                    <input class="col-9 col-sm-9 col-xs-10 form-control autocomplete" type="search" placeholder="Search" aria-label="Search" name="q_member">
+                    <input class="col-9 col-sm-9 col-xs-10 form-control autocomplete" type="search" placeholder="メンバーの名前を入力" aria-label="Search" name="q_member">
                     <div class="search_btn_min">
                       <button type="submit" class="btn my-0 px-3 ml-1 ml-xs-5 {{ group }}">
                         <i class="fas fa-search"></i>
@@ -51,6 +53,8 @@
                     </div>
                   </div>
                 </div>
+                <hr>
+                サポートしているメンバーを一覧表示します。
               </div>
             </form>
           </div>
@@ -74,16 +78,16 @@
             <div class="tab-content" id="myTabContent">
               <div class="tab-pane fade active" id="keyaki" role="tabpanel" aria-labelledby="keyaki-tab">
                 <div class="btn-group　mx-auto ml-1 mt-2 keyaki_initial" role="group">
-                  <a href="{% url 'search:memberList' %}?initial=あ&group=1" class="btn btn-light initial initial_a mb-1">あ</a>
-                  <a href="{% url 'search:memberList' %}?initial=か&group=1" class="btn btn-light initial initial_k mb-1">か</a>
-                  <a href="{% url 'search:memberList' %}?initial=さ&group=1" class="btn btn-light initial initial_s mb-1">さ</a>
-                  <a href="{% url 'search:memberList' %}?initial=た&group=1" class="btn btn-light initial initial_t mb-1">た</a>
-                  <a href="{% url 'search:memberList' %}?initial=な&group=1" class="btn btn-light initial initial_n mb-1">な</a>
-                  <a href="{% url 'search:memberList' %}?initial=は&group=1" class="btn btn-light initial initial_h mb-1">は</a>
-                  <a href="{% url 'search:memberList' %}?initial=ま&group=1" class="btn btn-light initial initial_m mb-1">ま</a>
-                  <a href="{% url 'search:memberList' %}?initial=や&group=1" class="btn btn-light initial initial_y mb-1">や</a>
-                  <a href="{% url 'search:memberList' %}?initial=ら&group=1" class="btn btn-light initial initial_r mb-1">ら</a>
-                  <a href="{% url 'search:memberList' %}?initial=わ&group=1" class="btn btn-light initial initial_w mb-1">わ</a>
+                  <a href="{% url 'search:memberList' %}?initial=あ&s_group=1" class="btn btn-light initial initial_a mb-1">あ</a>
+                  <a href="{% url 'search:memberList' %}?initial=か&s_group=1" class="btn btn-light initial initial_k mb-1">か</a>
+                  <a href="{% url 'search:memberList' %}?initial=さ&s_group=1" class="btn btn-light initial initial_s mb-1">さ</a>
+                  <a href="{% url 'search:memberList' %}?initial=た&s_group=1" class="btn btn-light initial initial_t mb-1">た</a>
+                  <a href="{% url 'search:memberList' %}?initial=な&s_group=1" class="btn btn-light initial initial_n mb-1">な</a>
+                  <a href="{% url 'search:memberList' %}?initial=は&s_group=1" class="btn btn-light initial initial_h mb-1">は</a>
+                  <a href="{% url 'search:memberList' %}?initial=ま&s_group=1" class="btn btn-light initial initial_m mb-1">ま</a>
+                  <a href="{% url 'search:memberList' %}?initial=や&s_group=1" class="btn btn-light initial initial_y mb-1">や</a>
+                  <a href="{% url 'search:memberList' %}?initial=ら&s_group=1" class="btn btn-light initial initial_r mb-1">ら</a>
+                  <a href="{% url 'search:memberList' %}?initial=わ&s_group=1" class="btn btn-light initial initial_w mb-1">わ</a>
                 </div>
                 {% if keyaki_exist %}
                 <table class="table table-hover text-left mt-4 mb-0">
@@ -113,23 +117,28 @@
                   </tbody>
                 </table>
                 {% else %}
-                  <div class="alert alert-danger mt-4" role="alert">
+                  <div class="alert alert-danger mt-3" role="alert">
                     条件に一致するメンバーは見つかりませんでした。
+                  </div>
+                  <div class="container">
+                    <div class="row justify-content-center">
+                      <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/memberNotFound.png' %});"></div>
+                    </div>
                   </div>
                 {% endif %}
               </div>
               <div class="tab-pane fade" id="hinata" role="tabpanel" aria-labelledby="hinata-tab">
                 <div class="btn-group　mx-auto ml-1 mt-2 hinata_initial" role="group">
-                  <a href="{% url 'search:memberList' %}?initial=あ&group=2" class="btn btn-light initial initial_a mb-1">あ</a>
-                  <a href="{% url 'search:memberList' %}?initial=か&group=2" class="btn btn-light initial initial_k mb-1">か</a>
-                  <a href="{% url 'search:memberList' %}?initial=さ&group=2" class="btn btn-light initial initial_s mb-1">さ</a>
-                  <a href="{% url 'search:memberList' %}?initial=た&group=2" class="btn btn-light initial initial_t mb-1">た</a>
-                  <a href="{% url 'search:memberList' %}?initial=な&group=2" class="btn btn-light initial initial_n mb-1">な</a>
-                  <a href="{% url 'search:memberList' %}?initial=は&group=2" class="btn btn-light initial initial_h mb-1">は</a>
-                  <a href="{% url 'search:memberList' %}?initial=ま&group=2" class="btn btn-light initial initial_m mb-1">ま</a>
-                  <a href="{% url 'search:memberList' %}?initial=や&group=2" class="btn btn-light initial initial_y mb-1">や</a>
-                  <a href="{% url 'search:memberList' %}?initial=ら&group=2" class="btn btn-light initial initial_r mb-1">ら</a>
-                  <a href="{% url 'search:memberList' %}?initial=わ&group=2" class="btn btn-light initial initial_w mb-1">わ</a>
+                  <a href="{% url 'search:memberList' %}?initial=あ&s_group=2" class="btn btn-light initial initial_a mb-1">あ</a>
+                  <a href="{% url 'search:memberList' %}?initial=か&s_group=2" class="btn btn-light initial initial_k mb-1">か</a>
+                  <a href="{% url 'search:memberList' %}?initial=さ&s_group=2" class="btn btn-light initial initial_s mb-1">さ</a>
+                  <a href="{% url 'search:memberList' %}?initial=た&s_group=2" class="btn btn-light initial initial_t mb-1">た</a>
+                  <a href="{% url 'search:memberList' %}?initial=な&s_group=2" class="btn btn-light initial initial_n mb-1">な</a>
+                  <a href="{% url 'search:memberList' %}?initial=は&s_group=2" class="btn btn-light initial initial_h mb-1">は</a>
+                  <a href="{% url 'search:memberList' %}?initial=ま&s_group=2" class="btn btn-light initial initial_m mb-1">ま</a>
+                  <a href="{% url 'search:memberList' %}?initial=や&s_group=2" class="btn btn-light initial initial_y mb-1">や</a>
+                  <a href="{% url 'search:memberList' %}?initial=ら&s_group=2" class="btn btn-light initial initial_r mb-1">ら</a>
+                  <a href="{% url 'search:memberList' %}?initial=わ&s_group=2" class="btn btn-light initial initial_w mb-1">わ</a>
                 </div>
                 {% if hinata_exist %}
                 <table class="table table-hover text-left mt-4 mb-0">
@@ -159,8 +168,13 @@
                   </tbody>
                 </table>
                 {% else %}
-                  <div class="alert alert-danger mt-4" role="alert">
+                  <div class="alert alert-danger mt-3" role="alert">
                     条件に一致するメンバーは見つかりませんでした。
+                  </div>
+                  <div class="container">
+                    <div class="row justify-content-center">
+                      <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/memberNotFound.png' %});"></div>
+                    </div>
                   </div>
                 {% endif %}
               </div>
@@ -181,13 +195,21 @@
         {% endif %}
         const $hinata = $('#groupTab a[href="#hinata"]');
         const $keyaki = $('#groupTab a[href="#keyaki"]');
-        {% if selected_group == '2' %}
+        {% if forced_group == '1' %}
+            $keyaki.tab('show');
+        {% elif forced_group == '2' %}
             $hinata.tab('show');
         {% else %}
-            {% if group == 'keyaki' %}
+            {% if selected_group == '1' %}
                 $keyaki.tab('show');
-            {% else %}
+            {% elif selected_group == '2' %}
                 $hinata.tab('show');
+            {% else %}
+                {% if group == 'keyaki' %}
+                    $keyaki.tab('show');
+                {% else %}
+                    $hinata.tab('show');
+                {% endif %}
             {% endif %}
         {% endif %}
     });

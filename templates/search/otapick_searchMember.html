@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
 メンバー検索
 {% endblock %}
@@ -32,7 +34,7 @@
               <div class="row justify-content-between">
                 <h3 class="col-md-6 col-12">メンバー検索</h3>
                 <div class="form-row col-md-6 col-12 justify-content-center">
-                  <input class="col-9 col-sm-9 col-xs-10 form-control autocomplete" type="search" placeholder="Search" aria-label="Search" name="q_member" autocomplete="off">
+                  <input class="col-9 col-sm-9 col-xs-10 form-control autocomplete" type="search" placeholder="メンバーの名前を入力" aria-label="Search" name="q_member" autocomplete="off">
                   <div class="search_btn_min">
                     <button type="submit" class="btn my-0 px-3 ml-1 ml-xs-5 {{ group }}">
                       <i class="fas fa-search"></i>
@@ -46,7 +48,7 @@
       </div>
     </div>
   </div>
-
+{% if appropriate %}
   {% if object_list %}
   <div class="otapick_card_back">
     <div class="otapick_card {{ group }}">
@@ -96,11 +98,45 @@
             <div class="alert alert-danger mt-3" role="alert">
               条件に一致するメンバーは見つかりませんでした。
             </div>
+            <p class="mx-3">
+              入力された文字列に間違いがないか今一度ご確認ください。<br>
+              <i class="fas fa-hand-point-right"></i>
+              現在ニックネームによる検索はサポートしておりません。ご了承ください。<br>
+              <i class="fas fa-hand-point-right"></i>
+              漢字や英語での検索も可能ですが、当サイトではひらがなでの検索を推奨します。<br>
+              <i class="fas fa-hand-point-right"></i>
+              また、検索バーの下にドロップダウンで予測したメンバーをその都度表示(サジェスト)していきます。ぜひご活用ください。<br>
+              <i class="fas fa-hand-point-right"></i>
+              メンバー検索以外にも<a href="{% url 'search:memberList' %}">こちら</a>からメンバーを選択して探すこともできます。
+            </p>
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/memberNotFound.png' %});"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   {% endif %}
+{% else %}
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card my-5">
+        <div class="card-body">
+          <div class="alert alert-danger mt-2" role="alert">
+            申し訳ございません。適切でない文字が検出されたため処理を中断しました。
+          </div>
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/memberNotFound.png' %});"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
 </div>
 
 {% endblock %}

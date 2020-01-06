@@ -23,7 +23,6 @@ def get_tag(progress, url, group_id):
     img_tags = article_tag.find_all('img')
 
     if not img_tags:
-        print('Not Found')
         progress.num = 100
         progress.save()
         quit()
@@ -42,29 +41,31 @@ def get_img_url(progress, url, group_id):
 def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
     img_num = len(img_urls)
     for i, img_url in enumerate(img_urls):
-        time.sleep(1)
+        try:
+            res = requests.get(img_url)
+            res.raise_for_status()
 
-        res = requests.get(img_url)
-        res.raise_for_status()
-
-        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        member_dir_path = str(group_id) + '_' + writer_ct
-        dire_path = os.path.join(base_path, "media", "blog_images", member_dir_path, str(blog_ct))
-        os.makedirs(dire_path, exist_ok=True)
-        path = os.path.join(dire_path, os.path.basename(img_url))
-        img_file = open(path, 'wb')
-        for chunk in res:
-            img_file.write(chunk)
-        if not Image.objects.filter(order=i, publisher=blog).exists():
-            Image.objects.create(
-                order=i,
-                picture=path,
-                publisher=blog,
-            )
-        img_file.close()
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            member_dir_path = str(group_id) + '_' + writer_ct
+            dire_path = os.path.join(base_path, "media", "blog_images", member_dir_path, str(blog_ct))
+            os.makedirs(dire_path, exist_ok=True)
+            path = os.path.join(dire_path, os.path.basename(img_url))
+            img_file = open(path, 'wb')
+            for chunk in res:
+                img_file.write(chunk)
+            if not Image.objects.filter(order=i, publisher=blog).exists():
+                Image.objects.create(
+                    order=i,
+                    picture=path,
+                    publisher=blog,
+                )
+            img_file.close()
+        except:
+            print('Image not Found')
 
         progress.num = (i + 1) * 100 / img_num
         progress.save()
+        time.sleep(1)
 
 
 def update(progress, group_id, blog_ct, writer_ct, blog):
