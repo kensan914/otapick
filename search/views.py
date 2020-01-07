@@ -281,7 +281,7 @@ class AutocompleteView(View):
             match_members = Member.objects.filter(
                 Q(full_kana__iregex=r'^%s' % inputText) | Q(first_kana__iregex=r'^%s' % inputText) |
                 Q(full_kanji__iregex=r'^%s' % inputText) | Q(first_kanji__iregex=r'^%s' % inputText) |
-                Q(full_eng__iregex=r'^%s' % inputText)
+                Q(full_eng__iregex=r'^%s' % inputText) | Q(first_eng__iregex=r'^%s' % inputText)
             )
             for member in match_members:
                 member_data = {

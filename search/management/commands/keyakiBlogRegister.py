@@ -82,6 +82,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         sleepTime_membertransition = 1
 
-        for member in Member.objects.filter(belonging_group__group_id=1, ):
+        for member in Member.objects.filter(belonging_group__group_id=1):
             blogRegisterByM_keyaki(member, allCheck=False)
             time.sleep(sleepTime_membertransition)
