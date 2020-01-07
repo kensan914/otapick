@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from ...models import Member
+from search.models import Member, Group
 
 
 class Command(BaseCommand):
@@ -10,15 +10,14 @@ class Command(BaseCommand):
         lines = fin.readlines()
         fin.close()
 
-        keyList = ['id', 'last_kanji', 'first_kanji', 'full_kanji', 'last_kana', 'first_kana', 'full_kana', 'filename',
-                   'group_id']
-
+        keyList = ['id', 'last_kanji', 'first_kanji', 'full_kanji', 'last_kana', 'first_kana', 'full_kana', 'last_eng',
+                   'first_eng', 'group_id']
         for line in lines:
             member = {}
             line = line.replace('\n', '')
             for key, val in zip(keyList, list(line.split(' '))):
                 member[key] = val
-
+            print(member)
             if not Member.objects.filter(ct=member['id'], belonging_group__group_id=int(member['group_id'])).exists():
                 Member.objects.create(
                     ct=member['id'],
@@ -28,6 +27,9 @@ class Command(BaseCommand):
                     last_kana=member['last_kana'],
                     first_kana=member['first_kana'],
                     full_kana=member['full_kana'],
-                    belonging_group__group_id=int(member['group_id'])
+                    last_eng=member['last_eng'],
+                    first_eng=member['first_eng'],
+                    full_eng=member['last_eng']+member['first_eng'],
+                    belonging_group=Group.objects.get(group_id=int(member['group_id'])),
                 )
                 print(member['full_kanji'], 'is registered!')

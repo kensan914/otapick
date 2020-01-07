@@ -25,7 +25,9 @@ class Member(models.Model):
     last_kana = models.CharField(verbose_name='姓_かな', max_length=20)
     first_kana = models.CharField(verbose_name='名_かな', max_length=20)
     full_kana = models.CharField(verbose_name='氏名_かな', max_length=40)
-    full_eng = models.CharField(verbose_name='氏名_英', max_length=50, null=True)
+    last_eng = models.CharField(verbose_name='姓_英', max_length=30, default='')
+    first_eng = models.CharField(verbose_name='名_英', max_length=30, default='')
+    full_eng = models.CharField(verbose_name='氏名_英', max_length=50, default='')
     belonging_group = models.ForeignKey(Group, verbose_name='所属グループ', on_delete=models.PROTECT)
 
     def __str__(self):
