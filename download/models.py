@@ -4,13 +4,9 @@ import os
 
 
 def get_upload_to(instance, filename):
-    return os.path.join('blog_images/',
-                        str(instance.publisher.writer.belonging_group.group_id) + '_' +
-                        str(instance.publisher.writer.ct),
-                        str(instance.publisher.blog_ct),
-                        filename,
-                        )
-
+    media_dir_1 = str(instance.publisher.writer.belonging_group.group_id) + '_' + str(instance.publisher.writer.ct)
+    media_dir_2 = str(instance.publisher.blog_ct)
+    return 'blog_images/{0}/{1}/{2}' .format(media_dir_1, media_dir_2, filename)
 
 class Image(models.Model):
     class Meta:

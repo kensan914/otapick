@@ -416,7 +416,7 @@ footer.footer {
 }
 
 .ui-autocomplete{
-    z-index: 1051;
+    z-index: 9999 !important;
 }
 
 .notFoundBox {

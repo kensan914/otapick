@@ -1,11 +1,11 @@
 import time
-
 import requests
 import os
 import urllib3
 from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
 from .models import Image
+from config import settings
 
 
 def get_tag(progress, url, group_id):
@@ -45,18 +45,21 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
             res = requests.get(img_url)
             res.raise_for_status()
 
-            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            base_path = settings.BASE_DIR
             member_dir_path = str(group_id) + '_' + writer_ct
-            dire_path = os.path.join(base_path, "media", "blog_images", member_dir_path, str(blog_ct))
+            media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
+            dire_path = os.path.join(base_path, "media", media_dir_path)
             os.makedirs(dire_path, exist_ok=True)
             path = os.path.join(dire_path, os.path.basename(img_url))
+            media = os.path.join(media_dir_path, os.path.basename(img_url))
             img_file = open(path, 'wb')
             for chunk in res:
                 img_file.write(chunk)
             if not Image.objects.filter(order=i, publisher=blog).exists():
                 Image.objects.create(
                     order=i,
-                    picture=path,
+                    picture=media,
                     publisher=blog,
                 )
             img_file.close()

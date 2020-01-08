@@ -42,15 +42,14 @@ def blogRegisterByM_keyaki(member, allCheck):
 
         url = base_url + str(page)
         r = http.request('GET', url)
-        soup = BeautifulSoup(r.data, 'html.parser')
-
+        soup = BeautifulSoup(r.data, 'lxml')
         blogs = soup.select('article')
         if not bool(blogs):
             print("finished!!")
             break
 
         for blog in blogs:
-            bottomul_tag = blog.select_one('div.box-bottom > ul')
+            bottomul_tag = blog.select_one('div.box-bottom ul')
             bottomli_tags = bottomul_tag.select('li')
             blog_url = bottomli_tags[1].find('a').get('href')
 

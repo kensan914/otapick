@@ -27,7 +27,7 @@ SECRET_KEY = 'ucj1y2hviu26_^lzxp0n=ct-qvcp%5w%aih6r=-!$znlm$g(#+'
 DEBUG = True
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['192.168.11.7', ' localhost ', ' 0.0.0.0 ']
+ALLOWED_HOSTS = ["192.168.11.46"]
 
 
 # Application definition
@@ -142,5 +142,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # media
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/home/otapick/{}/media'.format(PROJECT_NAME)

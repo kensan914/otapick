@@ -17,7 +17,6 @@ class Command(BaseCommand):
             line = line.replace('\n', '')
             for key, val in zip(keyList, list(line.split(' '))):
                 member[key] = val
-            print(member)
             if not Member.objects.filter(ct=member['id'], belonging_group__group_id=int(member['group_id'])).exists():
                 Member.objects.create(
                     ct=member['id'],
