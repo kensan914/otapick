@@ -12,6 +12,8 @@ from config import settings
 
 def get_tag(progress, url, group_id):
     global article_tag
+    #テスト　
+    print('get_tagスタート。。')
     urllib3.disable_warnings(InsecureRequestWarning)
     http = urllib3.PoolManager()
     r = http.request('GET', url)
@@ -43,49 +45,50 @@ def get_img_url(progress, url, group_id):
 def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
     img_num = len(img_urls)
 
+    #テスト
     print('save_imgスタート。。')
     for i, img_url in enumerate(img_urls):
-        try:
-            #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            # base_path = settings.BASE_DIR
+        # try:
+        #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # base_path = settings.BASE_DIR
 
-            member_dir_path = str(group_id) + '_' + writer_ct
-            media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
+        member_dir_path = str(group_id) + '_' + writer_ct
+        media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
 
-            # dire_path = os.path.join(base_path, "media", media_dir_path)
-            dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
+        # dire_path = os.path.join(base_path, "media", media_dir_path)
+        dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
 
-            os.makedirs(dire_path, exist_ok=True)
-            path = os.path.join(dire_path, os.path.basename(img_url))
-            media = os.path.join(media_dir_path, os.path.basename(img_url))
+        os.makedirs(dire_path, exist_ok=True)
+        path = os.path.join(dire_path, os.path.basename(img_url))
+        media = os.path.join(media_dir_path, os.path.basename(img_url))
 
-            # res = requests.get(img_url)
-            # res.raise_for_status()
+        # res = requests.get(img_url)
+        # res.raise_for_status()
 
-            # with urllib.request.urlopen(img_url) as web_file:
-            #     data = web_file.read()
-            #     with open(path, mode='wb') as local_file:
-            #         local_file.write(data)
-            img_file = open(path, 'wb')
+        # with urllib.request.urlopen(img_url) as web_file:
+        #     data = web_file.read()
+        #     with open(path, mode='wb') as local_file:
+        #         local_file.write(data)
+        img_file = open(path, 'wb')
 
-            response = requests.get(img_url)
-            image = response.content
+        response = requests.get(img_url)
+        image = response.content
 
-            img_file.write(image)
-            # for chunk in res:
-            #     img_file.write(chunk)
+        img_file.write(image)
+        # for chunk in res:
+        #     img_file.write(chunk)
 
-            if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
-                #テスト
-                print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
-                Image.objects.create(
-                    order=i,
-                    picture=media,
-                    publisher_id=blog.id,
-                )
-            img_file.close()
-        except:
-            print('Image not Found')
+        if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
+            #テスト
+            print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
+            Image.objects.create(
+                order=i,
+                picture=media,
+                publisher_id=blog.id,
+            )
+        img_file.close()
+        # except:
+        #     print('Image not Found')
 
         progress.num = (i + 1) * 100 / img_num
         progress.save()
