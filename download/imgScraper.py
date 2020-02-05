@@ -1,3 +1,4 @@
+import threading
 import time
 import urllib
 import requests
@@ -75,6 +76,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
             #     img_file.write(chunk)
 
             if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
+                #テスト
                 print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
                 Image.objects.create(
                     order=i,
@@ -96,4 +98,6 @@ def update(progress, group_id, blog_ct, writer_ct, blog):
         blog_url = "https://www.keyakizaka46.com/s/k46o/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"
     elif group_id == 2:
         blog_url = "https://www.hinatazaka46.com/s/official/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"
+    # テスト
+    print('現在のスレッド数', threading.active_count())
     save_img(get_img_url(progress, blog_url, group_id), progress, group_id, blog_ct, writer_ct, blog)
