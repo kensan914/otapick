@@ -51,7 +51,6 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
 
             # dire_path = os.path.join(base_path, "media", media_dir_path)
             dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
-            print('dire_path: ', dire_path)
 
             os.makedirs(dire_path, exist_ok=True)
             path = os.path.join(dire_path, os.path.basename(img_url))
