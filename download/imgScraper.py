@@ -64,12 +64,12 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
             #     data = web_file.read()
             #     with open(path, mode='wb') as local_file:
             #         local_file.write(data)
+            img_file = open(path, 'wb')
+
             response = requests.get(img_url)
             image = response.content
-            with open(path, "wb") as img_file:
-                img_file.write(image)
 
-            # img_file = open(path, 'wb')
+            img_file.write(image)
             # for chunk in res:
             #     img_file.write(chunk)
 
@@ -79,7 +79,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
                     picture=media,
                     publisher_id=blog.id,
                 )
-            # img_file.close()
+            img_file.close()
         except:
             print('Image not Found')
 
