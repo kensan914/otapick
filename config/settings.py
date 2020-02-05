@@ -24,10 +24,10 @@ PROJECT_NAME = os.path.basename(BASE_DIR)
 SECRET_KEY = 'ucj1y2hviu26_^lzxp0n=ct-qvcp%5w%aih6r=-!$znlm$g(#+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-#ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ["192.168.11.46"]
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["192.168.11.46"]
 
 
 # Application definition
@@ -138,9 +138,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
+STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
 
 # media
 MEDIA_URL = '/media/'
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_ROOT = '/home/otapick/{}/media'.format(PROJECT_NAME)
+MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)

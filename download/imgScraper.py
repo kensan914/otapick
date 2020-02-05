@@ -46,10 +46,14 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
             res.raise_for_status()
 
             #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            base_path = settings.BASE_DIR
+            # base_path = settings.BASE_DIR
+
             member_dir_path = str(group_id) + '_' + writer_ct
             media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
-            dire_path = os.path.join(base_path, "media", media_dir_path)
+
+            # dire_path = os.path.join(base_path, "media", media_dir_path)
+            dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
+
             os.makedirs(dire_path, exist_ok=True)
             path = os.path.join(dire_path, os.path.basename(img_url))
             media = os.path.join(media_dir_path, os.path.basename(img_url))
