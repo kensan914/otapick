@@ -41,6 +41,8 @@ def get_img_url(progress, url, group_id):
 
 def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
     img_num = len(img_urls)
+
+    print('save_imgスタート。。')
     for i, img_url in enumerate(img_urls):
         try:
             #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
