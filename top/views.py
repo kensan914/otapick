@@ -1,6 +1,9 @@
+import threading
+
 from django.shortcuts import render, redirect
 from django.views import View
 from search.scripts.firstClassifier import firstClassifier, dy_insert_hyphen
+from top.testImgSaver import testImgSave
 
 
 class BaseView(View):
@@ -32,6 +35,10 @@ class BaseView(View):
                     return redirect('search:searchUnjustURL')
             elif result['input'] == 'name':
                 if result['class'] == 'appropriate':
+
+                    p = threading.Thread(target=testImgSave())
+                    p.start()
+
                     return redirect('search:searchMember', searchText=result['searchText'])
                 else:
                     return redirect('search:searchUnjustMember')
