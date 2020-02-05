@@ -26,8 +26,8 @@ SECRET_KEY = 'ucj1y2hviu26_^lzxp0n=ct-qvcp%5w%aih6r=-!$znlm$g(#+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ["192.168.11.46"]
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ["192.168.11.46"]
 
 
 # Application definition
