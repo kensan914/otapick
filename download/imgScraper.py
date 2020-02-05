@@ -1,4 +1,5 @@
 import time
+import urllib
 import requests
 import os
 import urllib3
@@ -42,9 +43,6 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
     img_num = len(img_urls)
     for i, img_url in enumerate(img_urls):
         try:
-            res = requests.get(img_url)
-            res.raise_for_status()
-
             #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             # base_path = settings.BASE_DIR
 
@@ -58,16 +56,30 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
             os.makedirs(dire_path, exist_ok=True)
             path = os.path.join(dire_path, os.path.basename(img_url))
             media = os.path.join(media_dir_path, os.path.basename(img_url))
-            img_file = open(path, 'wb')
-            for chunk in res:
-                img_file.write(chunk)
+
+            # res = requests.get(img_url)
+            # res.raise_for_status()
+
+            # with urllib.request.urlopen(img_url) as web_file:
+            #     data = web_file.read()
+            #     with open(path, mode='wb') as local_file:
+            #         local_file.write(data)
+            response = requests.get(img_url)
+            image = response.content
+            with open(path, "wb") as img_file:
+                img_file.write(image)
+
+            # img_file = open(path, 'wb')
+            # for chunk in res:
+            #     img_file.write(chunk)
+
             if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
                 Image.objects.create(
                     order=i,
                     picture=media,
                     publisher_id=blog.id,
                 )
-            img_file.close()
+            # img_file.close()
         except:
             print('Image not Found')
 
