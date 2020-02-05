@@ -4,6 +4,8 @@ import urllib3
 from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
 from config import settings
+from download.models import Progress, Image
+from search.models import Blog
 
 
 def get_tag(url, group_id):
@@ -31,27 +33,27 @@ def get_img_url(url, group_id):
     return url_list
 
 
-def save_img(img_urls, group_id, blog_ct, writer_ct):
+def save_img(img_urls, group_id, blog_ct, writer_ct, progress):
     img_num = len(img_urls)
     for i, img_url in enumerate(img_urls):
-        #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        # base_path = settings.BASE_DIR
-        member_dir_path = str(group_id) + '_' + writer_ct
-        media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
-        # dire_path = os.path.join(base_path, "media", media_dir_path)
-        dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
-
-        os.makedirs(dire_path, exist_ok=True)
-        path = os.path.join(dire_path, os.path.basename(img_url))
-        media = os.path.join(media_dir_path, os.path.basename(img_url))
-
-        # res = requests.get(img_url)
-        # res.raise_for_status()
-
-        # with urllib.request.urlopen(img_url) as web_file:
-        #     data = web_file.read()
-        #     with open(path, mode='wb') as local_file:
-        #         local_file.write(data)
+        # #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # # base_path = settings.BASE_DIR
+        # member_dir_path = str(group_id) + '_' + writer_ct
+        # media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
+        # # dire_path = os.path.join(base_path, "media", media_dir_path)
+        # dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
+        #
+        # os.makedirs(dire_path, exist_ok=True)
+        # path = os.path.join(dire_path, os.path.basename(img_url))
+        # media = os.path.join(media_dir_path, os.path.basename(img_url))
+        #
+        # # res = requests.get(img_url)
+        # # res.raise_for_status()
+        #
+        # # with urllib.request.urlopen(img_url) as web_file:
+        # #     data = web_file.read()
+        # #     with open(path, mode='wb') as local_file:
+        # #         local_file.write(data)
         try:
             os.makedirs('/var/www/otapick/media/blog_images/testes', exist_ok=True)
             #リセット
@@ -65,26 +67,28 @@ def save_img(img_urls, group_id, blog_ct, writer_ct):
             # for chunk in res:
             #     img_file.write(chunk)
 
-            # if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
-            #     Image.objects.create(
-            #         order=i,
-            #         picture=media,
-            #         publisher_id=blog.id,
-            #     )
+            if not Image.objects.filter(order=i, publisher_id=1).exists():
+                Image.objects.create(
+                    order=i,
+                    picture=path,
+                    publisher_id=1,
+                )
             img_file.close()
         except:
             print(img_url)
             print('Image not Found')
 
-        # progress.num = (i + 1) * 100 / img_num
-        # progress.save()
+        progress.num = (i + 1) * 100 / img_num
+        progress.save()
 
 def testImgSave():
     blog_url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/30958?ima=0000&cd=member'
     group_id = 1
     blog_ct = 30958
     writer_ct = '12'
-    save_img(get_img_url(blog_url, group_id), group_id, blog_ct, writer_ct)
+    progress = Progress.objects.create(target_id=1)
+    # print(Blog.objects.filter(id=progress.target_id).exists())
+    save_img(get_img_url(blog_url, group_id), group_id, blog_ct, writer_ct, progress)
 
     # os.makedirs('/var/www/otapick/media/blog_images/testes', exist_ok=True)
     #

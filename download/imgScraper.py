@@ -73,6 +73,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
             #     img_file.write(chunk)
 
             if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
+                print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
                 Image.objects.create(
                     order=i,
                     picture=media,
