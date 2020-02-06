@@ -88,23 +88,26 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         img_file = open(path, 'wb')
 
         # テスト
-        print('save_imgスタート。。2')
+        print('save_imgスタート。。2.1')
 
         urllib3.disable_warnings(InsecureRequestWarning)
+
+        # テスト
+        print('save_imgスタート。。2.2')
         response = requests.get(img_url, verify=False)
 
         # テスト
-        print('save_imgスタート。。2')
+        print('save_imgスタート。。3')
         image = response.content
         # テスト
-        print('save_imgスタート。。3')
+        print('save_imgスタート。。4')
 
         img_file.write(image)
         # for chunk in res:
         #     img_file.write(chunk)
 
         # テスト
-        print('save_imgスタート。。4')
+        print('save_imgスタート。。5')
 
         if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
             #テスト
