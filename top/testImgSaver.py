@@ -90,7 +90,7 @@ def save_img(img_urls, group_id, blog_ct, writer_ct, progress):
 
 def testImgSave(blog_url, group_id, blog_ct, writer_ct):
     print('はじまったよーー')
-    print('blog_ct=',blog_ct)
+    print('blog_ct=',type(blog_ct))
     print('のid', Blog.objects.get(blog_ct=blog_ct).id)
 
     # progress = Progress.objects.get(target_id=1)
