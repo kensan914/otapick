@@ -14,25 +14,38 @@ import certifi
 def get_tag(progress, url, group_id):
     global article_tag
     #テスト　
-    print('get_tagスタート。。')
+    print('get_tagスタート。。1')
     urllib3.disable_warnings(InsecureRequestWarning)
     http = urllib3.PoolManager(
         cert_reqs='CERT_REQUIRED',
         ca_certs=certifi.where())
+
+    # テスト　
+    print('get_tagスタート。。2')
     r = http.request('GET', url)
+
+    # テスト　
+    print('get_tagスタート。。3')
     soup = BeautifulSoup(r.data, 'html.parser')
+
+    # テスト　
+    print('get_tagスタート。。4')
 
     if group_id == 1:
         article_tag = soup.find('div', class_='box-article')
     elif group_id == 2:
         article_tag = soup.find('div', class_='c-blog-article__text')
 
+    # テスト　
+    print('get_tagスタート。。5')
     img_tags = article_tag.find_all('img')
 
     if not img_tags:
         progress.num = 100
         progress.save()
         quit()
+    # テスト　
+    print('get_tagスタート。。6')
 
     return img_tags
 
@@ -49,7 +62,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
     img_num = len(img_urls)
 
     #テスト
-    print('save_imgスタート。。')
+    print('save_imgスタート。。1...', img_num)
     for i, img_url in enumerate(img_urls):
         # try:
         #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -74,13 +87,24 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         #         local_file.write(data)
         img_file = open(path, 'wb')
 
+        # テスト
+        print('save_imgスタート。。2')
+
         urllib3.disable_warnings(InsecureRequestWarning)
         response = requests.get(img_url, verify=False)
+
+        # テスト
+        print('save_imgスタート。。2')
         image = response.content
+        # テスト
+        print('save_imgスタート。。3')
 
         img_file.write(image)
         # for chunk in res:
         #     img_file.write(chunk)
+
+        # テスト
+        print('save_imgスタート。。4')
 
         if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
             #テスト
