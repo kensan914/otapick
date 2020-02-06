@@ -1,4 +1,5 @@
 import threading
+from concurrent import futures
 
 from django.shortcuts import render, redirect
 from django.views import View
@@ -36,8 +37,13 @@ class BaseView(View):
             elif result['input'] == 'name':
                 if result['class'] == 'appropriate':
 
-                    p = threading.Thread(target=testImgSave())
-                    p.start()
+                    #テスト
+                    # p = threading.Thread(target=testImgSave())
+                    # p.start()
+                    executor = futures.ThreadPoolExecutor()
+                    executor.submit(testImgSave)
+                    print("Threads: {}".format(len(executor._threads)))
+                    executor.shutdown(wait=False)
 
                     return redirect('search:searchMember', searchText=result['searchText'])
                 else:
