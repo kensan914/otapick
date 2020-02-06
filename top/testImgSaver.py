@@ -86,11 +86,16 @@ def save_img(img_urls, group_id, blog_ct, writer_ct, progress):
         time.sleep(3)
 
 def testImgSave():
+    print('はじまったよーー')
     blog_url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/30958?ima=0000&cd=member'
     group_id = 1
     blog_ct = 30958
     writer_ct = '12'
-    progress = Progress.objects.get(target_id=1)
+    # progress = Progress.objects.get(target_id=1)
+    if Progress.objects.filter(target_id=Blog.objects.get(blog_ct=blog_ct).id).exists():
+        progress = Progress.objects.get(target_id=Blog.objects.get(blog_ct=blog_ct).id)
+    else:
+        progress = Progress.objects.create(target_id=Blog.objects.get(blog_ct=blog_ct).id)
     # print(Blog.objects.filter(id=progress.target_id).exists())
     save_img(get_img_url(blog_url, group_id), group_id, blog_ct, writer_ct, progress)
 
