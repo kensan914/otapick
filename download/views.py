@@ -2,7 +2,7 @@ import os
 import threading
 from concurrent import futures
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from download.imgScraper import update
 from download.scripts.downloadViewFunc import blog_getter, render_progress
 from top.views import BaseView
@@ -41,7 +41,10 @@ class DownloadView(BaseView):
                     executor.shutdown(wait=False)
 
                     print('gogo れんだー')
-                    return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
+
+                    #テスト
+                    # return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
+                    return redirect('search:searchUnjustMember')
 
                 elif not Progress.objects.get(target_id=blog.id).ready:
                     progress = Progress.objects.get(target_id=blog.id)
