@@ -20,18 +20,19 @@ def get_tag(progress, url, group_id):
         cert_reqs='CERT_REQUIRED',
         ca_certs=certifi.where())
 
-    # テスト　
+    # テスト　#1分以上
     print('get_tagスタート。。2')
     r = http.request('GET', url)
     print('rの大きさ', len(r.data))
 
-    # テスト #1分以上　
+    # テスト
     print('get_tagスタート。。3.1')
     r_data = r.data
     print('get_tagスタート。。3.2')
+    # 1分以上　
     soup = BeautifulSoup(r_data, 'html.parser')
 
-    # テスト　
+    # テスト　#ちょいかかり
     print('get_tagスタート。。4')
 
     if group_id == 1:
@@ -67,7 +68,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
     #テスト
     print('save_imgスタート。。1...', img_num)
     for i, img_url in enumerate(img_urls):
-        # try:
+
         #base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # base_path = settings.BASE_DIR
 
@@ -90,39 +91,40 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         #         local_file.write(data)
         img_file = open(path, 'wb')
 
-        # テスト
-        print('save_imgスタート。。2.1')
+        try:
+            # テスト
+            print('save_imgスタート。。2.1')
 
-        urllib3.disable_warnings(InsecureRequestWarning)
+            urllib3.disable_warnings(InsecureRequestWarning)
 
-        # テスト
-        print('save_imgスタート。。2.2')
-        response = requests.get(img_url, verify=False)
+            # テスト　#鬼かかり
+            print('save_imgスタート。。2.2')
+            response = requests.get(img_url, verify=False)
 
-        # テスト
-        print('save_imgスタート。。3')
-        image = response.content
-        # テスト
-        print('save_imgスタート。。4')
+            # テスト
+            print('save_imgスタート。。3')
+            image = response.content
+            # テスト
+            print('save_imgスタート。。4')
 
-        img_file.write(image)
-        # for chunk in res:
-        #     img_file.write(chunk)
+            img_file.write(image)
+            # for chunk in res:
+            #     img_file.write(chunk)
 
-        # テスト
-        print('save_imgスタート。。5')
+            # テスト
+            print('save_imgスタート。。5')
 
-        if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
-            #テスト
-            print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
-            Image.objects.create(
-                order=i,
-                picture=media,
-                publisher_id=blog.id,
-            )
-        img_file.close()
-        # except:
-        #     print('Image not Found')
+            if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
+                #テスト
+                print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
+                Image.objects.create(
+                    order=i,
+                    picture=media,
+                    publisher_id=blog.id,
+                )
+            img_file.close()
+        except:
+            print('Image not Found')
 
         progress.num = (i + 1) * 100 / img_num
         progress.save()
