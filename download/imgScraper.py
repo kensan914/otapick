@@ -28,7 +28,7 @@ def get_tag(progress, url, group_id):
     print('get_tagスタート。。3.1')
     r_data = r.data
     print('get_tagスタート。。3.2')
-    soup = BeautifulSoup(r.data, 'html.parser')
+    soup = BeautifulSoup(r_data, 'html.parser')
 
     # テスト　
     print('get_tagスタート。。4')
