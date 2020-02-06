@@ -74,7 +74,8 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         #         local_file.write(data)
         img_file = open(path, 'wb')
 
-        response = requests.get(img_url)
+        urllib3.disable_warnings(InsecureRequestWarning)
+        response = requests.get(img_url, verify=False)
         image = response.content
 
         img_file.write(image)
