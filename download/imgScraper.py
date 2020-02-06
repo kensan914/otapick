@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
 from .models import Image
 from config import settings
+import certifi
 
 
 def get_tag(progress, url, group_id):
@@ -15,7 +16,9 @@ def get_tag(progress, url, group_id):
     #テスト　
     print('get_tagスタート。。')
     urllib3.disable_warnings(InsecureRequestWarning)
-    http = urllib3.PoolManager()
+    http = urllib3.PoolManager(
+        cert_reqs='CERT_REQUIRED',
+        ca_certs=certifi.where())
     r = http.request('GET', url)
     soup = BeautifulSoup(r.data, 'html.parser')
 
