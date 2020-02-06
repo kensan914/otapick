@@ -89,18 +89,19 @@ def save_img(img_urls, group_id, blog_ct, writer_ct, progress):
         time.sleep(3)
 
 def testImgSave(blog_url, group_id, blog_ct, writer_ct):
+    blog_ct2 = blog_ct
     print('はじまったよーー')
     print('blog_ct=',type(blog_ct))
-    print('のid', Blog.objects.get(blog_ct=blog_ct).id)
+    print('のid', Blog.objects.get(blog_ct=blog_ct2).id)
 
     # progress = Progress.objects.get(target_id=1)
-    if Progress.objects.filter(target_id=Blog.objects.get(blog_ct=blog_ct).id).exists():
-        print(Blog.objects.get(blog_ct=blog_ct), 'のプログレスある')
-        progress = Progress.objects.get(target_id=Blog.objects.get(blog_ct=blog_ct).id)
+    if Progress.objects.filter(target_id=Blog.objects.get(blog_ct=blog_ct2).id).exists():
+        print(Blog.objects.get(blog_ct=blog_ct2), 'のプログレスある')
+        progress = Progress.objects.get(target_id=Blog.objects.get(blog_ct=blog_ct2).id)
         print('got.')
     else:
-        print(Blog.objects.get(blog_ct=blog_ct), 'のプログレスない')
-        progress = Progress.objects.create(target_id=Blog.objects.get(blog_ct=blog_ct).id)
+        print(Blog.objects.get(blog_ct=blog_ct2), 'のプログレスない')
+        progress = Progress.objects.create(target_id=Blog.objects.get(blog_ct=blog_ct2).id)
         print('created.')
     print('はじまった？')
     # print(Blog.objects.filter(id=progress.target_id).exists())
