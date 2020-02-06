@@ -1,4 +1,6 @@
 import os
+import time
+
 import requests
 import urllib3
 from bs4 import BeautifulSoup
@@ -81,6 +83,7 @@ def save_img(img_urls, group_id, blog_ct, writer_ct, progress):
 
         progress.num = (i + 1) * 100 / img_num
         progress.save()
+        time.sleep(3)
 
 def testImgSave():
     blog_url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/30958?ima=0000&cd=member'

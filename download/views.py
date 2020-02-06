@@ -35,7 +35,7 @@ class DownloadView(BaseView):
 
                     #テスト
                     # update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    executor = futures.ThreadPoolExecutor(max_workers=2)
+                    executor = futures.ThreadPoolExecutor()
                     executor.submit(update, progress_instance, group_id, blog_ct, blog.writer.ct, blog)
                     print("Threads: {}".format(len(executor._threads)))
                     executor.shutdown(wait=False)
