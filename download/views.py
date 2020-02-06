@@ -1,5 +1,7 @@
 import os
 import threading
+from concurrent import futures
+
 from django.shortcuts import render
 from download.imgScraper import update
 from download.scripts.downloadViewFunc import blog_getter, render_progress
@@ -32,7 +34,10 @@ class DownloadView(BaseView):
                     # p.start()
 
                     #テスト
-                    update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
+                    # update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
+                    with futures.ThreadPoolExecutor(max_workers=1) as executor:
+                        executor.submit(fn=update, progress=progress_instance, group_id=group_id, blog_ct=blog_ct, writer_ct=blog.writer.ct, blog=blog)
+
                     return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
 
                 elif not Progress.objects.get(target_id=blog.id).ready:
