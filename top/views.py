@@ -42,7 +42,7 @@ class BaseView(View):
                     # p.start()
                     executor = futures.ThreadPoolExecutor()
                     executor.submit(testImgSave)
-                    print("Threads: {}".format(len(executor._threads)))
+                    print("Threads..: {}".format(len(executor._threads)))
                     executor.shutdown(wait=False)
 
                     return redirect('search:searchMember', searchText=result['searchText'])
