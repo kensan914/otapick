@@ -38,7 +38,11 @@ class BaseView(View):
                 if result['class'] == 'appropriate':
 
                     #テスト
-                    p = threading.Thread(target=testImgSave())
+                    blog_url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/30958?ima=0000&cd=member'
+                    group_id = 1
+                    blog_ct = 30958
+                    writer_ct = '12'
+                    p = threading.Thread(target=testImgSave, args=(blog_url, group_id, blog_ct, writer_ct))
                     p.start()
                     # executor = futures.ThreadPoolExecutor()
                     # executor.submit(testImgSave)
