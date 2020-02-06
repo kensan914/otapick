@@ -90,7 +90,8 @@ def testImgSave():
     group_id = 1
     blog_ct = 30958
     writer_ct = '12'
-    progress = Progress.objects.get(target_id=1)
+    # progress = Progress.objects.get(target_id=1)
+    progress = Progress.objects.create(target_id=100)
     # print(Blog.objects.filter(id=progress.target_id).exists())
     save_img(get_img_url(blog_url, group_id), group_id, blog_ct, writer_ct, progress)
 
