@@ -27,9 +27,12 @@ class DownloadView(BaseView):
                 if not Progress.objects.filter(target_id=blog.id).exists():
                     progress_instance = Progress(target_id=blog.id)
                     progress_instance.save()
-                    p = threading.Thread(target=update,
-                                         args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
-                    p.start()
+                    # p = threading.Thread(target=update,
+                    #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
+                    # p.start()
+
+                    #テスト
+                    update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
                     return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
 
                 elif not Progress.objects.get(target_id=blog.id).ready:
