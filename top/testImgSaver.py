@@ -13,6 +13,7 @@ def get_tag(url, group_id):
     urllib3.disable_warnings(InsecureRequestWarning)
     http = urllib3.PoolManager()
     r = http.request('GET', url)
+    print('rの大きさ', len(r.data))
     soup = BeautifulSoup(r.data, 'html.parser')
 
     if group_id == 1:

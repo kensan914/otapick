@@ -23,6 +23,7 @@ def get_tag(progress, url, group_id):
     # テスト　
     print('get_tagスタート。。2')
     r = http.request('GET', url)
+    print('rの大きさ', len(r.data))
 
     # テスト #1分以上　
     print('get_tagスタート。。3.1')
