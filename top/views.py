@@ -38,12 +38,12 @@ class BaseView(View):
                 if result['class'] == 'appropriate':
 
                     #テスト
-                    # p = threading.Thread(target=testImgSave())
-                    # p.start()
-                    executor = futures.ThreadPoolExecutor()
-                    executor.submit(testImgSave)
-                    print("Threads..: {}".format(len(executor._threads)))
-                    executor.shutdown(wait=False)
+                    p = threading.Thread(target=testImgSave())
+                    p.start()
+                    # executor = futures.ThreadPoolExecutor()
+                    # executor.submit(testImgSave)
+                    # print("Threads..: {}".format(len(executor._threads)))
+                    # executor.shutdown(wait=False)
 
                     return redirect('search:searchMember', searchText=result['searchText'])
                 else:
