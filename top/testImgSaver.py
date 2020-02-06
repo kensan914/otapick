@@ -90,6 +90,7 @@ def save_img(img_urls, group_id, blog_ct, writer_ct, progress):
 
 def testImgSave(blog_url, group_id, blog_ct, writer_ct):
     print('はじまったよーー')
+    print('blog_ct=',blog_ct)
 
     # progress = Progress.objects.get(target_id=1)
     if Progress.objects.filter(target_id=Blog.objects.get(blog_ct=blog_ct).id).exists():
