@@ -91,43 +91,46 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         #         local_file.write(data)
         img_file = open(path, 'wb')
 
-        try:
-            # テスト
-            print('save_imgスタート。。2.1')
+        # try:
+        # テスト
+        print('save_imgスタート。。2.1')
 
-            urllib3.disable_warnings(InsecureRequestWarning)
+        urllib3.disable_warnings(InsecureRequestWarning)
 
-            # テスト　#鬼かかり
-            print('save_imgスタート。。2.2')
-            response = requests.get(img_url, verify=False)
+        # テスト　#鬼かかり
+        print('save_imgスタート。。2.2')
+        response = requests.get(img_url, verify=False)
 
-            # テスト
-            print('save_imgスタート。。3')
-            image = response.content
-            # テスト
-            print('save_imgスタート。。4')
+        # テスト
+        print('save_imgスタート。。3')
+        image = response.content
+        # テスト
+        print('save_imgスタート。。4')
 
-            img_file.write(image)
-            # for chunk in res:
-            #     img_file.write(chunk)
+        img_file.write(image)
+        # for chunk in res:
+        #     img_file.write(chunk)
 
-            # テスト
-            print('save_imgスタート。。5')
-
-            if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
-                #テスト
-                print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
-                Image.objects.create(
-                    order=i,
-                    picture=media,
-                    publisher_id=blog.id,
-                )
-            img_file.close()
-        except:
-            print('Image not Found')
-
+        # テスト
+        print('save_imgスタート。。5')
+        if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
+            #テスト
+            print('order: ', i, 'picture: ', media, 'publisher_id', blog.id)
+            Image.objects.create(
+                order=i,
+                picture=media,
+                publisher_id=blog.id,
+            )
+            print('save_imgスタート。。6')
+        img_file.close()
+        # except:
+        #     print('Image not Found')
+        print('save_imgスタート。。7')
         progress.num = (i + 1) * 100 / img_num
+        print('save_imgスタート。。8')
         progress.save()
+
+        print('save_imgスタート。。9')
         time.sleep(1)
 
 

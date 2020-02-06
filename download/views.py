@@ -35,9 +35,12 @@ class DownloadView(BaseView):
 
                     #テスト
                     # update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    with futures.ThreadPoolExecutor(max_workers=1) as executor:
-                        executor.submit(fn=update, progress=progress_instance, group_id=group_id, blog_ct=blog_ct, writer_ct=blog.writer.ct, blog=blog)
+                    executor = futures.ThreadPoolExecutor(max_workers=2)
+                    print("Threads: {}".format(len(executor._threads)))
+                    executor.submit(update, progress_instance, group_id, blog_ct, blog.writer.ct, blog)
+                    executor.shutdown(wait=False)
 
+                    print('gogo れんだー')
                     return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
 
                 elif not Progress.objects.get(target_id=blog.id).ready:
