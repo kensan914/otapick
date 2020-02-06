@@ -12,8 +12,11 @@ from search.models import Blog
 
 def get_tag(url, group_id):
     global article_tag
+    print('get_tagスタート。。1')
     urllib3.disable_warnings(InsecureRequestWarning)
     http = urllib3.PoolManager()
+
+    print('get_tagスタート。。2')
     r = http.request('GET', url)
     print('rの大きさ', len(r.data))
     soup = BeautifulSoup(r.data, 'html.parser')
@@ -93,6 +96,7 @@ def testImgSave(blog_url, group_id, blog_ct, writer_ct):
         progress = Progress.objects.get(target_id=Blog.objects.get(blog_ct=blog_ct).id)
     else:
         progress = Progress.objects.create(target_id=Blog.objects.get(blog_ct=blog_ct).id)
+    print('はじまった？')
     # print(Blog.objects.filter(id=progress.target_id).exists())
     save_img(get_img_url(blog_url, group_id), group_id, blog_ct, writer_ct, progress)
 
