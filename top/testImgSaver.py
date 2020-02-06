@@ -93,9 +93,13 @@ def testImgSave(blog_url, group_id, blog_ct, writer_ct):
 
     # progress = Progress.objects.get(target_id=1)
     if Progress.objects.filter(target_id=Blog.objects.get(blog_ct=blog_ct).id).exists():
+        print(Blog.objects.get(blog_ct=blog_ct), 'のプログレスある')
         progress = Progress.objects.get(target_id=Blog.objects.get(blog_ct=blog_ct).id)
+        print('got.')
     else:
+        print(Blog.objects.get(blog_ct=blog_ct), 'のプログレスない')
         progress = Progress.objects.create(target_id=Blog.objects.get(blog_ct=blog_ct).id)
+        print('created.')
     print('はじまった？')
     # print(Blog.objects.filter(id=progress.target_id).exists())
     save_img(get_img_url(blog_url, group_id), group_id, blog_ct, writer_ct, progress)
