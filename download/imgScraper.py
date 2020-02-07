@@ -2,6 +2,7 @@
 import django
 
 from download.scripts.downloadViewFunc import blog_getter
+from search.models import Blog
 
 django.setup()
 from celery import shared_task
@@ -146,6 +147,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
 def update(target_id, group_id, blog_ct, writer_ct):
     print('start update()')
     #テスト
+    print('bloblo: ', Blog.objects.filter(group_id, blog_ct).exists())
     blog = blog_getter(group_id, blog_ct)
     print('propro: ', Progress.objects.filter(target_id=target_id).exists())
     progress = Progress.objects.get(target_id=target_id)
