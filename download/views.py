@@ -41,9 +41,9 @@ class DownloadView(BaseView):
                     # print("Threads: {}".format(len(executor._threads)))
                     # executor.shutdown(wait=False)
 
-                    p = multiprocessing.Process(target=update,
-                                         args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
-                    p.daemon = True
+                    p = threading.Thread(target=update,
+                                                args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog),
+                                                daemon=True)
                     p.start()
 
                     print('gogo れんだー')
