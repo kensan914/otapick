@@ -43,6 +43,7 @@ class DownloadView(BaseView):
 
                     p = multiprocessing.Process(target=update,
                                          args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
+                    p.daemon = True
                     p.start()
 
                     print('gogo れんだー')
