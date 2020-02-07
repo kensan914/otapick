@@ -1,3 +1,7 @@
+#テスト
+import django
+django.setup()
+
 import threading
 import time
 import urllib
