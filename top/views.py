@@ -1,3 +1,4 @@
+import multiprocessing
 import threading
 from concurrent import futures
 
@@ -42,12 +43,16 @@ class BaseView(View):
                     group_id = 1
                     blog_ct = 30958
                     writer_ct = '12'
-                    p = threading.Thread(target=testImgSave, args=(blog_url, group_id, blog_ct, writer_ct))
-                    p.start()
+                    # p = threading.Thread(target=testImgSave, args=(blog_url, group_id, blog_ct, writer_ct))
+                    # p.start()
+
                     # executor = futures.ThreadPoolExecutor()
                     # executor.submit(testImgSave)
                     # print("Threads..: {}".format(len(executor._threads)))
                     # executor.shutdown(wait=False)
+
+                    p = multiprocessing.Process(target=testImgSave, args=(blog_url, group_id, blog_ct, writer_ct))
+                    p.start()  # プロセスの開始
 
                     return redirect('search:searchMember', searchText=result['searchText'])
                 else:
