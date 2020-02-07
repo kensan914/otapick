@@ -87,6 +87,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'CONN_MAX_AGE': 3600,
         'NAME': 'otapick',
         'USER': 'root',
         'PASSWORD': 'gin-TK46',
