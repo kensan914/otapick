@@ -146,6 +146,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
 def update(target_id, group_id, blog_ct, writer_ct):
     print('start update()')
     #テスト
+    print('propro: ', Progress.objects.all())
     progress = Progress.objects.get(target_id=target_id)
     blog = blog_getter(group_id, blog_ct)
 
