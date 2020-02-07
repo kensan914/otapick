@@ -93,7 +93,8 @@ def testImgSave(blog_url, group_id, blog_ct, writer_ct):
     print('はじまったよーー')
     print('blog_ct=',type(blog_ct))
     id = Blog.objects.get(blog_ct=blog_ct2).id
-    print('のid', id, 'のタイプ', type(id))
+    print('のid', id)
+    print('のタイプ', type(id))
     print(Progress.objects.filter(target_id=id).exists())
 
     # progress = Progress.objects.get(target_id=1)
