@@ -49,8 +49,8 @@ class DownloadView(BaseView):
                     print('gogo れんだー')
 
                     #テスト
-                    # return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
-                    return redirect('search:searchUnjustMember')
+                    return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
+                    # return redirect('search:searchUnjustMember')
 
                 elif not Progress.objects.get(target_id=blog.id).ready:
                     progress = Progress.objects.get(target_id=blog.id)
