@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 import threading
 from concurrent import futures
@@ -35,16 +36,19 @@ class DownloadView(BaseView):
 
                     #テスト
                     # update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    executor = futures.ThreadPoolExecutor()
-                    executor.submit(update, progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    print("Threads: {}".format(len(executor._threads)))
-                    executor.shutdown(wait=False)
+                    # executor = futures.ThreadPoolExecutor()
+                    # executor.submit(update, progress_instance, group_id, blog_ct, blog.writer.ct, blog)
+                    # print("Threads: {}".format(len(executor._threads)))
+                    # executor.shutdown(wait=False)
+
+                    p = multiprocessing.Process(target=update,
+                                         args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
+                    p.start()
 
                     print('gogo れんだー')
 
                     #テスト
-                    # return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
-                    return redirect('search:searchUnjustMember')
+                    return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
 
                 elif not Progress.objects.get(target_id=blog.id).ready:
                     progress = Progress.objects.get(target_id=blog.id)
