@@ -1,6 +1,10 @@
 #テスト
 import django
+
+from download.scripts.downloadViewFunc import blog_getter
+
 django.setup()
+from celery import shared_task
 
 import threading
 import time
@@ -10,7 +14,7 @@ import os
 import urllib3
 from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
-from .models import Image
+from .models import Image, Progress
 from config import settings
 import certifi
 
@@ -138,7 +142,13 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         time.sleep(1)
 
 
-def update(progress, group_id, blog_ct, writer_ct, blog):
+@shared_task
+def update(target_id, group_id, blog_ct, writer_ct):
+    print('start update()')
+    #テスト
+    progress = Progress.objects.get(target_id=target_id)
+    blog = blog_getter(group_id, blog_ct)
+
     global blog_url
     if group_id == 1:
         blog_url = "https://www.keyakizaka46.com/s/k46o/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"

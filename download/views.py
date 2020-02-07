@@ -41,10 +41,11 @@ class DownloadView(BaseView):
                     # print("Threads: {}".format(len(executor._threads)))
                     # executor.shutdown(wait=False)
 
-                    p = threading.Thread(target=update,
-                                                args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog),
-                                                daemon=True)
-                    p.start()
+                    # p = multiprocessing.Process(target=update,
+                    #                             args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog),
+                    #                             daemon=True)
+                    # p.start()
+                    update.delay(blog.id, group_id, blog_ct, blog.writer.ct)
 
                     print('gogo れんだー')
 
