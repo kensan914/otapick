@@ -24,7 +24,7 @@ PROJECT_NAME = os.path.basename(BASE_DIR)
 SECRET_KEY = 'ucj1y2hviu26_^lzxp0n=ct-qvcp%5w%aih6r=-!$znlm$g(#+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ["192.168.11.46"]
@@ -150,4 +150,4 @@ MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
 # CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
 # # CELERY_RESULT_BACKEND = "django-db"
 BROKER_URL = 'redis://localhost:6379/1'
-CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
+# CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
