@@ -28,8 +28,9 @@ class DownloadView(BaseView):
         if blog:
             if not Progress.objects.filter(target_id=blog.id).exists() or Progress.objects.get(target_id=blog.id).num <= 100:
                 if not Progress.objects.filter(target_id=blog.id).exists():
-                    progress_instance = Progress(target_id=blog.id)
-                    progress_instance.save()
+                    # progress_instance = Progress(target_id=blog.id)
+                    # progress_instance.save()
+                    progress_instance = Progress.objects.create(target_id=blog.id)
                     # p = threading.Thread(target=update,
                     #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
                     # p.start()
