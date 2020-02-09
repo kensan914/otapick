@@ -37,23 +37,6 @@ class BaseView(View):
                     return redirect('search:searchUnjustURL')
             elif result['input'] == 'name':
                 if result['class'] == 'appropriate':
-
-                    #テスト
-                    blog_url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/30958?ima=0000&cd=member'
-                    group_id = 1
-                    blog_ct = 30958
-                    writer_ct = '12'
-                    # p = threading.Thread(target=testImgSave, args=(blog_url, group_id, blog_ct, writer_ct))
-                    # p.start()
-
-                    # executor = futures.ThreadPoolExecutor()
-                    # executor.submit(testImgSave)
-                    # print("Threads..: {}".format(len(executor._threads)))
-                    # executor.shutdown(wait=False)
-
-                    p = multiprocessing.Process(target=testImgSave, args=(blog_url, group_id, blog_ct, writer_ct))
-                    p.start()  # プロセスの開始
-
                     return redirect('search:searchMember', searchText=result['searchText'])
                 else:
                     return redirect('search:searchUnjustMember')
