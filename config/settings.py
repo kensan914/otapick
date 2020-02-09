@@ -141,12 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-<<<<<<< HEAD
-#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
-=======
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
->>>>>>> d467a72a1177b1a16a5b43d3fd851b1c873b5418
 STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
 
 # media
