@@ -1,7 +1,7 @@
 #テスト
 import django
 
-from download.scripts.downloadViewFunc import get_blog, get_progress
+from download.scripts.downloadViewFunc import get_blog
 from search.models import Blog, Member
 
 # django.setup()
