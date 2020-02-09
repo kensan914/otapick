@@ -4,7 +4,7 @@ import django
 from download.scripts.downloadViewFunc import get_blog
 from search.models import Blog, Member
 
-django.setup()
+# django.setup()
 from celery import shared_task
 
 import threading
