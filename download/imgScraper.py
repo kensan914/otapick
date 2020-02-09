@@ -150,6 +150,7 @@ def update(target_id, group_id, blog_ct, writer_ct):
     print('bloblo: ', Blog.objects.all().count())
     blog = blog_getter(group_id, blog_ct)
     print('propro: ', Progress.objects.all().count())
+    print('target_id=', target_id)
     progress = Progress.objects.get(target_id=target_id)
 
 
