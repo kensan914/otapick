@@ -145,7 +145,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         time.sleep(1)
 
 
-@shared_task(base=TransactionAwareTask, bind=True)
+@shared_task(base=TransactionAwareTask)
 def update(self, progress_id, group_id, blog_ct, writer_ct):
 
     print('start update()')

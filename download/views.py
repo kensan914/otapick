@@ -34,8 +34,8 @@ class DownloadView(BaseView):
                     # progress_instance.save()
 
                     # progress_instance = Progress.objects.create(target_id=blog.id)
-                    with transaction.atomic():
-                        progress_instance = Progress.objects.create(target_id=blog.id)
+                    # with transaction.atomic():
+                    progress_instance = Progress.objects.create(target_id=blog.id)
 
                     # p = threading.Thread(target=update,
                     #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
@@ -52,7 +52,7 @@ class DownloadView(BaseView):
                     #                             args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog),
                     #                             daemon=True)
                     # p.start()
-                        update.delay(progress_instance.id, group_id, blog_ct, blog.writer.ct)
+                    update.delay(progress_instance.id, group_id, blog_ct, blog.writer.ct)
 
                     print('gogo れんだー')
 
