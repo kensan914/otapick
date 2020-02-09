@@ -15,7 +15,6 @@ import os
 import urllib3
 from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
-from download.models import Image, Progress
 from config import settings
 import certifi
 
@@ -72,6 +71,8 @@ def get_img_url(progress, url, group_id):
 
 
 def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
+    from download.models import Image
+
     img_num = len(img_urls)
 
     #テスト
@@ -145,6 +146,8 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
 
 @shared_task
 def update(target_id, group_id, blog_ct, writer_ct):
+    from download.models import Progress
+
     print('start update()')
     #テスト
     print('bloblo: ', Blog.objects.all().count())
@@ -153,7 +156,7 @@ def update(target_id, group_id, blog_ct, writer_ct):
     # blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
     print('propro: ', Progress.objects.all().count())
     print('target_id=', target_id)
-    progress = get_progress(target_id)
+    progress = Progress.objects.get(target_id=target_id)
 
 
     global blog_url
