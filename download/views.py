@@ -4,6 +4,7 @@ import threading
 from concurrent import futures
 from time import sleep
 
+from django.db import transaction
 from django.shortcuts import render, redirect
 from download.imgScraper import update
 from download.scripts.downloadViewFunc import get_blog, render_progress
@@ -33,8 +34,8 @@ class DownloadView(BaseView):
                     # progress_instance.save()
 
                     # progress_instance = Progress.objects.create(target_id=blog.id)
-                    Progress.objects.create(target_id=blog.id)
-                    progress_instance = Progress.objects.get(target_id=blog.id)
+                    with transaction.atomic():
+                        progress_instance = Progress.objects.create(target_id=blog.id)
 
                     # p = threading.Thread(target=update,
                     #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
@@ -51,7 +52,7 @@ class DownloadView(BaseView):
                     #                             args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog),
                     #                             daemon=True)
                     # p.start()
-                    update.delay(blog.id, group_id, blog_ct, blog.writer.ct)
+                        update.delay(progress_instance.id, group_id, blog_ct, blog.writer.ct)
 
                     print('gogo れんだー')
 

@@ -144,8 +144,8 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         time.sleep(1)
 
 
-@shared_task
-def update(target_id, group_id, blog_ct, writer_ct):
+@shared_task(bind=True)
+def update(self, progress_id, group_id, blog_ct, writer_ct):
 
     print('start update()')
     #テスト
@@ -154,8 +154,8 @@ def update(target_id, group_id, blog_ct, writer_ct):
     # writer_belonging = Member.objects.filter(belonging_group__group_id=group_id)
     # blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
     print('propro: ', Progress.objects.all().count())
-    print('target_id=', target_id)
-    progress = Progress.objects.get(target_id=target_id)
+    print('target_id=', progress_id)
+    progress = Progress.objects.get(id=progress_id)
 
 
     global blog_url
