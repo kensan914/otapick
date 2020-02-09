@@ -32,7 +32,7 @@ def render_progress(request, progress, group_id, blog_ct, title, status):
     })
 
 def get_progress(target_id):
-    if Progress.objects.filter(target_id=target_id).exist():
+    if Progress.objects.filter(target_id=target_id).exists():
         progress = Progress.objects.get(target_id=target_id)
     else:
         progress = Progress.objects.create(target_id=target_id)
