@@ -153,7 +153,7 @@ def update(target_id, group_id, blog_ct, writer_ct):
     # blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
     print('propro: ', Progress.objects.all().count())
     print('target_id=', target_id)
-    progress = Progress.objects.get(target_id=target_id)
+    progress = Progress.objects.get(target_id=)
 
 
     global blog_url
