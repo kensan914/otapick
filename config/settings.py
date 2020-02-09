@@ -151,3 +151,5 @@ MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
 # # CELERY_RESULT_BACKEND = "django-db"
 BROKER_URL = 'redis://localhost:6379/1'
 # CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
