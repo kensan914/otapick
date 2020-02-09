@@ -148,9 +148,9 @@ def update(target_id, group_id, blog_ct, writer_ct):
     print('start update()')
     #テスト
     print('bloblo: ', Blog.objects.all().count())
-    # blog = get_blog(group_id, blog_ct)
-    writer_belonging = Member.objects.filter(belonging_group__group_id=group_id)
-    blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
+    blog = get_blog(group_id, blog_ct)
+    # writer_belonging = Member.objects.filter(belonging_group__group_id=group_id)
+    # blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
     print('propro: ', Progress.objects.all().count())
     print('target_id=', target_id)
     progress = get_progress(target_id)
