@@ -5,7 +5,7 @@ from concurrent import futures
 
 from django.shortcuts import render, redirect
 from download.imgScraper import update
-from download.scripts.downloadViewFunc import get_blog, render_progress, get_progress
+from download.scripts.downloadViewFunc import get_blog, render_progress
 from top.views import BaseView
 from .models import Image, Progress
 from django.http import HttpResponse
