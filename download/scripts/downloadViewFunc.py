@@ -2,10 +2,11 @@ import os
 import subprocess
 from django.shortcuts import render
 from config.settings import BASE_DIR
+from download.models import Progress
 from search.models import Member, Blog
 
 
-def blog_getter(group_id, blog_ct):
+def get_blog(group_id, blog_ct):
     writer_belonging = Member.objects.filter(belonging_group__group_id=group_id)
     try:
         blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)

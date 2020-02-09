@@ -1,10 +1,13 @@
+import multiprocessing
 import os
 import threading
 from concurrent import futures
+from time import sleep
 
+from django.db import transaction
 from django.shortcuts import render, redirect
 from download.imgScraper import update
-from download.scripts.downloadViewFunc import blog_getter, render_progress
+from download.scripts.downloadViewFunc import get_blog, render_progress
 from top.views import BaseView
 from .models import Image, Progress
 from django.http import HttpResponse
@@ -22,30 +25,16 @@ class DownloadView(BaseView):
 
         group_id = self.kwargs.get('group_id')
         blog_ct = self.kwargs.get('blog_ct')
-        blog = blog_getter(group_id, blog_ct)
+        blog = get_blog(group_id, blog_ct)
 
         if blog:
             if not Progress.objects.filter(target_id=blog.id).exists() or Progress.objects.get(target_id=blog.id).num <= 100:
                 if not Progress.objects.filter(target_id=blog.id).exists():
-                    progress_instance = Progress(target_id=blog.id)
-                    progress_instance.save()
-                    # p = threading.Thread(target=update,
-                    #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
-                    # p.start()
+                    progress_instance = Progress.objects.create(target_id=blog.id)
 
-                    #テスト
-                    # update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    executor = futures.ThreadPoolExecutor()
-                    executor.submit(update, progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    print("Threads: {}".format(len(executor._threads)))
-                    executor.shutdown(wait=False)
+                    update.delay(progress_instance.id, group_id, blog_ct, blog.writer.ct)
 
-                    print('gogo れんだー')
-
-                    #テスト
-                    # return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
-                    return redirect('search:searchUnjustMember')
-
+                    return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
                 elif not Progress.objects.get(target_id=blog.id).ready:
                     progress = Progress.objects.get(target_id=blog.id)
                     if progress.num >= 100:
