@@ -146,7 +146,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
 
 
 @shared_task(base=TransactionAwareTask)
-def update(self, progress_id, group_id, blog_ct, writer_ct):
+def update(progress_id, group_id, blog_ct, writer_ct):
 
     print('start update()')
     #テスト
