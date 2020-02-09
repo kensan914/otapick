@@ -11,23 +11,27 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_NAME = os.path.basename(BASE_DIR)
+
+#django-environ
+env = environ.Env(DEBUG=(bool,False))
+env.read_env(os.path.join(BASE_DIR,'.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ucj1y2hviu26_^lzxp0n=ct-qvcp%5w%aih6r=-!$znlm$g(#+'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ["192.168.11.46"]
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -85,14 +89,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'CONN_MAX_AGE': 3600,
-        'NAME': 'otapick',
-        'USER': 'root',
-        'PASSWORD': 'gin-TK46',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'ATOMIC_REQUESTS': True,
+        'ENGINE': env('DB_ENGINE'),
+        'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env.int('DB_PORT'),
+        'ATOMIC_REQUESTS': env('DB_ATOMIC_REQUESTS'),
         'OPTIONS': {
             'charset': 'utf8mb4',
         },
@@ -138,18 +142,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # media
 MEDIA_URL = '/media/'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #redis
-# CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/1')
-# # CELERY_RESULT_BACKEND = "django-db"
-BROKER_URL = 'redis://localhost:6379/1'
-# CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL")
-# CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+BROKER_URL = env('REDIS_URL')
