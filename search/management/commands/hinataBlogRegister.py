@@ -42,7 +42,7 @@ def blogRegisterByM_hinata(member):
 
         url = base_url + str(page)
         r = http.request('GET', url)
-        soup = BeautifulSoup(r.data, 'lxml')
+        soup = BeautifulSoup(r.data, 'html.parser')
 
         blogs = soup.select('div.p-blog-article')
         if not bool(blogs):
