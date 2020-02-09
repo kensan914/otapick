@@ -5,7 +5,7 @@ from concurrent import futures
 
 from django.shortcuts import render, redirect
 from download.imgScraper import update
-from download.scripts.downloadViewFunc import get_blog, render_progress
+from download.scripts.downloadViewFunc import get_blog, render_progress, get_progress
 from top.views import BaseView
 from .models import Image, Progress
 from django.http import HttpResponse
@@ -30,7 +30,7 @@ class DownloadView(BaseView):
                 if not Progress.objects.filter(target_id=blog.id).exists():
                     # progress_instance = Progress(target_id=blog.id)
                     # progress_instance.save()
-                    progress_instance = Progress.objects.create(target_id=blog.id)
+                    progress_instance = get_progress(blog.id)
                     # p = threading.Thread(target=update,
                     #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
                     # p.start()
