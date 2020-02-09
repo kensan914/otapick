@@ -15,7 +15,7 @@ import os
 import urllib3
 from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
-from .models import Image, Progress
+from download.models import Image, Progress
 from config import settings
 import certifi
 
