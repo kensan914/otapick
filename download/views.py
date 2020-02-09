@@ -30,36 +30,11 @@ class DownloadView(BaseView):
         if blog:
             if not Progress.objects.filter(target_id=blog.id).exists() or Progress.objects.get(target_id=blog.id).num <= 100:
                 if not Progress.objects.filter(target_id=blog.id).exists():
-                    # progress_instance = Progress(target_id=blog.id)
-                    # progress_instance.save()
-
-                    # progress_instance = Progress.objects.create(target_id=blog.id)
-                    # with transaction.atomic():
                     progress_instance = Progress.objects.create(target_id=blog.id)
 
-                    # p = threading.Thread(target=update,
-                    #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
-                    # p.start()
-
-                    #テスト
-                    # update(progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    # executor = futures.ThreadPoolExecutor()
-                    # executor.submit(update, progress_instance, group_id, blog_ct, blog.writer.ct, blog)
-                    # print("Threads: {}".format(len(executor._threads)))
-                    # executor.shutdown(wait=False)
-
-                    # p = multiprocessing.Process(target=update,
-                    #                             args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog),
-                    #                             daemon=True)
-                    # p.start()
                     update.delay(progress_instance.id, group_id, blog_ct, blog.writer.ct)
 
-                    print('gogo れんだー')
-
-                    #テスト
                     return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
-                    # return redirect('search:searchUnjustMember')
-
                 elif not Progress.objects.get(target_id=blog.id).ready:
                     progress = Progress.objects.get(target_id=blog.id)
                     if progress.num >= 100:
