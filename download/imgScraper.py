@@ -1,6 +1,7 @@
 #テスト
 import django
 
+from download.models import Image, Progress
 from download.scripts.downloadViewFunc import get_blog
 from search.models import Blog, Member
 
@@ -71,7 +72,6 @@ def get_img_url(progress, url, group_id):
 
 
 def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
-    from download.models import Image
 
     img_num = len(img_urls)
 
@@ -146,7 +146,6 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
 
 @shared_task
 def update(target_id, group_id, blog_ct, writer_ct):
-    from download.models import Progress
 
     print('start update()')
     #テスト

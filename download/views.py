@@ -2,6 +2,7 @@ import multiprocessing
 import os
 import threading
 from concurrent import futures
+from time import sleep
 
 from django.shortcuts import render, redirect
 from download.imgScraper import update
@@ -31,6 +32,7 @@ class DownloadView(BaseView):
                     # progress_instance = Progress(target_id=blog.id)
                     # progress_instance.save()
                     progress_instance = Progress.objects.create(target_id=blog.id)
+                    sleep(3)
                     # p = threading.Thread(target=update,
                     #                      args=(progress_instance, group_id, blog_ct, blog.writer.ct, blog))
                     # p.start()
