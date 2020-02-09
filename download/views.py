@@ -5,7 +5,7 @@ from concurrent import futures
 
 from django.shortcuts import render, redirect
 from download.imgScraper import update
-from download.scripts.downloadViewFunc import blog_getter, render_progress
+from download.scripts.downloadViewFunc import get_blog, render_progress
 from top.views import BaseView
 from .models import Image, Progress
 from django.http import HttpResponse
@@ -23,7 +23,7 @@ class DownloadView(BaseView):
 
         group_id = self.kwargs.get('group_id')
         blog_ct = self.kwargs.get('blog_ct')
-        blog = blog_getter(group_id, blog_ct)
+        blog = get_blog(group_id, blog_ct)
 
         if blog:
             if not Progress.objects.filter(target_id=blog.id).exists() or Progress.objects.get(target_id=blog.id).num <= 100:

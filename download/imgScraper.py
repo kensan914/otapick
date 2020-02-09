@@ -1,7 +1,7 @@
 #テスト
 import django
 
-from download.scripts.downloadViewFunc import blog_getter
+from download.scripts.downloadViewFunc import get_blog, get_progress
 from search.models import Blog
 
 django.setup()
@@ -148,10 +148,10 @@ def update(target_id, group_id, blog_ct, writer_ct):
     print('start update()')
     #テスト
     print('bloblo: ', Blog.objects.all().count())
-    blog = blog_getter(group_id, blog_ct)
+    blog = get_blog(group_id, blog_ct)
     print('propro: ', Progress.objects.all().count())
     print('target_id=', target_id)
-    progress = Progress.objects.get(target_id=target_id)
+    progress = get_progress(target_id)
 
 
     global blog_url
