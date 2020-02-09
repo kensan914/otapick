@@ -148,12 +148,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 >>>>>>> d467a72a1177b1a16a5b43d3fd851b1c873b5418
 STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #redis
 BROKER_URL = env('REDIS_URL')
