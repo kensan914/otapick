@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_NAME = os.path.basename(BASE_DIR)
 
 #django-environ
-env = environ.Env()
+env = environ.Env(DEBUG=(bool,False))
 env.read_env(os.path.join(BASE_DIR,'.env'))
 
 
