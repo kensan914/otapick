@@ -50,6 +50,7 @@ class Command(BaseCommand):
 
             blogs = soup.select('article')
             if not bool(blogs):
+                print('[', datetime.now(), '] ', end="")
                 print("finished!!")
                 break
             for blog in blogs:
@@ -62,6 +63,7 @@ class Command(BaseCommand):
                     postdate_tag = bottomli_tags[0]
                     writer_name_origin = blog.select_one('div.box-ttl > p.name').text
                     writer_name = textCleaner(writer_name_origin)
+                    print('[', datetime.now(), '] ', end="")
                     print('register 「' + title + '」 written by ' + writer_name)
                     Blog.objects.create(
                         blog_ct=extractBlog_ct(blog_url),
@@ -70,10 +72,12 @@ class Command(BaseCommand):
                         writer=Member.objects.get(belonging_group__group_id=1, full_kanji=writer_name),
                     )
                 else:
-                    print('kept up latest!!')
+                    print('[', datetime.now(), '] ', end="")
+                    print('keyaki blogs is up to date!!')
                     break
             else:
                 time.sleep(sleepTime)
+                print('[', datetime.now(), '] ', end="")
                 print('go next page.')
                 continue
             break
@@ -88,6 +92,7 @@ class Command(BaseCommand):
 
             blogs = soup.select('div.p-blog-article')
             if not bool(blogs):
+                print('[', datetime.now(), '] ', end="")
                 print("finished!!")
                 break
             for blog in blogs:
@@ -105,12 +110,15 @@ class Command(BaseCommand):
                         post_date=datetimeConverter(postdate_tag.text, 2),
                         writer=Member.objects.get(belonging_group__group_id=2, full_kanji=writer_name),
                     )
+                    print('[', datetime.now(), '] ', end="")
                     print('register 「' + title + '」 written by ' + writer_name)
                 else:
-                    print('kept up latest!!')
+                    print('[', datetime.now(), '] ', end="")
+                    print('hinata blogs is up to date!!')
                     break
             else:
                 time.sleep(sleepTime)
+                print('[', datetime.now(), '] ', end="")
                 print('go next page.')
                 continue
             break
