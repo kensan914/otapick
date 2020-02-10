@@ -20,11 +20,12 @@ from config import settings
 from django.views.static import serve
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('top.urls')),
     path('search/', include('search.urls')),
     path('download/', include('download.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
- 
-#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+#Debug=Falseでもadminへアクセスできてしまうため、対処
+if settings.DEBUG:
+    urlpatterns += path('admin/', admin.site.urls)
