@@ -26,6 +26,8 @@
 
   <link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css"/>
 
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+  <style>img.emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em;}</style>
   {% block extra_css %}{% endblock %}
 </head>
 
@@ -136,6 +138,10 @@
            minLength: 2,
        });
     });
+</script>
+
+<script>
+  twemoji.parse(document.body);
 </script>
 {% block extra_js %}{% endblock %}
 </body>
