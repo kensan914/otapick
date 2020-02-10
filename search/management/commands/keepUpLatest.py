@@ -72,8 +72,6 @@ class Command(BaseCommand):
                         writer=Member.objects.get(belonging_group__group_id=1, full_kanji=writer_name),
                     )
                 else:
-                    print('[', datetime.now(), '] ', end="")
-                    print('keyaki blogs is up to date!!')
                     break
             else:
                 time.sleep(sleepTime)
@@ -113,8 +111,6 @@ class Command(BaseCommand):
                     print('[', datetime.now(), '] ', end="")
                     print('register 「' + title + '」 written by ' + writer_name)
                 else:
-                    print('[', datetime.now(), '] ', end="")
-                    print('hinata blogs is up to date!!')
                     break
             else:
                 time.sleep(sleepTime)
