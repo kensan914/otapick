@@ -130,4 +130,7 @@ media/
 
 .env
 dump.rdb
+
+#cron
+cron/
 # End of https://www.gitignore.io/api/django
