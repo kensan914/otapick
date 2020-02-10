@@ -28,5 +28,4 @@ urlpatterns = [
 
 #Debug=Falseでもadminへアクセスできてしまうため、対処
 if settings.DEBUG:
-    print('papapapa')
     urlpatterns += [path('admin/', admin.site.urls)]
