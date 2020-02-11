@@ -30,7 +30,18 @@
   <style>img.emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em;}</style>
 
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+
   {% block extra_css %}{% endblock %}
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134426000-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-134426000-2');
+  </script>
 </head>
 
 <body>
