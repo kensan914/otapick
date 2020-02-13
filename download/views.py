@@ -1,11 +1,5 @@
-import multiprocessing
 import os
-import threading
-from concurrent import futures
-from time import sleep
-
-from django.db import transaction
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from download.imgScraper import update
 from download.scripts.downloadViewFunc import get_blog, render_progress
 from top.views import BaseView

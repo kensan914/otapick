@@ -17,7 +17,7 @@ import environ
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_NAME = os.path.basename(BASE_DIR)
 
-#django-environ
+# django-environ
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR,'.env'))
 
@@ -147,5 +147,5 @@ STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
 
-#redis
+# redis
 BROKER_URL = env('REDIS_URL')

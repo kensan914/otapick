@@ -1,12 +1,12 @@
 from django.db import models
 from search.models import Blog
-import os
 
 
 def get_upload_to(instance, filename):
     media_dir_1 = str(instance.publisher.writer.belonging_group.group_id) + '_' + str(instance.publisher.writer.ct)
     media_dir_2 = str(instance.publisher.blog_ct)
     return 'blog_images/{0}/{1}/{2}' .format(media_dir_1, media_dir_2, filename)
+
 
 class Image(models.Model):
     class Meta:
