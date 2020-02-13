@@ -19,7 +19,7 @@ PROJECT_NAME = os.path.basename(BASE_DIR)
 
 # django-environ
 env = environ.Env()
-env.read_env(os.path.join(BASE_DIR,'.env'))
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
