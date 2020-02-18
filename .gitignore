@@ -139,4 +139,6 @@ cron/
 .DS_Store
 
 *.py#
+
+.gitkeep
 # End of https://www.gitignore.io/api/django
