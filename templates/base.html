@@ -26,9 +26,11 @@
 
   <link type="text/css" rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css"/>
 
+  <!-- twemoji -->
   <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
   <style>img.emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em;}</style>
 
+  <!-- favicon -->
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 
   {% block extra_css %}{% endblock %}
@@ -153,9 +155,11 @@
     });
 </script>
 
+<!-- twemoji -->
 <script>
   twemoji.parse(document.body);
 </script>
+
 {% block extra_js %}{% endblock %}
 </body>
 
