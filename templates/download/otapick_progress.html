@@ -15,6 +15,11 @@
 
     <link href="{% static 'css/bootstrap-ex.min.css'%}" rel="stylesheet">
 
+    <!-- twemoji -->
+  <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+  <style>img.emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em;}</style>
+
+    <!-- favicon -->
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -90,5 +95,11 @@
         }
         reload();
     </script>
+
+<!-- twemoji -->
+<script>
+  twemoji.parse(document.body);
+</script>
+
 </body>
 </html>
