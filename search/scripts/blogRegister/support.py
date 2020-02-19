@@ -23,5 +23,5 @@ def datetimeConverter(datetime_text, group_id):
     elif group_id == 2:
         dt = datetime.strptime(new_datetime_text, '%Y.%m.%d %H:%M')
     else:
-        dt = ''
+        dt = None
     return make_aware(dt)

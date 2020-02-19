@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 import time
-from search.scripts.blogRegister.keyakiBlogRegister import blogRegisterByM_keyaki
-from search.scripts.blogRegister.hinataBlogRegister import blogRegisterByM_hinata
+from search.scripts.blogRegister.registerer import register_byMember
 from search.scripts.blogRegister.dialogue import *
 
 
@@ -28,11 +27,15 @@ class Command(BaseCommand):
         else:
             quit()
 
-        if group_id == 1:
-            for member in Member.objects.filter(belonging_group__group_id=1):
-                blogRegisterByM_keyaki(member, all_check=False, up_limit=page)
-                time.sleep(sleep_time_membertransition)
-        elif group_id == 2:
-            for member in Member.objects.filter(belonging_group__group_id=2):
-                blogRegisterByM_hinata(member, up_limit=page)
-                time.sleep(sleep_time_membertransition)
+        for member in Member.objects.filter(belonging_group__group_id=group_id):
+            register_byMember(member, all_check=False, up_limit=page)
+            time.sleep(sleep_time_membertransition)
+
+        # if group_id == 1:
+        #     for member in Member.objects.filter(belonging_group__group_id=1):
+        #         blogRegister_byMember(member, all_check=False, up_limit=page)
+        #         time.sleep(sleep_time_membertransition)
+        # elif group_id == 2:
+        #     for member in Member.objects.filter(belonging_group__group_id=2):
+        #         blogRegister_byMember(member, all_check=False, up_limit=page)
+        #         time.sleep(sleep_time_membertransition)
