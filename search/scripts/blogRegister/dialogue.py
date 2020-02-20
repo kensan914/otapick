@@ -1,4 +1,4 @@
-from ...models import Member, Group
+from search.models import Member, Group
 
 
 def which_group():
