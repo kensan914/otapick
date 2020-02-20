@@ -40,9 +40,9 @@ class SearchByLatestView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         members = Member.objects.filter(belonging_group__group_id=group_id)
         if group_id == 1:
-            return Blog.objects.filter(writer__in=members).order_by('-post_date')[:10]
+            return Blog.objects.filter(writer__in=members).order_by('-post_date', 'order_for_simul')[:10]
         elif group_id == 2:
-            return Blog.objects.filter(writer__in=members).order_by('-post_date')[:12]
+            return Blog.objects.filter(writer__in=members).order_by('-post_date', 'order_for_simul')[:12]
 
 
 searchByLatest = SearchByLatestView.as_view()
@@ -80,12 +80,12 @@ class SearchByBlogsView(generic.ListView, BaseView):
         if dy_text:
             dy = dy_getter(dy_text)
             if dy['year'] and dy['month']:
-                dy_blogs = Blog.objects.filter(writer__in=members, post_date__year=dy['year'],post_date__month=dy['month'])
+                dy_blogs = Blog.objects.filter(writer__in=members, post_date__year=dy['year'], post_date__month=dy['month'])
                 if dy['day']:
-                    return dy_blogs.filter(post_date__day=dy['day']).order_by('-post_date')
+                    return dy_blogs.filter(post_date__day=dy['day']).order_by('-post_date', 'order_for_simul')
                 else:
-                    return dy_blogs.order_by('-post_date')
-        return Blog.objects.filter(writer__in=members).order_by('-post_date')
+                    return dy_blogs.order_by('-post_date', 'order_for_simul')
+        return Blog.objects.filter(writer__in=members).order_by('-post_date', 'order_for_simul')
 
 
 searchByBlogs = SearchByBlogsView.as_view()
@@ -127,15 +127,15 @@ class SearchByMembersView(generic.ListView, BaseView):
         narrowing_blogs = Blog.objects.filter(writer=member)
         if narrowing_post:
             narrowing_blogs = narrowing_blogs.filter(writer=member, post_date__year=narrowing_post['year'],
-                                                 post_date__month=narrowing_post['month'])
+                                                     post_date__month=narrowing_post['month'])
             if 'day' in narrowing_post:
                 narrowing_blogs = narrowing_blogs.filter(post_date__day=narrowing_post['day'])
         if narrowing_keyword:
             narrowing_blogs = narrowing_blogs.filter(title__icontains=narrowing_keyword)
         if order_format:
             if order_format == 'older_post':
-                return narrowing_blogs.order_by('post_date')
-        return narrowing_blogs.order_by('-post_date')
+                return narrowing_blogs.order_by('post_date', 'order_for_simul')
+        return narrowing_blogs.order_by('-post_date', 'order_for_simul')
 
     def post(self, request, *args, **kwargs):
         group_id = self.kwargs.get('group_id')
