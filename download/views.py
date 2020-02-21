@@ -22,15 +22,15 @@ class DownloadView(BaseView):
         blog = get_blog(group_id, blog_ct)
 
         if blog:
-            if not Progress.objects.filter(target_id=blog.id).exists() or Progress.objects.get(target_id=blog.id).num <= 100:
-                if not Progress.objects.filter(target_id=blog.id).exists():
-                    progress_instance = Progress.objects.create(target_id=blog.id)
+            if not Progress.objects.filter(target=blog).exists() or Progress.objects.get(target=blog).num <= 100:
+                if not Progress.objects.filter(target=blog).exists():
+                    progress_instance = Progress.objects.create(target=blog)
 
                     update.delay(progress_instance.id, group_id, blog_ct, blog.writer.ct)
 
                     return render_progress(request, progress_instance, group_id, blog_ct, blog.title, 'download')
-                elif not Progress.objects.get(target_id=blog.id).ready:
-                    progress = Progress.objects.get(target_id=blog.id)
+                elif not Progress.objects.get(target=blog).ready:
+                    progress = Progress.objects.get(target=blog)
                     if progress.num >= 100:
                         progress.ready = True
                         progress.save()
@@ -41,7 +41,7 @@ class DownloadView(BaseView):
                         return render_progress(request, progress, group_id, blog_ct, blog.title, 'download')
                 # 同時接続用
                 elif request.is_ajax():
-                    progress = Progress.objects.get(target_id=blog.id)
+                    progress = Progress.objects.get(target=blog)
                     if progress.num >= 100:
                         request.session['loaded_' + str(group_id) + '_' + str(blog_ct)] = True
                     return HttpResponse(str(progress.num))
@@ -61,15 +61,15 @@ class DownloadView(BaseView):
                 'group': group,
             }
             if blog:
-                if Image.objects.filter(publisher_id=blog.id).exists():
-                    blog_images = Image.objects.filter(publisher_id=blog.id).order_by('order')
+                if Image.objects.filter(publisher=blog).exists():
+                    blog_images = Image.objects.filter(publisher=blog).order_by('order')
                     self.context['blog_images'] = blog_images
                 else:
                     self.context['blog_images'] = None
             return render(request, self.html_path, self.context)
         else:
             request.session['loaded_'+str(group_id)+'_'+str(blog_ct)] = True
-            progress = Progress.objects.get(target_id=blog.id)
+            progress = Progress.objects.get(target=blog)
             return render_progress(request, progress, group_id, blog_ct, blog.title, 'success')
 
     def post(self, request, *args, **kwargs):

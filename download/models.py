@@ -11,16 +11,15 @@ def get_upload_to(instance, filename):
 class Image(models.Model):
     class Meta:
         db_table = 'image'
-        unique_together = ('publisher_id', 'order')
+        unique_together = ('publisher', 'order')
 
     order = models.IntegerField(verbose_name='順番')
     picture = models.ImageField(verbose_name='イメージ', upload_to=get_upload_to)
     upload_date = models.DateTimeField(verbose_name='アップロード日', auto_now_add=True)
-    # publisher = models.ForeignKey(Blog, verbose_name='掲載ブログ', on_delete=models.CASCADE)
-    publisher_id = models.IntegerField(verbose_name='掲載ブログID', null=True)
+    publisher = models.ForeignKey(Blog, verbose_name='掲載ブログ', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return str(Blog.objects.get(id=self.publisher_id).blog_ct) + '/' + str(self.order)
+        return str(self.publisher.title) + '/' + str(self.order)
 
 
 class Progress(models.Model):
@@ -29,7 +28,7 @@ class Progress(models.Model):
 
     num = models.IntegerField(verbose_name='進捗', default=0, null=True)
     ready = models.BooleanField(default=False)
-    # target = models.OneToOneField(Blog, verbose_name='対象ブログ', on_delete=models.CASCADE, null=True, unique=True)
-    target_id = models.IntegerField(verbose_name='対象ブログID', null=True, unique=True)
+    target = models.OneToOneField(Blog, verbose_name='対象ブログ', on_delete=models.CASCADE, null=True, unique=True)
+
     def __str__(self):
-        return Blog.objects.get(id=self.target_id).title
+        return self.target.title

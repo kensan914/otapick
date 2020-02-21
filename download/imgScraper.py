@@ -61,12 +61,11 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
             response = requests.get(img_url, verify=False)
             image = response.content
             img_file.write(image)
-
-            if not Image.objects.filter(order=i, publisher_id=blog.id).exists():
+            if not Image.objects.filter(order=i, publisher=blog).exists():
                 Image.objects.create(
                     order=i,
                     picture=media,
-                    publisher_id=blog.id,
+                    publisher=blog,
                 )
             img_file.close()
         except:
