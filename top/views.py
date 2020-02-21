@@ -5,7 +5,6 @@ from concurrent import futures
 from django.shortcuts import render, redirect
 from django.views import View
 from search.scripts.firstClassifier import firstClassifier, dy_insert_hyphen
-from top.testImgSaver import testImgSave
 
 
 class BaseView(View):
