@@ -1,6 +1,3 @@
-import urllib3
-from bs4 import BeautifulSoup
-from urllib3.exceptions import InsecureRequestWarning
 import time
 from search.scripts.blogRegister.parser import parse_blog, extract_blogs
 from search.scripts.blogRegister import support
