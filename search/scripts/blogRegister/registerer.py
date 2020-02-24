@@ -2,44 +2,30 @@ import urllib3
 from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
 import time
-from datetime import datetime
-from search.scripts.blogRegister.parser import parse_blog
+from search.scripts.blogRegister.parser import parse_blog, extract_blogs
 from search.scripts.blogRegister import support
 from search.models import Blog
+from search.scripts.blogRegister.unregisterer import unregister, extract_cts
 
 
-def register_latest(group_id, up_limit=100, all_check=False):
+def register_latest(group_id, up_limit=100, all_check=False, unregister_num=1):
     sleep_time_pagetransition = 3
     simultime_blogs = []
     simultime_post_date = ""
+    correct_cts_list = []
 
-    if group_id == 1:
-        base_url = 'https://www.keyakizaka46.com/s/k46o/diary/member/list?ima=0000&page='
-    elif group_id == 2:
-        base_url = 'https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000&page='
-
-    urllib3.disable_warnings(InsecureRequestWarning)
-    http = urllib3.PoolManager()
     for page, is_last in support.lastone(range(up_limit)):
-        url = base_url + str(page)
-        r = http.request('GET', url)
-        soup = BeautifulSoup(r.data, 'html.parser')
-
-        if group_id == 1:
-            blogs = soup.select('article')
-        elif group_id == 2:
-            blogs = soup.select('div.p-blog-article')
+        blogs = extract_blogs(group_id, page)
 
         if not bool(blogs):
-            print('[', datetime.now(), '] ', end="")
-            print("register unacquired　blog...")
+            support.print_console("register unacquired　blog...")
             exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, is_latest=True)
-            print('[', datetime.now(), '] ', end="")
-            print("finished!!")
+            support.print_console("finished!!")
             break
-
+        if len(correct_cts_list) < unregister_num:
+            correct_cts_list.append(extract_cts(blogs, group_id))
         for blog in blogs:
-            post_date = parse_blog(group_id, blog, bc=False, ttl=False, pd=True, mem=False)
+            blog_ct, post_date = parse_blog(group_id, blog, bc=True, ttl=False, pd=True, mem=False)
 
             # first time
             if not simultime_blogs and not simultime_post_date:
@@ -53,6 +39,7 @@ def register_latest(group_id, up_limit=100, all_check=False):
                 finished = exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, is_latest=True)
 
                 if finished:
+                    unregister(correct_cts_list, group_id, unregister_num)
                     break
                 simultime_blogs = [blog]
                 simultime_post_date = post_date
@@ -61,8 +48,7 @@ def register_latest(group_id, up_limit=100, all_check=False):
                 exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, is_latest=True)
                 break
             time.sleep(sleep_time_pagetransition)
-            print('[', datetime.now(), '] ', end="")
-            print('go next page.')
+            support.print_console('go next page.')
             continue
         break
 
@@ -103,8 +89,7 @@ def exe_registration(blog_list, post_date, group_id, all_check, is_latest):
     for blog_object in blog_objects:
         blog_object.save()
         if is_latest:
-            print('[', datetime.now(), '] ', end="")
-            print('register 「' + blog_object.title + '」 written by ' + blog_object.writer.full_kanji)
+            support.print_console('register 「' + blog_object.title + '」 written by ' + blog_object.writer.full_kanji)
 
     # When there is at least one already saved blog in blog_list and all_check is False
     if download_count != len(blog_list) and not all_check:

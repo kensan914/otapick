@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from search.scripts.blogRegister.registerer import register_byMember
+# from search.scripts.blogRegister.registerer import register_byMember
 from search.scripts.blogRegister.dialogue import *
 
 
@@ -29,8 +29,4 @@ class Command(BaseCommand):
         else:
             quit()
 
-        register_byMember(member, all_check=True, up_limit=page)
-        # if group_id == 1:
-        #     blogRegister_byMember(member, all_check=True, up_limit=page)
-        # elif group_id == 2:
-        #     blogRegister_byMember(member, all_check=True, up_limit=page)
+        # register_byMember(member, all_check=True, up_limit=page)

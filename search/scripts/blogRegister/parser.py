@@ -1,3 +1,6 @@
+from bs4 import BeautifulSoup
+from urllib3.exceptions import InsecureRequestWarning
+import urllib3
 from search.models import Member
 from search.scripts.blogRegister import support
 
@@ -57,3 +60,26 @@ def parse_blog(group_id, blog, bc, ttl, pd, mem):
         return tuple(parsed_data)
     else:
         return parsed_data[0]
+
+
+def extract_blogs(group_id, page):
+    base_url = ''
+    blogs = None
+
+    if group_id == 1:
+        base_url = 'https://www.keyakizaka46.com/s/k46o/diary/member/list?ima=0000&page='
+    elif group_id == 2:
+        base_url = 'https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000&page='
+    urllib3.disable_warnings(InsecureRequestWarning)
+    http = urllib3.PoolManager()
+
+    url = base_url + str(page)
+    r = http.request('GET', url)
+    soup = BeautifulSoup(r.data, 'html.parser')
+
+    if group_id == 1:
+        blogs = soup.select('article')
+    elif group_id == 2:
+        blogs = soup.select('div.p-blog-article')
+
+    return blogs

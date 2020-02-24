@@ -27,6 +27,11 @@ def convert_datetime(datetime_text, group_id):
     return make_aware(dt)
 
 
+def print_console(text):
+    print('[', datetime.now(), '] ', end="")
+    print(text)
+
+
 # When last time in loop, return value with True.
 def lastone(iterable):
     # create iterator
