@@ -20,7 +20,7 @@ def get_tag(progress, url, group_id):
         ca_certs=certifi.where())
 
     r = http.request('GET', url)
-    soup = BeautifulSoup(r.data, 'html.parser')
+    soup = BeautifulSoup(r.data, 'lxml')
 
     if group_id == 1:
         article_tag = soup.find('div', class_='box-article')

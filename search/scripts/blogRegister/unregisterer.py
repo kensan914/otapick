@@ -29,7 +29,7 @@ def exe_unregistration(blog, group_id):
     urllib3.disable_warnings(InsecureRequestWarning)
     http = urllib3.PoolManager()
     r = http.request('GET', blog_url)
-    soup = BeautifulSoup(r.data, 'html.parser')
+    soup = BeautifulSoup(r.data, 'lxml')
 
     if group_id == 1:
         existBlog = soup.select('article')
