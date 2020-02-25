@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+{% if hit %}
+{% if group_id %}{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}{% endif %}
+のブログ一覧
+{% else %}
+検索結果
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Masthead -->
+  <div class="{{ group }}">
+    <header class="call-to-action text-white text-center">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-9 mx-auto">
+            <h1>
+              検索結果
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+{% if hit %}
+<!-- Result -->
+<div class="container text-muted">
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card mt-5 mb-3">
+        <div class="card-body">
+          <h3>ブログ一覧</h3>
+          <hr>
+          入力されたURLから複数のブログが検出されました。
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-2 mb-5">
+    <div class="row">
+      {% for blog in object_list %}
+      <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="otapick_card_back">
+          <div class="otapick_card {{ group }}">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">{{ blog.title }}</h5>
+                <div class="row">
+                  <p class="card-text ml-3">{{ blog.writer.full_kanji }}</p>
+                  <p class="card-text ml-3">{{ blog.post_date|date:"y/n/j" }}</p>
+                </div>
+                <div class="row mx-auto" style="width: 180px;">
+                  <div class="outline">
+                    {% if group_id == 1 %}
+                    <a class="btn {{ group }}" target="_blank"
+                       href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                       role="button">
+                      <span>確認</span>
+                    </a>
+                    {% elif group_id == 2 %}
+                    <a class="btn {{ group }}" target="_blank"
+                       href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                       role="button">
+                      <span>確認</span>
+                    </a>
+                    {% endif %}
+                  </div>
+                  <div class="rounded ml-3">
+                    <a class="btn {{ group }}" href="{% url 'download:download' group_id blog.blog_ct %}" role="button">
+                      <span>選択</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% else %}
+<!-- Result notFound -->
+<div class="container text-muted">
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card my-5">
+        <div class="card-body">
+          <h3 class="mb-4">URL検索</h3>
+          <hr>
+          <div class="alert alert-danger" role="alert">
+            入力されたURLのページからブログが見つかりませんでした。
+          </div>
+          <p class="mx-3">
+            入力されたURLのページにブログ情報が含まれているか今一度ご確認ください。<br>
+            <i class="fas fa-hand-point-right"></i>
+            <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46公式ブログ</a>や
+            <a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46公式ブログ</a>から
+            ブログを探していただくと確実です。<br>
+            <i class="fas fa-hand-point-right"></i>
+            ページに複数のブログ情報が含まれていてもかまいませんが、個別ページのURLを入力していただくと直ぐに画像保存をしていただけます。<br>
+            <i class="fas fa-hand-point-right"></i>
+            URL検索以外にも<a href="{% url 'search:memberList' %}">こちら</a>でメンバーから探すこともできます。
+          </p>
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/blogNotFound.png' %});"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

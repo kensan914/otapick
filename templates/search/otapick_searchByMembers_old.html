@@ -190,77 +190,38 @@
   </div>
   {% if object_list|length > 0  %}
   <div class="container mt-2 mb-5">
-    <!-- <div class="row"> -->
-    <div class="grid">
-      <div class="grid-sizer col-6 col-md-4 col-lg-3"></div>
-      
+    <div class="row">
       {% for blog in object_list %}
-      <div class="grid-item col-6 col-md-4 col-lg-3 my-2">
+      <div class="col-sm-6 col-lg-4 mb-4">
         <div class="otapick_card_back">
           <div class="otapick_card {{ group }}">
             <div class="card">
-              <div class="l-thumbnail">
-                <a href="{% url 'download:download' group_id blog.blog_ct %}">
-                  <figure class="thumbnail-wrapper">
-                    <img class="card-img-top" src="{% static 'img/kanemura/mobBmJUY6.jpg' %}" style="border-radius: 0;">
-                  </figure>
-                </a>
-                <span class="more-button">
-                  <div class="row justify-content-around">
-                    <div class="col-4 p-0 mr-2">
-                      {% if group_id == 1 %}
-                      <a href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
-                        style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
-                        <i class="fas fa-external-link-alt"></i>
-                      </a>
-                      {% elif group_id == 2 %}
-                      <a href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
-                        style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
-                        <i class="fas fa-external-link-alt"></i>
-                      </a>
-                      {% endif %}
-                    </div>
-                    <div class="col-4 p-0 ml-2">
-                      <a href="{% url 'download:download' group_id blog.blog_ct %}" style="color: white;"
-                        data-toggle="tooltip" title="ダウンロードページへ">
-                        <i class="fas fa-download"></i>
-                      </a>
-                    </div>
-                  </div>
-                </span>
-              </div>
-              <div class="card-body pb-0">
-                <a href="{% url 'download:download' group_id blog.blog_ct %}" style="color: dimgray;">
-                  <h6 class="card-title">{{ blog.title }}</h6>
-                </a>
+              <div class="card-body">
+                <h5 class="card-title">{{ blog.title }}</h5>
                 <div class="row">
-                  {% if group_id == 1 %}
-                  <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}"
-                    class="card-text ml-3 small mb-2 pb-0" style="color: limegreen;">
-                    {{ blog.writer.full_kanji }}
-                  </a>
-                  {% elif group_id == 2 %}
-                  <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}"
-                    class="card-text ml-3 small mb-2 pb-0" style="color: deepskyblue;">
-                    {{ blog.writer.full_kanji }}
-                  </a>
-                  {% endif %}
-                  <p class="card-text ml-3 small mb-2 pb-0">{{ blog.post_date|date:"y/n/j" }}</p>
+                  <p class="card-text ml-3">{{ blog.writer.full_kanji }}</p>
+                  <p class="card-text ml-3">{{ blog.post_date|date:"y/n/j" }}</p>
                 </div>
-                <div class="dropdown text-center mb-2">
-                  <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
-                    id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-bars" style="color:gray;"></i>
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
-                    <a class="dropdown-item" href="{% url 'download:download' group_id blog.blog_ct %}">ダウンロードページへ</a>
+                <div class="row mx-auto" style="width: 180px;">
+                  <div class="outline">
                     {% if group_id == 1 %}
-                    <a class="dropdown-item" target="_blank"
-                      href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                    <a class="btn {{ group }}" target="_blank"
+                      href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                      role="button">
+                      <span>確認</span>
+                    </a>
                     {% elif group_id == 2 %}
-                    <a class="dropdown-item" target="_blank"
-                      href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                    <a class="btn {{ group }}" target="_blank"
+                      href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                      role="button">
+                      <span>確認</span>
+                    </a>
                     {% endif %}
+                  </div>
+                  <div class="rounded ml-3">
+                    <a class="btn {{ group }}" href="{% url 'download:download' group_id blog.blog_ct %}" role="button">
+                      <span>選択</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -270,7 +231,6 @@
       </div>
       {% endfor %}
     </div>
-    <!-- </div> -->
   </div>
   <div class="container">
     <div class="row">
@@ -328,7 +288,5 @@
   $(document).ready(function () {
     $(".pagination").rPage();
   });
-
-  $('[data-toggle="tooltip"]').tooltip();
 </script>
 {% endblock %}
