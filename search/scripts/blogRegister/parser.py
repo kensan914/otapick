@@ -96,7 +96,7 @@ def extract_blogs(group_id, page):
 
     url = base_url + str(page)
     r = http.request('GET', url)
-    soup = BeautifulSoup(r.data, 'html.parser')
+    soup = BeautifulSoup(r.data, 'lxml')
 
     if group_id == 1:
         blogs = soup.select('article')
