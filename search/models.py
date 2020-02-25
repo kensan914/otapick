@@ -1,4 +1,5 @@
 from django.db import models
+# from download.models import Image
 
 
 class Group(models.Model):
@@ -45,6 +46,7 @@ class Blog(models.Model):
     post_date = models.DateTimeField(verbose_name='投稿日')
     order_for_simul = models.IntegerField(verbose_name='順番(同時投稿用)', default=0)
     writer = models.ForeignKey(Member, verbose_name='メンバー', on_delete=models.PROTECT)
+    thumbnail = models.ForeignKey('download.Image', verbose_name='サムネイル', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.title

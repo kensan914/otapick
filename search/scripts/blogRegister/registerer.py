@@ -2,6 +2,7 @@ import time
 from search.scripts.blogRegister.parser import parse_blog, extract_blogs
 from search.scripts.blogRegister import support
 from search.models import Blog
+from download.models import Image
 from search.scripts.blogRegister.unregisterer import unregister, extract_cts
 
 
@@ -22,7 +23,7 @@ def register_latest(group_id, up_limit=100, all_check=False, unregister_num=1):
         if len(correct_cts_list) < unregister_num:
             correct_cts_list.append(extract_cts(blogs, group_id))
         for blog in blogs:
-            blog_ct, post_date = parse_blog(group_id, blog, bc=True, ttl=False, pd=True, mem=False)
+            blog_ct, post_date = parse_blog(group_id, blog, bc=True, ttl=False, pd=True, mem=False, med=False)
 
             # first time
             if not simultime_blogs and not simultime_post_date:
@@ -53,40 +54,51 @@ def register_latest(group_id, up_limit=100, all_check=False, unregister_num=1):
 def exe_registration(blog_list, post_date, group_id, all_check, is_latest):
     download_count = 0
     blog_objects = []
+    image_objects = []
 
     for i, blog in enumerate(blog_list):
-        blog_ct = parse_blog(group_id, blog, bc=True, ttl=False, pd=False, mem=False)
+        blog_ct = parse_blog(group_id, blog, bc=True, ttl=False, pd=False, mem=False, med=False)
 
         # new blog
         if not Blog.objects.filter(blog_ct=blog_ct,
                                    writer__belonging_group__group_id=group_id).exists():
-            title, member = parse_blog(group_id, blog, bc=False, ttl=True, pd=False, mem=True)
+            title, member, media = parse_blog(group_id, blog, bc=blog_ct, ttl=True, pd=False, mem=True, med=True)
 
-            blog_objects.append(
-                Blog(
-                    blog_ct=blog_ct,
-                    title=title,
-                    post_date=post_date,
-                    order_for_simul=i,
-                    writer=member,
+            new_blog = Blog(blog_ct=blog_ct,
+                            title=title,
+                            post_date=post_date,
+                            order_for_simul=i,
+                            writer=member,)
+            blog_objects.append(new_blog)
+
+            if media is not None and not Image.objects.filter(order=1, publisher=new_blog).exists():
+                image_objects.append(
+                    Image(order=0,
+                          picture=media,
+                          publisher=new_blog,)
                 )
-            )
             download_count += 1
         # already saved
         else:
             pass
 
     # change the order_for_simul of already saved blog with the same post_date
-    if Blog.objects.filter(post_date=post_date).exists():
-        for saved_simultime_blog in Blog.objects.filter(post_date=post_date):
-            saved_simultime_blog.order_for_simul += download_count
-            saved_simultime_blog.save()
+        if Blog.objects.filter(post_date=post_date).exists():
+            for saved_simultime_blog in Blog.objects.filter(post_date=post_date):
+                saved_simultime_blog.order_for_simul += download_count
+                saved_simultime_blog.save()
 
     # save new blog
     for blog_object in blog_objects:
         blog_object.save()
         if is_latest:
             support.print_console('register 「' + blog_object.title + '」 written by ' + blog_object.writer.full_kanji)
+
+    # save new image(thumbnail)
+    for image_object in image_objects:
+        image_object.save()
+        image_object.publisher.thumbnail = image_object
+        image_object.publisher.save()
 
     # When there is at least one already saved blog in blog_list and all_check is False
     if download_count != len(blog_list) and not all_check:
