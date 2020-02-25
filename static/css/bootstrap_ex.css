@@ -455,3 +455,84 @@ footer.footer {
 div.thumbnail.checked + .save_img_checkbox {
     display: block;
 }
+
+/* thumbnail */
+.l-thumbnail {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+}
+
+.thumbnail-wrapper {
+    display: block;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.keyaki .thumbnail-wrapper::after {
+    transition: 0.5s;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* background: rgba(0, 0, 0, 0.4); */
+    background: linear-gradient(to right, #65f671 0, #d185fd 100%);
+    opacity: 0;
+}
+
+.hinata .thumbnail-wrapper::after {
+    transition: 0.5s;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* background: rgba(0, 0, 0, 0.4); */
+    background: linear-gradient(to right, #8eeeff 0, #d185fd 100%);
+    opacity: 0;
+}
+
+.thumbnail-wrapper img {
+    display: block;
+    max-width: 100%;
+
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+}
+
+.more-button {
+    transition: 0.5s;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    padding: 6px 12px 8px;
+    color: #fff;
+    font-size: 20px;
+    opacity: 0;
+}
+
+.l-thumbnail:hover .thumbnail-wrapper::after {
+    opacity: .4;
+}
+
+.l-thumbnail:hover .more-button {
+    opacity: 1;
+}
+
+.l-thumbnail:hover  .thumbnail-wrapper img{
+    opacity: .3;
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+/* end of thumbnail */
