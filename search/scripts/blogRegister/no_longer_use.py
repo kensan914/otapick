@@ -39,7 +39,7 @@ def register_byMember(member, all_check, up_limit=100):
             break
 
         for blog in blogs:
-            post_date = parse_blog(group_id, blog, bc=False, ttl=False, pd=True, mem=False)
+            post_date = parse_blog(group_id, blog, bc=False, ttl=False, pd=True, mem=False, med=False)
 
             if not simultime_blogs and not simultime_post_date:
                 simultime_blogs.append(blog)

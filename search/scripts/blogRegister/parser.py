@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
 import urllib3
+from download.imgScraper import exe_save_img
 from search.models import Member
 from search.scripts.blogRegister import support
 
@@ -13,21 +14,26 @@ ttl stands for tittle.
 pd stands for post_date.
 mem stands for member.
 Only True items will be returned.
+med depends on bc and mem.
 '''
 
 
-def parse_blog(group_id, blog, bc, ttl, pd, mem):
+def parse_blog(group_id, blog, bc, ttl, pd, mem, med):
     parsed_data = []
 
     if bc:
-        if group_id == 1:
-            bottomul_tag = blog.select_one('div.box-bottom ul')
-            bottomli_tags = bottomul_tag.select('li')
-            blog_url = bottomli_tags[1].find('a').get('href')
-        elif group_id == 2:
-            blog_url = blog.select_one('div.p-button__blog_detail').find('a').get('href')
-        blog_ct = support.extractBlog_ct(blog_url)
-        parsed_data.append(blog_ct)
+        if type(bc) == bool:
+            if group_id == 1:
+                bottomul_tag = blog.select_one('div.box-bottom ul')
+                bottomli_tags = bottomul_tag.select('li')
+                blog_url = bottomli_tags[1].find('a').get('href')
+            elif group_id == 2:
+                blog_url = blog.select_one('div.p-button__blog_detail').find('a').get('href')
+            blog_ct = support.extractBlog_ct(blog_url)
+            parsed_data.append(blog_ct)
+        elif type(bc) == int:
+            blog_ct = bc
+
 
     if ttl:
         if group_id == 1:
@@ -55,6 +61,21 @@ def parse_blog(group_id, blog, bc, ttl, pd, mem):
         writer_name = support.clean_text(writer_name_origin)
         member = Member.objects.get(belonging_group__group_id=group_id, full_kanji=writer_name)
         parsed_data.append(member)
+
+    if med:
+        writer_ct = member.ct
+
+        if group_id == 1:
+            article_tag = blog.find('div', class_='box-article')
+        elif group_id == 2:
+            article_tag = blog.find('div', class_='c-blog-article__text')
+        img_tag = article_tag.find('img')
+        if img_tag is not None:
+            img_url = img_tag.get('src')
+            media = exe_save_img(group_id, writer_ct, blog_ct, img_url)
+            parsed_data.append(media)
+        else:
+            parsed_data.append(None)
 
     if len(parsed_data) > 1:
         return tuple(parsed_data)

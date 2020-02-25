@@ -7,7 +7,7 @@ from .models import Image, Progress
 from django.http import HttpResponse
 import zipfile
 import user_agents
-from search.scripts.searchViewFunc import css_classConverter
+from search.scripts.searchViewFunc import convert_css_class
 
 
 class DownloadView(BaseView):
@@ -52,7 +52,7 @@ class DownloadView(BaseView):
             if user_agent.is_mobile:
                 self.html_path = "download/otapick_download_mobile.html"
 
-            group = css_classConverter(group_id)
+            group = convert_css_class(group_id)
             self.request.session['group'] = group
             self.context = {
                 'blog': blog,

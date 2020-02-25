@@ -1,4 +1,5 @@
 from datetime import datetime
+from download.models import Image
 from search.models import Member
 from top.views import BaseView
 from search.scripts.firstClassifier import nameClassifier
@@ -7,7 +8,7 @@ from django.views import generic
 import random
 
 
-def css_classConverter(group_id):
+def convert_css_class(group_id):
     if group_id == 1:
         return 'keyaki'
     elif group_id == 2:
@@ -38,7 +39,7 @@ def searchByMembers_init(self):
     return group_id, ct, member, order_format, narrowing_post_dic, narrowing_keyword
 
 
-def q_member_get(self, isListView):
+def get_q_member(self, isListView):
     if self.request.GET.get('q'):
         return BaseView.get(self, self.request)
     elif self.request.GET.get('q_member'):
@@ -83,7 +84,7 @@ def member_initial_narrower(i_letter):
     return members
 
 
-def eng_converter(i_letter):
+def convert_eng(i_letter):
     if not i_letter:
         return None
     elif i_letter == 'あ':
@@ -92,7 +93,7 @@ def eng_converter(i_letter):
         return ini_correspondence_dict[i_letter]
 
 
-def dy_getter(dy_text):
+def get_dy(dy_text):
     dy = {}
     try:
         dy['year'] = int(dy_text[0:4])

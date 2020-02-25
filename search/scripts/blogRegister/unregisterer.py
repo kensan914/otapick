@@ -46,6 +46,6 @@ def exe_unregistration(blog, group_id):
 def extract_cts(blogs, group_id):
     cts = []
     for blog in blogs:
-        ct = parse_blog(group_id, blog, bc=True, ttl=False, pd=False, mem=False)
+        ct = parse_blog(group_id, blog, bc=True, ttl=False, pd=False, mem=False, med=False)
         cts.append(ct)
     return cts

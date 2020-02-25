@@ -2,13 +2,10 @@ from urllib.parse import quote_plus
 import user_agents
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import redirect
 from search.forms import NarrowingForm
-from top.views import BaseView
-from django.views import generic, View
-from .models import Member, Blog
-from .scripts.searchViewFunc import css_classConverter, searchByMembers_init, q_member_get, kw_placeholder, \
-    member_initial_narrower, eng_converter, dy_getter
+from django.views import View
+from .models import Blog
+from .scripts.searchViewFunc import *
 
 
 class SearchByLatestView(generic.ListView, BaseView):
@@ -25,7 +22,7 @@ class SearchByLatestView(generic.ListView, BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         group_id = self.kwargs.get('group_id')
-        group = css_classConverter(group_id)
+        group = convert_css_class(group_id)
         self.request.session['group'] = group
         searchByLatestCtx = {
             'isLatest': True,
@@ -62,7 +59,7 @@ class SearchByBlogsView(generic.ListView, BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         group_id = self.kwargs.get('group_id')
-        group = css_classConverter(group_id)
+        group = convert_css_class(group_id)
         self.request.session['group'] = group
         searchByBlogsCtx = {
             'isLatest': False,
@@ -78,7 +75,7 @@ class SearchByBlogsView(generic.ListView, BaseView):
         members = Member.objects.filter(belonging_group__group_id=group_id)
         dy_text = self.request.GET.get('dy')
         if dy_text:
-            dy = dy_getter(dy_text)
+            dy = get_dy(dy_text)
             if dy['year'] and dy['month']:
                 dy_blogs = Blog.objects.filter(writer__in=members, post_date__year=dy['year'], post_date__month=dy['month'])
                 if dy['day']:
@@ -105,7 +102,7 @@ class SearchByMembersView(generic.ListView, BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         group_id, ct, member, order_format, narrowing_post, narrowing_keyword = searchByMembers_init(self)
-        group = css_classConverter(group_id)
+        group = convert_css_class(group_id)
         self.request.session['group'] = group
         searchByMembersCtx = {
             'group_id': group_id,
@@ -191,7 +188,7 @@ class SearchMemberView(generic.ListView, BaseView):
     paginate_by = 100
 
     def get(self, request, *args, **kwargs):
-        return q_member_get(self, isListView=True)
+        return get_q_member(self, isListView=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -233,7 +230,7 @@ class MemberListView(generic.ListView, BaseView):
     hinata_exist = True
 
     def get(self, request, *args, **kwargs):
-        return q_member_get(self, isListView=True)
+        return get_q_member(self, isListView=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -242,7 +239,7 @@ class MemberListView(generic.ListView, BaseView):
         selected_group = self.request.GET.get('s_group')
         searchMemberCtx = {
             'group': self.request.session.get('group', 'keyaki'),
-            'initial': eng_converter(initial_letter),
+            'initial': convert_eng(initial_letter),
             'forced_group': forced_group,
             'selected_group': selected_group,
             'keyaki_exist': self.keyaki_exist,
@@ -267,7 +264,7 @@ memberList = MemberListView.as_view()
 
 class SearchUnjustMemberView(BaseView):
     def get(self, request, *args, **kwargs):
-        return q_member_get(self, isListView=False)
+        return get_q_member(self, isListView=False)
 
 
 searchUnjustMember = SearchUnjustMemberView.as_view()
