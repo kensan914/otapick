@@ -81,6 +81,10 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url):
         img_file.close()
         return media
     except:
+        # テスト
+        import traceback
+        traceback.print_exc()
+
         print('Image not Found')
         return None
 
