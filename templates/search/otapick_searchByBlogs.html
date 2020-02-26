@@ -51,7 +51,7 @@
           <div class="otapick_card {{ group }}">
             <div class="card">
               <div class="l-thumbnail">
-                <a href="{% url 'download:download' group_id blog.blog_ct %}">
+                <a href="{% url 'download:download' group_id blog.blog_ct %}" ontouchstart="">
                   <figure class="thumbnail-wrapper">
                     {% if blog.thumbnail %}
                     <img class="card-img-top" src="{{ blog.thumbnail.picture.url }}" style="border-radius: 0;">

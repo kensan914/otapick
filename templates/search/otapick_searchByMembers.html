@@ -190,7 +190,6 @@
   </div>
   {% if object_list|length > 0  %}
   <div class="container mt-2 mb-5">
-    <!-- <div class="row"> -->
     <div class="grid">
       <div class="grid-sizer col-6 col-md-4 col-lg-3"></div>
       
@@ -200,7 +199,7 @@
           <div class="otapick_card {{ group }}">
             <div class="card">
               <div class="l-thumbnail">
-                <a href="{% url 'download:download' group_id blog.blog_ct %}">
+                <a href="{% url 'download:download' group_id blog.blog_ct %}" ontouchstart="">
                   <figure class="thumbnail-wrapper">
                     {% if blog.thumbnail %}
                     <img class="card-img-top" src="{{ blog.thumbnail.picture.url }}" style="border-radius: 0;">
@@ -274,7 +273,6 @@
       </div>
       {% endfor %}
     </div>
-    <!-- </div> -->
   </div>
   <div class="container">
     <div class="row">
