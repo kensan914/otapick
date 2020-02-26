@@ -34,7 +34,6 @@ def parse_blog(group_id, blog, bc, ttl, pd, mem, med):
         elif type(bc) == int:
             blog_ct = bc
 
-
     if ttl:
         if group_id == 1:
             title_tag = blog.select_one('h3 > a')

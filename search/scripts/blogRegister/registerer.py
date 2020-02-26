@@ -71,7 +71,7 @@ def exe_registration(blog_list, post_date, group_id, all_check, is_latest):
                             writer=member,)
             blog_objects.append(new_blog)
 
-            if media is not None and not Image.objects.filter(order=1, publisher=new_blog).exists():
+            if media is not None and not Image.objects.filter(order=0, publisher=new_blog).exists():
                 image_objects.append(
                     Image(order=0,
                           picture=media,
