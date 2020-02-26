@@ -10,7 +10,7 @@ import time
 
 
 class Command(BaseCommand):
-    help = 'test thumbnail.'
+    help = 'test thumbnail.　サムネイルを持たないblogの個別ページにアクセスし、画像を確認したらサムネイルに登録。グループ指定可。'
 
     def add_arguments(self, parser):
         parser.add_argument('-g', '--group', type=int, help='set groupID(1 or 2 or None). default:both')
@@ -23,7 +23,7 @@ class Command(BaseCommand):
             quit()
 
         if options['group']:
-            non_t_blogs = Blog.objects.filter(writer__full_kanji='守屋茜', thumbnail=None, writer__belonging_group__group_id=options['group'])
+            non_t_blogs = Blog.objects.filter(thumbnail=None, writer__belonging_group__group_id=options['group'])
         else:
             non_t_blogs = Blog.objects.filter(thumbnail=None)
 
