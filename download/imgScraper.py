@@ -72,6 +72,12 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url):
         path = os.path.join(dire_path, os.path.basename(img_url))
         media = os.path.join(media_dir_path, os.path.basename(img_url))
 
+        # テスト
+        print('img_url: ', img_url)
+        print('os.path.basename(img_url): ', os.path.basename(img_url))
+        print('path: ', path)
+        print('media: ', media)
+
         img_file = open(path, 'wb')
         urllib3.disable_warnings(InsecureRequestWarning)
         response = requests.get(img_url, verify=False)
