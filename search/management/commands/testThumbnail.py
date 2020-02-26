@@ -44,6 +44,7 @@ class Command(BaseCommand):
             if group_id == 1:
                 blog_article = soup.find('article')
             elif group_id == 2:
+                print('divdiv')
                 blog_article = soup.find('div.p-blog-article')
 
             print('blog_article: ', blog_article)
