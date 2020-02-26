@@ -45,6 +45,7 @@ class Command(BaseCommand):
                 blog_article = soup.select_one('article')
             elif group_id == 2:
                 blog_article = soup.select_one('div.p-blog-article')
+                print('blog_article, ', blog_article)
 
             blog_ct, member, media = parse_blog(group_id=group_id, blog=blog_article, bc=True, ttl=False, pd=False,
                                                 mem=True, med=True)
