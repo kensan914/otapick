@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         if options['group']:
             # テスト
-            non_t_blogs = Blog.objects.filter(writer__full_kanji='影山優佳', thumbnail=None, writer__belonging_group__group_id=options['group'])
+            non_t_blogs = Blog.objects.filter(writer__full_kanji='宮田愛萌', thumbnail=None, writer__belonging_group__group_id=options['group'])
         else:
             non_t_blogs = Blog.objects.filter(thumbnail=None)
 
