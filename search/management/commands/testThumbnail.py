@@ -45,10 +45,8 @@ class Command(BaseCommand):
                 blog_article = soup.select_one('article')
             elif group_id == 2:
                 blog_article = soup.select_one('div.p-blog-article')
-                print('blog_article, ', blog_article)
 
-            blog_ct, member, media = parse_blog(group_id=group_id, blog=blog_article, bc=True, ttl=False, pd=False,
-                                                mem=True, med=True)
+            member, media = parse_blog(group_id=group_id, blog=blog_article, bc=blog.blog_ct, ttl=False, pd=False, mem=True, med=True)
             if media is not None and not Image.objects.filter(order=0, publisher=blog).exists():
                 print('サムネイルを取得できました。登録を開始します。')
                 new_thumbnail = Image(order=0, picture=media, publisher=blog)
