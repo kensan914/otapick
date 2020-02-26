@@ -1,5 +1,4 @@
 from django.db import models
-# from download.models import Image
 
 
 class Group(models.Model):
