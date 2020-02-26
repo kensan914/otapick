@@ -41,6 +41,8 @@ class Command(BaseCommand):
             r = http.request('GET', url)
             soup = BeautifulSoup(r.data, 'lxml')
 
+            print('soup: ', soup)
+
             if group_id == 1:
                 blog_article = soup.find('article')
             elif group_id == 2:
