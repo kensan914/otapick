@@ -28,7 +28,7 @@ class Command(BaseCommand):
             non_t_blogs = Blog.objects.filter(thumbnail=None)
 
         for blog in non_t_blogs:
-            print('「', blog.title, '」writtern by', blog.writer.full_kanji, 'のサムネイルテストを開始します。')
+            print('「', blog.title, '」writtern by', blog.writer.full_kanji, '(', blog.post_date, ')のサムネイルテストを開始します。')
             group_id = blog.writer.belonging_group.group_id
 
             if group_id == 1:
