@@ -68,15 +68,30 @@ def parse_blog(group_id, blog, bc, ttl, pd, mem, med):
             article_tag = blog.find('div', class_='box-article')
         elif group_id == 2:
             article_tag = blog.find('div', class_='c-blog-article__text')
-        img_tag = article_tag.find('img')
-        if img_tag is not None:
-            # テスト
-            print('img_tag, ', img_tag)
-            img_url = img_tag.get('src')
-            media = exe_save_img(group_id, writer_ct, blog_ct, img_url)
-            parsed_data.append(media)
+        img_tags = article_tag.find_all('img')
+
+        if img_tags:
+            for img_tag in img_tags:
+                img_url = img_tag.get('src')
+                if img_url == '' or img_url is None:
+                    continue
+                else:
+                    media = exe_save_img(group_id, writer_ct, blog_ct, img_url)
+                    parsed_data.append(media)
+                    break
+            else:
+                parsed_data.append(None)
         else:
             parsed_data.append(None)
+
+        # if img_tag is not None:
+        #     # テスト
+        #     print('img_tag, ', img_tag)
+        #     img_url = img_tag.get('src')
+        #     media = exe_save_img(group_id, writer_ct, blog_ct, img_url)
+        #     parsed_data.append(media)
+        # else:
+        #     parsed_data.append(None)
 
     if len(parsed_data) > 1:
         return tuple(parsed_data)
