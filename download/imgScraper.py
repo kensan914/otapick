@@ -28,12 +28,21 @@ def get_tag(progress, url, group_id):
         article_tag = soup.find('div', class_='c-blog-article__text')
     img_tags = article_tag.find_all('img')
 
-    if not img_tags:
+    # Omit fake image tag.
+    real_img_tags = []
+    for img_tag in img_tags:
+        img_url = img_tag.get('src')
+        if img_url == '' or img_url is None:
+            continue
+        else:
+            real_img_tags.append(img_tag)
+
+    if not real_img_tags:
         progress.num = 100
         progress.save()
         quit()
 
-    return img_tags
+    return real_img_tags
 
 
 def get_img_url(progress, url, group_id):
