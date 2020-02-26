@@ -55,6 +55,6 @@ class Command(BaseCommand):
                 blog.save()
                 print('登録完了')
             elif media is None:
-                print('画像が登録されていません。')
+                print('画像が含まれていません。')
 
             time.sleep(sleep_time)
