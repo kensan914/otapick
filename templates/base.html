@@ -162,22 +162,33 @@
 </script>
 
 <!-- Masonry -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/masonry.pkgd.min.js' %}"></script>
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 <script>
-  $(function(){
-    var cnt = 0;
-    var waiting = setInterval(function(){
-        if(cnt == 1) {
-          $('.grid').masonry({
-            itemSelector: '.grid-item',
-            columnWidth: '.grid-sizer',
-            percentPosition: true
-          });
-          clearInterval(waiting);
-        }
-        cnt++;
-    }, 200);
-});
+  {#$(function(){#}
+  {#  var cnt = 0;#}
+  {#  var waiting = setInterval(function(){#}
+  {#      if(cnt == 1) {#}
+  {#        $('.grid').masonry({#}
+  {#          itemSelector: '.grid-item',#}
+  {#          columnWidth: '.grid-sizer',#}
+  {#          percentPosition: true#}
+  {#        });#}
+  {#        clearInterval(waiting);#}
+  {#      }#}
+  {#      cnt++;#}
+  {#  }, 200);#}
+  //});
+    var $grid = $('.grid').masonry({
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-sizer',
+        percentPosition: true
+    });
+    $grid.imagesLoaded().progress( function() {
+        $grid.masonry('layout');
+    });
+
 </script>
 
 {% block extra_js %}{% endblock %}
