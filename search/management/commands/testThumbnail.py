@@ -23,7 +23,7 @@ class Command(BaseCommand):
             quit()
 
         if options['group']:
-            non_t_blogs = Blog.objects.filter(thumbnail=None, writer__belonging_group__group_id=options['group'])
+            non_t_blogs = Blog.objects.filter(writer__full_kanji='守屋茜', thumbnail=None, writer__belonging_group__group_id=options['group'])
         else:
             non_t_blogs = Blog.objects.filter(thumbnail=None)
 

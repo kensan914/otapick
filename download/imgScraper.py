@@ -32,7 +32,7 @@ def get_tag(progress, url, group_id):
     real_img_tags = []
     for img_tag in img_tags:
         img_url = img_tag.get('src')
-        if img_url == '' or img_url is None:
+        if img_url == '' or img_url is None or not img_url.startswith('http'):
             continue
         else:
             real_img_tags.append(img_tag)

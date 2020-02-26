@@ -73,7 +73,7 @@ def parse_blog(group_id, blog, bc, ttl, pd, mem, med):
         if img_tags:
             for img_tag in img_tags:
                 img_url = img_tag.get('src')
-                if img_url == '' or img_url is None:
+                if img_url == '' or img_url is None or not img_url.startswith('http'):
                     continue
                 else:
                     media = exe_save_img(group_id, writer_ct, blog_ct, img_url)
