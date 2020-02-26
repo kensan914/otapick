@@ -32,9 +32,9 @@ class Command(BaseCommand):
             group_id = blog.writer.belonging_group.group_id
 
             if group_id == 1:
-                url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/' + blog.blog_ct + '?ima=0000&cd=member'
+                url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/' + str(blog.blog_ct) + '?ima=0000&cd=member'
             elif group_id == 2:
-                url = 'https://www.hinatazaka46.com/s/official/diary/detail/' + blog.blog_ct + '?ima=0000&cd=member'
+                url = 'https://www.hinatazaka46.com/s/official/diary/detail/' + str(blog.blog_ct) + '?ima=0000&cd=member'
             urllib3.disable_warnings(InsecureRequestWarning)
             http = urllib3.PoolManager()
 
