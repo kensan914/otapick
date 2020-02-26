@@ -41,15 +41,10 @@ class Command(BaseCommand):
             r = http.request('GET', url)
             soup = BeautifulSoup(r.data, 'lxml')
 
-            print('soup: ', soup)
-
             if group_id == 1:
-                blog_article = soup.find('article')
+                blog_article = soup.select_one('article')
             elif group_id == 2:
-                print('divdiv')
-                blog_article = soup.find('div.p-blog-article')
-
-            print('blog_article: ', blog_article)
+                blog_article = soup.select_one('div.p-blog-article')
 
             blog_ct, member, media = parse_blog(group_id=group_id, blog=blog_article, bc=True, ttl=False, pd=False,
                                                 mem=True, med=True)
