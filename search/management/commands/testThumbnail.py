@@ -23,8 +23,7 @@ class Command(BaseCommand):
             quit()
 
         if options['group']:
-            # テスト
-            non_t_blogs = Blog.objects.filter(writer__full_kanji='影山優佳', thumbnail=None, writer__belonging_group__group_id=options['group'])
+            non_t_blogs = Blog.objects.filter(thumbnail=None, writer__belonging_group__group_id=options['group'])
         else:
             non_t_blogs = Blog.objects.filter(thumbnail=None)
 
@@ -56,6 +55,6 @@ class Command(BaseCommand):
                 blog.save()
                 print('登録完了')
             elif media is None:
-                print('￿画像が含まれません。')
+                print('画像が登録されていません。')
 
             time.sleep(sleep_time)
