@@ -24,8 +24,8 @@ class Image(models.Model):
     upload_date = models.DateTimeField(verbose_name='アップロード日', auto_now_add=True)
     publisher = models.ForeignKey(Blog, verbose_name='掲載ブログ', on_delete=models.CASCADE)
 
-    # def __str__(self):
-    #     return str(self.publisher.title) + '/' + str(self.order)
+    def __str__(self):
+        return str(self.publisher.title) + '/' + str(self.order)
 
 
 class Progress(models.Model):

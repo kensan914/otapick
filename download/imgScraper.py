@@ -13,7 +13,6 @@ from config import settings
 import certifi
 
 
-
 def get_tag(progress, url, group_id):
     global article_tag
     urllib3.disable_warnings(InsecureRequestWarning)
