@@ -2,7 +2,7 @@ import time
 from search.scripts.blogRegister.parser import parse_blog, extract_blogs
 from search.scripts.blogRegister import support
 from search.models import Blog
-from download.models import Image
+from download.models import Thumbnail
 from search.scripts.blogRegister.unregisterer import unregister, extract_cts
 
 
@@ -71,11 +71,10 @@ def exe_registration(blog_list, post_date, group_id, all_check, is_latest):
                             writer=member,)
             blog_objects.append(new_blog)
 
-            if media is not None and not Image.objects.filter(order=0, publisher=new_blog).exists():
+            if media is not None and not Thumbnail.objects.filter(publisher=new_blog).exists():
                 image_objects.append(
-                    Image(order=0,
-                          picture=media,
-                          publisher=new_blog,)
+                    Thumbnail(picture=media,
+                              publisher=new_blog,)
                 )
             download_count += 1
         # already saved

@@ -1,6 +1,7 @@
 from config.celery import TransactionAwareTask
 from download.models import Image, Progress
 from download.scripts.downloadViewFunc import get_blog
+from search.scripts.blogRegister.compresser import compress_img
 from celery import shared_task
 import time
 import requests
@@ -10,6 +11,7 @@ from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
 from config import settings
 import certifi
+
 
 
 def get_tag(progress, url, group_id):
@@ -72,10 +74,13 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         time.sleep(1)
 
 
-def exe_save_img(group_id, writer_ct, blog_ct, img_url):
+def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False):
     try:
         member_dir_path = str(group_id) + '_' + writer_ct
-        media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
+        if is_thumbnail:
+            media_dir_path = os.path.join("blog_thumbnail", member_dir_path, str(blog_ct))
+        else:
+            media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
         dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
         os.makedirs(dire_path, exist_ok=True)
         path = os.path.join(dire_path, os.path.basename(img_url))
@@ -88,6 +93,9 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url):
         img_file.write(image)
 
         img_file.close()
+
+        if is_thumbnail:
+            compress_img(os.path.join(settings.MEDIA_ROOT, media))
         return media
     except:
         import traceback

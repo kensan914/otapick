@@ -76,7 +76,7 @@ def parse_blog(group_id, blog, bc, ttl, pd, mem, med):
                 if img_url == '' or img_url is None or not img_url.startswith('http'):
                     continue
                 else:
-                    media = exe_save_img(group_id, writer_ct, blog_ct, img_url)
+                    media = exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=True)
                     parsed_data.append(media)
                     break
             else:
