@@ -24,13 +24,13 @@ class SearchByLatestView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByLatestCtx = {
+        searchByLatest_ctx = {
             'isLatest': True,
             'group_id': group_id,
             'hit': True,
             'group': group,
         }
-        context.update(searchByLatestCtx)
+        context.update(searchByLatest_ctx)
         return context
 
     def get_queryset(self):
@@ -61,13 +61,13 @@ class SearchByBlogsView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByBlogsCtx = {
+        searchByBlogs_ctx = {
             'isLatest': False,
             'group_id': group_id,
             'hit': True,
             'group': group,
         }
-        context.update(searchByBlogsCtx)
+        context.update(searchByBlogs_ctx)
         return context
 
     def get_queryset(self):
@@ -104,7 +104,7 @@ class SearchByMembersView(generic.ListView, BaseView):
         group_id, ct, member, order_format, narrowing_post, narrowing_keyword = searchByMembers_init(self)
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByMembersCtx = {
+        searchByMembers_ctx = {
             'group_id': group_id,
             'ct': ct,
             'member': member,
@@ -116,7 +116,7 @@ class SearchByMembersView(generic.ListView, BaseView):
             'form': NarrowingForm(self.request.POST),
             'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile
         }
-        context.update(searchByMembersCtx)
+        context.update(searchByMembers_ctx)
         return context
 
     def get_queryset(self):
@@ -193,12 +193,12 @@ class SearchMemberView(generic.ListView, BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         searchText = self.kwargs.get('searchText')
-        searchMemberCtx = {
+        searchMember_ctx = {
             'searchText': searchText,
             'group': self.request.session.get('group', 'keyaki'),
             'appropriate': True,
         }
-        context.update(searchMemberCtx)
+        context.update(searchMember_ctx)
         return context
 
     def get_queryset(self):
@@ -237,7 +237,7 @@ class MemberListView(generic.ListView, BaseView):
         initial_letter = self.request.GET.get('initial')
         forced_group = self.request.GET.get('group')
         selected_group = self.request.GET.get('s_group')
-        searchMemberCtx = {
+        searchMember_ctx = {
             'group': self.request.session.get('group', 'keyaki'),
             'initial': convert_eng(initial_letter),
             'forced_group': forced_group,
@@ -245,7 +245,7 @@ class MemberListView(generic.ListView, BaseView):
             'keyaki_exist': self.keyaki_exist,
             'hinata_exist': self.hinata_exist,
         }
-        context.update(searchMemberCtx)
+        context.update(searchMember_ctx)
         return context
 
     def get_queryset(self, **kwargs):
