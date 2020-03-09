@@ -12,4 +12,5 @@ urlpatterns = [
     path('member/<str:searchText>/', views.searchMember, name='searchMember'),
     path('member/unjust', views.searchUnjustMember, name='searchUnjustMember'),
     path('autocomplete_name/', views.autocomplete, name='autocomplete'),
+    path('group/blog/<int:group_id>/', views.searchByGroups, name='searchByGroups'),
 ]

@@ -5,31 +5,47 @@
 {% block title %}アイドルブログ専用・画像保存ツール{% endblock %}
 
 {% block extra_css %}
-  <style>
-    .intro_img{
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center center;
-    }
-  </style>
+<style>
+  @font-face {
+	font-family: 'top-subtitle-font';
+	src: url("{% static 'font/FjnMacanKumbang-Regular.ttf' %}");
+}
+</style>
 {% endblock %}
 
 {% block content %}
-  <!-- Masthead -->
-  <div class="{{ group }}">
+<!-- Masthead -->
+<div class="{{ group }}">
   <header class="masthead text-white text-center">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-xl-9 mx-auto">
-          <h1>
-            アイドルブログ専用・画像保存ツール
-          </h1>
-          <h4 class="mb-3">
-            ブログのURL、メンバーの名前を入力してください。詳しくは<a href="#howto">こちら</a>
-          </h4>
+          <div class="row">
+            <div class="col-1 col-xs-4 col-sm-2 col-md-3 col-lg-4 col-xl-3"></div>
+            <h2 class="col-11 col-xs-7 col-sm-10 col-md-8 col-lg-7 col-xl-7 ml-xl-4 text-left"
+              style="letter-spacing: 0;">
+              <div class="init-effect-1">かっこいい画像も、</div>
+              <div class="init-effect-2">かわいい画像も、</div>
+              <div class="init-effect-3">保存しよう、いくらでも。</div>
+            </h2>
+            <div class="col-0 col-xs-1 col-sm-0 col-md-1 col-lg-1 col-xl-2"></div>
+          </div>
+          <div class="row justify-content-center mr-2 mr-md-0 ml-lg-5 ml-xl-0">
+            <div class="col-6 col-lg-5">
+              <h3 class="float-right init-effect-4"><a class="keyaki-text"
+                  href="{% url 'search:searchByGroups' 1 %}">#欅坂46</a>
+                </h>
+            </div>
+            <div class="col-6">
+              <h3 class="float-left init-effect-5"><a class="hinata-text"
+                  href="{% url 'search:searchByGroups' 2 %}">#日向坂46</a>
+              </h3>
+            </div>
+          </div>
         </div>
-        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+
+        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto mt-2 mb-1 init-effect-6">
           <form autocomplete="off">
             <div class="form-row">
               <div class="col-12 col-md-9 mb-2 mb-md-0">
@@ -45,123 +61,298 @@
             </div>
           </form>
         </div>
+        <div class="col-xl-9 mx-auto">
+          <h5 class="mb-3 init-effect-7">
+            ブログのURL、メンバーの名前を入力してください。詳しくは<a class="{{ group }}" href="#howto">こちら</a>
+          </h5>
+        </div>
       </div>
     </div>
   </header>
+</div>
+
+<!-- Share buttons -->
+<div class="share container my-3">
+  <div class="row">
+    <div class="sharebtns col-3">
+      <div class="twitterbtn">
+        <a href="http://twitter.com/share?url=https://otapick.com/&text=アイドルブログ専用・画像保存ツール" target="_blank">Twitter</a>
+      </div>
+    </div>
+
+    <div class="sharebtns col-3">
+      <div class="facebookbtn">
+        <a href="http://www.facebook.com/sharer.php?u=https://otapick.com/" target="_blank">Facebook</a>
+      </div>
+    </div>
+
+    <div class="sharebtns col-3">
+      <div class="linebtn">
+        <a href="http://line.me/R/msg/text/?アイドルブログ専用・画像保存ツール(https://otapick.com/)" target="_new">LINE</a>
+      </div>
+    </div>
+
+    <div class="sharebtns col-3">
+      <div class="pocketbtn">
+        <a href="http://getpocket.com/edit?url=https://otapick.com/" target="_blank">Pocket</a>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- Share buttons -->
-  <div class="share container my-3">
-    <div class="row">
-      <div class="sharebtns col-3">
-        <div class="twitterbtn">
-          <a href="http://twitter.com/share?url=https://otapick.com/&text=アイドルブログ専用・画像保存ツール" target="_blank">Twitter</a>
+<hr class="" id="newpost">
+<h1 class="text-center top-subtitle_newpost mt-5">NEW POST</h1>
+
+<!-- New post keyaki -->
+<div class="container text-muted">
+  <div class="otapick_card_back effect-fade">
+    <div class="otapick_card keyaki">
+      <div class="card mt-5 mb-3 border border-top-0">
+        <div class="card-body">
+          <div class="row justify-content-between">
+            <h5 class="col col-xs-8">欅坂46</h5>
+            <div class="col col-xs-4 pt-1 text-right">
+              <a class="keyaki" href="{% url 'search:searchByGroups' 1 %}">もっと見る></a>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="sharebtns col-3">
-        <div class="facebookbtn">
-          <a href="http://www.facebook.com/sharer.php?u=https://otapick.com/" target="_blank">Facebook</a>
+    </div>
+  </div>
+  <div class="row effect-fade">
+    {% for blog in keyaki_newblogs %}
+    <div class="col-6 col-md-4 col-lg-3 my-2">
+      <div class="otapick_card_back">
+        <div class="otapick_card keyaki">
+          <div class="card border border-top-0">
+            <div class="l-thumbnail">
+              <a href="{% url 'download:download' 1 blog.blog_ct %}">
+                <figure class="thumbnail-wrapper">
+                  {% if blog.thumbnail %}
+                  <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                  {% else %}
+                  <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                  {% endif %}
+                </figure>
+              </a>
+              <span class="more-button">
+                <div class="row justify-content-around">
+                  <div class="col-4 p-0 mr-2">
+                    <a href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                      style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                      <i class="fas fa-external-link-alt"></i>
+                    </a>
+                  </div>
+                  <div class="col-4 p-0 ml-2">
+                    <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
+                      title="ダウンロードページへ">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="card-body pb-0">
+              <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: dimgray;">
+                <h6 class="card-title newpost-title">{{ blog.title }}</h6>
+              </a>
+              <div class="row">
+                <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
+                  class="card-text ml-3 small mb-2 pb-0 card-writer keyaki">
+                  {{ blog.writer.full_kanji }}
+                </a>
+                <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+              </div>
+              <div class="dropdown text-center mb-2">
+                <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
+                  id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-bars" style="color:gray;"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
+                  <a class="dropdown-item" href="{% url 'download:download' 1 blog.blog_ct %}">ダウンロードページへ</a>
+                  <a class="dropdown-item" target="_blank"
+                    href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
-      <div class="sharebtns col-3">
-        <div class="linebtn">
-          <a href="http://line.me/R/msg/text/?アイドルブログ専用・画像保存ツール(https://otapick.com/)" target="_new">LINE</a>
-        </div>
-      </div>
 
-      <div class="sharebtns col-3">
-        <div class="pocketbtn">
-          <a href="http://getpocket.com/edit?url=https://otapick.com/" target="_blank">Pocket</a>
+<!-- New post hinata -->
+<div class="container mt-5 text-muted">
+  <div class="otapick_card_back effect-fade-under">
+    <div class="otapick_card hinata">
+      <div class="card mt-5 mb-3 border border-top-0">
+        <div class="card-body">
+          <div class="row">
+            <h5 class="col col-xs-8">日向坂46</h5>
+            <div class="col col-xs-4 pt-1 text-right">
+              <a class="hinata" href="{% url 'search:searchByGroups' 2 %}">もっと見る></a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- How to -->
-  <section>
-    <div id="howto" class="container mt-3">
-      <div class="row align-items-center">
-        <div class="col-lg-6 order-lg-2">
-          <img class="img-fluid intro_img" src="{% static 'img/preview1.png' %}" alt=""
+  <div class="row effect-fade">
+    {% for blog in hinata_newblogs %}
+    <div class="grid-item col-6 col-md-4 col-lg-3 my-2">
+      <div class="otapick_card_back">
+        <div class="otapick_card hinata">
+          <div class="card border border-top-0">
+            <div class="l-thumbnail">
+              <a href="{% url 'download:download' 2 blog.blog_ct %}">
+                <figure class="thumbnail-wrapper">
+                  {% if blog.thumbnail %}
+                  <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                  {% else %}
+                  <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound.jpg' %}">
+                  {% endif %}
+                </figure>
+              </a>
+              <span class="more-button">
+                <div class="row justify-content-around">
+                  <div class="col-4 p-0 mr-2">
+                    <a href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                      style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                      <i class="fas fa-external-link-alt"></i>
+                    </a>
+                  </div>
+                  <div class="col-4 p-0 ml-2">
+                    <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
+                      title="ダウンロードページへ">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="card-body pb-0">
+              <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: dimgray;">
+                <h6 class="card-title newpost-title">{{ blog.title }}</h6>
+              </a>
+              <div class="row">
+                <a href="{% url 'search:searchByMembers' 2 blog.writer.ct %}"
+                  class="card-text ml-3 small mb-2 pb-0 card-writer hinata">
+                  {{ blog.writer.full_kanji }}
+                </a>
+                <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+              </div>
+              <div class="dropdown text-center mb-2">
+                <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
+                  id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-bars" style="color:gray;"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
+                  <a class="dropdown-item" href="{% url 'download:download' 2 blog.blog_ct %}">ダウンロードページへ</a>
+                  <a class="dropdown-item" target="_blank"
+                    href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<hr id="howto" class="my-5">
+
+<!-- How to -->
+<h1 class="text-center top-subtitle_howto">HOW TO SAVE</h1>
+
+<section class="effect-fade-under">
+  <div class="container mt-3">
+    <div class="row align-items-center">
+      <div class="col-lg-6 order-lg-2">
+        <img class="img-fluid intro_img" src="{% static 'img/preview1.png' %}" alt=""
           style="background-image: url('{% static 'img/intro_back.png' %}');">
-        </div>
-        <div class="col-lg-6 order-lg-1">
-          <div class="p-4">
-            <h2>公式ブログから保存したい画像を選びます。</h2>
-            <p>
-              保存したい画像が見つかりましたら、そのページのURLをコピーしておいてください。
-              そのページに複数のブログ情報が含まれていても構いませんが、最も少ないステップで画像を保存するには「個別ページ」であることが推奨されます。
-              <br>現在サポート中のブログは<a href={% url 'top:support' %}>こちら</a>からご確認ください 。
-            </p>
-          </div>
+      </div>
+      <div class="col-lg-6 order-lg-1">
+        <div class="p-4">
+          <h2 class="intro-title">公式ブログから保存したい画像を選びます。</h2>
+          <p class="text-muted">
+            保存したい画像が見つかりましたら、そのページのURLをコピーしておいてください。
+            そのページに複数のブログ情報が含まれていても構いませんが、最も少ないステップで画像を保存するには「個別ページ」であることが推奨されます。
+            <br>現在サポート中のブログは<a href={% url 'top:support' %}>こちら</a>からご確認ください 。
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6 mr-0 mr-lg-0">
-          <img class="img-fluid intro_img" src="{% static 'img/preview2.jpeg' %}" alt="">
-        </div>
-        <div class="col-lg-6">
-          <div class="p-4">
-            <h2>検索にかけます。</h2>
-            <p>
-              先ほどのURLを当サイトの検索バーにそのまま貼り付けてください。そのページに含まれるブログを検出します。また、メンバーの名前からブログを探すことも可能です。
-              その際、メンバーの名前は漢字でもひらがなでも構いません。<br>
-              {% if group == 'keyaki' %}<a href="{% url 'search:memberList' %}?group=1">こちら</a>
-              {% elif group == 'hinata' %}<a href="{% url 'search:memberList' %}?group=2">こちら</a>{% endif %}
-              からメンバーを選択して探すことも可能です。
-            </p>
-          </div>
+<section class="effect-fade">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mr-0 mr-lg-0">
+        <img class="img-fluid intro_img" src="{% static 'img/preview2.jpeg' %}" alt="">
+      </div>
+      <div class="col-lg-6">
+        <div class="p-4">
+          <h2 class="intro-title">検索にかけます。</h2>
+          <p class="text-muted">
+            先ほどのURLを当サイトの検索バーにそのまま貼り付けてください。そのページに含まれるブログを検出します。また、メンバーの名前からブログを探すことも可能です。
+            その際、メンバーの名前は漢字でもひらがなでも構いません。<br>
+            {% if group == 'keyaki' %}<a href="{% url 'search:memberList' %}?group=1">こちら</a>
+            {% elif group == 'hinata' %}<a href="{% url 'search:memberList' %}?group=2">こちら</a>{% endif %}
+            からメンバーを選択して探すことも可能です。
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6 order-lg-2">
-          <img class="img-fluid intro_img" src="{% static 'img/preview3.png' %}" alt=""
+<section class="effect-fade">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 order-lg-2">
+        <img class="img-fluid intro_img" src="{% static 'img/preview3.png' %}" alt=""
           style="background-image: url('{% static 'img/intro_back3.png' %}');">
-        </div>
-        <div class="col-lg-6 order-lg-1">
-          <div class="p-4">
-            <h2>保存しましょう。【PC】</h2>
-            <p>
-              任意の画像を一枚から選択して保存することも出来ますし、全ての画像を一度に保存することも出来ます。画像はzipファイルとしてダウンロードされます。<br>
-              推奨ブラウザ<i class="fas fa-hand-point-right"></i>Chrome、Firefox、Safari、Microsoft Edgeの最新バージョン。また、Internet Explorerは対応しておりません。ご了承ください。
-            </p>
-          </div>
+      </div>
+      <div class="col-lg-6 order-lg-1">
+        <div class="p-4">
+          <h2 class="intro-title">保存しましょう。【PC】</h2>
+          <p class="text-muted">
+            任意の画像を一枚から選択して保存することも出来ますし、全ての画像を一度に保存することも出来ます。画像はzipファイルとしてダウンロードされます。<br>
+            推奨ブラウザ<i class="fas fa-hand-point-right"></i>Chrome、Firefox、Safari、Microsoft Edgeの最新バージョン。また、Internet
+            Explorerは対応しておりません。ご了承ください。
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <div class="container mb-5">
-      <div class="row align-items-center">
-        <div class="col-lg-6 mr-0 mr-lg-0">
-          <img class="img-fluid intro_img" src="{% static 'img/preview4.png' %}" alt=""
-            style="background-image: url('{% static 'img/intro_back4.png' %}');">
-        </div>
-        <div class="col-lg-6">
-          <div class="p-4">
-            <h2>保存しましょう。【スマホ】</h2>
-            <p>
-              画像が一覧表示されるのでブラウザごとの画像保存方法(通常は画像の長押し)に従いダウンロードを行ってください。<br>
-              推奨ブラウザ<i class="fas fa-hand-point-right"></i>Chrome、Firefox、Safariの最新バージョン。
-              <br>※PCスマホ問わず、画像を多く含んだブログの場合、画像の取得に10秒程度お時間がかかる可能性がございます。ご了承ください。
-            </p>
-          </div>
+<section class="effect-fade">
+  <div class="container mb-5">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mr-0 mr-lg-0">
+        <img class="img-fluid intro_img" src="{% static 'img/preview4.png' %}" alt=""
+          style="background-image: url('{% static 'img/intro_back4.png' %}');">
+      </div>
+      <div class="col-lg-6">
+        <div class="p-4">
+          <h2 class="intro-title">保存しましょう。【スマホ】</h2>
+          <p class="text-muted">
+            画像が一覧表示されるのでブラウザごとの画像保存方法(通常は画像の長押し)に従いダウンロードを行ってください。<br>
+            推奨ブラウザ<i class="fas fa-hand-point-right"></i>Chrome、Firefox、Safariの最新バージョン。
+            <br>※PCスマホ問わず、画像を多く含んだブログの場合、画像の取得に10秒程度お時間がかかる可能性がございます。ご了承ください。
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
 {% endblock %}

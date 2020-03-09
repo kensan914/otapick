@@ -19,7 +19,7 @@ class SearchForm(forms.Form):
 class NarrowingForm(forms.Form):
     keyword = forms.CharField(
         label='キーワード',
-        max_length=100,
+        max_length=30,
         required=False,
         widget=forms.TextInput(
             attrs={'placeholder': '例)'+kw_placeholder(), 'class': 'form-control form-control-sm mb-3'}
