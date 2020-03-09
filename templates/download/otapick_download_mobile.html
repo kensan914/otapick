@@ -31,7 +31,7 @@
 
   <div class="otapick_card_back">
     <div class="otapick_card {{ group }}">
-      <div class="card mb-5 mt-3">
+      <div class="card mb-5 mt-3 border border-top-0">
         <div class="card-body">
           <h3 class="ml-3">保存</h3>
           <hr>
@@ -111,12 +111,15 @@
   {% if blog %}
   <div class="otapick_card_back">
     <div class="otapick_card {{ group }}">
-      <div class="card mb-5">
+      <div class="card mb-5 border border-top-0">
         <div class="card-body">
           <p>引き続き保存を続けますか？</p>
           {% if group_id %}
           <p style="color: gray;">-{{ blog.writer.last_kanji }} {{ blog.writer.first_kanji }}の他のブログを探す場合は
             <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}">こちら</a>。
+          </p>
+          <p style="color: gray;">-{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のブログ一覧は
+            <a href="{% url 'search:searchByGroups' group_id %}">こちら</a>。
           </p>
           <p style="color: gray;">-{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のメンバーから探す場合は
             <a href="{% url 'search:memberList' %}?group={{ group_id }}">こちら</a>。

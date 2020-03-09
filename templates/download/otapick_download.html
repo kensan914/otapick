@@ -30,7 +30,7 @@
 <div class="container text-muted">
   <div class="otapick_card_back_left">
     <div class="otapick_card_left {{ group }}">
-      <div class="card my-5">
+      <div class="card my-5 border border-left-0">
         {% if blog_images %}
         <form action="{% url 'download:download' group_id blog_ct %}" method="POST" id="download">
           <div class="card-header">
@@ -197,7 +197,7 @@
   <div class="container text-muted">
     <div class="otapick_card_back">
       <div class="otapick_card {{ group }}">
-        <div class="card my-5">
+        <div class="card my-5 border border-top-0">
           <div class="card-body">
             <h3>保存</h3>
             <hr>
@@ -250,10 +250,13 @@
         <div class="modal-body">
           <p>ダウンロードダイアログにしたがって、画像を保存してください。</p>
           <p>引き続き保存を続けますか？</p>
+          {% if group_id %}
           <p style="color: gray;">-{{ blog.writer.last_kanji }} {{ blog.writer.first_kanji }}の他のブログを探す場合は
             <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}">こちら</a>。
           </p>
-          {% if group_id %}
+          <p style="color: gray;">-{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のブログ一覧は
+            <a href="{% url 'search:searchByGroups' group_id %}">こちら</a>。
+          </p>
           <p style="color: gray;">-{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のメンバーから探す場合は
             <a href="{% url 'search:memberList' %}?group={{ group_id }}">こちら</a>。
           </p>
@@ -293,70 +296,7 @@
 
 {% block extra_js %}
 
-  <script>
-  {% if blog and blog_images %}
-    function checkFunc(id) {
-      const idNum = id.replace(/[^0-9]/g, '');
-      if (!$('.save_img_checkbox#cb' + idNum).prop("checked")) {
-        $('div.thumbnail#img' + idNum).removeClass('checked');
-      } else {
-        $('div.thumbnail#img' + idNum).addClass('checked');
-      }
-    }
-
-    $(function () {
-      $('div.thumbnail').on('click', function () {
-          const id = $(this).attr("id");
-          const idNum = id.replace(/[^0-9]/g, '');
-
-        if (!$(this).is('.checked')) {
-          $(this).addClass('checked');
-          $('.save_img_checkbox#cb' + idNum).prop("checked", true);
-        } else {
-          $(this).removeClass('checked');
-          $('.save_img_checkbox#cb' + idNum).prop("checked", false);
-        }
-      });
-
-      $('#allCheck').on('click', function () {
-        if (!$(this).prop("checked")) {
-          $('div.thumbnail').removeClass('checked');
-          $('.save_img_checkbox').prop("checked", false);
-        } else {
-          $('div.thumbnail').addClass('checked');
-          $('.save_img_checkbox').prop("checked", true);
-        }
-      });
-      $('#allDownload, #allDownload2').on('click', function () {
-          $('div.thumbnail').addClass('checked');
-          $('.save_img_checkbox').prop("checked", true);
-          $('#allCheck').prop("checked", true);
-      });
-    });
-
-    $(function () {
-        let changeForm = true;
-        $(window).on('beforeunload', function () {
-        if (changeForm) return '保存が完了していません。このページを離れます。';
-      });
-      $('.save_button').on('click', function () {
-        changeForm = false;
-      });
-    });
-
-    $('#download').submit(function (event) {
-        event.preventDefault();
-        const check_count = $('.image-box :checked').length;
-        if (check_count === 0) {
-            $("#choice_image").show();
-            return false;
-        }else {
-            $(this).off('submit');
-            $(this).submit();
-            $("#choice_image").hide();
-            $('#download_complete').modal('show');
-        }
-    });
-  {% endif %}
-  </script>
+{% if blog and blog_images %}
+  <script src="{% static 'js/otapick/download.js' %}"></script>
+{% endif %}
 {% endblock %}

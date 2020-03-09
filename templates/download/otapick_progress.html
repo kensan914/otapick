@@ -64,42 +64,43 @@
 
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    
     <script>
-        function reload() {
-            {% if status == 'download' %}
-            jQuery(function($) {
-                $.ajax({
-                  url: "{% url 'download:download' group_id blog_ct %}",
-                  method: 'get',
-                  timeout: 10000,
-                    datatype: 'text',
-                })
-                .done( function(data) {
-                  $('#progress').css('width', data+'%').attr('aria-valuenow', data);
-                  if(parseInt(data) >= 100){
-                      setTimeout(function(){
-                          window.location.href = "{% url 'download:download' group_id blog_ct %}"
-                      },500);
-                  }
+      function reload() {
+        {% if status == 'download' %}
+        jQuery(function ($) {
+            $.ajax({
+                url: "{% url 'download:download' group_id blog_ct %}",
+                method: 'get',
+                timeout: 10000,
+                datatype: 'text',
+            })
+                .done(function (data) {
+                    $('#progress').css('width', data + '%').attr('aria-valuenow', data);
+                    if (parseInt(data) >= 100) {
+                        setTimeout(function () {
+                            window.location.href = "{% url 'download:download' group_id blog_ct %}"
+                        }, 500);
+                    }
                 });
-              setTimeout(function() {reload()},1000);
-            });
-            {% else %}
-                jQuery(function($) {
-                    $('#progress').css('width', 100+'%').attr('aria-valuenow', 100);
-                    setTimeout(function(){
-                        window.location.href = "{% url 'download:download' group_id blog_ct %}"
-                    },600);
-                });
-            {% endif %}
-        }
-        reload();
+            setTimeout(function () { reload() }, 1000);
+        });
+        {% else %}
+        jQuery(function ($) {
+            $('#progress').css('width', 100 + '%').attr('aria-valuenow', 100);
+            setTimeout(function () {
+                window.location.href = "{% url 'download:download' group_id blog_ct %}"
+            }, 600);
+        });
+        {% endif %}
+    }
+    reload();
     </script>
 
-<!-- twemoji -->
-<script>
-  twemoji.parse(document.body);
-</script>
+    <!-- twemoji -->
+    <script>
+      twemoji.parse(document.body);
+    </script>
 
 </body>
 </html>
