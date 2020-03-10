@@ -7,12 +7,11 @@
 
 {% endblock %}
 {% if blog %}
-  {{ blog.title }}({{ blog.writer.full_kanji }})
+  {{ blog.title }}　{{ blog.writer.full_kanji }}
 {% else %}
   画像保存
 {% endif %}
 {% block extra_css %}
-{#  <link rel="stylesheet" href="{% static 'css/test.css' %}">#}
 {% endblock %}
 
 {% block content %}
