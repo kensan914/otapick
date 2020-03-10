@@ -3,14 +3,13 @@
 {% load static %}
 
 {% block title %}
-
-
-{% endblock %}
 {% if blog %}
-  {{ blog.title }}
+  {{ blog.title }}({{ blog.writer.full_kanji }})
 {% else %}
   画像保存
 {% endif %}
+{% endblock %}
+
 {% block extra_css %}
 {% endblock %}
 

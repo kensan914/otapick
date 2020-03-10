@@ -4,7 +4,7 @@
 
 {% block title %}
   {% if blog %}
-    {{ blog.title }}
+    {{ blog.title }}({{ blog.writer.full_kanji }})
   {% else %}
     画像保存
   {% endif %}
