@@ -22,7 +22,7 @@ def exe_unregistration(blog, group_id):
     sleep_time_unregister = 1
     blog_url = ''
     if group_id == 1:
-        blog_url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/' +  str(blog.blog_ct) + '?ima=0000&cd=member'
+        blog_url = 'https://www.keyakizaka46.com/s/k46o/diary/detail/' + str(blog.blog_ct) + '?ima=0000&cd=member'
     elif group_id == 2:
         blog_url = 'https://www.hinatazaka46.com/s/official/diary/detail/' + str(blog.blog_ct) + '?ima=0000&cd=member'
 
@@ -32,16 +32,17 @@ def exe_unregistration(blog, group_id):
     soup = BeautifulSoup(r.data, 'lxml')
 
     if group_id == 1:
-        existBlog = soup.select('article')
+        exist_blog = soup.select('article')
     elif group_id == 2:
-        existBlog = soup.select('div.p-blog-article')
+        exist_blog = soup.select('div.p-blog-article')
 
-    if not existBlog:
+    if not exist_blog:
         support.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is not found in official blog. unregister this.')
         blog.delete()
     else:
         support.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is found in official blog. leave this.')
     time.sleep(sleep_time_unregister)
+
 
 def extract_cts(blogs, group_id):
     cts = []

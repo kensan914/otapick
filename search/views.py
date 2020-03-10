@@ -6,6 +6,7 @@ from search.forms import NarrowingForm
 from django.views import View
 from .models import Blog
 from .scripts.searchViewFunc import *
+from urllib.parse import urlparse
 
 
 class SearchByLatestView(generic.ListView, BaseView):
@@ -24,13 +25,13 @@ class SearchByLatestView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByLatestCtx = {
+        searchByLatest_ctx = {
             'isLatest': True,
             'group_id': group_id,
             'hit': True,
             'group': group,
         }
-        context.update(searchByLatestCtx)
+        context.update(searchByLatest_ctx)
         return context
 
     def get_queryset(self):
@@ -61,13 +62,13 @@ class SearchByBlogsView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByBlogsCtx = {
+        searchByBlogs_ctx = {
             'isLatest': False,
             'group_id': group_id,
             'hit': True,
             'group': group,
         }
-        context.update(searchByBlogsCtx)
+        context.update(searchByBlogs_ctx)
         return context
 
     def get_queryset(self):
@@ -88,12 +89,21 @@ class SearchByBlogsView(generic.ListView, BaseView):
 searchByBlogs = SearchByBlogsView.as_view()
 
 
-class SearchByMembersView(generic.ListView, BaseView):
-    template_name = html_path = 'search/otapick_searchByMembers.html'
+class BlogListView(generic.ListView, BaseView):
+    template_name = html_path = 'search/blogList.html'
     model = Blog
     paginate_by = 20
+    is_member = True
 
     def get(self, request, *args, **kwargs):
+        if self.request.GET.get('page'):
+            referer = request.environ.get('HTTP_REFERER')
+            referer_url = urlparse(referer)
+            if not referer or request.path != referer_url.path:
+                url = request.get_full_path()
+                url_removed_page = remove_query(url, 'page')
+                return redirect(url_removed_page)
+
         if self.request.GET.get('q'):
             return BaseView.get(self, self.request)
         else:
@@ -101,10 +111,11 @@ class SearchByMembersView(generic.ListView, BaseView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        group_id, ct, member, order_format, narrowing_post, narrowing_keyword = searchByMembers_init(self)
+        group_id, ct, member, order_format, narrowing_post, narrowing_keyword, page = blogList_init(self, self.is_member)
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByMembersCtx = {
+
+        listOfBlogs_ctx = {
             'group_id': group_id,
             'ct': ct,
             'member': member,
@@ -114,16 +125,20 @@ class SearchByMembersView(generic.ListView, BaseView):
             'narrowing_keyword': narrowing_keyword,
             'kw_placeholder': kw_placeholder(group_id),
             'form': NarrowingForm(self.request.POST),
-            'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile
+            'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile,
+            'page': page,
         }
-        context.update(searchByMembersCtx)
+        context.update(listOfBlogs_ctx)
         return context
 
     def get_queryset(self):
-        group_id, ct, member, order_format, narrowing_post, narrowing_keyword = searchByMembers_init(self)
-        narrowing_blogs = Blog.objects.filter(writer=member)
+        group_id, ct, member, order_format, narrowing_post, narrowing_keyword, page = blogList_init(self, self.is_member)
+        if self.is_member:
+            narrowing_blogs = Blog.objects.filter(writer=member)
+        else:
+            narrowing_blogs = Blog.objects.filter(writer__belonging_group__group_id=group_id)
         if narrowing_post:
-            narrowing_blogs = narrowing_blogs.filter(writer=member, post_date__year=narrowing_post['year'],
+            narrowing_blogs = narrowing_blogs.filter(post_date__year=narrowing_post['year'],
                                                      post_date__month=narrowing_post['month'])
             if 'day' in narrowing_post:
                 narrowing_blogs = narrowing_blogs.filter(post_date__day=narrowing_post['day'])
@@ -131,12 +146,14 @@ class SearchByMembersView(generic.ListView, BaseView):
             narrowing_blogs = narrowing_blogs.filter(title__icontains=narrowing_keyword)
         if order_format:
             if order_format == 'older_post':
-                return narrowing_blogs.order_by('post_date', 'order_for_simul')
+                return narrowing_blogs.order_by('post_date', '-order_for_simul')
         return narrowing_blogs.order_by('-post_date', 'order_for_simul')
 
     def post(self, request, *args, **kwargs):
         group_id = self.kwargs.get('group_id')
-        ct = self.kwargs.get('ct')
+
+        if self.is_member:
+            ct = self.kwargs.get('ct')
         form = NarrowingForm(request.POST)
         is_valid = form.is_valid()
 
@@ -157,12 +174,15 @@ class SearchByMembersView(generic.ListView, BaseView):
             n_keyword = narrowing_keyword
             n_keyword_query = quote_plus(n_keyword)
         if narrowing_year and narrowing_month and not n_post:
-           if narrowing_day:
-               n_post = narrowing_year + '-' + narrowing_month + '-' + narrowing_day
-           else:
-               n_post = narrowing_year + '-' + narrowing_month
+            if narrowing_day:
+                n_post = narrowing_year + '-' + narrowing_month + '-' + narrowing_day
+            else:
+                n_post = narrowing_year + '-' + narrowing_month
 
-        response = redirect('search:searchByMembers', group_id=group_id, ct=ct)
+        if self.is_member:
+            response = redirect('search:searchByMembers', group_id=group_id, ct=ct)
+        else:
+            response = redirect('search:searchByGroups', group_id=group_id)
         if order_format != 'None':
             response['location'] += '?order=' + order_format
             if n_keyword:
@@ -179,7 +199,18 @@ class SearchByMembersView(generic.ListView, BaseView):
         return response
 
 
+class SearchByMembersView(BlogListView):
+    is_member = True
+
+
 searchByMembers = SearchByMembersView.as_view()
+
+
+class SearchByGroupsView(BlogListView):
+    is_member = False
+
+
+searchByGroups = SearchByGroupsView.as_view()
 
 
 class SearchMemberView(generic.ListView, BaseView):
@@ -193,12 +224,12 @@ class SearchMemberView(generic.ListView, BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         searchText = self.kwargs.get('searchText')
-        searchMemberCtx = {
+        searchMember_ctx = {
             'searchText': searchText,
             'group': self.request.session.get('group', 'keyaki'),
             'appropriate': True,
         }
-        context.update(searchMemberCtx)
+        context.update(searchMember_ctx)
         return context
 
     def get_queryset(self):
@@ -237,7 +268,7 @@ class MemberListView(generic.ListView, BaseView):
         initial_letter = self.request.GET.get('initial')
         forced_group = self.request.GET.get('group')
         selected_group = self.request.GET.get('s_group')
-        searchMemberCtx = {
+        searchMember_ctx = {
             'group': self.request.session.get('group', 'keyaki'),
             'initial': convert_eng(initial_letter),
             'forced_group': forced_group,
@@ -245,7 +276,7 @@ class MemberListView(generic.ListView, BaseView):
             'keyaki_exist': self.keyaki_exist,
             'hinata_exist': self.hinata_exist,
         }
-        context.update(searchMemberCtx)
+        context.update(searchMember_ctx)
         return context
 
     def get_queryset(self, **kwargs):
@@ -272,13 +303,13 @@ searchUnjustMember = SearchUnjustMemberView.as_view()
 
 class AutocompleteView(View):
     def get(self, request, *args, **kwargs):
-        inputText = self.request.GET.get('input')
+        input_text = self.request.GET.get('input')
         members_data = []
-        if inputText:
+        if input_text:
             match_members = Member.objects.filter(
-                Q(full_kana__iregex=r'^%s' % inputText) | Q(first_kana__iregex=r'^%s' % inputText) |
-                Q(full_kanji__iregex=r'^%s' % inputText) | Q(first_kanji__iregex=r'^%s' % inputText) |
-                Q(full_eng__iregex=r'^%s' % inputText) | Q(first_eng__iregex=r'^%s' % inputText)
+                Q(full_kana__iregex=r'^%s' % input_text) | Q(first_kana__iregex=r'^%s' % input_text) |
+                Q(full_kanji__iregex=r'^%s' % input_text) | Q(first_kanji__iregex=r'^%s' % input_text) |
+                Q(full_eng__iregex=r'^%s' % input_text) | Q(first_eng__iregex=r'^%s' % input_text)
             )
             for member in match_members:
                 member_data = {

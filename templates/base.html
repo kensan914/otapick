@@ -3,6 +3,7 @@
 
 <!DOCTYPE html>
 <html lang="ja">
+{% block first_import %}{% endblock %}
 
 <head>
 
@@ -12,26 +13,39 @@
   <meta name="author" content="">
 
   <title>{% block title %}{% endblock %}｜ヲタピック</title>
-  {% bootstrap_css %}
-  {% bootstrap_javascript jquery='full' %}
 
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <!-- {% bootstrap_css %} -->
+  <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  {% bootstrap_javascript %}
+
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
-        integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   <link href="{% static 'css/simple-line-icons.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
-        type="text/css">
+    type="text/css">
 
   <link href="{% static 'css/bootstrap_ex.css' %}" rel="stylesheet">
 
-  <link type="text/css" rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css"/>
+  <link type="text/css" rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap" rel="stylesheet">
 
   <!-- twemoji -->
   <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
-  <style>img.emoji { height: 1em; width: 1em; margin: 0 .05em 0 .1em; vertical-align: -0.1em;}</style>
+  <style>
+    img.emoji {
+      height: 1em;
+      width: 1em;
+      margin: 0 .05em 0 .1em;
+      vertical-align: -0.1em;
+    }
+  </style>
 
   <!-- favicon -->
-  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 
   {% block extra_css %}{% endblock %}
 
@@ -39,148 +53,179 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134426000-2"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'UA-134426000-2');
   </script>
 </head>
 
-<body>
+<body ontouchstart="">
 
-<!-- Navigation -->
-<nav class="navbar navbar-light bg-light static-top navbar-expand-lg">
-  <a class="navbar-brand" href="{% url 'top:top' %}"
-     style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
+  <!-- Navigation -->
+  <nav class="navbar navbar-light bg-light static-top navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
              height: 50px; width: 170px;"></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-5 mr-sm-0">
-      <li class="nav-item">
-        <a class="nav-link mr-3" href={% url 'search:memberList' %}>メンバーから探す</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link mr-3" href={% url 'top:top' %}#howto>つかい方</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link mr-3" href={% url 'top:support' %}>サポート</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0 justify-content-center" autocomplete="off">
-      <input class="col-9 form-control autocomplete" type="search" placeholder="Search" aria-label="Search" name="q">
-      <div class="search_btn_min col-3">
-        <button type="submit" class="btn my-0 px-3 {{ group }}">
-          <i class="fas fa-search"></i>
-        </button>
-      </div>
-    </form>
-  </div>
-</nav>
-
-{% block content %}{% endblock %}
-
-<!-- Sub searcher -->
-<div class={{ group }}>
-<section class="call-to-action text-white text-center mt-3">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-xl-9 mx-auto">
-        <h2 class="mb-4">アイドルブログ専用・画像保存ツール</h2>
-      </div>
-      <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-        <form autocomplete="off">
-          <div class="form-row">
-            <div class="col-12 col-md-9 mb-2 mb-md-0">
-              <input class="form-control form-control-lg autocomplete" placeholder="Search" name="q">
-            </div>
-            <div class="col-12 col-md-3">
-              <div class="search_btn">
-                <button type="submit" class="btn btn-block btn-lg {{ group }}">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <form class="form-inline mt-3 mb-2 my-lg-0 justify-content-center col" autocomplete="off">
+        <input class="col form-control autocomplete" type="search" placeholder="Search" aria-label="Search" name="q">
+      </form>
+      <ul class="navbar-nav mx-4 mx-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdownMenuLink" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ブログ一覧
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'search:searchByGroups' 1 %}">欅坂46</a>
+            <a class="dropdown-item" href="{% url 'search:searchByGroups' 2 %}">日向坂46</a>
+            <a class="dropdown-item" href="{% url 'search:memberList' %}">メンバーリスト</a>
           </div>
-        </form>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdownMenuLink" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            公式
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000"
+              target="_blank">欅坂46公式ブログ <i class="fas fa-external-link-alt"></i></a>
+            <a class="dropdown-item" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000"
+              target="_blank">日向坂46公式ブログ <i class="fas fa-external-link-alt"></i></a>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link mr-3" href="{% url 'top:top' %}#howto">つかい方</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link mr-0" href="{% url 'top:support' %}">サポート</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  {% block content %}{% endblock %}
+
+  <!-- Footer -->
+  <footer class="footer bg-light text-muted mt-5">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-xl-3 col-lg-12 col-xs-12 text-center mb-5">
+          <a class="navbar-brand ml-4 ml-xl-0" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
+             height: 50px; width: 170px;"></a>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-xs-12">
+          <ul class="footer-menu">
+            <span class="font-weight-bold">ブログを探す</span>
+            <hr class="my-1 mr-4 mr-lg-0">
+            <li>
+              <a href="{% url 'search:searchByGroups' 1 %}">欅坂46 ブログ一覧</a>
+            </li>
+            <li>
+              <a href="{% url 'search:searchByGroups' 2 %}">日向坂46 ブログ一覧</a>
+            </li>
+            <li>
+              <a href="{% url 'search:memberList' %}">メンバーリスト</a>
+            </li>
+            <li>
+              <a href="{% url 'top:top' %}#newpost">新着ブログ</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-xs-12">
+          <ul class="footer-menu">
+            <span class="font-weight-bold">公式リンク</span>
+            <hr class="my-1 mr-4 mr-lg-0">
+            <li>
+              <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46 公式ブログ <i class="fas fa-external-link-alt"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/?ima=0000">欅坂46 公式サイト <i class="fas fa-external-link-alt"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46 公式ブログ <i class="fas fa-external-link-alt"></i></a>
+            </li>
+            <li>
+              <a target="_blank" href="https://www.hinatazaka46.com/s/official/?ima=0000">日向坂46 公式サイト <i class="fas fa-external-link-alt"></i></a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-xs-12">
+          <ul class="footer-menu">
+            <span class="font-weight-bold">ヲタピックについて</span>
+            <hr class="my-1 mr-4 mr-lg-0">
+            <li>
+              <a href="{% url 'top:top' %}#howto">つかい方</a>
+            </li>
+            <li>
+              <a href="{% url 'top:support' %}">サポート</a>
+            </li>
+            <li>
+              <a href="{% url 'top:support' %}#contact_info">お問い合わせ</a>
+            </li>
+            <li>
+              <a target="_blank" href="https://twitter.com/otapick">公式Twitter<i class="fas fa-external-link-alt"></i></a>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </div>
+  </footer>
+  <div class="col-12 text-center py-4 text-muted">
+    <p class="small">Copyright &copy; otapick 2020 All rights reserved.</p>
   </div>
-</section>
-</div>
 
-<!-- Footer -->
-<footer class="footer bg-light">
-  <div class="h-100 text-center my-auto">
-{#    <p class="text-muted small mb-4 mb-lg-0">Copyright &copy; <a href="http://proative.net" target="_blank">PROATIVE</a> 2019 All rights reserved.</p>#}
-    <p class="text-muted small mb-4 mb-lg-0">Copyright &copy; otapick 2020 All rights reserved.</p>
-  </div>
-</footer>
+  <!-- autocomplete -->
+  <script>
+    $(function () {
+      $.ui.autocomplete.prototype._renderItem = function (ul, item) {
+        return $("<li>").append("<a href='" + "/search/member/blog/" + item.group_id + "/" + item.ct + "/" + "'>" + item.name + "</a>").appendTo(ul);
+      };
 
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-
-<script>
-   $(function() {
-       $.ui.autocomplete.prototype._renderItem = function(ul, item) {
-           return $("<li>").append("<a href='" + "/search/member/blog/" + item.group_id + "/" + item.ct + "/" + "'>" + item.name + "</a>").appendTo(ul);
-       };
-
-       $("input.autocomplete").autocomplete({
-           source: function(req, res){
-               $.ajax({
-                   url: "{% url 'search:autocomplete' %}?input=" + encodeURIComponent(req.term),
-                   type: "get",
-                   cache: false,
-                   dataType: "json",
-                   success: function(data) {
-                       res(data);
-                   },
-               });
-           },
-           focus: function(event, ui) {
-              $("input.autocomplete").val(ui.item.name);
-              return false;
-           },
-           select: function(event, ui) {
-               window.location.href = "/search/member/blog/" + ui.item.group_id + "/" + ui.item.ct + "/";
-              return false;
-           },
-           delay: 0,
-           minLength: 2,
-       });
-    });
-</script>
-
-<!-- twemoji -->
-<script>
-  twemoji.parse(document.body);
-</script>
-
-<!-- Masonry -->
-<script type="text/javascript" src="{% static 'js/masonry.pkgd.min.js' %}"></script>
-<script>
-  $(function(){
-    var cnt = 0;
-    var waiting = setInterval(function(){
-        if(cnt == 1) {
-          $('.grid').masonry({
-            itemSelector: '.grid-item',
-            columnWidth: '.grid-sizer',
-            percentPosition: true
+      $("input.autocomplete").autocomplete({
+        source: function (req, res) {
+          $.ajax({
+            url: "{% url 'search:autocomplete' %}?input=" + encodeURIComponent(req.term),
+            type: "get",
+            cache: false,
+            dataType: "json",
+            success: function (data) {
+              res(data);
+            },
           });
-          clearInterval(waiting);
-        }
-        cnt++;
-    }, 200);
-});
-</script>
+        },
+        focus: function (event, ui) {
+          $("input.autocomplete").val(ui.item.name);
+          return false;
+        },
+        select: function (event, ui) {
+          window.location.href = "/search/member/blog/" + ui.item.group_id + "/" + ui.item.ct + "/";
+          return false;
+        },
+        delay: 0,
+        minLength: 2,
+      });
+    });
+  </script>
 
-{% block extra_js %}{% endblock %}
+  <!-- Masonry -->
+  <script type="text/javascript" src="{% static 'js/masonry.pkgd.min.js' %}"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+
+  <script src="{% static 'js/otapick/base.js' %}"></script>
+
+  {% block extra_js %}{% endblock %}
 </body>
 
 </html>

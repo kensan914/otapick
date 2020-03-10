@@ -2,7 +2,6 @@ import os
 import subprocess
 from django.shortcuts import render
 from config.settings import BASE_DIR
-from download.models import Progress
 from search.models import Member, Blog
 
 

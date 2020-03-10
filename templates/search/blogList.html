@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block first_import %}
+{% if page %}
+    <script src="{% static 'js/otapick/blogList_reload.js' %}"></script>
+{% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if member %}
+        {{ member.full_kanji }}({% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %})のブログ一覧
+    {% else %}
+        {% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のブログ一覧
+    {% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<!-- tempusdominus-bootstrap-4(css) -->
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" />
+{% if not isMobile %}
+{{ form.media }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Masthead -->
+<div class="{{ group }}">
+  <header class="call-to-action text-white text-center">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <h1>
+            ブログ一覧
+          </h1>
+          <h4 class="mb-0">
+            {% if member %}
+                {{ member.last_kanji }} {{ member.first_kanji }}
+            {% else %}
+                {% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}
+            {% endif %}
+          </h4>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<!-- Result -->
+<div class="container text-muted">
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card mt-5 mb-3 border border-top-0">
+        <div class="card-body">
+          <div class="row mx-2 justify-content-between">
+            <h3>
+              {% if member %}
+                  {{ member.full_kanji }}
+              {% else %}
+                  {% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}
+              {% endif %}
+            </h3>
+            <div class="row ml-2">
+              {% if narrowing_keyword %}
+              {% if group == 'keyaki' %}
+              <span class="badge badge-success mr-2 badge-pill d-flex align-items-center"
+                style="background-color: rgba(50, 205, 50, 0.7)">"{{ narrowing_keyword }}"</span>
+              {% elif group == 'hinata' %}
+              <span class="badge badge-success mr-2 badge-pill d-flex align-items-center"
+                style="background-color: rgba(0, 191, 255, 0.75)">"{{ narrowing_keyword }}"</span>
+              {% endif %}
+              {% endif %}
+              {% if narrowing_post %}
+              <span class="badge badge-success mr-2 badge-pill d-flex align-items-center"
+                style="background-color: rgba(186, 85, 211, 0.85)">{{ narrowing_post.year }}/{{ narrowing_post.month }}
+                {% if narrowing_post.day %}/{{ narrowing_post.day }}{% endif %}</span>
+              {% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="container">
+            <div class="row justify-content-between">
+              <div class="col-12 col-md-7">
+                <div class="">検索結果（<b>{{ page_obj.paginator.count }}</b>件）</div>
+              </div>
+              <div class="col-12 col-md-5 mt-2 mt-md-0">
+                <div class="row">
+                  <button class="btn btn-light ml-auto mr-3" type="button" data-toggle="collapse"
+                    data-target="#narrowing" aria-expanded="false" aria-controls="narrowing"
+                    style="border: solid 1px silver; border-radius: 5%; background-color: #F4F3F3">
+                    <i class="fas fa-search"></i> 絞り込み
+                  </button>
+
+                  <div class="btn-group mr-1" style="border: solid 1px silver; border-radius: 5%">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
+                      {% if order_format == 'older_post' %}
+                      <i class="fas fa-sort"></i> 古い順
+                      {% else %}
+                      <i class="fas fa-sort"></i> 新着順
+                      {% endif %}
+                    </button>
+                    <div class="dropdown-menu">
+                      {% if narrowing_keyword and narrowing_post %}
+                          <a class="dropdown-item"
+                            href="?sort=newer_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
+                          <a class="dropdown-item"
+                            href="?sort=older_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
+                      {% elif narrowing_keyword %}
+                          <a class="dropdown-item"
+                            href="?sort=newer_post&keyword={{ narrowing_keyword }}">新着順</a>
+                          <a class="dropdown-item"
+                            href="?sort=older_post&keyword={{ narrowing_keyword }}">古い順</a>
+                      {% elif narrowing_post %}
+                          <a class="dropdown-item"
+                            href="?sort=newer_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
+                          <a class="dropdown-item"
+                            href="?sort=older_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
+                      {% else %}
+                          <a class="dropdown-item"
+                            href="?sort=newer_post">新着順</a>
+                          <a class="dropdown-item"
+                            href="?sort=older_post">古い順</a>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mb-3">
+    <div class="collapse mt-2" id="narrowing">
+      <div class="card card-body">
+          {% if narrowing_keyword and narrowing_post %}
+        <form
+          action="?sort={{ order_format }}&keyword={{ narrowing_keyword }}&year={{ narrowing_post.year }}&month={{ narrowing_post.month }}{% if narrowing_post.day %}&day={{ narrowing_post.day }}{% endif %}"
+          method="POST" autocomplete="off">
+          {% elif narrowing_keyword %}
+          <form
+            action="?sort={{ order_format }}&keyword={{ narrowing_keyword }}"
+            method="POST">
+          {% elif narrowing_post %}
+            <form
+              action="?sort={{ order_format }}&year={{ narrowing_post.year }}&month={{ narrowing_post.month }}{% if narrowing_post.day %}&day={{ narrowing_post.day }}{% endif %}"
+              method="POST">
+          {% else %}
+              <form action="?sort={{ order_format }}" method="POST">
+          {% endif %}
+                {% csrf_token %}
+                <h5 class="mb-3"><b>絞り込み</b></h5>
+
+                {% if isMobile %}
+                <div class="form-group row mx-2">
+                  <label for="keyword_form" class="col-md-2 col-form-label col-form-label-sm">キーワード</label>
+                  <div class="col-md-10">
+                    <input type="search" class="form-control form-control-sm" id="keyword_form"
+                      placeholder="例){{ kw_placeholder }}" name="keyword" maxlength='20'>
+                  </div>
+                </div>
+                <div class="form-group row mx-2">
+                  <label for="month_picker" class="col-md-2 col-form-label col-form-label-sm">投稿月</label>
+                  <div class="col-md-10">
+                    <input type="month" class="form-control form-control-sm" value="" id="month_picker"
+                      name="post">
+                  </div>
+                </div>
+
+                {% else %}
+                <div class="form-group row mx-2">
+                  {% for field in form %}
+                  <label for="{{ field.name }}"
+                    class="col-md-2 col-form-label col-form-label-sm">{{ field.label }}</label>
+                  <div class="col-md-10">
+                    {{ field }}
+                  </div>
+                  {% endfor %}
+                </div>
+                {% endif %}
+
+                <hr>
+                <div class="row">
+                    {% if member %}
+                      <a class="btn btn-light rounded-pill ml-auto mr-3"
+                        href="{% url 'search:searchByMembers' group_id ct %}"
+                        style="border: solid 1px silver; border-radius: 5%; background-color: #F4F3F3; color: dimgray">
+                        条件を解除
+                      </a>
+                    {% else %}
+                    <a class="btn btn-light rounded-pill ml-auto mr-3"
+                        href="{% url 'search:searchByGroups' group_id %}"
+                        style="border: solid 1px silver; border-radius: 5%; background-color: #F4F3F3; color: dimgray">
+                        条件を解除
+                      </a>
+                    {% endif %}
+
+                  <div class="rounded mr-4">
+                    <button class="btn {{ group }}" type="submit">
+                      <span>適用</span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </form>
+          </form>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% if object_list|length > 0  %}
+  <div class="grid">
+    <div class="grid-sizer col-6 col-md-4 col-lg-3"></div>
+
+    {% for blog in object_list %}
+    <div class="grid-item col-6 col-md-4 col-lg-3 my-2">
+      <div class="otapick_card_back">
+        <div class="otapick_card {{ group }}">
+          <div class="card border border-top-0">
+            <div class="l-thumbnail">
+              <a href="{% url 'download:download' group_id blog.blog_ct %}">
+                <figure class="thumbnail-wrapper">
+                  {% if blog.thumbnail %}
+                  <img class="card-img-top" src="{{ blog.thumbnail.picture.url }}" style="border-radius: 0;">
+                  {% else %}
+                  <img class="card-img-top" src="{% static 'img/imageNotFound.jpg' %}" style="border-radius: 0;">
+                  {% endif %}
+                </figure>
+              </a>
+              <span class="more-button">
+                <div class="row justify-content-around">
+                  <div class="col-4 p-0 mr-2">
+                    {% if group_id == 1 %}
+                    <a href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                      style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                      <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    {% elif group_id == 2 %}
+                    <a href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                      style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                      <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    {% endif %}
+                  </div>
+                  <div class="col-4 p-0 ml-2">
+                    <a href="{% url 'download:download' group_id blog.blog_ct %}" style="color: white;"
+                      data-toggle="tooltip" title="ダウンロードページへ">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </div>
+              </span>
+            </div>
+            <div class="card-body pb-0">
+              <a href="{% url 'download:download' group_id blog.blog_ct %}" style="color: dimgray;">
+                <h6 class="card-title ">{{ blog.title }}</h6>
+              </a>
+              <div class="row">
+                {% if group_id == 1 %}
+                <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}"
+                  class="card-text ml-3 small mb-2 pb-0 card-writer" style="color: limegreen;">
+                  {{ blog.writer.full_kanji }}
+                </a>
+                {% elif group_id == 2 %}
+                <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}"
+                  class="card-text ml-3 small mb-2 pb-0 card-writer" style="color: deepskyblue;">
+                  {{ blog.writer.full_kanji }}
+                </a>
+                {% endif %}
+                <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+              </div>
+              <div class="dropdown text-center mb-2">
+                <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
+                  id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-bars" style="color:gray;"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
+                  <a class="dropdown-item" href="{% url 'download:download' group_id blog.blog_ct %}">ダウンロードページへ</a>
+                  {% if group_id == 1 %}
+                  <a class="dropdown-item" target="_blank"
+                    href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                  {% elif group_id == 2 %}
+                  <a class="dropdown-item" target="_blank"
+                    href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="page-load-status">
+    {% if page_obj.has_next %}
+    <div class="loader-ellips infinite-scroll-request mb-5">
+      <span class="loader-ellips__dot"></span>
+      <span class="loader-ellips__dot"></span>
+      <span class="loader-ellips__dot"></span>
+      <span class="loader-ellips__dot"></span>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if page_obj.has_next %}
+      {% if order_format %}
+          {% if narrowing_keyword and narrowing_post %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ order_format }}&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}" id="to_next_page">next</a>
+          {% elif narrowing_keyword %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ order_format }}&keyword={{ narrowing_keyword }}" id="to_next_page">next</a>
+          {% elif narrowing_post %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ order_format }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}" id="to_next_page">next</a>
+          {% else %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&sort={{ order_format }}" id="to_next_page">next</a>
+          {% endif %}
+      {% else %}
+          {% if narrowing_keyword and narrowing_post %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}" id="to_next_page">next</a>
+          {% elif narrowing_keyword %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&keyword={{ narrowing_keyword }}" id="to_next_page">next</a>
+          {% elif narrowing_post %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}" id="to_next_page">next</a>
+          {% else %}
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}" id="to_next_page">next</a>
+          {% endif %}
+      {% endif %}
+  {% endif %}
+
+
+  {% else %}
+  <div class="container">
+    <div class="alert alert-danger" role="alert">
+        {% if member %}
+            条件に一致するブログが見つかりませんでした。条件を解除する場合は<a href="{% url 'search:searchByMembers' group_id ct %}">こちら</a>。
+        {% else %}
+            条件に一致するブログが見つかりませんでした。条件を解除する場合は<a href="{% url 'search:searchByGroups' group_id %}">こちら</a>。
+        {% endif %}
+    </div>
+    <div class="row justify-content-center">
+      <div class="notFoundBox col-12 col-md-10 col-xl-8"
+        style="background-image: url({% static 'img/blogNotFound.png' %});"></div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/responsive-paginate.js' %}"></script>
+<script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+
+<script src="{% static 'js/otapick/blogList.js' %}"></script>
+{% endblock %}

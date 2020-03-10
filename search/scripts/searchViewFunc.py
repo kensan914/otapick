@@ -1,11 +1,11 @@
 from datetime import datetime
-from download.models import Image
 from search.models import Member
 from top.views import BaseView
 from search.scripts.firstClassifier import nameClassifier
 from django.shortcuts import redirect
 from django.views import generic
 import random
+import urllib.parse
 
 
 def convert_css_class(group_id):
@@ -15,13 +15,18 @@ def convert_css_class(group_id):
         return 'hinata'
 
 
-def searchByMembers_init(self):
+def blogList_init(self, is_member):
     group_id = self.kwargs.get('group_id')
     ct = self.kwargs.get('ct')
-    member = Member.objects.get(ct=ct, belonging_group__group_id=int(group_id))
+    if is_member:
+        member = Member.objects.get(ct=ct, belonging_group__group_id=int(group_id))
+    else:
+        member = None
+
     order_format = self.request.GET.get('sort')
     narrowing_keyword = self.request.GET.get('keyword')
     narrowing_post = self.request.GET.get('post')
+    page = self.request.GET.get('page')
 
     narrowing_post_dic = {}
     if narrowing_post:
@@ -36,7 +41,7 @@ def searchByMembers_init(self):
             return group_id, ct, member, order_format, narrowing_post_dic, narrowing_keyword
         narrowing_post_dic['month'] = post_date.month
         narrowing_post_dic['year'] = post_date.year
-    return group_id, ct, member, order_format, narrowing_post_dic, narrowing_keyword
+    return group_id, ct, member, order_format, narrowing_post_dic, narrowing_keyword, page
 
 
 def get_q_member(self, isListView):
@@ -106,3 +111,10 @@ def get_dy(dy_text):
     else:
         dy['day'] = None
     return dy
+
+
+def remove_query(url, key):
+    pr = urllib.parse.urlparse(url)
+    d = urllib.parse.parse_qs(pr.query)
+    d.pop(key, None)
+    return urllib.parse.urlunparse(pr._replace(query=urllib.parse.urlencode(d, doseq=True)))

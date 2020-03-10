@@ -1,10 +1,7 @@
-import multiprocessing
-import threading
-from concurrent import futures
-
 from django.shortcuts import render, redirect
 from django.views import View
 from search.scripts.firstClassifier import firstClassifier, dy_insert_hyphen
+from search.models import Blog
 
 
 class BaseView(View):
@@ -12,9 +9,9 @@ class BaseView(View):
     context = {}
 
     def get(self, request, *args, **kwargs):
-        inputText = request.GET.get('q')
-        if inputText:
-            result = firstClassifier(inputText)
+        input_text = request.GET.get('q')
+        if input_text:
+            result = firstClassifier(input_text)
             if result['input'] == 'url':
                 if result['class'] == 'detail':
                     return redirect('download:download', group_id=result['group_id'], blog_ct=result['blog_ct'])
@@ -41,6 +38,10 @@ class BaseView(View):
                     return redirect('search:searchUnjustMember')
         else:
             self.context['group'] = request.session.get('group', 'keyaki')
+            self.context['keyaki_newblogs']\
+                = Blog.objects.filter(writer__belonging_group__group_id=1).order_by('-post_date', 'order_for_simul')[:4]
+            self.context['hinata_newblogs'] \
+                = Blog.objects.filter(writer__belonging_group__group_id=2).order_by('-post_date', 'order_for_simul')[:4]
             return render(request, self.html_path, self.context)
 
 

@@ -1,6 +1,7 @@
 from config.celery import TransactionAwareTask
 from download.models import Image, Progress
 from download.scripts.downloadViewFunc import get_blog
+from search.scripts.blogRegister.compresser import compress_img
 from celery import shared_task
 import time
 import requests
@@ -20,7 +21,7 @@ def get_tag(progress, url, group_id):
         ca_certs=certifi.where())
 
     r = http.request('GET', url)
-    soup = BeautifulSoup(r.data, 'html.parser')
+    soup = BeautifulSoup(r.data, 'lxml')
 
     if group_id == 1:
         article_tag = soup.find('div', class_='box-article')
@@ -28,12 +29,21 @@ def get_tag(progress, url, group_id):
         article_tag = soup.find('div', class_='c-blog-article__text')
     img_tags = article_tag.find_all('img')
 
-    if not img_tags:
+    # Omit fake image tag.
+    real_img_tags = []
+    for img_tag in img_tags:
+        img_url = img_tag.get('src')
+        if img_url == '' or img_url is None or not img_url.startswith('http'):
+            continue
+        else:
+            real_img_tags.append(img_tag)
+
+    if not real_img_tags:
         progress.num = 100
         progress.save()
         quit()
 
-    return img_tags
+    return real_img_tags
 
 
 def get_img_url(progress, url, group_id):
@@ -63,10 +73,13 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         time.sleep(1)
 
 
-def exe_save_img(group_id, writer_ct, blog_ct, img_url):
+def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False):
     try:
         member_dir_path = str(group_id) + '_' + writer_ct
-        media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
+        if is_thumbnail:
+            media_dir_path = os.path.join("blog_thumbnail", member_dir_path, str(blog_ct))
+        else:
+            media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
         dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
         os.makedirs(dire_path, exist_ok=True)
         path = os.path.join(dire_path, os.path.basename(img_url))
@@ -79,8 +92,14 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url):
         img_file.write(image)
 
         img_file.close()
+
+        if is_thumbnail:
+            compress_img(os.path.join(settings.MEDIA_ROOT, media))
         return media
     except:
+        import traceback
+        traceback.print_exc()
+
         print('Image not Found')
         return None
 
