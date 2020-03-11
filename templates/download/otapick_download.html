@@ -2,10 +2,15 @@
 
 {% load static %}
 
-{% block title %}画像保存{% endblock %}
+{% block title %}
+{% if blog %}
+  {{ blog.title }}({{ blog.writer.full_kanji }})
+{% else %}
+  画像保存
+{% endif %}
+{% endblock %}
 
 {% block extra_css %}
-{#  <link rel="stylesheet" href="{% static 'css/test.css' %}">#}
 {% endblock %}
 
 {% block content %}
