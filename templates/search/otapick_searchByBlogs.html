@@ -2,6 +2,10 @@
 
 {% load static %}
 
+{% block description %}
+<meta name="description" content="ヲタピックのブログ検索結果です。『ヲタピック』は、欅坂46・日向坂46の公式ブログ画像を素早く、効率よく保存できるヲタ活支援サービスです。画像が保存できないと諦めるているあなた、是非当サイトで高画質ブログ画像を保存してください。坂道Gに限らず、対応アイドルのリクエスト等、DMにてお待ちしております。">
+{% endblock %}
+
 {% block title %}
 {% if hit %}
 {% if group_id %}{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}{% endif %}
