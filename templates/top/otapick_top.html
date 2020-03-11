@@ -158,7 +158,13 @@
             </div>
             <div class="card-body pb-0">
               <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: dimgray;">
-                <h6 class="card-title newpost-title">{{ blog.title }}</h6>
+                <h6 class="card-title newpost-title">
+                  {% if blog.title == "" %}
+                    &nbsp;
+                  {% else %}
+                    {{ blog.title }}
+                  {% endblock %}
+                </h6>
               </a>
               <div class="row">
                 <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
@@ -240,7 +246,13 @@
             </div>
             <div class="card-body pb-0">
               <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: dimgray;">
-                <h6 class="card-title newpost-title">{{ blog.title }}</h6>
+                <h6 class="card-title newpost-title">
+                  {% if blog.title == "" %}
+                    &nbsp;
+                  {% else %}
+                    {{ blog.title }}
+                  {% endblock %}
+                </h6>
               </a>
               <div class="row">
                 <a href="{% url 'search:searchByMembers' 2 blog.writer.ct %}"
