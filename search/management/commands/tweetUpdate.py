@@ -4,6 +4,7 @@ from datetime import date, timedelta, datetime
 from search.models import Blog
 from config import settings
 import pytz
+import emoji
 
 
 class Command(BaseCommand):
@@ -54,14 +55,18 @@ class Command(BaseCommand):
         start = datetime.strptime(start_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('Asia/Tokyo'))
         end = datetime.strptime(end_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('Asia/Tokyo'))
 
-        new_posts = Blog.objects.filter(post_date__range=(start, end), writer__belonging_group__group_id=group_id)
+        new_posts = Blog.objects.filter(post_date__range=(start, end), writer__belonging_group__group_id=group_id).order_by('-post_date', 'order_for_simul')
         return new_posts
 
     def create_text(self, new_posts, group_id):
-        text = '本日の坂道ブログ更新情報(' + str(len(new_posts)) + '件)\n\n'
+        text = emoji.emojize(':rainbow:', use_aliases=True)\
+               + '本日の坂道ブログ更新情報(' + str(len(new_posts)) + '件)'\
+               + emoji.emojize(':rainbow:', use_aliases=True)\
+               + '\n\n'
         for new_post in new_posts[:4]:
             text += '「' + self.shorten_text(new_post.title, max_length=10) + '」 #' + new_post.writer.full_kanji + '\n'
-        text += '\n↓もっと見る↓\n'
+        text += '\n' + emoji.emojize(':arrow_double_down:', use_aliases=True) + 'もっと見る'\
+                + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n'
         text += 'otapick.com/#newpost\n\n'
 
         if group_id == 1:
