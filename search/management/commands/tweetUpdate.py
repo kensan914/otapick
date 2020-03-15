@@ -3,6 +3,7 @@ import tweepy
 # import ssl
 from datetime import date, timedelta, datetime
 from search.models import Blog
+from config import settings
 
 
 class Command(BaseCommand):
@@ -77,7 +78,8 @@ class Command(BaseCommand):
 
         for new_post in new_posts[:4]:
             media_path = new_post.thumbnail.picture.url
-            file_names.append(media_path)
+            file_name = settings.PROJECT_NAME + media_path
+            file_names.append(file_name)
 
         for file_name in file_names:
             res = api.media_upload(file_name)
