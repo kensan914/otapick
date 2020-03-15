@@ -67,7 +67,7 @@ class Command(BaseCommand):
 
         text += '本日の坂道ブログ更新情報(' + str(len(new_posts)) + '件)'
 
-        text = emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
+        text += emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
 
         for new_post in new_posts[:4]:
             text += '「' + self.shorten_text(new_post.title, max_length=10) + '」 #' + new_post.writer.full_kanji + '\n'
