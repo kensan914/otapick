@@ -78,7 +78,7 @@ class Command(BaseCommand):
 
         for new_post in new_posts[:4]:
             media_path = new_post.thumbnail.picture.url
-            file_name = settings.PROJECT_NAME + media_path
+            file_name = settings.BASE_DIR + media_path
             file_names.append(file_name)
 
         for file_name in file_names:
