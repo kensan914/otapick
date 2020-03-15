@@ -64,7 +64,7 @@ class Command(BaseCommand):
             text = emoji.emojize(':deciduous_tree:', use_aliases=True)\
                    + '本日の坂道ブログ更新情報(欅' + str(len(new_posts)) + '件)'
         elif group_id == 2:
-            text = emoji.emojize(':sunny:', use_aliases=True)\
+            text = emoji.emojize(':sun_with_face:', use_aliases=True)\
                    + '本日の坂道ブログ更新情報(日向' + str(len(new_posts)) + '件)'
 
         text += emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
