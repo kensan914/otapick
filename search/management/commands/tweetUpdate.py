@@ -70,7 +70,7 @@ class Command(BaseCommand):
         text += emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
 
         for new_post in new_posts[:4]:
-            text += '「' + self.shorten_text(new_post.title, max_length=10) + '」 #' + new_post.writer.full_kanji + '\n'
+            text += '「' + self.shorten_text(new_post.title, max_length=10) + '」#' + new_post.writer.full_kanji + '\n'
 
         if len(new_posts) > 4:
             text += 'etc…\n'
