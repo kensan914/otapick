@@ -59,20 +59,29 @@ class Command(BaseCommand):
         return new_posts
 
     def create_text(self, new_posts, group_id):
-        text = emoji.emojize(':rainbow:', use_aliases=True)\
-               + '本日の坂道ブログ更新情報(' + str(len(new_posts)) + '件)'\
-               + emoji.emojize(':rainbow:', use_aliases=True)\
-               + '\n\n'
+        text = ''
+        if group_id == 1:
+            text = emoji.emojize(':rainbow:', use_aliases=True)
+        elif group_id == 2:
+            text = emoji.emojize(':sunny:', use_aliases=True)
+
+        text += '本日の坂道ブログ更新情報(' + str(len(new_posts)) + '件)'
+
+        text = emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
+
         for new_post in new_posts[:4]:
             text += '「' + self.shorten_text(new_post.title, max_length=10) + '」 #' + new_post.writer.full_kanji + '\n'
+
+        if len(new_posts) > 4:
+            text += 'etc…\n'
+
         text += '\n' + emoji.emojize(':arrow_double_down:', use_aliases=True) + 'もっと見る'\
                 + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n'
-        text += 'otapick.com/#newpost\n\n'
 
         if group_id == 1:
-            text += '#欅坂46'
+            text += 'otapick.com/search/group/blog/1/\n\n#欅坂46'
         elif group_id == 2:
-            text += '#日向坂46'
+            text += 'otapick.com/search/group/blog/2/\n\n#日向坂46'
         return text
 
     def create_media_ids(self, api, new_posts):
