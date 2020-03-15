@@ -79,9 +79,17 @@ class Command(BaseCommand):
                 + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n'
 
         if group_id == 1:
-            text += 'otapick.com/search/group/blog/1/\n\n#欅坂46'
+            text += 'otapick.com/search/group/blog/1/\n' \
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '公式'\
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n'\
+                    + 'https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000'\
+                    + '\n\n#欅坂46'
         elif group_id == 2:
-            text += 'otapick.com/search/group/blog/2/\n\n#日向坂46'
+            text += 'otapick.com/search/group/blog/2/\n' \
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '公式' \
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n' \
+                    + 'https://www.hinatazaka46.com/s/official/diary/member?ima=0000' \
+                    + '\n\n#日向坂46'
         return text
 
     def create_media_ids(self, api, new_posts):
