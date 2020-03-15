@@ -61,11 +61,11 @@ class Command(BaseCommand):
     def create_text(self, new_posts, group_id):
         text = ''
         if group_id == 1:
-            text = emoji.emojize(':rainbow:', use_aliases=True)
+            text = emoji.emojize(':deciduous_tree:', use_aliases=True)\
+                   + '本日の坂道ブログ更新情報(欅' + str(len(new_posts)) + '件)'
         elif group_id == 2:
-            text = emoji.emojize(':sunny:', use_aliases=True)
-
-        text += '本日の坂道ブログ更新情報(' + str(len(new_posts)) + '件)'
+            text = emoji.emojize(':sunny:', use_aliases=True)\
+                   + '本日の坂道ブログ更新情報(日向' + str(len(new_posts)) + '件)'
 
         text += emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
 
@@ -89,9 +89,10 @@ class Command(BaseCommand):
         media_ids = []
 
         for new_post in new_posts[:4]:
-            media_path = new_post.thumbnail.picture.url
-            file_name = settings.BASE_DIR + media_path
-            file_names.append(file_name)
+            if new_post.thumbnail is not None:
+                media_path = new_post.thumbnail.picture.url
+                file_name = settings.BASE_DIR + media_path
+                file_names.append(file_name)
 
         for file_name in file_names:
             res = api.media_upload(file_name)
