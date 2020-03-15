@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
 import tweepy
-# import ssl
 from datetime import date, timedelta, datetime
 from search.models import Blog
 from config import settings
+import pytz
 
 
 class Command(BaseCommand):
@@ -20,8 +20,6 @@ class Command(BaseCommand):
         new_posts = self.filter_blog_1day(options['group'])
         if len(new_posts) <= 0:
             quit()
-
-        # ssl._create_default_https_context = ssl._create_unverified_context
 
         CK = "EndyyIz6105OLMVZLj48whPTl"
         CS = "6UcaWCKZSk9Z5a4HRwYoyVU4e2Kucmrt3bFdg7SP5q2c5iTMyB"
@@ -53,8 +51,8 @@ class Command(BaseCommand):
         start_str = str(yesterday) + ' ' + yesterday_time
         end_str = str(today) + ' ' + today_time
 
-        start = datetime.strptime(start_str, '%Y-%m-%d %H:%M:%S')
-        end = datetime.strptime(end_str, '%Y-%m-%d %H:%M:%S')
+        start = datetime.strptime(start_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+        end = datetime.strptime(end_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('Asia/Tokyo'))
 
         new_posts = Blog.objects.filter(post_date__range=(start, end), writer__belonging_group__group_id=group_id)
         return new_posts
