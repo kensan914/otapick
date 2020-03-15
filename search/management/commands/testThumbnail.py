@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from search.scripts.blogRegister.registerer import register_latest
 from search.models import Blog
 from download.models import Image
 from urllib3.exceptions import InsecureRequestWarning
