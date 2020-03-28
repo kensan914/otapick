@@ -27,7 +27,7 @@ class Command(BaseCommand):
             quit()
 
         for blog in blogs:
-            if not Progress.objects.filter(target=blog).exists() or Progress.objects.get(target=blog).num <= 100:
+            if not Progress.objects.filter(target=blog).exists() or not Progress.objects.get(target=blog).ready:
                 progress_instance = Progress.objects.create(target=blog)
                 imgScraper.update(progress_instance.id, options['group'], blog.blog_ct, options['ct'])
                 progress_instance.num = 100
