@@ -41,14 +41,18 @@ def get_tag(progress, url, group_id):
     if not real_img_tags:
         progress.num = 100
         progress.save()
-        quit()
+        # quit()
+        return
 
     return real_img_tags
 
 
 def get_img_url(progress, url, group_id):
     url_list = []
-    for img_tag in get_tag(progress, url, group_id):
+    img_tags = get_tag(progress, url, group_id)
+    if img_tags is None:
+        return
+    for img_tag in img_tags:
         img_url = img_tag.get('src')
         url_list.append(img_url)
     return url_list
@@ -69,8 +73,6 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
 
         progress.num = (i + 1) * 100 / img_num
         progress.save()
-
-        time.sleep(1)
 
 
 def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False):
@@ -115,4 +117,8 @@ def update(progress_id, group_id, blog_ct, writer_ct):
     elif group_id == 2:
         blog_url = "https://www.hinatazaka46.com/s/official/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"
 
-    save_img(get_img_url(progress, blog_url, group_id), progress, group_id, blog_ct, writer_ct, blog)
+    img_urls = get_img_url(progress, blog_url, group_id)
+    if img_urls is None:
+        return
+
+    save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog)
