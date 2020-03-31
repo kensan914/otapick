@@ -97,10 +97,12 @@ class Command(BaseCommand):
         media_ids = []
 
         for new_post in new_posts[:4]:
-            if new_post.thumbnail_id is not None:
+            try:
                 media_path = new_post.thumbnail.picture.url
                 file_name = settings.BASE_DIR + media_path
                 file_names.append(file_name)
+            except:
+                pass
 
         for file_name in file_names:
             res = api.media_upload(file_name)
