@@ -97,7 +97,7 @@ class Command(BaseCommand):
         media_ids = []
 
         for new_post in new_posts[:4]:
-            if new_post.thumbnail is not None:
+            if new_post.thumbnail_id is not None:
                 media_path = new_post.thumbnail.picture.url
                 file_name = settings.BASE_DIR + media_path
                 file_names.append(file_name)
