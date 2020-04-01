@@ -770,7 +770,7 @@ div.thumbnail.checked + .save_img_checkbox {
 }
 
 /* top subtitle */
-.top-subtitle_newpost, .top-subtitle_howto {
+.top-subtitle_newpost, .top-subtitle_howto, .top-subtitle_twitter {
     font-family: top-subtitle-font;
     position: relative;
     color: rgb(100, 100, 100);
@@ -792,7 +792,7 @@ div.thumbnail.checked + .save_img_checkbox {
     filter: blur(5px);
     transition: all 0.5s;
 }
-.top-subtitle_newpost.effect-scroll, .top-subtitle_howto.effect-scroll {
+.top-subtitle_newpost.effect-scroll, .top-subtitle_howto.effect-scroll, .top-subtitle_twitter.effect-scroll {
     opacity: 1;
 }
 .top-subtitle_howto::after {
@@ -809,6 +809,21 @@ div.thumbnail.checked + .save_img_checkbox {
     -webkit-text-fill-color: transparent;
     filter: blur(5px);
   }
+
+.top-subtitle_twitter::after {
+    content: "Twitter";
+    position: absolute;
+    z-index: -1;
+    bottom: -10px;
+    left: 5%;
+    height: 110%;
+    width: 90%;
+    opacity: 0.8;
+    background-image: linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(5px);
+}
 
   /* footer */
   .footer-menu span{
@@ -849,4 +864,51 @@ a.keyaki {
 }
 a.hinata {
     color: deepskyblue;
+}
+
+{#gradient-button#}
+.gradient-btn {
+  font-size: 18px;
+  color: #fff;
+  padding: 10px 10px;
+  display: block;
+  border-radius: 50px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  will-change: transform, filter;
+  transform-style: preserve-3d;
+  transition: all .3s ease-out;
+}
+.gradient-btn:hover {
+  transform: scale(1.03);
+}
+.gradient-btn::before {
+  content: "";
+  height: 40px;
+  display: inline-block;
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 5px;
+  z-index: -1;
+  border-radius: 50px;
+  opacity: 0;
+  transform-style: preserve-3d;
+  transition: all .3s ease-out;
+}
+.gradient-btn:hover::before {
+  bottom: -10px;
+  opacity: .8;
+  filter: blur(15px);
+}
+
+.gradient-btn.keyaki,
+.gradient-btn.keyaki::before {
+  text-decoration: none !important;
+  color: white;
+  background-position: center;
+  background: -moz-linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
+  background: -webkit-linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
+  background: linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
 }

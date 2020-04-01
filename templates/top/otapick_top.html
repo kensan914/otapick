@@ -15,6 +15,8 @@
 	src: url("{% static 'font/FjnMacanKumbang-Regular.ttf' %}");
 }
 </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.css">
 {% endblock %}
 
 {% block content %}
@@ -39,7 +41,7 @@
             <div class="col-6 col-lg-5">
               <h3 class="float-right init-effect-4"><a class="keyaki-text"
                   href="{% url 'search:searchByGroups' 1 %}">#欅坂46</a>
-                </h>
+              </h3>
             </div>
             <div class="col-6">
               <h3 class="float-left init-effect-5"><a class="hinata-text"
@@ -107,9 +109,90 @@
 <hr class="" id="newpost">
 <h1 class="text-center top-subtitle_newpost mt-5">NEW POST</h1>
 
+<div class="container text-muted">
+  <div class="swiper-container effect-fade" style="overflow-y:visible;">
+    <div class="swiper-wrapper pb-5">
+      {% for blog in keyaki_newblogs %}
+      <div class="swiper-slide col-6 col-md-4 col-lg-3 my-2">
+        <div class="otapick_card_back">
+          <div class="otapick_card keyaki">
+            <div class="card border border-top-0">
+              <div class="l-thumbnail">
+                <a href="{% url 'download:download' 1 blog.blog_ct %}">
+                  <figure class="thumbnail-wrapper">
+                    {% if blog.thumbnail %}
+                    <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                    {% else %}
+                    <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                    {% endif %}
+                  </figure>
+                </a>
+                <span class="more-button">
+                  <div class="row justify-content-around">
+                    <div class="col-4 p-0 mr-2">
+                      <a href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                        style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
+                    </div>
+                    <div class="col-4 p-0 ml-2">
+                      <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
+                        title="ダウンロードページへ">
+                        <i class="fas fa-download"></i>
+                      </a>
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <div class="card-body pb-0">
+                <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: dimgray;">
+                  <h6 class="card-title newpost-title">
+                    {% if blog.title == "" %}
+                      &nbsp;
+                    {% else %}
+                      {{ blog.title }}
+                    {% endif %}
+                  </h6>
+                </a>
+                <div class="row">
+                  <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
+                    class="card-text ml-3 small mb-2 pb-0 card-writer keyaki">
+                    {{ blog.writer.full_kanji }}
+                  </a>
+                  <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+                </div>
+                <div class="dropdown text-center mb-2">
+                  <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
+                    id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bars" style="color:gray;"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
+                    <a class="dropdown-item" href="{% url 'download:download' 1 blog.blog_ct %}">ダウンロードページへ</a>
+                    <a class="dropdown-item" target="_blank"
+                      href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+  <div class="mx-auto effect-fade" style="width: 200px;">
+    <a href="{% url 'search:searchByGroups' 1 %}" class="gradient-btn keyaki" style="width: 200px; background-image: url('{% static 'img/test.jpeg' %}'); background-size: cover;">
+      <b>もっと見る>></b>
+    </a>
+  </div>
+</div>
+
+
+
 <!-- New post keyaki -->
 <div class="container text-muted">
-  <div class="otapick_card_back effect-fade">
+  <div class="otapick_card_back effect-fade-under">
     <div class="otapick_card keyaki">
       <div class="card mt-5 mb-3 border border-top-0">
         <div class="card-body">
@@ -371,4 +454,58 @@
   </div>
 </section>
 
+<hr class="my-5">
+<!-- Twitter -->
+<h1 class="text-center top-subtitle_twitter">Twitter</h1>
+<div class="container effect-fade my-5">
+  <div class="row align-items-center">
+    <div class="col-lg-6 order-lg-1">
+      <div class="p-4">
+        <h3 class="intro-title">ヲタピック公式Twitterアカウント</h3>
+        <p class="text-muted">
+          毎日、欅坂46・日向坂46のブログ更新情報を発信！！他にはメンテナンス、アップデート情報からシンプルなつぶやきまで色々発信していきます。<b>フォロ―バック4600%</b>ですので、気軽にフォローしてください！
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-6 order-lg-2">
+      <div class="otapick_card_back">
+        <div class="otapick_card {{ group }}">
+          <div class="card border border-top-0">
+            <a class="twitter-timeline" data-height="500" href="https://twitter.com/otapick?ref_src=twsrc%5Etfw">Tweets by otapick</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.js"></script>
+ <script>
+    var swiper = new Swiper('.swiper-container', {
+      slidesPerView: 2,
+      spaceBetween: 0,
+      freeMode: true,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+
+    $( document ).ready(uploadSlidesPerView);
+    $( window ).resize(uploadSlidesPerView);
+
+    function uploadSlidesPerView() {
+        if (window.innerWidth >= 992) {
+            swiper.params.slidesPerView = 4;
+        } else if (window.innerWidth >= 768) {
+            swiper.params.slidesPerView = 3;
+        } else {
+            swiper.params.slidesPerView = 2;
+        }
+        swiper.update();
+    }
+  </script>
 {% endblock %}
