@@ -828,7 +828,7 @@ div.thumbnail.checked + .save_img_checkbox {
   /* footer */
   .footer-menu span{
     color: gray;
-    padding:10px 0px;
+    padding:10px 0;
     display: block;
     text-transform: uppercase;
     font-size: 16px;
@@ -906,9 +906,18 @@ a.hinata {
 .gradient-btn.keyaki,
 .gradient-btn.keyaki::before {
   text-decoration: none !important;
-  color: white;
+  color: white !important;
   background-position: center;
   background: -moz-linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
   background: -webkit-linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
   background: linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
+}
+.gradient-btn.hinata,
+.gradient-btn.hinata::before {
+  text-decoration: none !important;
+  color: white !important;
+  background-position: center;
+  background: -moz-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
+  background: -webkit-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
+  background: linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
 }
