@@ -46,7 +46,7 @@ window.onload = function () {
     });
 
     function scroll_effect() {
-        $('.effect-fade, .effect-fade-under, .top-subtitle_newpost, .top-subtitle_howto, .top-subtitle_twitter').each(function () {
+        $('.effect-fade, .effect-fade-under, .top-subtitle_newpost, .top-subtitle_howto, .top-subtitle_twitter, .top-subtitle_popular').each(function () {
             var elemPos = $(this).offset().top;
             var scroll = $(window).scrollTop();
             var windowHeight = $(window).height();

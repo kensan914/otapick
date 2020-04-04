@@ -1,7 +1,11 @@
 import os
 from django.shortcuts import render
+from django.views import View
+
 from download.imgScraper import update
-from download.scripts.downloadViewFunc import get_blog, render_progress
+from download.scripts.downloadViewFunc import get_blog, render_progress, increment_num_of_views, \
+    increment_num_of_downloads, edit_num_of_most_downloads
+from search.models import Blog
 from top.views import BaseView
 from .models import Image, Progress
 from django.http import HttpResponse
@@ -66,6 +70,8 @@ class DownloadView(BaseView):
                     self.context['blog_images'] = blog_images
                 else:
                     self.context['blog_images'] = None
+            # rewrite num_of_views
+            increment_num_of_views(blog, num=1)
             return render(request, self.html_path, self.context)
         else:
             request.session['loaded_'+str(group_id)+'_'+str(blog_ct)] = True
@@ -77,6 +83,13 @@ class DownloadView(BaseView):
         blog_ct = self.kwargs.get('blog_ct')
         file_pks = request.POST.getlist('zip')
         upload_images = Image.objects.filter(pk__in=file_pks)
+
+        #rewrite num_of_downloads
+        if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct).exists():
+            blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+            increment_num_of_downloads(upload_images, blog, num=1)
+            edit_num_of_most_downloads(blog)
+
         response = HttpResponse(content_type='application/zip')
         file_zip = zipfile.ZipFile(response, 'w')
         for upload_image in upload_images:
@@ -88,3 +101,22 @@ class DownloadView(BaseView):
 
 
 download = DownloadView.as_view()
+
+
+class InformOfDownloadView(View):
+    def post(self, request, *args, **kwargs):
+        image_order_text = request.POST['image_order']
+        group_id =  request.POST['group_id']
+        blog_ct =  request.POST['blog_ct']
+        if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct).exists():
+            blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+            image_order = int(image_order_text[3:])
+            if Image.objects.filter(publisher=blog, order=image_order).exists():
+                image = Image.objects.filter(publisher=blog, order=image_order)
+                increment_num_of_downloads(image, blog, num=1)
+                edit_num_of_most_downloads(blog)
+                return HttpResponse('success' + str(image_order))
+        return HttpResponse('error')
+
+
+inform_of_download = InformOfDownloadView.as_view()

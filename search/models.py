@@ -45,6 +45,13 @@ class Blog(models.Model):
     post_date = models.DateTimeField(verbose_name='投稿日')
     order_for_simul = models.IntegerField(verbose_name='順番(同時投稿用)', default=0)
     writer = models.ForeignKey(Member, verbose_name='メンバー', on_delete=models.PROTECT)
+    num_of_downloads = models.IntegerField(verbose_name='総ダウンロード数', default=0)
+    num_of_most_downloads = models.IntegerField(verbose_name='最大ダウンロード数', default=0)
+    num_of_views = models.IntegerField(verbose_name='閲覧数', default=0)
+    v1_per_week = models.IntegerField(verbose_name='閲覧数(1週目)', default=0)
+    v2_per_week = models.IntegerField(verbose_name='閲覧数(2週目)', default=0)
+    v3_per_week = models.IntegerField(verbose_name='閲覧数(3週目)', default=0)
+    score = models.FloatField(verbose_name='スコア(人気順)', default=0)
 
     def __str__(self):
         return self.title

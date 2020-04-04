@@ -1,36 +1,65 @@
-var swiper_keyaki = new Swiper('#tab-pane-keyaki>.swiper-container', {
+var swiper_keyaki_n = new Swiper('#tab-pane-keyaki-newpost>.swiper-container', {
   slidesPerView: 2,
   spaceBetween: 0,
   freeMode: true,
   pagination: {
-    el: '#swiper-pagination-keyaki',
-    clickable: true,
+    el: '#swiper-pagination-keyaki-newpost',
+    clickable: true
   }
 });
-var swiper_hinata = new Swiper('#tab-pane-hinata>.swiper-container', {
+var swiper_hinata_n = new Swiper('#tab-pane-hinata-newpost>.swiper-container', {
   slidesPerView: 2,
   spaceBetween: 0,
   freeMode: true,
   pagination: {
-    el: '#swiper-pagination-hinata',
-    clickable: true,
+    el: '#swiper-pagination-hinata-newpost',
+    clickable: true
+  }
+});
+var swiper_keyaki_p = new Swiper('#tab-pane-keyaki-popular>.swiper-container', {
+  slidesPerView: 2,
+  spaceBetween: 0,
+  freeMode: true,
+  pagination: {
+    el: '#swiper-pagination-keyaki-popular',
+    clickable: true
+  }
+});
+var swiper_hinata_p = new Swiper('#tab-pane-hinata-popular>.swiper-container', {
+  slidesPerView: 2,
+  spaceBetween: 0,
+  freeMode: true,
+  pagination: {
+    el: '#swiper-pagination-hinata-popular',
+    clickable: true
   }
 });
 
-$( document ).ready(uploadSlidesPerView);
+$( document ).ready(function(){
+    uploadSlidesPerView();
+    rewrite_card_parameter_num();
+});
 $( window ).resize(uploadSlidesPerView);
 
 function uploadSlidesPerView() {
     if (window.innerWidth >= 992) {
-        swiper_keyaki.params.slidesPerView = 4;
-        swiper_hinata.params.slidesPerView = 4;
+        swiper_keyaki_n.params.slidesPerView = 4;
+        swiper_hinata_n.params.slidesPerView = 4;
+        swiper_keyaki_p.params.slidesPerView = 4;
+        swiper_hinata_p.params.slidesPerView = 4;
     } else if (window.innerWidth >= 768) {
-        swiper_keyaki.params.slidesPerView = 3;
-        swiper_hinata.params.slidesPerView = 3;
+        swiper_keyaki_n.params.slidesPerView = 3;
+        swiper_hinata_n.params.slidesPerView = 3;
+        swiper_keyaki_p.params.slidesPerView = 3;
+        swiper_hinata_p.params.slidesPerView = 3;
     } else {
-        swiper_keyaki.params.slidesPerView = 2;
-        swiper_hinata.params.slidesPerView = 2;
+        swiper_keyaki_n.params.slidesPerView = 2;
+        swiper_hinata_n.params.slidesPerView = 2;
+        swiper_keyaki_p.params.slidesPerView = 2;
+        swiper_hinata_p.params.slidesPerView = 2;
     }
-    swiper_keyaki.update();
-    swiper_hinata.update();
+    swiper_keyaki_n.update();
+    swiper_hinata_n.update();
+    swiper_keyaki_p.update();
+    swiper_hinata_p.update();
 }

@@ -1,5 +1,6 @@
 $(document).ready(function () {
     $(".pagination").rPage();
+    rewrite_card_parameter_num();
 });
 
 $('[data-toggle="tooltip"]').tooltip();
@@ -22,4 +23,5 @@ $grid.infiniteScroll({
 $grid.on('append.infiniteScroll', function () {
     twemoji.parse(document.body);
     $('[data-toggle="tooltip"]').tooltip();
+    rewrite_card_parameter_num();
 });

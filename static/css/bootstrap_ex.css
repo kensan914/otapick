@@ -535,6 +535,11 @@ div.thumbnail.checked + .save_img_checkbox {
     -webkit-transform: scale(1.05);
     transform: scale(1.05);
 }
+
+.thumbnail-wrapper-mobile {
+    margin: 0;
+    padding: 0;
+}
 /* end of thumbnail */
 
 /* .loader-ellips */
@@ -721,11 +726,10 @@ div.thumbnail.checked + .save_img_checkbox {
 /* end funwari fade-in */
 
 /* new post */
-.newpost-thumbnail, .newpost-thumbnail{
+.newpost-thumbnail {
     border-radius: 0;
-    width: 260px;
-    height: 260px;
-    object-fit: cover;
+	height:260px;
+    object-fit:cover;
 }
 .newpost-title {
     overflow: hidden;
@@ -739,24 +743,34 @@ div.thumbnail.checked + .save_img_checkbox {
  .card-title {
    font-size: 1.0rem;
  }
+ .card-parameter {
+    font-size: 0.8rem;
+ }
 }
 /* 中デバイス（タブレット, 992px 未満） */
 @media (max-width: 991.98px) {
  .card-title {
    font-size: 0.9rem;
  }
+ .card-parameter {
+    font-size: 0.7rem;
+ }
+
 }
 /* 小デバイス（横向きモバイル, 768px 未満） */
 @media (max-width: 767.98px) {
  .card-title {
-   font-size: 0.8rem;
+   font-size: 0.9rem;
+ }
+ .card-parameter {
+    font-size: 0.7rem;
  }
 }
 /* @include media-breakpoint-up(sm) { */
 /* 極小デバイス（縦向きモバイル, 576px 未満） */
 @media (max-width: 575.98px) {
  .card-title {
-   font-size: 0.7rem;
+   font-size: 0.8rem;
  }
  .card-writer {
     font-size: 0.6rem;
@@ -764,13 +778,48 @@ div.thumbnail.checked + .save_img_checkbox {
  .intro-title {
     font-size: 1.4rem;
  }
+ .card-parameter {
+    font-size: 0.5rem;
+ }
+ .blogList-detail-btn {
+     font-size: 0.9rem;
+ }
+ .catch_copy {
+     font-size: 25px;
+ }
+ .top-hashtag {
+     font-size: 26px;
+ }
+ .newpost-thumbnail {
+     height: 230px;
+ }
 }
+
+/* iphone 5 */
+@media (max-width: 365px) {
+ .card-parameter {
+    font-size: 0.1rem;
+ }
+ .blogList-detail-btn {
+     font-size: 0.8rem;
+ }
+ .catch_copy {
+     font-size: 24px;
+ }
+ .top-hashtag {
+     font-size: 26px;
+ }
+ .newpost-thumbnail {
+     height: 220px;
+ }
+}
+
 .intro-title {
     color: rgb(90, 90, 90);
 }
 
 /* top subtitle */
-.top-subtitle_newpost, .top-subtitle_howto, .top-subtitle_twitter {
+.top-subtitle_newpost, .top-subtitle_howto, .top-subtitle_twitter, .top-subtitle_popular {
     font-family: top-subtitle-font;
     position: relative;
     color: rgb(100, 100, 100);
@@ -792,7 +841,7 @@ div.thumbnail.checked + .save_img_checkbox {
     filter: blur(5px);
     transition: all 0.5s;
 }
-.top-subtitle_newpost.effect-scroll, .top-subtitle_howto.effect-scroll, .top-subtitle_twitter.effect-scroll {
+.top-subtitle_newpost.effect-scroll, .top-subtitle_howto.effect-scroll, .top-subtitle_twitter.effect-scroll, .top-subtitle_popular.effect-scroll {
     opacity: 1;
 }
 .top-subtitle_howto::after {
@@ -811,7 +860,21 @@ div.thumbnail.checked + .save_img_checkbox {
   }
 
 .top-subtitle_twitter::after {
-    content: "Twitter";
+    content: "TWITTER";
+    position: absolute;
+    z-index: -1;
+    bottom: -10px;
+    left: 5%;
+    height: 110%;
+    width: 90%;
+    opacity: 0.8;
+    background-image: linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: blur(5px);
+}
+.top-subtitle_popular::after {
+    content: "POPULAR";
     position: absolute;
     z-index: -1;
     bottom: -10px;
@@ -908,9 +971,9 @@ a.hinata {
   text-decoration: none !important;
   color: white !important;
   background-position: center;
-  background: -moz-linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
-  background: -webkit-linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
-  background: linear-gradient(45deg, #47ff56 38%, #d185fd 50%, #8eeeff 62%);
+  background: -moz-linear-gradient(45deg, #00ffa1 38%, #05c4ff 50%, #bb40fd 62%);
+  background: -webkit-linear-gradient(45deg, #00ffa1 38%, #05c4ff 50%, #bb40fd 62%);
+  background: linear-gradient(45deg, #00ffa1 38%, #05c4ff 50%, #bb40fd 62%);
 }
 .gradient-btn.hinata,
 .gradient-btn.hinata::before {
@@ -920,4 +983,17 @@ a.hinata {
   background: -moz-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
   background: -webkit-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
   background: linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
+}
+
+{#card-detail-button#}
+.card-detail-button {
+    width:2rem;
+    height:2rem;
+    flex-shrink: 0;
+}
+
+.card-detail-button-super {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
