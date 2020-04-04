@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from download.models import Image
 from search.models import Blog
+from search.scripts.blogRegister import support
 
 
 class Command(BaseCommand):
@@ -9,14 +10,20 @@ class Command(BaseCommand):
            '1週間ごと(毎週月曜日00:00)に実行。'
 
     def handle(self, *args, **options):
-        blogs = Blog.objects.exclude(v1_per_week=0, v2_per_week=0, v3_per_week=0)
-        for blog in blogs:
-            blog.v3_per_week = blog.v2_per_week
-            blog.v2_per_week = blog.v1_per_week
-            blog.v1_per_week = 0
-            blog.save()
+        try:
+            blogs = Blog.objects.exclude(v1_per_week=0, v2_per_week=0, v3_per_week=0)
+            for blog in blogs:
+                blog.v3_per_week = blog.v2_per_week
+                blog.v2_per_week = blog.v1_per_week
+                blog.v1_per_week = 0
+                blog.save()
 
-        images = Image.objects.exclude(d1_per_week=0)
-        for image in images:
-            image.d1_per_week = 0
-            image.save()
+            images = Image.objects.exclude(d1_per_week=0)
+            for image in images:
+                image.d1_per_week = 0
+                image.save()
+
+        except Exception as e:
+            support.print_console(e)
+        else:
+            support.print_console('finished shift_per_week!!')
