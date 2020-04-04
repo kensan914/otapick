@@ -10,7 +10,7 @@ class Command(BaseCommand):
            '1週間ごと(毎週月曜日00:00)に実行。'
 
     def add_arguments(self, parser):
-        parser.add_argument('-r', '--reverse', type=bool,
+        parser.add_argument('-r', '--reverse', action='store_true',
                             help='間違えて実行してしまったときに元に戻す。ただ、消えてしまったv3_per_week, d1_per_weekは修復不可。')
 
     def handle(self, *args, **options):
