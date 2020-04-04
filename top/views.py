@@ -1,3 +1,4 @@
+import user_agents
 from django.shortcuts import render, redirect
 from django.views import View
 from search.scripts.firstClassifier import firstClassifier, dy_insert_hyphen
@@ -37,11 +38,16 @@ class BaseView(View):
                 else:
                     return redirect('search:searchUnjustMember')
         else:
+            self.context['isMobile'] = user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile
             self.context['group'] = request.session.get('group', 'keyaki')
             self.context['keyaki_newblogs']\
-                = Blog.objects.filter(writer__belonging_group__group_id=1).order_by('-post_date', 'order_for_simul')[:4]
+                = Blog.objects.filter(writer__belonging_group__group_id=1).order_by('-post_date', 'order_for_simul')[:8]
             self.context['hinata_newblogs'] \
-                = Blog.objects.filter(writer__belonging_group__group_id=2).order_by('-post_date', 'order_for_simul')[:4]
+                = Blog.objects.filter(writer__belonging_group__group_id=2).order_by('-post_date', 'order_for_simul')[:8]
+            self.context['keyaki_popularblogs'] \
+                = Blog.objects.filter(writer__belonging_group__group_id=1).order_by('-score', '-num_of_most_downloads', '-post_date', 'order_for_simul')[:8]
+            self.context['hinata_popularblogs'] \
+                = Blog.objects.filter(writer__belonging_group__group_id=2).order_by('-score', '-num_of_most_downloads', '-post_date', 'order_for_simul')[:8]
             return render(request, self.html_path, self.context)
 
 

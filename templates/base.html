@@ -133,10 +133,13 @@
               <a href="{% url 'search:searchByGroups' 2 %}">日向坂46 ブログ一覧</a>
             </li>
             <li>
-              <a href="{% url 'search:memberList' %}">メンバーリスト</a>
+              <a href="{% url 'top:top' %}#newpost">新着ブログ</a>
             </li>
             <li>
-              <a href="{% url 'top:top' %}#newpost">新着ブログ</a>
+              <a href="{% url 'top:top' %}#popular">人気ブログ</a>
+            </li>
+            <li>
+              <a href="{% url 'search:memberList' %}">メンバーリスト</a>
             </li>
           </ul>
         </div>

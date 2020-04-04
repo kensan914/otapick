@@ -147,6 +147,14 @@ class BlogListView(generic.ListView, BaseView):
         if order_format:
             if order_format == 'older_post':
                 return narrowing_blogs.order_by('post_date', '-order_for_simul')
+            elif order_format == 'popularity':
+                return narrowing_blogs.order_by('-score', '-num_of_most_downloads', '-post_date', 'order_for_simul')
+            elif order_format == 'dl':
+                return narrowing_blogs.order_by('-num_of_most_downloads', '-score', '-post_date', 'order_for_simul')
+            elif order_format == 'sum_dl':
+                return narrowing_blogs.order_by('-num_of_downloads', '-score', '-post_date', 'order_for_simul')
+            elif order_format == 'view':
+                return narrowing_blogs.order_by('-num_of_views', '-score', '-post_date', 'order_for_simul')
         return narrowing_blogs.order_by('-post_date', 'order_for_simul')
 
     def post(self, request, *args, **kwargs):
@@ -184,7 +192,7 @@ class BlogListView(generic.ListView, BaseView):
         else:
             response = redirect('search:searchByGroups', group_id=group_id)
         if order_format != 'None':
-            response['location'] += '?order=' + order_format
+            response['location'] += '?sort=' + order_format
             if n_keyword:
                 response['location'] += '&keyword=' + n_keyword_query
             if n_post:

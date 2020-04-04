@@ -87,49 +87,86 @@
           <hr>
           <div class="container">
             <div class="row justify-content-between">
-              <div class="col-12 col-md-7">
+              <div class="col-12 col-md-6 col-lg-7 col-xl-8">
                 <div class="">検索結果（<b>{{ page_obj.paginator.count }}</b>件）</div>
               </div>
-              <div class="col-12 col-md-5 mt-2 mt-md-0">
-                <div class="row">
-                  <button class="btn btn-light ml-auto mr-3" type="button" data-toggle="collapse"
+              <div class="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
+                <div class="row justify-content-around">
+                  <button class="btn btn-light blogList-detail-btn col-5" type="button" data-toggle="collapse"
                     data-target="#narrowing" aria-expanded="false" aria-controls="narrowing"
                     style="border: solid 1px silver; border-radius: 5%; background-color: #F4F3F3">
                     <i class="fas fa-search"></i> 絞り込み
                   </button>
-
-                  <div class="btn-group mr-1" style="border: solid 1px silver; border-radius: 5%">
-                    <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      {% if order_format == 'older_post' %}
+                  <button type="button" class="btn btn-light dropdown-toggle blogList-detail-btn col-5" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" style="border: solid 1px silver; border-radius: 5%">
+                    {% if order_format == 'older_post' %}
                       <i class="fas fa-sort"></i> 古い順
-                      {% else %}
+                    {% elif order_format == 'popularity' %}
+                      <i class="fas fa-sort"></i> 人気順
+                    {% elif order_format == 'dl' %}
+                      <i class="fas fa-sort"></i> DL数順
+                    {% elif order_format == 'sum_dl' %}
+                      <i class="fas fa-sort"></i> 総DL順
+                    {% elif order_format == 'view' %}
+                      <i class="fas fa-sort"></i> 閲覧数順
+                    {% else %}
                       <i class="fas fa-sort"></i> 新着順
-                      {% endif %}
-                    </button>
-                    <div class="dropdown-menu">
-                      {% if narrowing_keyword and narrowing_post %}
-                          <a class="dropdown-item"
-                            href="?sort=newer_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
-                          <a class="dropdown-item"
-                            href="?sort=older_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
-                      {% elif narrowing_keyword %}
-                          <a class="dropdown-item"
-                            href="?sort=newer_post&keyword={{ narrowing_keyword }}">新着順</a>
-                          <a class="dropdown-item"
-                            href="?sort=older_post&keyword={{ narrowing_keyword }}">古い順</a>
-                      {% elif narrowing_post %}
-                          <a class="dropdown-item"
-                            href="?sort=newer_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
-                          <a class="dropdown-item"
-                            href="?sort=older_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
-                      {% else %}
-                          <a class="dropdown-item"
-                            href="?sort=newer_post">新着順</a>
-                          <a class="dropdown-item"
-                            href="?sort=older_post">古い順</a>
-                      {% endif %}
-                    </div>
+                    {% endif %}
+                  </button>
+                  <div class="dropdown-menu" style="overflow-y:visible;">
+                    {% if narrowing_keyword and narrowing_post %}
+                        <a class="dropdown-item"
+                          href="?sort=newer_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
+                        <a class="dropdown-item"
+                          href="?sort=older_post&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
+                        <a class="dropdown-item"
+                          href="?sort=popularity&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">人気順</a>
+                        <a class="dropdown-item"
+                          href="?sort=dl&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=sum_dl&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">総DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=view&keyword={{ narrowing_keyword }}&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">閲覧数順</a>
+                    {% elif narrowing_keyword %}
+                        <a class="dropdown-item"
+                          href="?sort=newer_post&keyword={{ narrowing_keyword }}">新着順</a>
+                        <a class="dropdown-item"
+                          href="?sort=older_post&keyword={{ narrowing_keyword }}">古い順</a>
+                        <a class="dropdown-item"
+                          href="?sort=popularity&keyword={{ narrowing_keyword }}">人気順</a>
+                        <a class="dropdown-item"
+                          href="?sort=dl&keyword={{ narrowing_keyword }}">DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=sum_dl&keyword={{ narrowing_keyword }}">総DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=view&keyword={{ narrowing_keyword }}">閲覧数順</a>
+                    {% elif narrowing_post %}
+                        <a class="dropdown-item"
+                          href="?sort=newer_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">新着順</a>
+                        <a class="dropdown-item"
+                          href="?sort=older_post&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">古い順</a>
+                        <a class="dropdown-item"
+                          href="?sort=popularity&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">人気順</a>
+                        <a class="dropdown-item"
+                          href="?sort=dl&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=sum_dl&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">総DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=view&post={{ narrowing_post.year }}-{{ narrowing_post.month }}{% if narrowing_post.day %}-{{ narrowing_post.day }}{% endif %}">閲覧数順</a>
+                    {% else %}
+                        <a class="dropdown-item"
+                          href="?sort=newer_post">新着順</a>
+                        <a class="dropdown-item"
+                          href="?sort=older_post">古い順</a>
+                        <a class="dropdown-item"
+                          href="?sort=popularity">人気順</a>
+                        <a class="dropdown-item"
+                          href="?sort=dl">DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=sum_dl">総DL順</a>
+                        <a class="dropdown-item"
+                          href="?sort=view">閲覧数順</a>
+                    {% endif %}
                   </div>
                 </div>
               </div>
@@ -139,7 +176,7 @@
       </div>
     </div>
   </div>
-  <div class="container mb-3">
+  <div class="container mb-3 px-1">
     <div class="collapse mt-2" id="narrowing">
       <div class="card card-body">
           {% if narrowing_keyword and narrowing_post %}
@@ -190,6 +227,13 @@
 
                 <hr>
                 <div class="row">
+                  {% if order_format %}
+                    <a class="btn btn-light rounded-pill ml-auto mr-3"
+                      href="?sort={{ order_format }}"
+                      style="border: solid 1px silver; border-radius: 5%; background-color: #F4F3F3; color: dimgray">
+                      条件を解除
+                    </a>
+                  {% else %}
                     {% if member %}
                       <a class="btn btn-light rounded-pill ml-auto mr-3"
                         href="{% url 'search:searchByMembers' group_id ct %}"
@@ -203,6 +247,7 @@
                         条件を解除
                       </a>
                     {% endif %}
+                  {% endif %}
 
                   <div class="rounded mr-4">
                     <button class="btn {{ group }}" type="submit">
@@ -222,11 +267,23 @@
     <div class="grid-sizer col-6 col-md-4 col-lg-3"></div>
 
     {% for blog in object_list %}
-    <div class="grid-item col-6 col-md-4 col-lg-3 my-2">
+    <div class="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3">
       <div class="otapick_card_back">
         <div class="otapick_card {{ group }}">
           <div class="card border border-top-0">
             <div class="l-thumbnail">
+
+            {% if isMobile %}
+              <a href="{% url 'download:download' group_id blog.blog_ct %}">
+                <figure class="thumbnail-wrapper-mobile">
+                  {% if blog.thumbnail %}
+                  <img class="card-img-top" src="{{ blog.thumbnail.picture.url }}" style="border-radius: 0;">
+                  {% else %}
+                  <img class="card-img-top" src="{% static 'img/imageNotFound.jpg' %}" style="border-radius: 0;">
+                  {% endif %}
+                </figure>
+              </a>
+            {% else %}
               <a href="{% url 'download:download' group_id blog.blog_ct %}">
                 <figure class="thumbnail-wrapper">
                   {% if blog.thumbnail %}
@@ -259,8 +316,10 @@
                   </div>
                 </div>
               </span>
+            {% endif %}
+
             </div>
-            <div class="card-body pb-0">
+            <div class="card-body pb-0 px-3 px-sm-4 pt-3">
               <a href="{% url 'download:download' group_id blog.blog_ct %}" style="color: dimgray;">
                 <h6 class="card-title ">{{ blog.title }}</h6>
               </a>
@@ -278,20 +337,60 @@
                 {% endif %}
                 <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
               </div>
-              <div class="dropdown text-center mb-2">
-                <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
-                  id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fas fa-bars" style="color:gray;"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
-                  <a class="dropdown-item" href="{% url 'download:download' group_id blog.blog_ct %}">ダウンロードページへ</a>
-                  {% if group_id == 1 %}
-                  <a class="dropdown-item" target="_blank"
-                    href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
-                  {% elif group_id == 2 %}
-                  <a class="dropdown-item" target="_blank"
-                    href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
-                  {% endif %}
+
+              <div class="container mb-2">
+                <div class="row">
+
+                  <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                    <div class="row justify-content-around">
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-eye" style="color: grey"></i>
+                      </div>
+                      &nbsp;
+                      <div class="card-parameter-num">
+                        {% if blog.num_of_views %}
+                          {{ blog.num_of_views }}
+                        {% else %}
+                          0
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="dropdown col-4 text-center" style="overflow-y:visible;">
+                    <div class="card-detail-button-super">
+                      <button type="button" class="btn btn-light rounded-circle p-0 card-detail-button"
+                        id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bars" style="color:gray;"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
+                        <a class="dropdown-item" href="{% url 'download:download' group_id blog.blog_ct %}">ダウンロードページへ</a>
+                        {% if group_id == 1 %}
+                        <a class="dropdown-item" target="_blank"
+                          href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                        {% elif group_id == 2 %}
+                        <a class="dropdown-item" target="_blank"
+                          href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                    <div class="row justify-content-around">
+                      <div class="d-flex align-items-center">
+                        <i class="fas fa-download" style="color: grey"></i>
+                      </div>
+                      &nbsp;
+                      <div class="card-parameter-num">
+                        {% if blog.num_of_downloads %}
+                          {{ blog.num_of_downloads }}
+                        {% else %}
+                          0
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -357,8 +456,10 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/responsive-paginate.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/responsive-paginate.js' %}"></script>
 <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
 
-<script src="{% static 'js/otapick/blogList.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_parameter_num.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/blogList.js' %}"></script>
+
 {% endblock %}

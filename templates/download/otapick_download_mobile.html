@@ -64,7 +64,7 @@
                 <div class="row text-center">
                   {% for blog_image in blog_images %}
                     <div style="padding-bottom:10%;">
-                      <img src="{{ blog_image.picture.url }}" class="img-thumbnail shadow">
+                      <img src="{{ blog_image.picture.url }}" class="img-thumbnail shadow" id="img{{ blog_image.order }}">
                     </div>
                   {% endfor %}
                 </div>
@@ -149,6 +149,9 @@
 
 {% endblock %}
 
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'js/jquery.longpress.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/download_mobile.js' %}"></script>
 <script>
   {% if blog %}
   // ページ遷移確認
@@ -160,4 +163,23 @@
     changeForm = false;
   });
   {% endif %}
+
+
+$('img').longpress(function(e) {
+    $.ajax({
+      url: "{% url 'download:inform_of_download' %}",
+      type: "POST",
+      data: {
+        'image_order': $(this).attr('id'),
+        'group_id': {{ group_id }},
+        'blog_ct': {{ blog_ct }},
+      }
+    })
+    .done( (data) => {
+    })
+  },
+  function(){},
+  300
+);
 </script>
+{% endblock %}

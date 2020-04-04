@@ -12,9 +12,11 @@
 <style>
   @font-face {
 	font-family: 'top-subtitle-font';
-	src: url("{% static 'font/FjnMacanKumbang-Regular.ttf' %}");
-}
+	src: url("{% static 'font/Lovelo-LineBold.ttf' %}");
+  }
 </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.css">
 {% endblock %}
 
 {% block content %}
@@ -27,7 +29,7 @@
         <div class="col-xl-9 mx-auto">
           <div class="row">
             <div class="col-1 col-xs-4 col-sm-2 col-md-3 col-lg-4 col-xl-3"></div>
-            <h2 class="col-11 col-xs-7 col-sm-10 col-md-8 col-lg-7 col-xl-7 ml-xl-4 text-left"
+            <h2 class="col-11 col-xs-7 col-sm-10 col-md-8 col-lg-7 col-xl-7 ml-xl-4 text-left catch_copy"
               style="letter-spacing: 0;">
               <div class="init-effect-1">かっこいい画像も、</div>
               <div class="init-effect-2">かわいい画像も、</div>
@@ -37,12 +39,12 @@
           </div>
           <div class="row justify-content-center mr-2 mr-md-0 ml-lg-5 ml-xl-0">
             <div class="col-6 col-lg-5">
-              <h3 class="float-right init-effect-4"><a class="keyaki-text"
+              <h3 class="float-right init-effect-4"><a class="keyaki-text top-hashtag"
                   href="{% url 'search:searchByGroups' 1 %}">#欅坂46</a>
-                </h>
+              </h3>
             </div>
             <div class="col-6">
-              <h3 class="float-left init-effect-5"><a class="hinata-text"
+              <h3 class="float-left init-effect-5"><a class="hinata-text top-hashtag"
                   href="{% url 'search:searchByGroups' 2 %}">#日向坂46</a>
               </h3>
             </div>
@@ -104,187 +106,597 @@
   </div>
 </div>
 
-<hr class="" id="newpost">
-<h1 class="text-center top-subtitle_newpost mt-5">NEW POST</h1>
+<hr class="mb-5" id="newpost">
+<h1 class="text-center top-subtitle_newpost mb-0 display-4">NEW POST</h1>
+<p class="text-center text-muted effect-fade">最新記事</p>
 
-<!-- New post keyaki -->
 <div class="container text-muted">
-  <div class="otapick_card_back effect-fade">
-    <div class="otapick_card keyaki">
-      <div class="card mt-5 mb-3 border border-top-0">
-        <div class="card-body">
-          <div class="row justify-content-between">
-            <h5 class="col col-xs-8">欅坂46</h5>
-            <div class="col col-xs-4 pt-1 text-right">
-              <a class="keyaki" href="{% url 'search:searchByGroups' 1 %}">もっと見る></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row effect-fade">
-    {% for blog in keyaki_newblogs %}
-    <div class="col-6 col-md-4 col-lg-3 my-2">
-      <div class="otapick_card_back">
-        <div class="otapick_card keyaki">
-          <div class="card border border-top-0">
-            <div class="l-thumbnail">
-              <a href="{% url 'download:download' 1 blog.blog_ct %}">
-                <figure class="thumbnail-wrapper">
-                  {% if blog.thumbnail %}
-                  <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
-                  {% else %}
-                  <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
-                  {% endif %}
-                </figure>
-              </a>
-              <span class="more-button">
-                <div class="row justify-content-around">
-                  <div class="col-4 p-0 mr-2">
-                    <a href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
-                      style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
-                      <i class="fas fa-external-link-alt"></i>
-                    </a>
-                  </div>
-                  <div class="col-4 p-0 ml-2">
-                    <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
-                      title="ダウンロードページへ">
-                      <i class="fas fa-download"></i>
-                    </a>
-                  </div>
-                </div>
-              </span>
-            </div>
-            <div class="card-body pb-0">
-              <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: dimgray;">
-                <h6 class="card-title newpost-title">
-                  {% if blog.title == "" %}
-                    &nbsp;
-                  {% else %}
-                    {{ blog.title }}
-                  {% endif %}
-                </h6>
-              </a>
-              <div class="row">
-                <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
-                  class="card-text ml-3 small mb-2 pb-0 card-writer keyaki">
-                  {{ blog.writer.full_kanji }}
-                </a>
-                <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
-              </div>
-              <div class="dropdown text-center mb-2">
-                <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
-                  id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fas fa-bars" style="color:gray;"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
-                  <a class="dropdown-item" href="{% url 'download:download' 1 blog.blog_ct %}">ダウンロードページへ</a>
-                  <a class="dropdown-item" target="_blank"
-                    href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
+  <ul class="nav nav-tabs mb-3" id="groupTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" id="keyaki-tab" data-toggle="tab" href="#tab-pane-keyaki-newpost" role="tab"
+         aria-controls="keyaki" aria-selected="false" style="color: limegreen;">欅坂46</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="hinata-tab" data-toggle="tab" href="#tab-pane-hinata-newpost" role="tab"
+         aria-controls="hinata" aria-selected="false" style="color: deepskyblue;">日向坂46</a>
+    </li>
+  </ul>
 
+{% if isMobile %}
+  </div>
+{% endif %}
+  <div class="tab-content">
+    <!-- New post keyaki -->
+    <div class="tab-pane fade active" id="tab-pane-keyaki-newpost" role="tabpanel" aria-labelledby="keyaki-tab">
+      <div class="swiper-container effect-fade" style="overflow-y:visible;">
+        <div class="swiper-wrapper pb-5">
+          {% for blog in keyaki_newblogs %}
+          <div class="swiper-slide col-6 col-md-4 col-lg-3 my-2">
+            <div class="otapick_card_back">
+              <div class="otapick_card keyaki">
+                <div class="card border border-top-0">
+                  <div class="l-thumbnail">
 
-<!-- New post hinata -->
-<div class="container mt-5 text-muted">
-  <div class="otapick_card_back effect-fade-under">
-    <div class="otapick_card hinata">
-      <div class="card mt-5 mb-3 border border-top-0">
-        <div class="card-body">
-          <div class="row">
-            <h5 class="col col-xs-8">日向坂46</h5>
-            <div class="col col-xs-4 pt-1 text-right">
-              <a class="hinata" href="{% url 'search:searchByGroups' 2 %}">もっと見る></a>
+                  {% if isMobile %}
+                    <a href="{% url 'download:download' 1 blog.blog_ct %}">
+                      <figure class="thumbnail-wrapper-mobile">
+                        {% if blog.thumbnail %}
+                        <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                        {% else %}
+                        <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                        {% endif %}
+                      </figure>
+                    </a>
+                  {% else %}
+                    <a href="{% url 'download:download' 1 blog.blog_ct %}">
+                      <figure class="thumbnail-wrapper">
+                        {% if blog.thumbnail %}
+                        <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                        {% else %}
+                        <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                        {% endif %}
+                      </figure>
+                    </a>
+                    <span class="more-button">
+                      <div class="row justify-content-around">
+                        <div class="col-4 p-0 mr-2">
+                          <a href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                            style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                            <i class="fas fa-external-link-alt"></i>
+                          </a>
+                        </div>
+                        <div class="col-4 p-0 ml-2">
+                          <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
+                            title="ダウンロードページへ">
+                            <i class="fas fa-download"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </span>
+                  {% endif %}
+
+                  </div>
+                  <div class="card-body pb-0 px-3 px-sm-4 pt-3">
+                    <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: dimgray;">
+                      <h6 class="card-title newpost-title">
+                        {% if blog.title == "" %}
+                          &nbsp;
+                        {% else %}
+                          {{ blog.title }}
+                        {% endif %}
+                      </h6>
+                    </a>
+                    <div class="row">
+                      <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
+                        class="card-text ml-3 small mb-2 pb-0 card-writer keyaki">
+                        {{ blog.writer.full_kanji }}
+                      </a>
+                      <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+                    </div>
+
+                    <div class="container mb-2">
+                      <div class="row">
+
+                        <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                          <div class="row justify-content-around">
+                            <div class="d-flex align-items-center">
+                              <i class="fas fa-eye" style="color: grey"></i>
+                            </div>
+                            &nbsp;
+                            <div class="card-parameter-num">
+                              {% if blog.num_of_views %}
+                                {{ blog.num_of_views }}
+                              {% else %}
+                                0
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="dropdown col-4 text-center" style="overflow-y:visible;">
+                          <div class="card-detail-button-super">
+                            <button type="button" class="btn btn-light rounded-circle p-0 card-detail-button"
+                              id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fas fa-bars" style="color:gray;"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
+                              <a class="dropdown-item" href="{% url 'download:download' 1 blog.blog_ct %}">ダウンロードページへ</a>
+                              <a class="dropdown-item" target="_blank"
+                                href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                          <div class="row justify-content-around">
+                            <div class="d-flex align-items-center">
+                              <i class="fas fa-download" style="color: grey"></i>
+                            </div>
+                            &nbsp;
+                            <div class="card-parameter-num">
+                              {% if blog.num_of_downloads %}
+                                {{ blog.num_of_downloads }}
+                              {% else %}
+                                0
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          {% endfor %}
         </div>
+        <div class="swiper-pagination" id="swiper-pagination-keyaki-newpost"></div>
+      </div>
+      <div class="mx-auto effect-fade" style="width: 200px;">
+        <a href="{% url 'search:searchByGroups' 1 %}" class="gradient-btn keyaki" style="width: 200px; background-image: url('{% static 'img/button_keyaki.jpeg' %}'); background-size: cover;">
+          <b>もっと見る>></b>
+        </a>
+      </div>
+    </div>
+
+    <!-- New post hinata -->
+    <div class="tab-pane fade active" id="tab-pane-hinata-newpost" role="tabpanel" aria-labelledby="hinata-tab">
+      <div class="swiper-container effect-fade" style="overflow-y:visible;">
+        <div class="swiper-wrapper pb-5">
+          {% for blog in hinata_newblogs %}
+            <div class="swiper-slide col-6 col-md-4 col-lg-3 my-2">
+              <div class="otapick_card_back">
+                <div class="otapick_card hinata">
+                  <div class="card border border-top-0">
+                    <div class="l-thumbnail">
+
+                    {% if isMobile %}
+                      <a href="{% url 'download:download' 2 blog.blog_ct %}">
+                        <figure class="thumbnail-wrapper-mobile">
+                          {% if blog.thumbnail %}
+                          <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                          {% else %}
+                          <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                          {% endif %}
+                        </figure>
+                      </a>
+                    {% else %}
+                      <a href="{% url 'download:download' 2 blog.blog_ct %}">
+                        <figure class="thumbnail-wrapper">
+                          {% if blog.thumbnail %}
+                          <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                          {% else %}
+                          <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                          {% endif %}
+                        </figure>
+                      </a>
+                      <span class="more-button">
+                        <div class="row justify-content-around">
+                          <div class="col-4 p-0 mr-2">
+                            <a href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                              style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                              <i class="fas fa-external-link-alt"></i>
+                            </a>
+                          </div>
+                          <div class="col-4 p-0 ml-2">
+                            <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
+                              title="ダウンロードページへ">
+                              <i class="fas fa-download"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </span>
+                    {% endif %}
+
+                    </div>
+                    <div class="card-body pb-0 px-3 px-sm-4 pt-3">
+                      <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: dimgray;">
+                        <h6 class="card-title newpost-title">
+                          {% if blog.title == "" %}
+                            &nbsp;
+                          {% else %}
+                            {{ blog.title }}
+                          {% endif %}
+                        </h6>
+                      </a>
+                      <div class="row">
+                        <a href="{% url 'search:searchByMembers' 2 blog.writer.ct %}"
+                          class="card-text ml-3 small mb-2 pb-0 card-writer hinata">
+                          {{ blog.writer.full_kanji }}
+                        </a>
+                        <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+                      </div>
+
+                      <div class="container mb-2">
+                        <div class="row">
+
+                          <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                            <div class="row justify-content-around">
+                              <div class="d-flex align-items-center">
+                                <i class="fas fa-eye" style="color: grey"></i>
+                              </div>
+                              &nbsp;
+                              <div class="card-parameter-num">
+                                {% if blog.num_of_views %}
+                                  {{ blog.num_of_views }}
+                                {% else %}
+                                  0
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="dropdown col-4 text-center" style="overflow-y:visible;">
+                            <div class="card-detail-button-super">
+                              <button type="button" class="btn btn-light rounded-circle p-0 card-detail-button"
+                                id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bars" style="color:gray;"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
+                                <a class="dropdown-item" href="{% url 'download:download' 2 blog.blog_ct %}">ダウンロードページへ</a>
+                                <a class="dropdown-item" target="_blank"
+                                  href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                            <div class="row justify-content-around">
+                              <div class="d-flex align-items-center">
+                                <i class="fas fa-download" style="color: grey"></i>
+                              </div>
+                              &nbsp;
+                              <div class="card-parameter-num">
+                                {% if blog.num_of_downloads %}
+                                  {{ blog.num_of_downloads }}
+                                {% else %}
+                                  0
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination" id="swiper-pagination-hinata-newpost"></div>
+      </div>
+      <div class="mx-auto effect-fade" style="width: 200px;">
+        <a href="{% url 'search:searchByGroups' 2 %}" class="gradient-btn hinata" style="width: 200px; background-image: url('{% static 'img/button_hinata.jpg' %}'); background-size: cover;">
+          <b>もっと見る>></b>
+        </a>
       </div>
     </div>
   </div>
 
-  <div class="row effect-fade">
-    {% for blog in hinata_newblogs %}
-    <div class="grid-item col-6 col-md-4 col-lg-3 my-2">
-      <div class="otapick_card_back">
-        <div class="otapick_card hinata">
-          <div class="card border border-top-0">
-            <div class="l-thumbnail">
-              <a href="{% url 'download:download' 2 blog.blog_ct %}">
-                <figure class="thumbnail-wrapper">
-                  {% if blog.thumbnail %}
-                  <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
-                  {% else %}
-                  <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
-                  {% endif %}
-                </figure>
-              </a>
-              <span class="more-button">
-                <div class="row justify-content-around">
-                  <div class="col-4 p-0 mr-2">
-                    <a href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
-                      style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
-                      <i class="fas fa-external-link-alt"></i>
+{% if not isMobile %}
+  </div>
+{% endif %}
+
+<hr class="my-5" id="popular">
+<h1 class="text-center top-subtitle_popular mb-0 display-4">POPULAR</h1>
+<p class="text-center text-muted effect-fade">人気記事</p>
+
+<div class="container text-muted">
+  <ul class="nav nav-tabs mb-3" id="groupTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" id="keyaki-tab" data-toggle="tab" href="#tab-pane-keyaki-popular" role="tab"
+         aria-controls="keyaki" aria-selected="false" style="color: limegreen;">欅坂46</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="hinata-tab" data-toggle="tab" href="#tab-pane-hinata-popular" role="tab"
+         aria-controls="hinata" aria-selected="false" style="color: deepskyblue;">日向坂46</a>
+    </li>
+  </ul>
+
+{% if isMobile %}
+  </div>
+{% endif %}
+  <div class="tab-content">
+    <!-- Popular post keyaki -->
+    <div class="tab-pane fade active" id="tab-pane-keyaki-popular" role="tabpanel" aria-labelledby="keyaki-tab">
+      <div class="swiper-container effect-fade" style="overflow-y:visible;">
+        <div class="swiper-wrapper pb-5">
+          {% for blog in keyaki_popularblogs %}
+          <div class="swiper-slide col-6 col-md-4 col-lg-3 my-2">
+            <div class="otapick_card_back">
+              <div class="otapick_card keyaki">
+                <div class="card border border-top-0">
+                  <div class="l-thumbnail">
+
+                  {% if isMobile %}
+                    <a href="{% url 'download:download' 1 blog.blog_ct %}">
+                      <figure class="thumbnail-wrapper-mobile">
+                        {% if blog.thumbnail %}
+                        <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                        {% else %}
+                        <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                        {% endif %}
+                      </figure>
                     </a>
-                  </div>
-                  <div class="col-4 p-0 ml-2">
-                    <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
-                      title="ダウンロードページへ">
-                      <i class="fas fa-download"></i>
-                    </a>
-                  </div>
-                </div>
-              </span>
-            </div>
-            <div class="card-body pb-0">
-              <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: dimgray;">
-                <h6 class="card-title newpost-title">
-                  {% if blog.title == "" %}
-                    &nbsp;
                   {% else %}
-                    {{ blog.title }}
+                    <a href="{% url 'download:download' 1 blog.blog_ct %}">
+                      <figure class="thumbnail-wrapper">
+                        {% if blog.thumbnail %}
+                        <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                        {% else %}
+                        <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                        {% endif %}
+                      </figure>
+                    </a>
+                    <span class="more-button">
+                      <div class="row justify-content-around">
+                        <div class="col-4 p-0 mr-2">
+                          <a href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                            style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                            <i class="fas fa-external-link-alt"></i>
+                          </a>
+                        </div>
+                        <div class="col-4 p-0 ml-2">
+                          <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
+                            title="ダウンロードページへ">
+                            <i class="fas fa-download"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </span>
                   {% endif %}
-                </h6>
-              </a>
-              <div class="row">
-                <a href="{% url 'search:searchByMembers' 2 blog.writer.ct %}"
-                  class="card-text ml-3 small mb-2 pb-0 card-writer hinata">
-                  {{ blog.writer.full_kanji }}
-                </a>
-                <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
-              </div>
-              <div class="dropdown text-center mb-2">
-                <button type="button" class="btn btn-light rounded-circle p-0" style="width:2rem;height:2rem;"
-                  id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fas fa-bars" style="color:gray;"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="thumbnailDetail">
-                  <a class="dropdown-item" href="{% url 'download:download' 2 blog.blog_ct %}">ダウンロードページへ</a>
-                  <a class="dropdown-item" target="_blank"
-                    href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+
+                  </div>
+                  <div class="card-body pb-0 px-3 px-sm-4 pt-3">
+                    <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: dimgray;">
+                      <h6 class="card-title newpost-title">
+                        {% if blog.title == "" %}
+                          &nbsp;
+                        {% else %}
+                          {{ blog.title }}
+                        {% endif %}
+                      </h6>
+                    </a>
+                    <div class="row">
+                      <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
+                        class="card-text ml-3 small mb-2 pb-0 card-writer keyaki">
+                        {{ blog.writer.full_kanji }}
+                      </a>
+                      <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+                    </div>
+
+                    <div class="container mb-2">
+                      <div class="row">
+
+                        <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                          <div class="row justify-content-around">
+                            <div class="d-flex align-items-center">
+                              <i class="fas fa-eye" style="color: grey"></i>
+                            </div>
+                            &nbsp;
+                            <div class="card-parameter-num">
+                              {% if blog.num_of_views %}
+                                {{ blog.num_of_views }}
+                              {% else %}
+                                0
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="dropdown col-4 text-center" style="overflow-y:visible;">
+                          <div class="card-detail-button-super">
+                            <button type="button" class="btn btn-light rounded-circle p-0 card-detail-button"
+                              id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fas fa-bars" style="color:gray;"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
+                              <a class="dropdown-item" href="{% url 'download:download' 1 blog.blog_ct %}">ダウンロードページへ</a>
+                              <a class="dropdown-item" target="_blank"
+                                href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                          <div class="row justify-content-around">
+                            <div class="d-flex align-items-center">
+                              <i class="fas fa-download" style="color: grey"></i>
+                            </div>
+                            &nbsp;
+                            <div class="card-parameter-num">
+                              {% if blog.num_of_downloads %}
+                                {{ blog.num_of_downloads }}
+                              {% else %}
+                                0
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          {% endfor %}
         </div>
+        <div class="swiper-pagination" id="swiper-pagination-keyaki-popular"></div>
+      </div>
+      <div class="mx-auto effect-fade" style="width: 200px;">
+        <a href="{% url 'search:searchByGroups' 1 %}?sort=popularity" class="gradient-btn keyaki" style="width: 200px; background-image: url('{% static 'img/button_keyaki.jpeg' %}'); background-size: cover;">
+          <b>もっと見る>></b>
+        </a>
       </div>
     </div>
-    {% endfor %}
+
+    <!-- Popular post hinata -->
+    <div class="tab-pane fade active" id="tab-pane-hinata-popular" role="tabpanel" aria-labelledby="hinata-tab">
+      <div class="swiper-container effect-fade" style="overflow-y:visible;">
+        <div class="swiper-wrapper pb-5">
+          {% for blog in hinata_popularblogs %}
+            <div class="swiper-slide col-6 col-md-4 col-lg-3 my-2">
+              <div class="otapick_card_back">
+                <div class="otapick_card hinata">
+                  <div class="card border border-top-0">
+                    <div class="l-thumbnail">
+
+                    {% if isMobile %}
+                      <a href="{% url 'download:download' 2 blog.blog_ct %}">
+                        <figure class="thumbnail-wrapper-mobile">
+                          {% if blog.thumbnail %}
+                          <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                          {% else %}
+                          <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                          {% endif %}
+                        </figure>
+                      </a>
+                    {% else %}
+                      <a href="{% url 'download:download' 2 blog.blog_ct %}">
+                        <figure class="thumbnail-wrapper">
+                          {% if blog.thumbnail %}
+                          <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
+                          {% else %}
+                          <img class="card-img-top newpost-thumbnail" src="{% static 'img/imageNotFound_newpost.png' %}">
+                          {% endif %}
+                        </figure>
+                      </a>
+                      <span class="more-button">
+                        <div class="row justify-content-around">
+                          <div class="col-4 p-0 mr-2">
+                            <a href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member"
+                              style="color: white;" target="_blank" data-toggle="tooltip" title="公式ブログで確認">
+                              <i class="fas fa-external-link-alt"></i>
+                            </a>
+                          </div>
+                          <div class="col-4 p-0 ml-2">
+                            <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: white;" data-toggle="tooltip"
+                              title="ダウンロードページへ">
+                              <i class="fas fa-download"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </span>
+                    {% endif %}
+
+                    </div>
+                    <div class="card-body pb-0 px-3 px-sm-4 pt-3">
+                      <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: dimgray;">
+                        <h6 class="card-title newpost-title">
+                          {% if blog.title == "" %}
+                            &nbsp;
+                          {% else %}
+                            {{ blog.title }}
+                          {% endif %}
+                        </h6>
+                      </a>
+                      <div class="row">
+                        <a href="{% url 'search:searchByMembers' 2 blog.writer.ct %}"
+                          class="card-text ml-3 small mb-2 pb-0 card-writer hinata">
+                          {{ blog.writer.full_kanji }}
+                        </a>
+                        <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+                      </div>
+
+                      <div class="container mb-2">
+                        <div class="row">
+
+                          <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                            <div class="row justify-content-around">
+                              <div class="d-flex align-items-center">
+                                <i class="fas fa-eye" style="color: grey"></i>
+                              </div>
+                              &nbsp;
+                              <div class="card-parameter-num">
+                                {% if blog.num_of_views %}
+                                  {{ blog.num_of_views }}
+                                {% else %}
+                                  0
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="dropdown col-4 text-center" style="overflow-y:visible;">
+                            <div class="card-detail-button-super">
+                              <button type="button" class="btn btn-light rounded-circle p-0 card-detail-button"
+                                id="thumbnailDetail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bars" style="color:gray;"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
+                                <a class="dropdown-item" href="{% url 'download:download' 2 blog.blog_ct %}">ダウンロードページへ</a>
+                                <a class="dropdown-item" target="_blank"
+                                  href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-4 card-parameter d-flex justify-content-center align-items-center">
+                            <div class="row justify-content-around">
+                              <div class="d-flex align-items-center">
+                                <i class="fas fa-download" style="color: grey"></i>
+                              </div>
+                              &nbsp;
+                              <div class="card-parameter-num">
+                                {% if blog.num_of_downloads %}
+                                  {{ blog.num_of_downloads }}
+                                {% else %}
+                                  0
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="swiper-pagination" id="swiper-pagination-hinata-popular"></div>
+      </div>
+      <div class="mx-auto effect-fade" style="width: 200px;">
+        <a href="{% url 'search:searchByGroups' 2 %}?sort=popularity" class="gradient-btn hinata" style="width: 200px; background-image: url('{% static 'img/button_hinata.jpg' %}'); background-size: cover;">
+          <b>もっと見る>></b>
+        </a>
+      </div>
+    </div>
   </div>
-</div>
+
+{% if not isMobile %}
+  </div>
+{% endif %}
 
 <hr id="howto" class="my-5">
 
 <!-- How to -->
-<h1 class="text-center top-subtitle_howto">HOW TO SAVE</h1>
+<h1 class="text-center top-subtitle_howto mb-0 display-4">HOW TO SAVE</h1>
+<p class="text-center text-muted effect-fade">保存方法</p>
 
 <section class="effect-fade-under">
   <div class="container mt-3">
@@ -371,4 +783,80 @@
   </div>
 </section>
 
+<hr class="my-5">
+<!-- Twitter -->
+<h1 class="text-center top-subtitle_twitter mb-0 display-4">Twitter</h1>
+<p class="text-center text-muted effect-fade">フォローミー</p>
+
+<div class="container effect-fade my-5">
+  <div class="row align-items-center">
+    <div class="col-lg-6 order-lg-1">
+      <div class="p-4">
+        <h3 class="intro-title text-center">ヲタピック公式Twitterアカウント</h3>
+        <p class="text-muted">
+          毎日、欅坂46・日向坂46のブログ更新情報を発信！！他にはメンテナンス、アップデート情報からシンプルなつぶやきまで色々発信していきます。<b>フォロ―バック4600%</b>ですので、気軽にフォローしてください！
+        </p>
+          <div class="mx-auto effect-fade my-3" style="width: 200px;">
+            {% if group == 'keyaki' %}
+            <a target="_blank" href="https://twitter.com/otapick" class="gradient-btn keyaki" style="width: 200px; background-image: url('{% static 'img/button_keyaki.jpeg' %}'); background-size: cover;">
+              <i class="fas fa-hashtag"></i><b>こちらから</b>
+            </a>
+            {% elif group == 'hinata' %}
+            <a target="_blank" href="https://twitter.com/otapick" class="gradient-btn hinata" style="width: 200px; background-image: url('{% static 'img/button_hinata.jpg' %}'); background-size: cover;">
+              <i class="fas fa-hashtag"></i><b>こちらから</b>
+            </a>
+            {% endif %}
+          </div>
+      </div>
+    </div>
+    <div class="col-lg-6 order-lg-2">
+      <div class="otapick_card_back">
+        <div class="otapick_card {{ group }}">
+          <div class="card border border-top-0">
+            <a class="twitter-timeline" data-height="500" href="https://twitter.com/otapick?ref_src=twsrc%5Etfw">Tweets by otapick</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.js"></script>
+
+<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_parameter_num.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/top.js' %}"></script>
+ <script>
+    const $keyaki_n = $('#groupTab a[href="#tab-pane-keyaki-newpost"]');
+    const $hinata_n = $('#groupTab a[href="#tab-pane-hinata-newpost"]');
+    const $keyaki_p = $('#groupTab a[href="#tab-pane-keyaki-popular"]');
+    const $hinata_p = $('#groupTab a[href="#tab-pane-hinata-popular"]');
+    $(document).ready(function(){
+        {% if group == 'keyaki' %}
+            $keyaki_n.tab('show');
+            $('#tab-pane-hinata-newpost').removeClass('active');
+            $keyaki_p.tab('show');
+            $('#tab-pane-hinata-popular').removeClass('active');
+        {% elif group == 'hinata' %}
+            $hinata_n.tab('show');
+            $('#tab-pane-keyaki-newpost').removeClass('active');
+            $hinata_p.tab('show');
+            $('#tab-pane-keyaki-popular').removeClass('active');
+        {% endif %}
+    });
+    $keyaki_n.click(function () {
+        uploadSlidesPerView();
+    });
+    $hinata_n.click(function () {
+        uploadSlidesPerView();
+    });
+    $keyaki_p.click(function () {
+        uploadSlidesPerView();
+    });
+    $hinata_p.click(function () {
+        uploadSlidesPerView();
+    });
+  </script>
 {% endblock %}
