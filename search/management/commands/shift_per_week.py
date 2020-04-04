@@ -9,21 +9,42 @@ class Command(BaseCommand):
            'v1_per_week、Imageのパラメータ、d1_per_weekはリセット。' \
            '1週間ごと(毎週月曜日00:00)に実行。'
 
+    def add_arguments(self, parser):
+        parser.add_argument('-r', '--reverse', type=bool,
+                            help='間違えて実行してしまったときに元に戻す。ただ、消えてしまったv3_per_week, d1_per_weekは修復不可。')
+
     def handle(self, *args, **options):
         try:
-            blogs = Blog.objects.exclude(v1_per_week=0, v2_per_week=0, v3_per_week=0)
-            for blog in blogs:
-                blog.v3_per_week = blog.v2_per_week
-                blog.v2_per_week = blog.v1_per_week
-                blog.v1_per_week = 0
-                blog.save()
+            if options['reverse']:
+                blogs = Blog.objects.exclude(v2_per_week=0, v3_per_week=0)
+                for blog in blogs:
+                    blog.v1_per_week = blog.v2_per_week
+                    blog.v2_per_week = blog.v3_per_week
+                    blog.v3_per_week = 0
+                    blog.save()
+            else:
+                blogs = Blog.objects.exclude(v1_per_week=0, v2_per_week=0, v3_per_week=0)
+                for blog in blogs:
+                    blog.v3_per_week = blog.v2_per_week
+                    blog.v2_per_week = blog.v1_per_week
+                    blog.v1_per_week = 0
+                    blog.save()
 
-            images = Image.objects.exclude(d1_per_week=0)
-            for image in images:
-                image.d1_per_week = 0
-                image.save()
+            if options['reverse']:
+                images = Image.objects.exclude(num_of_downloads=0)
+                for image in images:
+                    image.d1_per_week = image.num_of_downloads
+                    image.save()
+            else:
+                images = Image.objects.exclude(d1_per_week=0)
+                for image in images:
+                    image.d1_per_week = 0
+                    image.save()
 
         except Exception as e:
             support.print_console(e)
         else:
-            support.print_console('finished shift_per_week!!')
+            if options['reverse']:
+                support.print_console('finished shift_per_week reverse!!')
+            else:
+                support.print_console('finished shift_per_week!!')
