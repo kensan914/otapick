@@ -30,16 +30,10 @@ class Command(BaseCommand):
                     blog.v1_per_week = 0
                     blog.save()
 
-            if options['reverse']:
-                images = Image.objects.exclude(num_of_downloads=0)
-                for image in images:
-                    image.d1_per_week = image.num_of_downloads
-                    image.save()
-            else:
-                images = Image.objects.exclude(d1_per_week=0)
-                for image in images:
-                    image.d1_per_week = 0
-                    image.save()
+            images = Image.objects.exclude(d1_per_week=0)
+            for image in images:
+                image.d1_per_week = 0
+                image.save()
 
         except Exception as e:
             support.print_console(e)
