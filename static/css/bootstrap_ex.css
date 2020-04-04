@@ -845,7 +845,7 @@ div.thumbnail.checked + .save_img_checkbox {
     opacity: 1;
 }
 .top-subtitle_howto::after {
-    content: "HOW TO SAVE";
+    content: "HOW TO";
     position: absolute;
     z-index: -1;
     bottom: -10px;
