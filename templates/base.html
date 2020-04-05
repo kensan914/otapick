@@ -75,24 +75,26 @@
         <input class="col form-control autocomplete" type="search" placeholder="Search" aria-label="Search" name="q">
       </form>
       <ul class="navbar-nav mx-4 mx-lg-0">
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" id="nav-dropdown1">
           <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdownMenuLink" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             ブログ一覧
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="nav-dropdown-menu1">
             <a class="dropdown-item" href="{% url 'search:searchByGroups' 1 %}">欅坂46</a>
             <a class="dropdown-item" href="{% url 'search:searchByGroups' 2 %}">日向坂46</a>
+            <a class="dropdown-item" href="{% url 'top:top' %}#newpost">新着ブログ</a>
+            <a class="dropdown-item" href="{% url 'top:top' %}#popular">人気ブログ</a>
             <a class="dropdown-item" href="{% url 'search:memberList' %}">メンバーリスト</a>
           </div>
         </li>
 
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" id="nav-dropdown2">
           <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdownMenuLink" role="button"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             公式
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="nav-dropdown-menu2">
             <a class="dropdown-item" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000"
               target="_blank">欅坂46公式ブログ <i class="fas fa-external-link-alt"></i></a>
             <a class="dropdown-item" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000"

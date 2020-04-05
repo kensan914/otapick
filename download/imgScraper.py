@@ -1,9 +1,9 @@
+from billiard.exceptions import SoftTimeLimitExceeded
 from config.celery import TransactionAwareTask
 from download.models import Image, Progress
 from download.scripts.downloadViewFunc import get_blog
 from search.scripts.blogRegister.compresser import compress_img
 from celery import shared_task
-import time
 import requests
 import os
 import urllib3
@@ -41,7 +41,6 @@ def get_tag(progress, url, group_id):
     if not real_img_tags:
         progress.num = 100
         progress.save()
-        # quit()
         return
 
     return real_img_tags
@@ -106,19 +105,25 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False):
         return None
 
 
-@shared_task(base=TransactionAwareTask)
+@shared_task(base=TransactionAwareTask, soft_time_limit=60)
 def update(progress_id, group_id, blog_ct, writer_ct):
-    progress = Progress.objects.get(id=progress_id)
-    blog = get_blog(group_id, blog_ct)
+    try:
+        progress = Progress.objects.get(id=progress_id)
+        blog = get_blog(group_id, blog_ct)
 
-    global blog_url
-    if group_id == 1:
-        blog_url = "https://www.keyakizaka46.com/s/k46o/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"
-    elif group_id == 2:
-        blog_url = "https://www.hinatazaka46.com/s/official/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"
+        global blog_url
+        if group_id == 1:
+            blog_url = "https://www.keyakizaka46.com/s/k46o/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"
+        elif group_id == 2:
+            blog_url = "https://www.hinatazaka46.com/s/official/diary/detail/" + str(blog_ct) + "?ima=0000&cd=member"
 
-    img_urls = get_img_url(progress, blog_url, group_id)
-    if img_urls is None:
-        return
+        img_urls = get_img_url(progress, blog_url, group_id)
+        if img_urls is None:
+            return
 
-    save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog)
+        save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog)
+
+    #timeout(60s)後の処理
+    except SoftTimeLimitExceeded:
+        progress = Progress.objects.get(id=progress_id)
+        progress.delete()
