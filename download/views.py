@@ -1,7 +1,6 @@
 import os
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
-
 from download.imgScraper import update
 from download.scripts.downloadViewFunc import get_blog, render_progress, increment_num_of_views, \
     increment_num_of_downloads, edit_num_of_most_downloads
@@ -42,6 +41,11 @@ class DownloadView(BaseView):
                     if request.is_ajax():
                         return HttpResponse(str(progress.num))
                     else:
+                        #progressだけが作成されてceleryが起動しなかった時の対応。
+                        #task_idからtaskが生きているかの条件も追加したかったが断念。
+                        if progress.num == 0:
+                            progress.delete()
+                            return redirect('download:download', group_id, blog_ct)
                         return render_progress(request, progress, group_id, blog_ct, blog.title, 'download')
                 # 同時接続用
                 elif request.is_ajax():

@@ -25,6 +25,8 @@ $(window).scroll(function () {
             $(".fixed-top").css("top", "-" + menuHeight + "px");
             $(".fixed-top").css("transition", "0.3s");
             $(".fixed-top").css("transition-timing-function", "ease-out");
+
+            $("#nav-dropdown1, #nav-dropdown-menu1, #nav-dropdown2, #nav-dropdown-menu2, #navbarSupportedContent").removeClass("show");
         }
     } else if (startPos > currentPos) {
         $(".fixed-top").css("top", 0 + "px");
