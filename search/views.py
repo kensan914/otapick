@@ -30,6 +30,7 @@ class SearchByLatestView(generic.ListView, BaseView):
             'group_id': group_id,
             'hit': True,
             'group': group,
+            'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile,
         }
         context.update(searchByLatest_ctx)
         return context
@@ -67,6 +68,7 @@ class SearchByBlogsView(generic.ListView, BaseView):
             'group_id': group_id,
             'hit': True,
             'group': group,
+            'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile,
         }
         context.update(searchByBlogs_ctx)
         return context
