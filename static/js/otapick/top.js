@@ -38,6 +38,8 @@ var swiper_hinata_p = new Swiper('#tab-pane-hinata-popular>.swiper-container', {
 $( document ).ready(function(){
     uploadSlidesPerView();
     rewrite_card_parameter_num();
+    rewrite_card_writer_name();
+    rewrite_card_blog_title();
 });
 $( window ).resize(uploadSlidesPerView);
 

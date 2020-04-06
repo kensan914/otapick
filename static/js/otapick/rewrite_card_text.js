@@ -34,5 +34,30 @@ function rewrite_card_parameter_num(){
             $(this).text('-');
         }
         $(o).removeClass("card-parameter-num");
+        $(o).addClass("card-parameter-num-corrected");
+    });
+}
+
+//rewrite 新2期生 and 新3期生
+function rewrite_card_writer_name(){
+    $(".writer-name").each(function(i, o){
+        if ( $(o).text().match(/欅坂46新二期生/)) {
+            $(this).text('新二期生');
+        } else if ( $(o).text().match(/日向坂46新三期生/)) {
+            $(this).text('新三期生');
+        }
+        $(o).removeClass("writer-name");
+        $(o).addClass("writer-name-corrected");
+    });
+}
+
+//rewrite title if blank
+function rewrite_card_blog_title(){
+    $(".blog-title").each(function(i, o){
+        if ( !$(o).html() ) {
+            $(this).html('&nbsp;');
+        }
+        $(o).removeClass("blog-title");
+        $(o).addClass("blog-title-corrected");
     });
 }
