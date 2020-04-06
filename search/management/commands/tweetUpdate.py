@@ -70,7 +70,17 @@ class Command(BaseCommand):
         text += emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
 
         for new_post in new_posts[:4]:
-            text += '「' + self.shorten_text(new_post.title, max_length=10) + '」#' + new_post.writer.full_kanji + '\n'
+            blog_title = self.shorten_text(new_post.title, max_length=10)
+            member_name = new_post.writer.full_kanji
+
+            # 新メンバー対処
+            if member_name == '欅坂46新二期生':
+                member_name = '新二期生'
+            elif member_name == '日向坂46新三期生':
+                member_name = '新三期生'
+            # 新メンバー対処
+
+            text += '「' + blog_title + '」#' + member_name + '\n'
 
         if len(new_posts) > 4:
             text += 'etc…\n'
