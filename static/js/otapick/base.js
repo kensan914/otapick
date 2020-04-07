@@ -52,7 +52,7 @@ window.onload = function () {
             var elemPos = $(this).offset().top;
             var scroll = $(window).scrollTop();
             var windowHeight = $(window).height();
-            if (scroll > elemPos - windowHeight + 70) {
+            if (scroll > elemPos - windowHeight + effectTrigger) {
                 $(this).addClass('effect-scroll');
             }
         });
