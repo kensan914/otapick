@@ -321,21 +321,12 @@
             </div>
             <div class="card-body pb-0 px-3 px-sm-4 pt-3">
               <a href="{% url 'download:download' group_id blog.blog_ct %}" style="color: dimgray;">
-                <h6 class="card-title ">{{ blog.title }}</h6>
+                <h6 class="card-title blog-title">{{ blog.title }}</h6>
               </a>
               <div class="row">
-                {% if group_id == 1 %}
                 <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}"
-                  class="card-text ml-3 small mb-2 pb-0 card-writer" style="color: limegreen;">
-                  {{ blog.writer.full_kanji }}
-                </a>
-                {% elif group_id == 2 %}
-                <a href="{% url 'search:searchByMembers' group_id blog.writer.ct %}"
-                  class="card-text ml-3 small mb-2 pb-0 card-writer" style="color: deepskyblue;">
-                  {{ blog.writer.full_kanji }}
-                </a>
-                {% endif %}
-                <p class="card-text ml-3 small mb-2 pb-0 card-writer">{{ blog.post_date|date:"y/n/j" }}</p>
+                  class="card-text ml-3 small mb-2 pb-0 card-info {{ group }} writer-name">{{ blog.writer.full_kanji }}</a>
+                <p class="card-text ml-3 small mb-2 pb-0 card-info">{{ blog.post_date|date:"y/n/j" }}</p>
               </div>
 
               <div class="container mb-2">
@@ -459,7 +450,7 @@
 <script type="text/javascript" src="{% static 'js/responsive-paginate.js' %}"></script>
 <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
 
-<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_parameter_num.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_text.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/otapick/blogList.js' %}"></script>
 
 {% endblock %}
