@@ -36,6 +36,7 @@ var swiper_hinata_p = new Swiper('#tab-pane-hinata-popular>.swiper-container', {
 });
 
 $( document ).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
     uploadSlidesPerView();
     rewrite_card_parameter_num();
     rewrite_card_writer_name();
