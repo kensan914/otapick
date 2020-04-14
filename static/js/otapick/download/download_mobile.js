@@ -1,3 +1,6 @@
+// twemoji
+twemoji.parse(document.body);
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -28,3 +31,20 @@ $.ajaxSetup({
         }
     }
 });
+
+$('img').longpress(function(e) {
+    if (location.pathname.startsWith('/download')) {
+        $.ajax({
+            url: "/download/inform_of_download/",
+            type: "POST",
+            data: {
+                'image_order': $(this).attr('id'),
+                'group_id': $(this).data('group_id'),
+                'blog_ct': $(this).data('blog_ct')
+            }
+        })
+    }
+},
+function(){},
+300
+);

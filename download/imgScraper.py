@@ -1,7 +1,6 @@
 from billiard.exceptions import SoftTimeLimitExceeded
 from config.celery import TransactionAwareTask
 from download.models import Image, Progress
-from download.scripts.downloadViewFunc import get_blog
 from search.scripts.blogRegister.compresser import compress_img
 from celery import shared_task
 import requests
@@ -11,6 +10,8 @@ from bs4 import BeautifulSoup
 from urllib3.exceptions import InsecureRequestWarning
 from config import settings
 import certifi
+
+from search.scripts.searchViewFunc import get_blog
 
 
 def get_tag(progress, url, group_id):

@@ -1,0 +1,45 @@
+{% load static %}
+
+<title>
+{% if title and writer_name %}
+  {{ title }}({{ writer_name }})｜ヲタピック
+{% else %}
+  画像保存｜ヲタピック
+{% endif %}
+</title>
+
+<div class="main-download">
+  <div class="position-absolute h-100 w-100 p-3 d-flex align-items-center justify-content-center"
+     style="overflow: hidden;">
+    <div class="container text-center px-0 mx-0">
+      <h2 class="ml-3 now-loading">Now Loading...</h2>
+
+      <div class="write_box">
+        <div class="img-wrap">
+          <img src="{% static 'img/otapick_logo_back.png' %}" class="img-fluid mb-5 col-lg-5 col-md-8 col-11"
+               alt="Responsive image">
+        </div>
+
+        <div class="img-wrap-before">
+        </div>
+      </div>
+
+      <h3 class="progress-info">「{% if title %}{{ title }}{% endif %}」に含まれる画像を取得中です。</h3>
+      <div class="progress">
+        <div class="progress-bar" id="progress" role="progressbar" aria-valuenow="{{ progress.num }}"
+             aria-valuemin="0" aria-valuemax="100" style="width: {{ progress.num }}%">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ajax-script" id="progress_ajax-script">
+  <script type="text/javascript" src="{% static 'js/otapick/download/progress_ajax.js' %}"></script>
+  <script>
+    $(function () {
+        get_progress_num("{% url 'download:download' group_id blog_ct %}", false);
+        $(".fixed-top").removeClass("shadow");
+    });
+  </script>
+</div>

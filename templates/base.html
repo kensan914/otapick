@@ -15,11 +15,13 @@
   <title>{% block title %}{% endblock %}｜ヲタピック</title>
   <link rel="index" href="{% url 'top:top' %}" />
 
-  <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
   {% bootstrap_javascript %}
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
@@ -50,20 +52,20 @@
   {% block extra_css %}{% endblock %}
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134426000-2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'UA-134426000-2');
-  </script>
+{#  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134426000-2"></script>#}
+{#  <script>#}
+{#    window.dataLayer = window.dataLayer || [];#}
+{#    function gtag() { dataLayer.push(arguments); }#}
+{#    gtag('js', new Date());#}
+{##}
+{#    gtag('config', 'UA-134426000-2');#}
+{#  </script>#}
 </head>
 
 <body ontouchstart="">
 
   <!-- Navigation -->
-  <nav class="navbar navbar-light bg-light static-top navbar-expand-lg fixed-top">
+  <nav class="navbar navbar-light bg-light static-top navbar-expand-lg fixed-top border-bottom">
     <a class="navbar-brand" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
              height: 50px; width: 170px;"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -112,7 +114,9 @@
     </div>
   </nav>
 
-  {% block content %}{% endblock %}
+  <div class="main">{% block content %}{% endblock %}</div>
+
+  {% block out_of_main %}{% endblock %}
 
   <!-- Footer -->
   <footer class="footer bg-light text-muted mt-5">
@@ -151,16 +155,20 @@
             <span class="font-weight-bold">公式リンク</span>
             <hr class="my-1 mr-4 mr-lg-0">
             <li>
-              <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46 公式ブログ <i class="fas fa-external-link-alt"></i></a>
+              <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46 公式ブログ <i
+                  class="fas fa-external-link-alt"></i></a>
             </li>
             <li>
-              <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/?ima=0000">欅坂46 公式サイト <i class="fas fa-external-link-alt"></i></a>
+              <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/?ima=0000">欅坂46 公式サイト <i
+                  class="fas fa-external-link-alt"></i></a>
             </li>
             <li>
-              <a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46 公式ブログ <i class="fas fa-external-link-alt"></i></a>
+              <a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46 公式ブログ <i
+                  class="fas fa-external-link-alt"></i></a>
             </li>
             <li>
-              <a target="_blank" href="https://www.hinatazaka46.com/s/official/?ima=0000">日向坂46 公式サイト <i class="fas fa-external-link-alt"></i></a>
+              <a target="_blank" href="https://www.hinatazaka46.com/s/official/?ima=0000">日向坂46 公式サイト <i
+                  class="fas fa-external-link-alt"></i></a>
             </li>
           </ul>
         </div>
@@ -179,7 +187,8 @@
               <a href="{% url 'top:support' %}#contact_info">お問い合わせ</a>
             </li>
             <li>
-              <a target="_blank" href="https://twitter.com/otapick">公式Twitter<i class="fas fa-external-link-alt"></i></a>
+              <a target="_blank" href="https://twitter.com/otapick">公式Twitter<i
+                  class="fas fa-external-link-alt"></i></a>
             </li>
           </ul>
         </div>
@@ -187,42 +196,12 @@
       </div>
     </div>
   </footer>
-  <div class="col-12 text-center py-4 text-muted">
+  <div class="col-12 text-center py-4 text-muted" id="copyright">
     <p class="small">Copyright &copy; otapick 2020 All rights reserved.</p>
   </div>
 
   <!-- autocomplete -->
-  <script>
-    $(function () {
-      $.ui.autocomplete.prototype._renderItem = function (ul, item) {
-        return $("<li>").append("<a href='" + "/search/member/blog/" + item.group_id + "/" + item.ct + "/" + "'>" + item.name + "</a>").appendTo(ul);
-      };
-
-      $("input.autocomplete").autocomplete({
-        source: function (req, res) {
-          $.ajax({
-            url: "{% url 'search:autocomplete' %}?input=" + encodeURIComponent(req.term),
-            type: "get",
-            cache: false,
-            dataType: "json",
-            success: function (data) {
-              res(data);
-            },
-          });
-        },
-        focus: function (event, ui) {
-          $("input.autocomplete").val(ui.item.name);
-          return false;
-        },
-        select: function (event, ui) {
-          window.location.href = "/search/member/blog/" + ui.item.group_id + "/" + ui.item.ct + "/";
-          return false;
-        },
-        delay: 0,
-        minLength: 2,
-      });
-    });
-  </script>
+  <script type="text/javascript" src="{% static 'js/otapick/autocomplete.js' %}"></script>
 
   <!-- Masonry -->
   <script type="text/javascript" src="{% static 'js/masonry.pkgd.min.js' %}"></script>

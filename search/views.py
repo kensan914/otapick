@@ -1,16 +1,15 @@
 from urllib.parse import quote_plus
-import user_agents
 from django.db.models import Q
 from django.http import JsonResponse
+from search.scripts.searchViewSubFunc import check_is_mobile
 from search.forms import NarrowingForm
 from django.views import View
-from .models import Blog
-from .scripts.searchViewFunc import *
-from urllib.parse import urlparse
+from search.scripts.searchViewFunc import *
+from top.views import BaseView
 
 
 class SearchByLatestView(generic.ListView, BaseView):
-    template_name = html_path = 'search/otapick_searchByBlogs.html'
+    template_name = html_path = 'search/searchByBlogs.html'
     model = Blog
     paginate_by = 12
 
@@ -30,7 +29,7 @@ class SearchByLatestView(generic.ListView, BaseView):
             'group_id': group_id,
             'hit': True,
             'group': group,
-            'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile,
+            'isMobile': check_is_mobile(self.request),
         }
         context.update(searchByLatest_ctx)
         return context
@@ -47,10 +46,11 @@ class SearchByLatestView(generic.ListView, BaseView):
 searchByLatest = SearchByLatestView.as_view()
 
 
-class SearchByBlogsView(generic.ListView, BaseView):
-    template_name = html_path = 'search/otapick_searchByBlogs.html'
+class SearchByURLView(generic.ListView, BaseView):
+    template_name = html_path = 'search/searchByBlogs.html'
     model = Blog
     paginate_by = 20
+    is_member = True
 
     def get(self, request, *args, **kwargs):
         if self.request.GET.get('q'):
@@ -66,16 +66,26 @@ class SearchByBlogsView(generic.ListView, BaseView):
         searchByBlogs_ctx = {
             'isLatest': False,
             'group_id': group_id,
-            'hit': True,
             'group': group,
-            'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile,
+            'hit': True,
+            'isMobile': check_is_mobile(self.request),
         }
+        ct = self.kwargs.get('ct')
+        if ct:
+            searchByBlogs_ctx['ct'] = ct
+            if Member.objects.filter(belonging_group__group_id=group_id, ct=ct).exists():
+                searchByBlogs_ctx['member'] = Member.objects.get(belonging_group__group_id=group_id, ct=ct)
         context.update(searchByBlogs_ctx)
         return context
 
     def get_queryset(self):
         group_id = self.kwargs.get('group_id')
-        members = Member.objects.filter(belonging_group__group_id=group_id)
+        ct = self.kwargs.get('ct')
+        if ct:
+            members = Member.objects.filter(belonging_group__group_id=group_id, ct=ct)
+        else:
+            members = Member.objects.filter(belonging_group__group_id=group_id)
+
         dy_text = self.request.GET.get('dy')
         if dy_text:
             dy = get_dy(dy_text)
@@ -88,7 +98,18 @@ class SearchByBlogsView(generic.ListView, BaseView):
         return Blog.objects.filter(writer__in=members).order_by('-post_date', 'order_for_simul')
 
 
+class SearchByBlogsView(SearchByURLView):
+    is_member = False
+
+
 searchByBlogs = SearchByBlogsView.as_view()
+
+
+class SearchByMemersURLView(SearchByURLView):
+    is_member = True
+
+
+searchByMembersURL = SearchByMemersURLView.as_view()
 
 
 class BlogListView(generic.ListView, BaseView):
@@ -99,9 +120,7 @@ class BlogListView(generic.ListView, BaseView):
 
     def get(self, request, *args, **kwargs):
         if self.request.GET.get('page'):
-            referer = request.environ.get('HTTP_REFERER')
-            referer_url = urlparse(referer)
-            if not referer or request.path != referer_url.path:
+            if not request.is_ajax():
                 url = request.get_full_path()
                 url_removed_page = remove_query(url, 'page')
                 return redirect(url_removed_page)
@@ -127,7 +146,7 @@ class BlogListView(generic.ListView, BaseView):
             'narrowing_keyword': narrowing_keyword,
             'kw_placeholder': kw_placeholder(group_id),
             'form': NarrowingForm(self.request.POST),
-            'isMobile': user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile,
+            'isMobile': check_is_mobile(self.request),
             'page': page,
         }
         context.update(listOfBlogs_ctx)
@@ -224,7 +243,7 @@ searchByGroups = SearchByGroupsView.as_view()
 
 
 class SearchMemberView(generic.ListView, BaseView):
-    html_path = template_name = 'search/otapick_searchMember.html'
+    html_path = template_name = 'search/searchMember.html'
     model = Member
     paginate_by = 100
 
@@ -253,7 +272,7 @@ searchMember = SearchMemberView.as_view()
 
 
 class SearchUnjustURLView(BaseView):
-    html_path = 'search/otapick_searchByBlogs.html'
+    html_path = 'search/searchByBlogs.html'
 
     def get(self, request, *args, **kwargs):
         self.context['hit'] = False
@@ -264,7 +283,7 @@ searchUnjustURL = SearchUnjustURLView.as_view()
 
 
 class MemberListView(generic.ListView, BaseView):
-    html_path = template_name = 'search/otapick_memberList.html'
+    html_path = template_name = 'search/memberList.html'
     model = Member
     paginate_by = 50
     keyaki_exist = True

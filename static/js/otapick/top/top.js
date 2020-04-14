@@ -38,9 +38,9 @@ var swiper_hinata_p = new Swiper('#tab-pane-hinata-popular>.swiper-container', {
 $( document ).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
     uploadSlidesPerView();
-    rewrite_card_parameter_num();
-    rewrite_card_writer_name();
-    rewrite_card_blog_title();
+    rewriteCardParameterNum();
+    rewriteCardWriterName();
+    rewriteCardBlogTitle();
 });
 $( window ).resize(uploadSlidesPerView);
 
@@ -66,3 +66,33 @@ function uploadSlidesPerView() {
     swiper_keyaki_p.update();
     swiper_hinata_p.update();
 }
+
+const $keyaki_n = $('#groupTab a[href="#tab-pane-keyaki-newpost"]');
+const $hinata_n = $('#groupTab a[href="#tab-pane-hinata-newpost"]');
+const $keyaki_p = $('#groupTab a[href="#tab-pane-keyaki-popular"]');
+const $hinata_p = $('#groupTab a[href="#tab-pane-hinata-popular"]');
+$(function () {
+  if (group === 'keyaki') {
+      $keyaki_n.tab('show');
+      $('#tab-pane-hinata-newpost').removeClass('active');
+      $keyaki_p.tab('show');
+      $('#tab-pane-hinata-popular').removeClass('active');
+  } else if (group === 'hinata'){
+      $hinata_n.tab('show');
+      $('#tab-pane-keyaki-newpost').removeClass('active');
+      $hinata_p.tab('show');
+      $('#tab-pane-keyaki-popular').removeClass('active');
+  }
+});
+$keyaki_n.click(function () {
+uploadSlidesPerView();
+});
+$hinata_n.click(function () {
+uploadSlidesPerView();
+});
+$keyaki_p.click(function () {
+uploadSlidesPerView();
+});
+$hinata_p.click(function () {
+uploadSlidesPerView();
+});
