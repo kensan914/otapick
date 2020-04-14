@@ -1,10 +1,10 @@
 body {
-    font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif
+    font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ', 'Helvetica Neue', Helvetica, Arial, sans-serif
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-weight: 700
+    font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 700;
 }
 
 .keyaki header.masthead {
@@ -619,7 +619,7 @@ div.thumbnail.checked + .save_img_checkbox {
 * {
     letter-spacing: .03em;
   }
-  h1, h2, h3, h4, h5 {font-family: 'Noto Sans JP', sans-serif;}
+  {#h1, h2, h3, h4, h5 {font-family: 'Noto Sans JP', sans-serif;}#}
 
   /* introimage */
   .intro_img {
@@ -766,33 +766,60 @@ div.thumbnail.checked + .save_img_checkbox {
     font-size: 0.7rem;
  }
 }
+
 /* @include media-breakpoint-up(sm) { */
-/* 極小デバイス（縦向きモバイル, 576px 未満） */
+/* 極小デバイス （縦向きモバイル, 576px 未満） */
 @media (max-width: 575.98px) {
- .card-title {
-   font-size: 0.8rem;
- }
- .card-info {
-    font-size: 0.6rem;
- }
- .intro-title {
-    font-size: 1.4rem;
- }
- .card-parameter {
-    font-size: 0.5rem;
- }
- .blogList-detail-btn {
-     font-size: 0.9rem;
- }
- .catch_copy {
-     font-size: 25px;
- }
- .top-hashtag {
-     font-size: 26px;
- }
- .newpost-thumbnail {
-     height: 230px;
- }
+    .card-title {
+        font-size: 0.9rem;
+    }
+    .card-info {
+        font-size: 0.7rem;
+    }
+    .intro-title {
+        font-size: 1.4rem;
+    }
+    .card-parameter {
+        font-size: 0.7rem;
+    }
+    .blogList-detail-btn {
+         font-size: 0.9rem;
+    }
+    .catch_copy {
+        font-size: 25px;
+    }
+    .top-hashtag {
+        font-size: 26px;
+    }
+    .newpost-thumbnail {
+        height: 230px;
+    }
+}
+
+/* iphone XR 414x896 （420px 未満） */
+@media (max-width: 420px) {
+    .card-title {
+        font-size: 0.9rem;
+    }
+    .card-info {
+        font-size: 0.7rem;
+    }
+    .card-parameter {
+        font-size: 0.7rem;
+    }
+}
+
+/* iphone X 375x812 （380px 未満） */
+@media (max-width: 380px) {
+    .card-title {
+        font-size: 0.8rem;
+    }
+    .card-info {
+        font-size: 0.6rem;
+    }
+    .card-parameter {
+        font-size: 0.6rem;
+    }
 }
 
 /* iphone 5 */
@@ -942,6 +969,7 @@ a.hinata {
   will-change: transform, filter;
   transform-style: preserve-3d;
   transition: all .3s ease-out;
+  border: 0;
 }
 .gradient-btn:hover {
   transform: scale(1.03);
@@ -977,12 +1005,24 @@ a.hinata {
 }
 .gradient-btn.hinata,
 .gradient-btn.hinata::before {
-  text-decoration: none !important;
-  color: white !important;
-  background-position: center;
-  background: -moz-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
-  background: -webkit-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
-  background: linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
+    text-decoration: none !important;
+    color: white !important;
+    background-position: center;
+    background: -moz-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
+    background: -webkit-linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
+    background: linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
+}
+.gradient-btn.keyaki {
+    background-image: url('/static/img/button_keyaki.jpeg');
+    background-size: cover;
+}
+.gradient-btn.hinata {
+    background-image: url('/static/img/button_hinata.jpg');
+    background-size: cover;
+}
+{#for button tag.#}
+.gradient-btn:focus {
+    outline:0;
 }
 
 {#card-detail-button#}
@@ -996,4 +1036,43 @@ a.hinata {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+{#download-back-button#}
+.otapick-back-button {
+    width:3rem;
+    height:3rem;
+}
+.otapick-back-button-mobile {
+    width:3rem;
+    height:3rem;
+}
+
+{#otapick-card2#}
+.otapick-card2 {
+    border-radius: 3rem;
+    border-color: whitesmoke;
+    box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2);
+}
+.otapick-card2-mobile {
+    border-radius: 2rem;
+    border-color: whitesmoke;
+    box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2);
+}
+
+.download-info {
+    font-size: 1.3rem;
+}
+.download-info-mobile {
+    font-size: 1.1rem;
+}
+.download-info-mobile2 {
+    font-size: 0.8rem;
+}
+
+.download-official-a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: underline;
 }

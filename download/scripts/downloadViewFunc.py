@@ -1,35 +1,56 @@
-import os
-import subprocess
 from django.shortcuts import render
-from config.settings import BASE_DIR
-from download.models import Image
-from search.models import Member, Blog
+from download.models import Image, Progress
+from search.scripts.searchViewFunc import convert_css_class
+from search.scripts.searchViewSubFunc import check_is_mobile
 
 
-def get_blog(group_id, blog_ct):
-    writer_belonging = Member.objects.filter(belonging_group__group_id=group_id)
-    try:
-        blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
-    except:
-        try:
-            subprocess.call(['python', os.path.join(BASE_DIR, 'manage.py'), 'keepUpLatest'])
-        except:
-            print("subprocess.check_call() failed")
-        try:
-            blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
-        except:
-            return None
-    return blog
-
-
-def render_progress(request, progress, group_id, blog_ct, title, status):
-    return render(request, 'download/otapick_progress.html', {
+def render_progress(request, progress, group_id, blog_ct, title, writer_name):
+    return render(request, 'download/progress.html', {
         'progress': progress,
         'group_id': group_id,
         'blog_ct': blog_ct,
         'title': title,
-        'status': status
+        'writer_name': writer_name,
     })
+
+
+def render_progress_ajax(request, title, group_id, blog_ct, writer_name):
+    return render(request, 'download/progress_ajax.html', {
+        'title': title,
+        'group_id': group_id,
+        'blog_ct': blog_ct,
+        'writer_name': writer_name,
+    })
+
+
+def preparate_download_view(self, group_id, blog, blog_ct, is_ajax):
+    if check_is_mobile(self.request):
+        if is_ajax:
+            self.html_path = "download/download_mobile_ajax.html"
+        else:
+            self.html_path = "download/download_mobile.html"
+    else:
+        if is_ajax:
+            self.html_path = "download/download_ajax.html"
+        else:
+            self.html_path = "download/download.html"
+
+    group = convert_css_class(group_id)
+    self.request.session['group'] = group
+    self.context = {
+        'blog': blog,
+        'group_id': group_id,
+        'blog_ct': blog_ct,
+        'group': group,
+    }
+    if blog:
+        if Image.objects.filter(publisher=blog).exists():
+            blog_images = Image.objects.filter(publisher=blog).order_by('order')
+            self.context['blog_images'] = blog_images
+        else:
+            self.context['blog_images'] = None
+    # rewrite num_of_views
+    increment_num_of_views(blog, num=1)
 
 
 def increment_num_of_views(blog, num):
@@ -54,3 +75,16 @@ def increment_num_of_downloads(images, blog, num):
 def edit_num_of_most_downloads(blog):
     blog.num_of_most_downloads = Image.objects.filter(publisher=blog).order_by('-num_of_downloads')[0].num_of_downloads
     blog.save()
+
+
+from download.imgScraper import update
+
+
+def recreate_progress(request, progress, blog, group_id, blog_ct, is_ajax):
+    progress.delete()
+    new_progress = Progress.objects.create(target=blog)
+    update.delay(new_progress.id, group_id, blog_ct, blog.writer.ct)
+    if is_ajax:
+        return render_progress_ajax(request, blog.title, group_id, blog_ct, blog.writer.full_kanji)
+    else:
+        return render_progress(request, new_progress, group_id, blog_ct, blog.title, blog.writer.full_kanji)

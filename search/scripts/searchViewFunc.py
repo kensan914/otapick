@@ -1,11 +1,14 @@
+import os
+import subprocess
 from datetime import datetime
-from search.models import Member
-from top.views import BaseView
+from config.settings import BASE_DIR
+from search.models import Member, Blog
 from search.scripts.firstClassifier import nameClassifier
 from django.shortcuts import redirect
 from django.views import generic
 import random
 import urllib.parse
+from top.views import BaseView
 
 
 def convert_css_class(group_id):
@@ -60,7 +63,7 @@ def get_q_member(self, isListView):
         else:
             base_view = BaseView()
             base_view.context['appropriate'] = False
-            base_view.html_path = 'search/otapick_searchMember.html'
+            base_view.html_path = 'search/searchMember.html'
             return base_view.get(self.request)
 
 
@@ -118,3 +121,19 @@ def remove_query(url, key):
     d = urllib.parse.parse_qs(pr.query)
     d.pop(key, None)
     return urllib.parse.urlunparse(pr._replace(query=urllib.parse.urlencode(d, doseq=True)))
+
+
+def get_blog(group_id, blog_ct):
+    writer_belonging = Member.objects.filter(belonging_group__group_id=group_id)
+    try:
+        blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
+    except:
+        try:
+            subprocess.call(['python', os.path.join(BASE_DIR, 'manage.py'), 'keepUpLatest'])
+        except:
+            print("subprocess.check_call() failed")
+        try:
+            blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
+        except:
+            return None
+    return blog

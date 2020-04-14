@@ -1,12 +1,12 @@
-import user_agents
 from django.shortcuts import render, redirect
 from django.views import View
-from search.scripts.firstClassifier import firstClassifier, dy_insert_hyphen
+from search.scripts.firstClassifier import firstClassifier
 from search.models import Blog
+from search.scripts.searchViewSubFunc import check_is_mobile
 
 
 class BaseView(View):
-    html_path = 'top/otapick_top.html'
+    html_path = 'top/top.html'
     context = {}
 
     def get(self, request, *args, **kwargs):
@@ -24,11 +24,9 @@ class BaseView(View):
                         response['location'] += '?dy=' + result['dy']
                     return response
                 elif result['class'] == 'searchByMembers':
-                    response = redirect('search:searchByMembers', group_id=result['group_id'], ct=result['ct'])
-                    response['location'] += '?page=' + str(result['page'])
+                    response = redirect('search:searchByMembersURL', group_id=result['group_id'], ct=result['ct'], page=result['page'])
                     if result['dy']:
-                        dy = dy_insert_hyphen(result['dy'])
-                        response['location'] += '&post=' + dy
+                        response['location'] += '?dy=' + result['dy']
                     return response
                 else:
                     return redirect('search:searchUnjustURL')
@@ -38,7 +36,7 @@ class BaseView(View):
                 else:
                     return redirect('search:searchUnjustMember')
         else:
-            self.context['isMobile'] = user_agents.parse(self.request.META['HTTP_USER_AGENT']).is_mobile
+            self.context['isMobile'] = check_is_mobile(self.request)
             self.context['group'] = request.session.get('group', 'keyaki')
             self.context['keyaki_newblogs']\
                 = Blog.objects.filter(writer__belonging_group__group_id=1).order_by('-post_date', 'order_for_simul')[:8]
@@ -52,14 +50,14 @@ class BaseView(View):
 
 
 class TopView(BaseView):
-    html_path = 'top/otapick_top.html'
+    html_path = 'top/top.html'
 
 
 top = TopView.as_view()
 
 
 class SupportView(BaseView):
-    html_path = 'top/otapick_support.html'
+    html_path = 'top/support.html'
 
 
 support = SupportView.as_view()

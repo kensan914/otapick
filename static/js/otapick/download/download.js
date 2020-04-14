@@ -1,3 +1,7 @@
+// twemoji
+twemoji.parse(document.body);
+$('[data-toggle="tooltip"]').tooltip();
+
 function checkFunc(id) {
     const idNum = id.replace(/[^0-9]/g, '');
     if (!$('.save_img_checkbox#cb' + idNum).prop("checked")) {
@@ -8,7 +12,9 @@ function checkFunc(id) {
 }
 
 $(function () {
-    $('div.thumbnail').on('click', function () {
+    $(document).off('click.n1 click.n2 click.n3 click.n4');
+
+    $(document).on('click.n1', 'div.thumbnail', function () {
         const id = $(this).attr("id");
         const idNum = id.replace(/[^0-9]/g, '');
 
@@ -21,7 +27,7 @@ $(function () {
         }
     });
 
-    $('#allCheck').on('click', function () {
+    $(document).on('click.n2', '#allCheck', function () {
         if (!$(this).prop("checked")) {
             $('div.thumbnail').removeClass('checked');
             $('.save_img_checkbox').prop("checked", false);
@@ -30,33 +36,26 @@ $(function () {
             $('.save_img_checkbox').prop("checked", true);
         }
     });
-    $('#allDownload, #allDownload2').on('click', function () {
+
+    $(document).on('click.n3', '#allDownload, #allDownload2', function () {
         $('div.thumbnail').addClass('checked');
         $('.save_img_checkbox').prop("checked", true);
         $('#allCheck').prop("checked", true);
     });
-});
 
-$(function () {
-    let changeForm = true;
-    $(window).on('beforeunload', function () {
-        if (changeForm) return '保存が完了していません。このページを離れます。';
+    $(document).on('click.n4', '#image-download-btn', function (event) {
+        event.preventDefault();
+        const check_count = $('.image-box :checked').length;
+        if (check_count === 0) {
+            $("#choice-image-alert").show();
+            return false;
+        } else {
+            $('#download').submit();
+            $('div.thumbnail').removeClass('checked');
+            $('.save_img_checkbox').prop("checked", false);
+            $('#allCheck').prop("checked", false);
+            $("#choice-image-alert").hide();
+            $('#download_complete').modal('show');
+        }
     });
-    $('.save_button').on('click', function () {
-        changeForm = false;
-    });
-});
-
-$('#download').submit(function (event) {
-    event.preventDefault();
-    const check_count = $('.image-box :checked').length;
-    if (check_count === 0) {
-        $("#choice_image").show();
-        return false;
-    } else {
-        $(this).off('submit');
-        $(this).submit();
-        $("#choice_image").hide();
-        $('#download_complete').modal('show');
-    }
 });

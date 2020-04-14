@@ -1,5 +1,5 @@
 // rewrite card-parameter-num.
-function rewrite_card_parameter_num(){
+function rewriteCardParameterNum(){
     $(".card-parameter-num").each(function(i, o){
         const card_parameter_num = Number($(o).text());
         if (1000 <= card_parameter_num && card_parameter_num < 10000) {
@@ -39,7 +39,7 @@ function rewrite_card_parameter_num(){
 }
 
 //rewrite 新2期生 and 新3期生
-function rewrite_card_writer_name(){
+function rewriteCardWriterName(){
     $(".writer-name").each(function(i, o){
         if ( $(o).text().match(/欅坂46新二期生/)) {
             $(this).text('新二期生');
@@ -52,7 +52,7 @@ function rewrite_card_writer_name(){
 }
 
 //rewrite title if blank
-function rewrite_card_blog_title(){
+function rewriteCardBlogTitle(){
     $(".blog-title").each(function(i, o){
         if ( !$(o).html() ) {
             $(this).html('&nbsp;');
