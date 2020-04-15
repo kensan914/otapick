@@ -9,13 +9,7 @@
 {% endif %}
 {% endblock %}
 
-{% block title %}
-{% if title and writer_name %}
-  {{ title }}({{ writer_name }})
-{% else %}
-  画像保存
-{% endif %}
-{% endblock %}
+{% block title %}{% if title and writer_name %}{{ title }}({{ writer_name }}){% else %}画像保存{% endif %}{% endblock %}
 
 {% block out_of_main %}
 <div class="main-download">
@@ -46,11 +40,15 @@
 {% endblock %}
 
 {% block extra_js %}
-<script id="progress_ajax-script" type="text/javascript" src="{% static 'js/otapick/download/progress_ajax.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/otapick/download/download_reload.js' %}"></script>
+<script id="progress_ajax-script" type="text/javascript" src="{% static 'js/otapick/download/progress_ajax.js' %}{{ static_update }}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/download/download_direct.js' %}{{ static_update }}"></script>
 <script>
 $(function () {
+  {% if historyBackIsToTop %}
   get_progress_num("{% url 'download:download' group_id blog_ct %}", true);
+  {% else %}
+  get_progress_num("{% url 'download:download' group_id blog_ct %}", false);
+  {% endif %}
   $("footer").hide();
   $("#copyright").hide();
 });

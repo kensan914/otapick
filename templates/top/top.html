@@ -806,11 +806,11 @@
 {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.js"></script>
 
-<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_text.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_text.js' %}{{ static_update }}"></script>
 <script>
   {% if isMobile %} var effectTrigger = 10; {% else %} var effectTrigger = 70; {% endif %}
   {% if group == 'keyaki' %} var group = 'keyaki'; {% elif group == 'hinata' %} var group = 'hinata'; {% endif %}
 </script>
-<script type="text/javascript" src="{% static 'js/otapick/top/top.js' %}"></script>
-<script id="blogList_ajax-script" type="text/javascript" src="{% static 'js/otapick/search/blogList_ajax.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/top/top.js' %}{{ static_update }}"></script>
+<script id="blogList_ajax-script" type="text/javascript" src="{% static 'js/otapick/search/blogList_ajax.js' %}{{ static_update }}"></script>
 {% endblock %}

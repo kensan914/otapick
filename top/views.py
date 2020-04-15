@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from config import settings
 from search.scripts.firstClassifier import firstClassifier
 from search.models import Blog
 from search.scripts.searchViewSubFunc import check_is_mobile
@@ -7,7 +8,7 @@ from search.scripts.searchViewSubFunc import check_is_mobile
 
 class BaseView(View):
     html_path = 'top/top.html'
-    context = {}
+    context = {'static_update': '?20200415', 'debug': settings.env.bool('DEBUG')}
 
     def get(self, request, *args, **kwargs):
         input_text = request.GET.get('q')

@@ -29,6 +29,7 @@ class Member(models.Model):
     first_eng = models.CharField(verbose_name='名_英', max_length=30, default='')
     full_eng = models.CharField(verbose_name='氏名_英', max_length=50, default='')
     belonging_group = models.ForeignKey(Group, verbose_name='所属グループ', on_delete=models.PROTECT)
+    graduate = models.BooleanField(verbose_name='卒業生', default=False)
 
     def __str__(self):
         return self.full_kanji

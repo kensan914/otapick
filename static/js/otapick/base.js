@@ -46,7 +46,7 @@ function navbar_effect() {
 }
 
 function navbar_shadow() {
-    if ( $(window).scrollTop() != 0 ) {
+    if ( $(window).scrollTop() > 0 ) {
         $(".fixed-top").addClass("shadow");
     } else {
         $(".fixed-top").removeClass("shadow");

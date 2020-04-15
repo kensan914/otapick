@@ -4,3 +4,8 @@ window.addEventListener("popstate", function () {
     url.searchParams.delete("page");
     window.location.href = url.toString();
 });
+
+function changeHistoryBackToTop() {
+    $("a.back-from-download").attr("href", "/");
+    $("button.back-from-download").attr("onClick", "location.href='/'");
+}

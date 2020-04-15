@@ -1,4 +1,4 @@
-function get_progress_num( download_url, is_redirect ) {
+function get_progress_num( download_url, historyBackIsToTop ) {
   jQuery(function ($) {
       $.ajax({
           url: download_url,
@@ -11,16 +11,16 @@ function get_progress_num( download_url, is_redirect ) {
           $('#progress').css('width', data + '%').attr('aria-valuenow', data);
           if (parseInt(data) >= 100) {
               setTimeout(function () {
-                  view_download(download_url, is_redirect);
+                  view_download(download_url, historyBackIsToTop);
               }, 400);
           } else {
-              setTimeout(function () { get_progress_num(download_url, is_redirect) }, 500);
+              setTimeout(function () { get_progress_num(download_url, historyBackIsToTop) }, 500);
           }
       });
   });
 }
 
-function view_download( download_url, is_redirect ) {
+function view_download( download_url, historyBackIsToTop ) {
   $.ajax({
       url: download_url,
       type: 'get',
@@ -34,7 +34,7 @@ function view_download( download_url, is_redirect ) {
       $(".main-download").replaceWith(data_elm[1]);
       $("#progress_ajax-script").after(data_elm[2]);
       $("body").removeClass('p-0');
-      if (is_redirect) {
+      if (historyBackIsToTop) {
           $("a.back-from-download").attr("href", "/");
           $("button.back-from-download").attr("onClick", "location.href='/'");
       }

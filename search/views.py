@@ -24,19 +24,20 @@ class SearchByLatestView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByLatest_ctx = {
+        searchByLatest_ctx = BaseView.context
+        searchByLatest_ctx.update({
             'isLatest': True,
             'group_id': group_id,
             'hit': True,
             'group': group,
             'isMobile': check_is_mobile(self.request),
-        }
+        })
         context.update(searchByLatest_ctx)
         return context
 
     def get_queryset(self):
         group_id = self.kwargs.get('group_id')
-        members = Member.objects.filter(belonging_group__group_id=group_id)
+        members = Member.objects.filter(belonging_group__group_id=group_id, graduate=False)
         if group_id == 1:
             return Blog.objects.filter(writer__in=members).order_by('-post_date', 'order_for_simul')[:10]
         elif group_id == 2:
@@ -63,13 +64,14 @@ class SearchByURLView(generic.ListView, BaseView):
         group_id = self.kwargs.get('group_id')
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-        searchByBlogs_ctx = {
+        searchByBlogs_ctx = BaseView.context
+        searchByBlogs_ctx.update({
             'isLatest': False,
             'group_id': group_id,
             'group': group,
             'hit': True,
             'isMobile': check_is_mobile(self.request),
-        }
+        })
         ct = self.kwargs.get('ct')
         if ct:
             searchByBlogs_ctx['ct'] = ct
@@ -84,7 +86,7 @@ class SearchByURLView(generic.ListView, BaseView):
         if ct:
             members = Member.objects.filter(belonging_group__group_id=group_id, ct=ct)
         else:
-            members = Member.objects.filter(belonging_group__group_id=group_id)
+            members = Member.objects.filter(belonging_group__group_id=group_id, graduate=False)
 
         dy_text = self.request.GET.get('dy')
         if dy_text:
@@ -135,8 +137,8 @@ class BlogListView(generic.ListView, BaseView):
         group_id, ct, member, order_format, narrowing_post, narrowing_keyword, page = blogList_init(self, self.is_member)
         group = convert_css_class(group_id)
         self.request.session['group'] = group
-
-        listOfBlogs_ctx = {
+        listOfBlogs_ctx = BaseView.context
+        listOfBlogs_ctx.update({
             'group_id': group_id,
             'ct': ct,
             'member': member,
@@ -148,7 +150,7 @@ class BlogListView(generic.ListView, BaseView):
             'form': NarrowingForm(self.request.POST),
             'isMobile': check_is_mobile(self.request),
             'page': page,
-        }
+        })
         context.update(listOfBlogs_ctx)
         return context
 
@@ -253,11 +255,12 @@ class SearchMemberView(generic.ListView, BaseView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         searchText = self.kwargs.get('searchText')
-        searchMember_ctx = {
+        searchMember_ctx = BaseView.context
+        searchMember_ctx.update({
             'searchText': searchText,
             'group': self.request.session.get('group', 'keyaki'),
             'appropriate': True,
-        }
+        })
         context.update(searchMember_ctx)
         return context
 
@@ -297,14 +300,15 @@ class MemberListView(generic.ListView, BaseView):
         initial_letter = self.request.GET.get('initial')
         forced_group = self.request.GET.get('group')
         selected_group = self.request.GET.get('s_group')
-        searchMember_ctx = {
+        searchMember_ctx = BaseView.context
+        searchMember_ctx.update({
             'group': self.request.session.get('group', 'keyaki'),
             'initial': convert_eng(initial_letter),
             'forced_group': forced_group,
             'selected_group': selected_group,
             'keyaki_exist': self.keyaki_exist,
             'hinata_exist': self.hinata_exist,
-        }
+        })
         context.update(searchMember_ctx)
         return context
 

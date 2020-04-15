@@ -1,12 +1,6 @@
 {% load static %}
 
-<title>
-{% if title and writer_name %}
-  {{ title }}({{ writer_name }})｜ヲタピック
-{% else %}
-  画像保存｜ヲタピック
-{% endif %}
-</title>
+<title>{% if title and writer_name %}{{ title }}({{ writer_name }})｜ヲタピック{% else %}画像保存｜ヲタピック{% endif %}</title>
 
 <div class="main-download">
   <div class="position-absolute h-100 w-100 p-3 d-flex align-items-center justify-content-center"
@@ -35,7 +29,7 @@
 </div>
 
 <div class="ajax-script" id="progress_ajax-script">
-  <script type="text/javascript" src="{% static 'js/otapick/download/progress_ajax.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/otapick/download/progress_ajax.js' %}{{ static_update }}"></script>
   <script>
     $(function () {
         get_progress_num("{% url 'download:download' group_id blog_ct %}", false);

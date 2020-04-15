@@ -1,6 +1,8 @@
 import os
+from urllib.parse import urlparse
 from django.shortcuts import render
 from django.views import View
+from config import settings
 from download.imgScraper import update
 from download.scripts.downloadViewFunc import render_progress, \
     increment_num_of_downloads, edit_num_of_most_downloads, preparate_download_view, render_progress_ajax, \
@@ -51,11 +53,11 @@ class DownloadView(BaseView):
 
             if function_name is None:
                 if download_status == 'start':
-                    return render_progress_ajax(request, blog.title, group_id, blog_ct, blog.writer.full_kanji)
+                    return render_progress_ajax(request, blog.title, group_id, blog_ct, blog.writer.full_kanji, self.context)
                 elif download_status == 'doing':
                     if progress.num == 0:
-                        return recreate_progress(request, progress, blog, group_id, blog_ct, is_ajax=True)
-                    return render_progress_ajax(request, blog.title, group_id, blog_ct, blog.writer.full_kanji)
+                        return recreate_progress(request, progress, blog, group_id, blog_ct, self.context, is_ajax=True)
+                    return render_progress_ajax(request, blog.title, group_id, blog_ct, blog.writer.full_kanji, self.context)
                 elif download_status == 'done':
                     preparate_download_view(self, group_id, blog, blog_ct, is_ajax=True)
                     return render(request, self.html_path, self.context)
@@ -72,14 +74,18 @@ class DownloadView(BaseView):
                     return render(request, self.html_path, self.context)
         # When direct access
         else:
+            referer = request.environ.get('HTTP_REFERER')
+            referer_url = urlparse(referer)
+            historyBackIsToTop = referer is None or not str(referer_url.netloc).startswith(settings.env('ALLOWED_HOSTS'))
             if download_status == 'start':
-                return render_progress(request, progress, group_id, blog_ct, blog.title, blog.writer.full_kanji)
+                return render_progress(request, progress, group_id, blog_ct, blog.title, blog.writer.full_kanji, historyBackIsToTop, self.context)
             elif download_status == 'doing':
                 if progress.num == 0:
-                    return recreate_progress(request, progress, blog, group_id, blog_ct, is_ajax=False)
-                return render_progress(request, progress, group_id, blog_ct, blog.title, blog.writer.full_kanji)
+                    return recreate_progress(request, progress, blog, group_id, blog_ct, self.context, historyBackIsToTop=historyBackIsToTop, is_ajax=False)
+                return render_progress(request, progress, group_id, blog_ct, blog.title, blog.writer.full_kanji, historyBackIsToTop, self.context)
             elif download_status == 'done':
                 preparate_download_view(self, group_id, blog, blog_ct, is_ajax=False)
+                self.context['historyBackIsToTop'] = historyBackIsToTop
                 return render(request, self.html_path, self.context)
 
         # Not applicable
