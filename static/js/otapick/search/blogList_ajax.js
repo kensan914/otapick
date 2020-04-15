@@ -40,10 +40,7 @@ function destroyISandMasonry() {
 }
 
 function pushLoadDataToGA() {
-    dataLayer.push({
-        'downloadPageURL': location.pathname,
-        event: 'downloadLoadedEvent'
-    });
+    gtag('config', $gaMeasurementID);
 }
 
 function reprojectMain(){
