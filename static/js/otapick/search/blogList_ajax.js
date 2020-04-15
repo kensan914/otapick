@@ -30,12 +30,20 @@ $(document).on('pjax:success', function(e, data) {
                     $("title").replaceWith($(data).filter('title'));
                     $("#blogList_ajax-script").after($(data).filter('.ajax-script'));
                     $(".main-download").show();
+                    pushLoadDataToGA();
                 });
 });
 
 function destroyISandMasonry() {
     $grid.infiniteScroll('destroy');
     $grid.masonry('destroy');
+}
+
+function pushLoadDataToGA() {
+    dataLayer.push({
+        'downloadPageURL': location.pathname,
+        event: 'downloadLoadedEvent'
+    });
 }
 
 function reprojectMain(){
