@@ -1,6 +1,14 @@
-if (window.performance.navigation.type === 1/* TYPE_RELOAD */ || window.performance.navigation.type === 2/* TYPE_BACK_FORWARD */) {
-    const url = new URL(location);
-    window.alert('url: ' + url);
-    url.searchParams.delete("page");
-    window.location.href = url.toString();
-}
+// when reload or back_forward
+$(function () {
+    var perfEntries = performance.getEntriesByType("navigation");
+    perfEntries.forEach(function(pe){
+        switch( pe.type ){
+        case 'reload':
+        case 'back_forward':
+            const url = new URL(location);
+            url.searchParams.delete("page");
+            window.location.href = url.toString();
+            break;
+        }
+    });
+})

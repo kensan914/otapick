@@ -4,23 +4,26 @@ from search.scripts.searchViewFunc import convert_css_class
 from search.scripts.searchViewSubFunc import check_is_mobile
 
 
-def render_progress(request, progress, group_id, blog_ct, title, writer_name):
-    return render(request, 'download/progress.html', {
+def render_progress(request, progress, group_id, blog_ct, title,  writer_name, historyBackIsToTop, context):
+    context.update({
         'progress': progress,
         'group_id': group_id,
         'blog_ct': blog_ct,
         'title': title,
         'writer_name': writer_name,
+        'historyBackIsToTop': historyBackIsToTop,
     })
+    return render(request, 'download/progress.html', context)
 
 
-def render_progress_ajax(request, title, group_id, blog_ct, writer_name):
-    return render(request, 'download/progress_ajax.html', {
+def render_progress_ajax(request, title, group_id, blog_ct, writer_name, context):
+    context.update({
         'title': title,
         'group_id': group_id,
         'blog_ct': blog_ct,
         'writer_name': writer_name,
     })
+    return render(request, 'download/progress_ajax.html', context)
 
 
 def preparate_download_view(self, group_id, blog, blog_ct, is_ajax):
@@ -37,12 +40,12 @@ def preparate_download_view(self, group_id, blog, blog_ct, is_ajax):
 
     group = convert_css_class(group_id)
     self.request.session['group'] = group
-    self.context = {
+    self.context.update({
         'blog': blog,
         'group_id': group_id,
         'blog_ct': blog_ct,
         'group': group,
-    }
+    })
     if blog:
         if Image.objects.filter(publisher=blog).exists():
             blog_images = Image.objects.filter(publisher=blog).order_by('order')
@@ -80,11 +83,11 @@ def edit_num_of_most_downloads(blog):
 from download.imgScraper import update
 
 
-def recreate_progress(request, progress, blog, group_id, blog_ct, is_ajax):
+def recreate_progress(request, progress, blog, group_id, blog_ct, context, historyBackIsToTop=False, is_ajax=False):
     progress.delete()
     new_progress = Progress.objects.create(target=blog)
     update.delay(new_progress.id, group_id, blog_ct, blog.writer.ct)
     if is_ajax:
-        return render_progress_ajax(request, blog.title, group_id, blog_ct, blog.writer.full_kanji)
+        return render_progress_ajax(request, blog.title, group_id, blog_ct, blog.writer.full_kanji, context)
     else:
-        return render_progress(request, new_progress, group_id, blog_ct, blog.title, blog.writer.full_kanji)
+        return render_progress(request, new_progress, group_id, blog_ct, blog.title, blog.writer.full_kanji, historyBackIsToTop, context)

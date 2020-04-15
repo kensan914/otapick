@@ -1,12 +1,6 @@
 {% load static %}
 
-<title>
-{% if blog %}
-  {{ blog.title }}({{ blog.writer.full_kanji }})｜ヲタピック
-{% else %}
-  画像保存｜ヲタピック
-{% endif %}
-</title>
+<title>{% if blog %}{{ blog.title }}({{ blog.writer.full_kanji }})｜ヲタピック{% else %}画像保存｜ヲタピック{% endif %}</title>
 
 <div class="main-download">
   <div class="container mt-3 text-muted">
@@ -198,5 +192,5 @@
         $(".fixed-top").removeClass("shadow");
     })
   </script>
-  <script type="text/javascript" src="{% static 'js/otapick/download/download.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/otapick/download/download.js' %}{{ static_update }}"></script>
 </div>

@@ -12,13 +12,7 @@
 <meta name="description" content="『ヲタピック』は、欅坂46・日向坂46の公式ブログ画像や写真を素早く、効率よく保存できるヲタ活支援サービスです。画像や写真が保存できないと諦めるているあなた、是非当サイトで高画質ブログ画像を保存してください。坂道Gに限らず、対応アイドルのリクエスト等、DMにてお待ちしております。">
 {% endblock %}
 
-{% block title %}
-    {% if member %}
-        {{ member.full_kanji }}({% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %})のブログ一覧
-    {% else %}
-        {% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のブログ一覧
-    {% endif %}
-{% endblock %}
+{% block title %}{% if member %}{{ member.full_kanji }}({% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %})のブログ一覧{% else %}{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のブログ一覧{% endif %}{% endblock %}
 
 {% block extra_css %}
 <!-- tempusdominus-bootstrap-4(css) -->
@@ -454,11 +448,12 @@
 
 
 {% block extra_js %}
+<script type="text/javascript" src="{% static 'js/otapick/search/blogList_reload.js' %}{{ static_update }}"></script>
+
 <script id="responsive-paginate-script" type="text/javascript" src="{% static 'js/responsive-paginate.js' %}"></script>
 <script id="infinite-scroll-script" src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
 
-<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_text.js' %}"></script>
-<script id="blogList-script" type="text/javascript" src="{% static 'js/otapick/search/blogList.js' %}"></script>
-
-<script id="blogList_ajax-script" type="text/javascript" src="{% static 'js/otapick/search/blogList_ajax.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/rewrite_card_text.js' %}{{ static_update }}"></script>
+<script id="blogList-script" type="text/javascript" src="{% static 'js/otapick/search/blogList.js' %}{{ static_update }}"></script>
+<script id="blogList_ajax-script" type="text/javascript" src="{% static 'js/otapick/search/blogList_ajax.js' %}{{ static_update }}"></script>
 {% endblock %}

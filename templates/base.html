@@ -6,14 +6,6 @@
 {% block first_import %}{% endblock %}
 
 <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-57FQ4QM');</script>
-<!-- End Google Tag Manager -->
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   {% block description %}{% endblock %}
@@ -37,7 +29,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet"
     type="text/css">
 
-  <link href="{% static 'css/bootstrap_ex.css' %}" rel="stylesheet">
+  <link href="{% static 'css/bootstrap_ex.css' %}{{ static_update }}" rel="stylesheet">
 
   <link type="text/css" rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap" rel="stylesheet">
@@ -57,7 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 
   {% block extra_css %}{% endblock %}
-
+  {% if not debug %}
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134426000-2"></script>
   <script>
@@ -65,17 +57,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', $gaMeasurementID);
   </script>
+  {% endif %}
 </head>
 
 <body ontouchstart="">
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-57FQ4QM"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
   <!-- Navigation -->
   <nav class="navbar navbar-light bg-light static-top navbar-expand-lg fixed-top border-bottom">
     <a class="navbar-brand" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
@@ -219,7 +206,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script type="text/javascript" src="{% static 'js/masonry.pkgd.min.js' %}"></script>
   <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 
-  <script src="{% static 'js/otapick/base.js' %}"></script>
+  <script src="{% static 'js/otapick/base.js' %}{{ static_update }}"></script>
 
   {% block extra_js %}{% endblock %}
 </body>

@@ -10,13 +10,7 @@
 {% endif %}
 {% endblock %}
 
-{% block title %}
-  {% if blog %}
-    {{ blog.title }}({{ blog.writer.full_kanji }})
-  {% else %}
-    画像保存
-  {% endif %}
-{% endblock %}
+{% block title %}{% if blog %}{{ blog.title }}({{ blog.writer.full_kanji }}){% else %}画像保存{% endif %}{% endblock %}
 
 {% block out_of_main %}
 <div class="main-download">
@@ -24,7 +18,7 @@
   <!-- Save -->
   <div class="container mt-3 text-muted">
     <div class="row d-flex align-items-center mx-2">
-      <button onClick="location.href='{% url 'top:top' %}'" type="button" class="btn btn-light rounded-circle p-0 otapick-back-button-mobile border shadow-sm">
+      <button onClick="history.back()" type="button" class="btn btn-light rounded-circle p-0 otapick-back-button-mobile border shadow-sm back-from-download">
         <i class="fas fa-arrow-left" style="color:gray;"></i>
       </button>
       <h4 class="ml-3 my-0">保存</h4>
@@ -112,11 +106,11 @@
 
     <div class="mx-auto" style="width: 100px;">
       {% if group_id == 1 %}
-      <a href="{% url 'top:top' %}" class="gradient-btn keyaki" style="width: 100px;">
+      <a href="javascript:history.back()" class="gradient-btn keyaki back-from-download" style="width: 100px;">
         <b>戻る</b>
       </a>
       {% elif group_id == 2 %}
-      <a href="{% url 'top:top' %}" class="gradient-btn hinata" style="width: 100px;">
+      <a href="javascript:history.back()" class="gradient-btn hinata back-from-download" style="width: 100px;">
         <b>戻る</b>
       </a>
       {% endif %}
@@ -147,5 +141,7 @@
 
 {% block extra_js %}
 <script type="text/javascript" src="{% static 'js/jquery.longpress.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/otapick/download/download_mobile.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/download/download_mobile.js' %}{{ static_update }}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/download/download_direct.js' %}{{ static_update }}"></script>
+{% if historyBackIsToTop %}<script>changeHistoryBackToTop();</script>{% endif %}
 {% endblock %}

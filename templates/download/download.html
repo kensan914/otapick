@@ -10,25 +10,15 @@
 {% endif %}
 {% endblock %}
 
-{% block title %}
-{% if blog %}
-  {{ blog.title }}({{ blog.writer.full_kanji }})
-{% else %}
-  画像保存
-{% endif %}
-{% endblock %}
-
-{% block extra_css %}
-{% endblock %}
+{% block title %}{% if blog %}{{ blog.title }}({{ blog.writer.full_kanji }}){% else %}画像保存{% endif %}{% endblock %}
 
 {% block out_of_main %}
 <div class="main-download">
   <div class="container mt-3 text-muted">
     <div class="row d-flex align-items-center">
-      <button onClick="location.href='{% url 'top:top' %}'" type="button" class="btn btn-light rounded-circle p-0 otapick-back-button border shadow-sm">
+      <button onClick="history.back()" type="button" class="btn btn-light rounded-circle p-0 otapick-back-button border shadow-sm back-from-download">
         <i class="fas fa-arrow-left" style="color:gray;"></i>
       </button>
-
       <h3 class="ml-3 my-0">保存</h3>
     </div>
 
@@ -187,12 +177,12 @@
         <div class="modal-footer">
           <div class="mx-auto" style="width: 100px;">
             {% if group_id == 1 %}
-            <a href="{% url 'top:top' %}" class="gradient-btn keyaki"
+            <a href="javascript:history.back()" class="gradient-btn keyaki back-from-download"
               style="width: 100px;">
               <b>戻る</b>
             </a>
             {% elif group_id == 2 %}
-            <a href="{% url 'top:top' %}" class="gradient-btn hinata"
+            <a href="javascript:history.back()" class="gradient-btn hinata back-from-download"
               style="width: 100px;">
               <b>戻る</b>
             </a>
@@ -210,7 +200,8 @@
 {% block extra_js %}
 
 {% if blog  %}
-<script type="text/javascript" src="{% static 'js/otapick/download/download.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/otapick/download/download_reload.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/download/download.js' %}{{ static_update }}"></script>
+<script type="text/javascript" src="{% static 'js/otapick/download/download_direct.js' %}{{ static_update }}"></script>
+{% if historyBackIsToTop %}<script>changeHistoryBackToTop();</script>{% endif %}
 {% endif %}
 {% endblock %}

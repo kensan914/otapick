@@ -7,20 +7,21 @@ $(function () {
 })
 
 function view_download_or_progress() {
+    $(".tooltip").remove();
     $downloadTrigger = $(this);
     var url = $downloadTrigger.attr('href');
     $.pjax({
         url: url,
         container : ".main-download",
         fragment : ".main-download",
-        timeout : 1000,
+        timeout : 3000,
         scrollTo: false
     });
+
     return false;
 }
 
 $(document).on('pjax:success', function(e, data) {
-
     $(".main").animate({opacity: 0, marginTop: "20px"}, 200, function () {
                     $("footer").hide();
                     $("#copyright").hide();
@@ -30,7 +31,9 @@ $(document).on('pjax:success', function(e, data) {
                     $("title").replaceWith($(data).filter('title'));
                     $("#blogList_ajax-script").after($(data).filter('.ajax-script'));
                     $(".main-download").show();
-                    pushLoadDataToGA();
+                    try {
+                        pushLoadDataToGA();
+                    } catch (e) {}
                 });
 });
 
@@ -40,7 +43,9 @@ function destroyISandMasonry() {
 }
 
 function pushLoadDataToGA() {
-    gtag('config', $gaMeasurementID, {'page_path': location.pathname});
+    gtag('config', $gaMeasurementID, {'page_path': location.pathname});{
+        throw "Now is debug mode";
+    }
 }
 
 function reprojectMain(){
@@ -51,6 +56,8 @@ function reprojectMain(){
     $(".ajax-script").remove();
     $(".main-download").hide();
     $(".main").removeAttr("style").show();
+
+    $(".tooltip").remove();
 
     if($('.grid .grid-item').length){
         initMasonryInfiniteScroll();
