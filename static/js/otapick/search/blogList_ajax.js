@@ -40,7 +40,7 @@ function destroyISandMasonry() {
 }
 
 function pushLoadDataToGA() {
-    gtag('config', $gaMeasurementID);
+    gtag('config', $gaMeasurementID, {'page_path': location.pathname});
 }
 
 function reprojectMain(){
