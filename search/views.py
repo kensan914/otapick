@@ -31,6 +31,7 @@ class SearchByLatestView(generic.ListView, BaseView):
             'hit': True,
             'group': group,
             'isMobile': check_is_mobile(self.request),
+            'is_member': False,
         })
         context.update(searchByLatest_ctx)
         return context
@@ -71,9 +72,11 @@ class SearchByURLView(generic.ListView, BaseView):
             'group': group,
             'hit': True,
             'isMobile': check_is_mobile(self.request),
+            'is_member': self.is_member
         })
         ct = self.kwargs.get('ct')
         if ct:
+            print("ct", ct)
             searchByBlogs_ctx['ct'] = ct
             if Member.objects.filter(belonging_group__group_id=group_id, ct=ct).exists():
                 searchByBlogs_ctx['member'] = Member.objects.get(belonging_group__group_id=group_id, ct=ct)

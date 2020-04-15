@@ -6,7 +6,7 @@
 <meta name="description" content="ヲタピックのブログ検索結果です。『ヲタピック』は、欅坂46・日向坂46の公式ブログ画像や写真を素早く、効率よく保存できるヲタ活支援サービスです。画像や写真が保存できないと諦めるているあなた、是非当サイトで高画質ブログ画像を保存してください。坂道Gに限らず、対応アイドルのリクエスト等、DMにてお待ちしております。">
 {% endblock %}
 
-{% block title %}{% if isLatest %}{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}の検索結果{% else %}{{ member.full_kanji }}の検索結果{% endif %}{% endblock %}
+{% block title %}{% if is_member %}{{ member.full_kanji }}{% else %}{% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}{% endif %}の検索結果{% endblock %}
 
 {% block content %}
 <!-- Masthead -->
@@ -35,12 +35,12 @@
           <h3>ブログ一覧</h3>
           <hr>
           <p>入力されたURLから複数のブログが検出されました。</p>
-          {% if isLatest %}
-            {% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のブログ一覧は
-            <a href="{% url 'search:searchByGroups' group_id %}">こちら</a>。
-          {% else %}
+          {% if is_member %}
             {{ member.full_kanji }}のブログ一覧は
             <a href="{% url 'search:searchByMembers' group_id ct %}">こちら</a>。
+          {% else %}
+            {% if group_id == 1 %}欅坂46{% elif group_id == 2 %}日向坂46{% endif %}のブログ一覧は
+            <a href="{% url 'search:searchByGroups' group_id %}">こちら</a>。
           {% endif %}
         </div>
       </div>
