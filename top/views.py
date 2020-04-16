@@ -8,7 +8,7 @@ from search.scripts.searchViewSubFunc import check_is_mobile
 
 class BaseView(View):
     html_path = 'top/top.html'
-    context = {'static_update': '?20200416', 'debug': settings.env.bool('DEBUG')}
+    context = {'static_update': '?20200417', 'debug': settings.env.bool('DEBUG')}
 
     def get(self, request, *args, **kwargs):
         input_text = request.GET.get('q')
