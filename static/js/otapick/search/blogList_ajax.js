@@ -7,17 +7,18 @@ $(function () {
 })
 
 function view_download_or_progress() {
-    $(".tooltip").remove();
-    $downloadTrigger = $(this);
-    var url = $downloadTrigger.attr('href');
-    $.pjax({
-        url: url,
-        container : ".main-download",
-        fragment : ".main-download",
-        timeout : 3000,
-        scrollTo: false
-    });
-
+    if (!location.pathname.startsWith('/download')){
+        $(".tooltip").remove();
+        $downloadTrigger = $(this);
+        var url = $downloadTrigger.attr('href');
+        $.pjax({
+            url: url,
+            container : ".main-download",
+            fragment : ".main-download",
+            timeout : 3000,
+            scrollTo: false
+        });
+    }
     return false;
 }
 
