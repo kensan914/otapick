@@ -44,7 +44,7 @@
   </style>
 
   <!-- favicon -->
-  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}{{ static_update }}" />
 
   {% block extra_css %}{% endblock %}
   {% if not debug %}
@@ -63,7 +63,7 @@
 <body ontouchstart="">
   <!-- Navigation -->
   <nav class="navbar navbar-light bg-light static-top navbar-expand-lg fixed-top border-bottom">
-    <a class="navbar-brand" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
+    <a class="navbar-brand" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}{{ static_update }}) no-repeat left center; background-size: contain;
              height: 50px; width: 170px;"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,7 +121,7 @@
       <div class="row">
 
         <div class="col-xl-3 col-lg-12 col-xs-12 text-center mb-5">
-          <a class="navbar-brand ml-4 ml-xl-0" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}) no-repeat left center; background-size: contain;
+          <a class="navbar-brand ml-4 ml-xl-0" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}{{ static_update }}) no-repeat left center; background-size: contain;
              height: 50px; width: 170px;"></a>
         </div>
 
