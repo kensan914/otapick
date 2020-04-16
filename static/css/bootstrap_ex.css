@@ -330,7 +330,8 @@ footer.footer {
 .progress .progress-bar {
     background: linear-gradient(-45deg, #d185fd, #8eeeff, #d185fd, #47ff56);
     background-size: 400% 400%;
-    animation: gradient_frame 3s ease infinite
+    animation: gradient_frame 3s ease infinite;
+    width: 0;
 }
 
 @keyframes gradient_frame {
