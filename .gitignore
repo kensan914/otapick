@@ -145,3 +145,6 @@ cron/
 *migrations/
 !*migrations/__init__.py
 # End of https://www.gitignore.io/api/django
+
+# registerer_ex.py
+/search/scripts/blogRegister/registerer_ex.py

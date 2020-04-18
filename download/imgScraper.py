@@ -84,14 +84,15 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False, craw
             media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
         dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
         os.makedirs(dire_path, exist_ok=True)
-        if crawl_externally:
+        if crawl_externally: # 公式以外からの取得用
             root, ext = os.path.splitext(img_url)
             file_name = str(blog_ct) + '_' + str(img_order) + ext
             path = os.path.join(dire_path, file_name)
             media = os.path.join(media_dir_path, file_name)
         else:
-            path = os.path.join(dire_path, os.path.basename(img_url))
-            media = os.path.join(media_dir_path, os.path.basename(img_url))
+            file_name = os.path.basename(img_url)
+            path = os.path.join(dire_path, file_name)
+            media = os.path.join(media_dir_path, file_name)
 
         img_file = open(path, 'wb')
         urllib3.disable_warnings(InsecureRequestWarning)
