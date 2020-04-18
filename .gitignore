@@ -147,4 +147,4 @@ cron/
 # End of https://www.gitignore.io/api/django
 
 # registerer_ex.py
-/search/scripts/blogRegister/registerer_ex.py
+search/scripts/blogRegister/registerer_ex.py
