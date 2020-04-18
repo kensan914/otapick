@@ -15,10 +15,10 @@ class Command(BaseCommand):
         for image in Image.objects.all():
             print(image.picture)
             if os.path.basename(str(image.picture)).startswith('.'):
-                dir_name = os.path.dirname(image.picture) # blog_images/1_07/9244
+                dir_name = os.path.dirname(str(image.picture)) # blog_images/1_07/9244
                 file_path = os.path.join(dir_name, '_' + os.path.basename(image.picture)) # blog_images/1_07/9244/_.jpg
 
-                full_dir_name = os.path.dirname(image.picture.path) # /www/var/otapick/media/blog_images/1_07/9244
+                full_dir_name = os.path.dirname(str(image.picture.path)) # /www/var/otapick/media/blog_images/1_07/9244
                 full_file_path = os.path.join(full_dir_name, '_' + os.path.basename(image.picture)) # /www/var/otapick/media/blog_images/1_07/9244/_.jpg
 
                 shutil.move(image.picture.path, full_file_path)
