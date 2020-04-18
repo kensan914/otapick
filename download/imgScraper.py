@@ -75,7 +75,7 @@ def save_img(img_urls, progress, group_id, blog_ct, writer_ct, blog):
         progress.save()
 
 
-def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False):
+def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False, crawl_externally=False, img_order=0):
     try:
         member_dir_path = str(group_id) + '_' + writer_ct
         if is_thumbnail:
@@ -84,8 +84,14 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False):
             media_dir_path = os.path.join("blog_images", member_dir_path, str(blog_ct))
         dire_path = os.path.join(settings.MEDIA_ROOT, media_dir_path)
         os.makedirs(dire_path, exist_ok=True)
-        path = os.path.join(dire_path, os.path.basename(img_url))
-        media = os.path.join(media_dir_path, os.path.basename(img_url))
+        if crawl_externally:
+            root, ext = os.path.splitext(img_url)
+            file_name = str(blog_ct) + '_' + str(img_order) + ext
+            path = os.path.join(dire_path, file_name)
+            media = os.path.join(media_dir_path, file_name)
+        else:
+            path = os.path.join(dire_path, os.path.basename(img_url))
+            media = os.path.join(media_dir_path, os.path.basename(img_url))
 
         img_file = open(path, 'wb')
         urllib3.disable_warnings(InsecureRequestWarning)
