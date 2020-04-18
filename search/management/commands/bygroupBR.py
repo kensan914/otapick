@@ -1,6 +1,12 @@
+"""
+現在使用していない
+"""
+
+
+
+
 from django.core.management.base import BaseCommand
 import time
-# from search.scripts.blogRegister.registerer import register_byMember
 from search.scripts.blogRegister.dialogue import *
 
 
