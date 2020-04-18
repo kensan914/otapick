@@ -13,7 +13,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # ファイル名が無いドットファイルにファイル名を与える。(.jpg⇒_.jpg)
         for image in Image.objects.all():
-            if str(os.path.basename(image.picture)).startswith('.'):
+            print(image.picture)
+            if os.path.basename(str(image.picture)).startswith('.'):
                 dir_name = os.path.dirname(image.picture) # blog_images/1_07/9244
                 file_path = os.path.join(dir_name, '_' + os.path.basename(image.picture)) # blog_images/1_07/9244/_.jpg
 
