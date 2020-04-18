@@ -16,4 +16,5 @@ def compress_img(img_path):
 
     root, ext = os.path.splitext(img_path)
     resize_img_path = "".join([root, ext])
+    print(resize_img_path)
     img.save(resize_img_path)
