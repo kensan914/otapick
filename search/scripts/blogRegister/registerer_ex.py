@@ -23,7 +23,10 @@ def register_external(group_id, ct):
         return False
 
     base_url = 'https://archive.sakamichi.co/'
-    member_base_url = base_url + 'keyaki/members/' + member.ct
+    if group_id == 1:
+        member_base_url = base_url + 'keyaki/members/' + member.ct
+    elif group_id ==2:
+        member_base_url = base_url + 'hinata/members/' + member.ct
 
     urllib3.disable_warnings(InsecureRequestWarning)
     http = urllib3.PoolManager()
