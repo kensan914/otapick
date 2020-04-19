@@ -1,0 +1,127 @@
+from django.core.management.base import BaseCommand
+import tweepy
+from datetime import date, timedelta, datetime
+from main.models import Blog
+from config import settings
+import pytz
+import emoji
+
+
+class Command(BaseCommand):
+    help = 'tweet update information.'
+
+    def add_arguments(self, parser):
+        parser.add_argument('-g', '--group', type=int, help='set groupID(1 or 2). default:None')
+
+    def handle(self, *args, **options):
+        if options['group'] != 1 and options['group'] != 2 or options['group'] is None:
+            print('groupID', options['group'], 'is not supported.')
+            quit()
+
+        new_posts = self.filter_blog_1day(options['group'])
+        if len(new_posts) <= 0:
+            quit()
+
+        CK = "EndyyIz6105OLMVZLj48whPTl"
+        CS = "6UcaWCKZSk9Z5a4HRwYoyVU4e2Kucmrt3bFdg7SP5q2c5iTMyB"
+        AT = "1227261179380162560-cQdyzZXEqUaW7i2kmUHa5ImE9mNJWv"
+        AS = "ulqsDBaJG8eeb7kRZ4DOWpsG6XXVOJvi5YXHF64uC4RaV"
+
+        auth = tweepy.OAuthHandler(CK, CS)
+        auth.set_access_token(AT, AS)
+        api = tweepy.API(auth)
+
+        text = self.create_text(new_posts, options['group'])
+        media_ids = self.create_media_ids(api, new_posts)
+
+        try:
+            api.update_status(status=text, media_ids=media_ids)
+        except Exception as e:
+            print(e)
+
+    # blog 1 day before current time
+    def filter_blog_1day(self, group_id):
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+
+        dt_now = datetime.now()
+        dt_now_1secago = dt_now - timedelta(seconds=1)
+        yesterday_time = dt_now.strftime('%H:%M:%S')
+        today_time = dt_now_1secago.strftime('%H:%M:%S')
+
+        start_str = str(yesterday) + ' ' + yesterday_time
+        end_str = str(today) + ' ' + today_time
+
+        start = datetime.strptime(start_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+        end = datetime.strptime(end_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('Asia/Tokyo'))
+
+        new_posts = Blog.objects.filter(post_date__range=(start, end), writer__belonging_group__group_id=group_id).order_by('-post_date', 'order_for_simul')
+        return new_posts
+
+    def create_text(self, new_posts, group_id):
+        text = ''
+        if group_id == 1:
+            text = emoji.emojize(':deciduous_tree:', use_aliases=True)\
+                   + '本日の坂道ブログ更新情報(欅' + str(len(new_posts)) + '件)'
+        elif group_id == 2:
+            text = emoji.emojize(':sun_with_face:', use_aliases=True)\
+                   + '本日の坂道ブログ更新情報(日向' + str(len(new_posts)) + '件)'
+
+        text += emoji.emojize(':rainbow:', use_aliases=True) + '\n\n'
+
+        for new_post in new_posts[:4]:
+            blog_title = self.shorten_text(new_post.title, max_length=10)
+            member_name = new_post.writer.full_kanji
+
+            # 新メンバー対処
+            if member_name == '欅坂46新二期生':
+                member_name = '新二期生'
+            elif member_name == '日向坂46新三期生':
+                member_name = '新三期生'
+            # 新メンバー対処
+
+            text += '「' + blog_title + '」#' + member_name + '\n'
+
+        if len(new_posts) > 4:
+            text += 'etc…\n'
+
+        text += '\n' + emoji.emojize(':arrow_double_down:', use_aliases=True) + 'もっと見る'\
+                + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n'
+
+        if group_id == 1:
+            text += 'otapick.com/main/group/blog/1/\n' \
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '公式'\
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n'\
+                    + 'https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000'\
+                    + '\n\n#欅坂46'
+        elif group_id == 2:
+            text += 'otapick.com/main/group/blog/2/\n' \
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '公式' \
+                    + emoji.emojize(':arrow_double_down:', use_aliases=True) + '\n' \
+                    + 'https://www.hinatazaka46.com/s/official/diary/member?ima=0000' \
+                    + '\n\n#日向坂46'
+        return text
+
+    def create_media_ids(self, api, new_posts):
+        file_names = []
+        media_ids = []
+
+        for new_post in new_posts[:4]:
+            try:
+                media_path = new_post.thumbnail.picture.url
+                file_name = settings.BASE_DIR + media_path
+                file_names.append(file_name)
+            except:
+                pass
+
+        for file_name in file_names:
+            res = api.media_upload(file_name)
+            media_ids.append(res.media_id)
+
+        return media_ids
+
+    def shorten_text(self, txt, max_length):
+        if len(txt) > max_length:
+            txt = txt[:max_length]
+            txt += '…'
+        return txt

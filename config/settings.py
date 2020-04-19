@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'top.apps.TopConfig',
-    'search.apps.SearchConfig',
-    'download.apps.DownloadConfig',
+    'main.apps.MainConfig',
+    'image.apps.ImageConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
 ]

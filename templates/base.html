@@ -10,7 +10,7 @@
   <meta name="author" content="">
 
   <title>{% block title %}{% endblock %}｜ヲタピック</title>
-  <link rel="index" href="{% url 'top:top' %}" />
+  <link rel="index" href="{% url 'top' %}" />
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -66,7 +66,7 @@
 <body ontouchstart="">
   <!-- Navigation -->
   <nav class="navbar navbar-light bg-light static-top navbar-expand-lg fixed-top border-bottom">
-    <a class="navbar-brand" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}{{ static_update }}) no-repeat left center; background-size: contain;
+    <a class="navbar-brand" href="{% url 'top' %}" style="background: url({% static 'img/otapick.png' %}{{ static_update }}) no-repeat left center; background-size: contain;
              height: 50px; width: 170px;"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,11 +83,11 @@
             ブログ一覧
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="nav-dropdown-menu1">
-            <a class="dropdown-item" href="{% url 'search:searchByGroups' 1 %}">欅坂46</a>
-            <a class="dropdown-item" href="{% url 'search:searchByGroups' 2 %}">日向坂46</a>
-            <a class="dropdown-item" href="{% url 'top:top' %}#newpost">新着ブログ</a>
-            <a class="dropdown-item" href="{% url 'top:top' %}#popular">人気ブログ</a>
-            <a class="dropdown-item" href="{% url 'search:memberList' %}">メンバーリスト</a>
+            <a class="dropdown-item" href="{% url 'main:searchByGroups' 1 %}">欅坂46</a>
+            <a class="dropdown-item" href="{% url 'main:searchByGroups' 2 %}">日向坂46</a>
+            <a class="dropdown-item" href="{% url 'top' %}#newpost">新着ブログ</a>
+            <a class="dropdown-item" href="{% url 'top' %}#popular">人気ブログ</a>
+            <a class="dropdown-item" href="{% url 'main:memberList' %}">メンバーリスト</a>
           </div>
         </li>
 
@@ -105,10 +105,10 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link mr-3" href="{% url 'top:top' %}#howto">つかい方</a>
+          <a class="nav-link mr-3" href="{% url 'top' %}#howto">つかい方</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link mr-0" href="{% url 'top:support' %}">サポート</a>
+          <a class="nav-link mr-0" href="{% url 'support' %}">サポート</a>
         </li>
       </ul>
     </div>
@@ -124,7 +124,7 @@
       <div class="row">
 
         <div class="col-xl-3 col-lg-12 col-xs-12 text-center mb-5">
-          <a class="navbar-brand ml-4 ml-xl-0" href="{% url 'top:top' %}" style="background: url({% static 'img/otapick.png' %}{{ static_update }}) no-repeat left center; background-size: contain;
+          <a class="navbar-brand ml-4 ml-xl-0" href="{% url 'top' %}" style="background: url({% static 'img/otapick.png' %}{{ static_update }}) no-repeat left center; background-size: contain;
              height: 50px; width: 170px;"></a>
         </div>
 
@@ -133,19 +133,19 @@
             <span class="font-weight-bold">ブログを探す</span>
             <hr class="my-1 mr-4 mr-lg-0">
             <li>
-              <a href="{% url 'search:searchByGroups' 1 %}">欅坂46 ブログ一覧</a>
+              <a href="{% url 'main:searchByGroups' 1 %}">欅坂46 ブログ一覧</a>
             </li>
             <li>
-              <a href="{% url 'search:searchByGroups' 2 %}">日向坂46 ブログ一覧</a>
+              <a href="{% url 'main:searchByGroups' 2 %}">日向坂46 ブログ一覧</a>
             </li>
             <li>
-              <a href="{% url 'top:top' %}#newpost">新着ブログ</a>
+              <a href="{% url 'top' %}#newpost">新着ブログ</a>
             </li>
             <li>
-              <a href="{% url 'top:top' %}#popular">人気ブログ</a>
+              <a href="{% url 'top' %}#popular">人気ブログ</a>
             </li>
             <li>
-              <a href="{% url 'search:memberList' %}">メンバーリスト</a>
+              <a href="{% url 'main:memberList' %}">メンバーリスト</a>
             </li>
           </ul>
         </div>
@@ -178,13 +178,13 @@
             <span class="font-weight-bold">ヲタピックについて</span>
             <hr class="my-1 mr-4 mr-lg-0">
             <li>
-              <a href="{% url 'top:top' %}#howto">つかい方</a>
+              <a href="{% url 'top' %}#howto">つかい方</a>
             </li>
             <li>
-              <a href="{% url 'top:support' %}">サポート</a>
+              <a href="{% url 'support' %}">サポート</a>
             </li>
             <li>
-              <a href="{% url 'top:support' %}#contact_info">お問い合わせ</a>
+              <a href="{% url 'support' %}#contact_info">お問い合わせ</a>
             </li>
             <li>
               <a target="_blank" href="https://twitter.com/otapick">公式Twitter<i
