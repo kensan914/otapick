@@ -16,13 +16,16 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
+
+import main.views
 from config import settings
 from django.views.static import serve
 
 urlpatterns = [
-    path('', include('top.urls')),
-    path('search/', include('search.urls')),
-    path('download/', include('download.urls')),
+    path('', main.views.top, name='top'),
+    path('support/', main.views.support, name='support'),
+    path('search/', include('main.urls')),
+    path('download/', include('image.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 

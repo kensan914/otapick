@@ -41,12 +41,12 @@
           <div class="row justify-content-center mr-2 mr-md-0 ml-lg-5 ml-xl-0">
             <div class="col-6 col-lg-5">
               <h3 class="float-right init-effect-4"><a class="keyaki-text top-hashtag"
-                  href="{% url 'search:searchByGroups' 1 %}">#欅坂46</a>
+                  href="{% url 'main:searchByGroups' 1 %}">#欅坂46</a>
               </h3>
             </div>
             <div class="col-6">
               <h3 class="float-left init-effect-5"><a class="hinata-text top-hashtag"
-                  href="{% url 'search:searchByGroups' 2 %}">#日向坂46</a>
+                  href="{% url 'main:searchByGroups' 2 %}">#日向坂46</a>
               </h3>
             </div>
           </div>
@@ -139,7 +139,7 @@
                 <div class="l-thumbnail">
 
                   {% if isMobile %}
-                  <a href="{% url 'download:download' 1 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 1 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper-mobile">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -149,7 +149,7 @@
                     </figure>
                   </a>
                   {% else %}
-                  <a href="{% url 'download:download' 1 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 1 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -167,7 +167,7 @@
                         </a>
                       </div>
                       <div class="col-4 p-0 ml-2">
-                      <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: white;"
+                      <a href="{% url 'image:image' 1 blog.blog_ct %}" style="color: white;"
                         data-toggle="tooltip" title="ダウンロードページへ" class="download-trigger">
                           <i class="fas fa-download"></i>
                         </a>
@@ -178,11 +178,11 @@
 
                 </div>
                 <div class="card-body pb-0 px-3 px-sm-4 pt-3">
-                  <a href="{% url 'download:download' 1 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
+                  <a href="{% url 'image:image' 1 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
                     <h6 class="card-title newpost-title blog-title hover-border">{{ blog.title }}</h6>
                   </a>
                   <div class="row">
-                    <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
+                    <a href="{% url 'main:searchByMembers' 1 blog.writer.ct %}"
                       class="card-text ml-3 small mb-2 pb-0 card-info keyaki writer-name">{{ blog.writer.full_kanji }}</a>
                     <p class="card-text ml-3 small mb-2 pb-0 card-info">{{ blog.post_date|date:"y/n/j" }}</p>
                   </div>
@@ -213,7 +213,7 @@
                             <i class="fas fa-bars" style="color:gray;"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
-                            <a href="{% url 'download:download' 1 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
+                            <a href="{% url 'image:image' 1 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
                             <a class="dropdown-item" target="_blank"
                               href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
                           </div>
@@ -247,7 +247,7 @@
       <div class="swiper-pagination" id="swiper-pagination-keyaki-newpost"></div>
     </div>
     <div class="mx-auto effect-fade" style="width: 200px;">
-      <a href="{% url 'search:searchByGroups' 1 %}" class="gradient-btn keyaki"
+      <a href="{% url 'main:searchByGroups' 1 %}" class="gradient-btn keyaki"
         style="width: 200px;">
         <b>もっと見る>></b>
       </a>
@@ -266,7 +266,7 @@
                 <div class="l-thumbnail">
 
                   {% if isMobile %}
-                  <a href="{% url 'download:download' 2 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 2 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper-mobile">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -276,7 +276,7 @@
                     </figure>
                   </a>
                   {% else %}
-                  <a href="{% url 'download:download' 2 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 2 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -294,7 +294,7 @@
                         </a>
                       </div>
                       <div class="col-4 p-0 ml-2">
-                        <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: white;"
+                        <a href="{% url 'image:image' 2 blog.blog_ct %}" style="color: white;"
                           data-toggle="tooltip" title="ダウンロードページへ" class="download-trigger">
                           <i class="fas fa-download"></i>
                         </a>
@@ -305,11 +305,11 @@
 
                 </div>
                 <div class="card-body pb-0 px-3 px-sm-4 pt-3">
-                  <a href="{% url 'download:download' 2 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
+                  <a href="{% url 'image:image' 2 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
                     <h6 class="card-title newpost-title blog-title hover-border">{{ blog.title }}</h6>
                   </a>
                   <div class="row">
-                    <a href="{% url 'search:searchByMembers' 2 blog.writer.ct %}"
+                    <a href="{% url 'main:searchByMembers' 2 blog.writer.ct %}"
                       class="card-text ml-3 small mb-2 pb-0 card-info hinata writer-name">{{ blog.writer.full_kanji }}</a>
                     <p class="card-text ml-3 small mb-2 pb-0 card-info">{{ blog.post_date|date:"y/n/j" }}</p>
                   </div>
@@ -340,7 +340,7 @@
                             <i class="fas fa-bars" style="color:gray;"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
-                            <a href="{% url 'download:download' 2 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
+                            <a href="{% url 'image:image' 2 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
                             <a class="dropdown-item" target="_blank"
                               href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
                           </div>
@@ -374,7 +374,7 @@
       <div class="swiper-pagination" id="swiper-pagination-hinata-newpost"></div>
     </div>
     <div class="mx-auto effect-fade" style="width: 200px;">
-      <a href="{% url 'search:searchByGroups' 2 %}" class="gradient-btn hinata"
+      <a href="{% url 'main:searchByGroups' 2 %}" class="gradient-btn hinata"
         style="width: 200px;">
         <b>もっと見る>></b>
       </a>
@@ -418,7 +418,7 @@
                 <div class="l-thumbnail">
 
                   {% if isMobile %}
-                  <a href="{% url 'download:download' 1 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 1 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper-mobile">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -428,7 +428,7 @@
                     </figure>
                   </a>
                   {% else %}
-                  <a href="{% url 'download:download' 1 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 1 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -446,7 +446,7 @@
                         </a>
                       </div>
                       <div class="col-4 p-0 ml-2">
-                        <a href="{% url 'download:download' 1 blog.blog_ct %}" style="color: white;"
+                        <a href="{% url 'image:image' 1 blog.blog_ct %}" style="color: white;"
                           data-toggle="tooltip" title="ダウンロードページへ" class="download-trigger">
                           <i class="fas fa-download"></i>
                         </a>
@@ -457,11 +457,11 @@
 
                 </div>
                 <div class="card-body pb-0 px-3 px-sm-4 pt-3">
-                  <a href="{% url 'download:download' 1 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
+                  <a href="{% url 'image:image' 1 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
                     <h6 class="card-title newpost-title blog-title hover-border">{{ blog.title }}</h6>
                   </a>
                   <div class="row">
-                    <a href="{% url 'search:searchByMembers' 1 blog.writer.ct %}"
+                    <a href="{% url 'main:searchByMembers' 1 blog.writer.ct %}"
                       class="card-text ml-3 small mb-2 pb-0 card-info keyaki writer-name">{{ blog.writer.full_kanji }}</a>
                     <p class="card-text ml-3 small mb-2 pb-0 card-info">{{ blog.post_date|date:"y/n/j" }}</p>
                   </div>
@@ -492,7 +492,7 @@
                             <i class="fas fa-bars" style="color:gray;"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
-                            <a href="{% url 'download:download' 1 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
+                            <a href="{% url 'image:image' 1 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
                             <a class="dropdown-item" target="_blank"
                               href="https://www.keyakizaka46.com/s/k46o/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
                           </div>
@@ -526,7 +526,7 @@
       <div class="swiper-pagination" id="swiper-pagination-keyaki-popular"></div>
     </div>
     <div class="mx-auto effect-fade" style="width: 200px;">
-      <a href="{% url 'search:searchByGroups' 1 %}?sort=popularity" class="gradient-btn keyaki"
+      <a href="{% url 'main:searchByGroups' 1 %}?sort=popularity" class="gradient-btn keyaki"
         style="width: 200px;">
         <b>もっと見る>></b>
       </a>
@@ -545,7 +545,7 @@
                 <div class="l-thumbnail">
 
                   {% if isMobile %}
-                  <a href="{% url 'download:download' 2 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 2 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper-mobile">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -555,7 +555,7 @@
                     </figure>
                   </a>
                   {% else %}
-                  <a href="{% url 'download:download' 2 blog.blog_ct %}" class="download-trigger">
+                  <a href="{% url 'image:image' 2 blog.blog_ct %}" class="download-trigger">
                     <figure class="thumbnail-wrapper">
                       {% if blog.thumbnail %}
                       <img class="card-img-top newpost-thumbnail" src="{{ blog.thumbnail.picture.url }}">
@@ -573,7 +573,7 @@
                         </a>
                       </div>
                       <div class="col-4 p-0 ml-2">
-                        <a href="{% url 'download:download' 2 blog.blog_ct %}" style="color: white;"
+                        <a href="{% url 'image:image' 2 blog.blog_ct %}" style="color: white;"
                         data-toggle="tooltip" title="ダウンロードページへ" class="download-trigger">
                           <i class="fas fa-download"></i>
                         </a>
@@ -584,11 +584,11 @@
 
                 </div>
                 <div class="card-body pb-0 px-3 px-sm-4 pt-3">
-                  <a href="{% url 'download:download' 2 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
+                  <a href="{% url 'image:image' 2 blog.blog_ct %}" class="download-trigger" style="color: dimgray;">
                     <h6 class="card-title newpost-title blog-title hover-border">{{ blog.title }}</h6>
                   </a>
                   <div class="row">
-                    <a href="{% url 'search:searchByMembers' 2 blog.writer.ct %}"
+                    <a href="{% url 'main:searchByMembers' 2 blog.writer.ct %}"
                       class="card-text ml-3 small mb-2 pb-0 card-info hinata writer-name">{{ blog.writer.full_kanji }}</a>
                     <p class="card-text ml-3 small mb-2 pb-0 card-info">{{ blog.post_date|date:"y/n/j" }}</p>
                   </div>
@@ -619,7 +619,7 @@
                             <i class="fas fa-bars" style="color:gray;"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="thumbnailDetail">
-                            <a href="{% url 'download:download' 2 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
+                            <a href="{% url 'image:image' 2 blog.blog_ct %}" class="dropdown-item download-trigger">ダウンロードページへ</a>
                             <a class="dropdown-item" target="_blank"
                               href="https://www.hinatazaka46.com/s/official/diary/detail/{{ blog.blog_ct }}?ima=0000&cd=member">公式ブログで確認</a>
                           </div>
@@ -653,7 +653,7 @@
       <div class="swiper-pagination" id="swiper-pagination-hinata-popular"></div>
     </div>
     <div class="mx-auto effect-fade" style="width: 200px;">
-      <a href="{% url 'search:searchByGroups' 2 %}?sort=popularity" class="gradient-btn hinata"
+      <a href="{% url 'main:searchByGroups' 2 %}?sort=popularity" class="gradient-btn hinata"
         style="width: 200px;">
         <b>もっと見る>></b>
       </a>
@@ -684,7 +684,7 @@
           <p class="text-muted">
             保存したい画像が見つかりましたら、そのページのURLをコピーしておいてください。
             そのページに複数のブログ情報が含まれていても構いませんが、最も少ないステップで画像を保存するには「個別ページ」であることが推奨されます。
-            <br>現在サポート中のブログは<a href={% url 'top:support' %}>こちら</a>からご確認ください 。
+            <br>現在サポート中のブログは<a href={% url 'support' %}>こちら</a>からご確認ください 。
           </p>
         </div>
       </div>
@@ -704,8 +704,8 @@
           <p class="text-muted">
             先ほどのURLを当サイトの検索バーにそのまま貼り付けてください。そのページに含まれるブログを検出します。また、メンバーの名前からブログを探すことも可能です。
             その際、メンバーの名前は漢字でもひらがなでも構いません。<br>
-            {% if group == 'keyaki' %}<a href="{% url 'search:memberList' %}?group=1">こちら</a>
-            {% elif group == 'hinata' %}<a href="{% url 'search:memberList' %}?group=2">こちら</a>{% endif %}
+            {% if group == 'keyaki' %}<a href="{% url 'main:memberList' %}?group=1">こちら</a>
+            {% elif group == 'hinata' %}<a href="{% url 'main:memberList' %}?group=2">こちら</a>{% endif %}
             からメンバーを選択して探すことも可能です。
           </p>
         </div>
@@ -812,5 +812,5 @@
   {% if group == 'keyaki' %} var group = 'keyaki'; {% elif group == 'hinata' %} var group = 'hinata'; {% endif %}
 </script>
 <script type="text/javascript" src="{% static 'js/otapick/top/top.js' %}{{ static_update }}"></script>
-<script id="blogList_ajax-script" type="text/javascript" src="{% static 'js/otapick/search/blogList_ajax.js' %}{{ static_update }}"></script>
+<script id="blogList_ajax-script" type="text/javascript" src="{% static 'js/otapick/main/blogList_ajax.js' %}{{ static_update }}"></script>
 {% endblock %}

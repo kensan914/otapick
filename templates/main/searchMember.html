@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block description %}
+<meta name="description" content="『ヲタピック』は、欅坂46・日向坂46の公式ブログ画像や写真を素早く、効率よく保存できるヲタ活支援サービスです。画像や写真が保存できないと諦めるているあなた、是非当サイトで高画質ブログ画像を保存してください。坂道Gに限らず、対応アイドルのリクエスト等、DMにてお待ちしております。">
+{% endblock %}
+
+{% block title %}メンバー検索{% endblock %}
+
+{% block content %}
+<!-- Masthead -->
+  <div class="{{ group }}">
+    <header class="call-to-action text-white text-center">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-9 mx-auto">
+            <h1>
+              検索結果
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+<!-- Result -->
+<div class="container text-muted">
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card mt-5 border border-top-0">
+        <div class="card-body">
+          <form>
+            <div class="container">
+              <div class="row justify-content-between">
+                <h3 class="col-md-6 col-12">メンバー検索</h3>
+                <div class="form-row col-md-6 col-12 justify-content-center">
+                  <input class="col-9 col-sm-9 col-xs-10 form-control autocomplete" type="search" placeholder="メンバーの名前を入力" aria-label="Search" name="q_member" autocomplete="off">
+                  <div class="search_btn_min">
+                    <button type="submit" class="btn my-0 px-3 ml-1 ml-xs-5 {{ group }}">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% if appropriate %}
+  {% if object_list %}
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card my-5 border border-top-0">
+        <div class="card-body">
+          "{% if searchText %}{{ searchText }}{% endif %}"({{ object_list|length }}件)
+          <table class="table table-hover text-left mt-4 mb-0">
+            <thead>
+              <tr>
+                <th scope="col" style="width:40%">名前</th>
+                <th scope="col" style="width:35%">所属グループ</th>
+                <th scope="col" style="width:30%; text-align: center; vertical-align: middle;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for member in object_list %}
+              <tr>
+                <td>{{ member.last_kanji }} {{ member.first_kanji }}</td>
+                <td>{{ member.belonging_group.name }}</td>
+                <td>
+                    <div class="outline">
+                      {% if member.belonging_group.group_id == 1 %}
+                          <a class="btn keyaki" href="{% url 'main:searchByMembers' member.belonging_group.group_id member.ct %}" role="button">
+                            <span>選択</span>
+                          </a>
+                      {% elif member.belonging_group.group_id == 2 %}
+                          <a class="btn hinata" href="{% url 'main:searchByMembers' member.belonging_group.group_id member.ct %}" role="button">
+                            <span>選択</span>
+                          </a>
+                      {% endif %}
+                    </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <div class="otapick_card_back">
+      <div class="otapick_card {{ group }}">
+        <div class="card my-5 border border-top-0">
+          <div class="card-body">
+            "{% if searchText %}{{ searchText }}{% endif %}"({{ object_list|length }}件)
+            <div class="alert alert-danger mt-3" role="alert">
+              条件に一致するメンバーは見つかりませんでした。
+            </div>
+            <p class="mx-3">
+              入力された文字列に間違いがないか今一度ご確認ください。<br>
+              <i class="fas fa-hand-point-right"></i>
+              現在ニックネームによる検索はサポートしておりません。ご了承ください。<br>
+              <i class="fas fa-hand-point-right"></i>
+              漢字や英語での検索も可能ですが、当サイトではひらがなでの検索を推奨します。<br>
+              <i class="fas fa-hand-point-right"></i>
+              また、検索バーの下にドロップダウンで予測したメンバーをその都度表示(サジェスト)していきます。ぜひご活用ください。<br>
+              <i class="fas fa-hand-point-right"></i>
+              メンバー検索以外にも<a href="{% url 'main:memberList' %}">こちら</a>からメンバーを選択して探すこともできます。
+            </p>
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/memberNotFound.png' %});"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% else %}
+  <div class="otapick_card_back">
+    <div class="otapick_card {{ group }}">
+      <div class="card my-5 border border-top-0">
+        <div class="card-body">
+          <div class="alert alert-danger mt-2" role="alert">
+            申し訳ございません。適切でない文字が検出されたため処理を中断しました。
+          </div>
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="notFoundBox col-12 col-md-10 col-xl-8" style="background-image: url({% static 'img/memberNotFound.png' %});"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+</div>
+
+{% endblock %}
