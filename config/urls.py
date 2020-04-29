@@ -26,6 +26,7 @@ urlpatterns = [
     path('support/', main.views.support, name='support'),
     path('search/', include('main.urls')),
     path('download/', include('image.urls')),
+    path('api/', include('api.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 

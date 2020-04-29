@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 
@@ -17,6 +18,7 @@ class Member(models.Model):
     class Meta:
         db_table = 'member'
         unique_together = ('ct', 'belonging_group')
+        ordering = ['belonging_group', 'full_kana']
 
     ct = models.CharField(verbose_name='ct', max_length=10)
     last_kanji = models.CharField(verbose_name='姓_漢', max_length=10)

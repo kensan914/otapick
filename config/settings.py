@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'image.apps.ImageConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,14 @@ MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
 
 # redis
 BROKER_URL = env('REDIS_URL')
+
+# rest_framework
+DEFAULT_RENDERER_CLASSES_val = ['rest_framework.renderers.JSONRenderer']
+if DEBUG:
+    DEFAULT_RENDERER_CLASSES_val.append('rest_framework.renderers.BrowsableAPIRenderer')
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES_val,
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ]
+}
