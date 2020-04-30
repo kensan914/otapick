@@ -13,3 +13,12 @@ class MemberRetrieveAPIView(views.APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
 memberRetrieveAPIView = MemberRetrieveAPIView.as_view()
+
+
+class MemberListAPIView(views.APIView):
+    def get(self, request, group_id, *args, **kwargs):
+        members = Member.objects.filter(belonging_group__group_id=group_id)
+        serializer = MemberSerializer(members, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+memberListAPIView = MemberListAPIView.as_view()

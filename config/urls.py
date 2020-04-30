@@ -28,6 +28,9 @@ urlpatterns = [
     path('download/', include('image.urls')),
     path('api/', include('api.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+
+    path('react/', main.views.react, name='react'),
+
 ]
 
 #Debug=Falseでもadminへアクセスできてしまうため、対処
