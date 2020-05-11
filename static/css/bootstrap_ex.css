@@ -1077,3 +1077,11 @@ a.hinata {
     white-space: nowrap;
     text-decoration: underline;
 }
+
+/* navbar-brand */
+.navbar-brand {
+    background: url(/static/img/otapick.png?20200417_2) no-repeat left center;
+    background-size: contain;
+    height: 50px;
+    width: 170px;
+}

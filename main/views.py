@@ -422,7 +422,7 @@ autocomplete = AutocompleteView.as_view()
 
 class ReactView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'frontend/index.html')
+        return render(request, 'frontend/index.html', BaseView.context)
 
 
 react = ReactView.as_view()
