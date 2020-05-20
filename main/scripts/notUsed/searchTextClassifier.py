@@ -1,7 +1,7 @@
 # coding=utf-8
 from urllib.parse import urlparse
 from django.db.models import Q
-from ..models import Member
+from main.models import Member
 
 
 def searchTextClassifier(searchText):

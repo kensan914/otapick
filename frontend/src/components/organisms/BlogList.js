@@ -1,5 +1,6 @@
 import React from 'react';
 import BlogCard from '../molecules/BlogCard';
+import Loader from '../atoms/Loader';
 import Masonry from 'react-masonry-component';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
@@ -10,60 +11,72 @@ class BlogList extends React.Component {
     super(props);
     this.state = {
       hasMore: true,
-      elements: [
-        {
-          full_kanji: 'init1-1',
-          full_kana: 'init1-2',
-        },
-        {
-          full_kanji: 'init2-1',
-          full_kana: 'init2-2',
-        }
-      ],
+      blogs: [],
     };
-    this.getBlogList = this.getBlogList.bind(this);
+    this.setBlogList = this.setBlogList.bind(this);
   }
 
-  getBlogList() {
+  setBlogList(page) {
+    console.log('スタートsetBlogList, ' + page);
+    const url = this.props.URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct, `?page=${page}&sort=${this.props.orderFormat}`);
+    console.log('blogs', url);
+
     setTimeout(() => {
       axios
-        .get('http://192.168.99.100:8000/api/member/1/')
+        .get(url)
         .then(res => {
-          const newElements = res.data.map((member, index) =>
-            ({
-              full_kanji: member.full_kanji,
-              full_kana: member.full_kana,
-            })
-          );
-
-          console.log(newElements);
-
-          this.setState(state => ({
-            elements: state.elements.concat(newElements),
-          }));
+          if (res.data.length > 0) {
+            const newBlogs = res.data.map((blog, index) =>
+              ({
+                blogCt: blog.blog_ct,
+                title: blog.title,
+                postDate: blog.post_date,
+                writer: blog.writer,
+                writerCt: blog.writer_ct,
+                numOfViews: blog.num_of_views,
+                numOfDownloads: blog.num_of_downloads,
+                thumbnail: blog.thumbnail,
+              })
+            );
+            this.setState(state => ({
+              blogs: state.blogs.concat(newBlogs),
+            }));
+          } else {
+            this.setState({ hasMore: false });
+          }
         })
         .catch(err => {
           console.log(err);
-        });
-    }, 0);
+        })
+        .finally(
+          () => { console.log("エンドsetBlogList, " + page) }
+        )
+    }, 2000);
   };
 
+  componentDidMount() {
+    console.log('マウント');
+  }
+
+  componentDidUpdate() {
+  }
+
   render() {
-    console.log("nibu");
     const options = {
       itemSelector: '.grid-item',
     };
 
     return (
-
       <InfiniteScroll
         hasMore={this.state.hasMore}
-        loadMore={this.getBlogList}
+        loadMore={this.setBlogList}
+        initialLoad={true}
+        loader={<Loader />}
       >
         <Masonry options={options}>
           {
-            this.state.elements.map(({ full_kanji, full_kana }, i) => (
-              <BlogCard key={i} group="hinata" img="../../../../static/img/intro_back.png" title={full_kanji} writer={full_kana} postDate="20/02/02" num_of_views="100" num_of_downloads="200" />
+            this.state.blogs.map(({ blogCt, title, postDate, writer, writerCt, numOfViews, numOfDownloads, thumbnail }, i) => (
+              <BlogCard key={i} id={i} groupID={this.props.groupID} group={this.props.group} blogCt={blogCt} thumbnail={thumbnail} title={title} writer={writer} writerCt={writerCt} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} />
             ))
           }
         </Masonry>

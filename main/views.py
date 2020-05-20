@@ -4,10 +4,10 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from config import settings
 from main.scripts.firstClassifier import firstClassifier
-from main.scripts.searchViewSubFunc import check_is_mobile
+from main.scripts.search.searchViewSubFunc import check_is_mobile
 from main.forms import NarrowingForm
 from django.views import View
-from main.scripts.searchViewFunc import *
+from main.scripts.search.searchViewFunc import *
 
 
 class BaseView(View):

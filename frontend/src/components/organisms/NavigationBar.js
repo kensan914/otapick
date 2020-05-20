@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import { withRouter } from 'react-router';
 
-const NavigationBar = () => {
+
+const NavigationBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
@@ -21,11 +23,11 @@ const NavigationBar = () => {
               ブログ一覧
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem href="/search/group/blog/1/">欅坂46</DropdownItem>
-              <DropdownItem href="/search/group/blog/2/">日向坂46</DropdownItem>
-              <DropdownItem href="/#newpost">新着ブログ</DropdownItem>
-              <DropdownItem href="/#popular">人気ブログ</DropdownItem>
-              <DropdownItem href="/search/member">メンバーリスト</DropdownItem>
+              <DropdownItem onClick={() => props.history.push('/react/blogs/1')}>欅坂46</DropdownItem>
+              <DropdownItem onClick={() => props.history.push('/react/blogs/2')}>日向坂46</DropdownItem>
+              <DropdownItem onClick={() => props.history.push('/react/blogs/2/2')}>新着ブログ</DropdownItem>
+              <DropdownItem onClick={() => props.history.push('/react/blogs/1/13')}>人気ブログ</DropdownItem>
+              <DropdownItem onClick={() => props.history.push('/react/blogs/2/13')}>メンバーリスト</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
           <UncontrolledDropdown nav inNavbar id="nav-dropdown2" className="mr-3">
@@ -49,4 +51,4 @@ const NavigationBar = () => {
   );
 };
 
-export default NavigationBar;
+export default withRouter(NavigationBar);

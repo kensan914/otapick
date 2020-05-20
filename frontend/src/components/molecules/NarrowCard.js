@@ -35,7 +35,7 @@ class NarrowCard extends React.Component {
                 </a>
 
                 <div className="mr-4">
-                  <OtapickButton group="hinata" href="" width="100" title="適用" />
+                  <OtapickButton group={this.props.group} href="" width="100" title="適用" />
                 </div>
               </div>
 

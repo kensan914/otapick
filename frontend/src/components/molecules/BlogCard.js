@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip } from 'reactstrap';
+import { Link, withRouter } from 'react-router-dom';
 
 
 const DetailButton = () => {
@@ -21,13 +22,22 @@ const DetailButton = () => {
 const CardTooltip = (props) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
+
   return (
-    <Tooltip placement="top" isOpen={tooltipOpen} target={props.target} toggle={toggle}>{props.title}</Tooltip>
+    <Tooltip placement="top" isOpen={tooltipOpen} target={props.target} toggle={toggle} >
+      {props.title}
+    </Tooltip>
   )
 }
 
+
 class BlogCard extends React.Component {
   render() {
+    var thumbnail = this.props.thumbnail;
+    if (thumbnail == null) {
+      thumbnail = "/static/img/imageNotFound.jpg"
+    }
+
     return (
       <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3">
         <div className="otapick_card_back">
@@ -35,25 +45,26 @@ class BlogCard extends React.Component {
             <div className="card border border-top-0">
               <div className="l-thumbnail">
 
-                <a href="" className="download-trigger">
+                <a className="download-trigger" onClick={() => { this.props.history.push('/react/blogs/1/'); }}>
+                  {/* <a className="download-trigger" href=""> */}
                   <figure className="thumbnail-wrapper">
-                    <img className="card-img-top" src={this.props.img} style={{ borderRadius: "0" }} />
+                    <img className="card-img-top" src={thumbnail} style={{ borderRadius: "0" }} />
                   </figure>
                 </a>
                 <span className="more-button">
                   <div className="row justify-content-around">
                     <div className="col-4 p-0 mr-2">
-                      <a href="" style={{ color: "white" }} target="_blank" id="to-official-page">
+                      <a href="" style={{ color: "white" }} target="_blank" id={`to-official-page-${this.props.id}`}>
                         <i className="fas fa-external-link-alt"></i>
                       </a>
                     </div>
-                    <CardTooltip target="to-official-page" title="公式ブログで確認" />
+                    <CardTooltip target={`to-official-page-${this.props.id}`} title="公式ブログで確認" />
                     <div className="col-4 p-0 ml-2">
-                      <a href="" style={{ color: "white" }} id="to-download-page" className="download-trigger">
+                      <a href="" style={{ color: "white" }} id={`to-download-page-${this.props.id}`} className="download-trigger">
                         <i className="fas fa-download"></i>
                       </a>
                     </div>
-                    <CardTooltip target="to-download-page" title="ダウンロードページへ" />
+                    <CardTooltip target={`to-download-page-${this.props.id}`} title="ダウンロードページへ" />
                   </div>
                 </span>
               </div>
@@ -62,7 +73,10 @@ class BlogCard extends React.Component {
                   <h6 className="card-title blog-title">{this.props.title}</h6>
                 </a>
                 <div className="row">
-                  <a href="" className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.group}>{this.props.writer}</a>
+                  <Link to={`/react/blogs/${this.props.groupID}/${this.props.writerCt}`} className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.group}>
+                    {this.props.writer}
+                  </Link>
+                  {/* <a href="" className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.group}>{this.props.writer}</a> */}
                   <p className="card-text ml-3 small mb-2 pb-0 card-info">{this.props.postDate}</p>
                 </div>
 
@@ -76,7 +90,7 @@ class BlogCard extends React.Component {
                         </div>
                           &nbsp;
                           <div className="card-parameter-num">
-                          {this.props.num_of_views}
+                          {this.props.numOfViews}
                         </div>
                       </div>
                     </div>
@@ -90,7 +104,7 @@ class BlogCard extends React.Component {
                         </div>
                           &nbsp;
                           <div className="card-parameter-num">
-                          {this.props.num_of_downloads}
+                          {this.props.numOfDownloads}
                         </div>
                       </div>
                     </div>
@@ -106,4 +120,4 @@ class BlogCard extends React.Component {
 };
 
 
-export default BlogCard;
+export default withRouter(BlogCard);

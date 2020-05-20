@@ -12,7 +12,7 @@ from main.views import BaseView
 from .models import Image, Progress
 from django.http import HttpResponse, Http404, FileResponse
 import zipfile
-from main.scripts.searchViewFunc import get_blog
+from main.scripts.search.searchViewFunc import get_blog
 
 
 class DownloadView(BaseView):

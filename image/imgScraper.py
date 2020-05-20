@@ -11,7 +11,7 @@ from urllib3.exceptions import InsecureRequestWarning
 from config import settings
 import certifi
 
-from main.scripts.searchViewFunc import get_blog
+from main.scripts.search.searchViewFunc import get_blog
 
 
 def get_tag(progress, url, group_id):

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from image.models import Image, Progress
-from main.scripts.searchViewFunc import convert_css_class
-from main.scripts.searchViewSubFunc import check_is_mobile
+from main.scripts.search.searchViewFunc import convert_css_class
+from main.scripts.search.searchViewSubFunc import check_is_mobile
 
 
 def render_progress(request, progress, group_id, blog_ct, title,  writer_name, historyBackIsToTop, context):
