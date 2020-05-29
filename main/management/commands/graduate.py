@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from image import imgScraper
 from image.models import Progress
 from main.models import Blog
-from main.scripts.blogRegister.registerer_ex import register_external
+# from main.scripts.blogRegister.registerer_ex import register_external
 from main.scripts.blogRegister.textScraper import save_text
 
 
