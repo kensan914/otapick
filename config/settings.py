@@ -144,7 +144,10 @@ STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
 
 # media
 MEDIA_URL = '/media/'
+<<<<<<< HEAD
 # MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
+=======
+>>>>>>> 1ae300b211c0708ffbb402d293335cbd77db2af9
 MEDIA_ROOT = env('MEDIA_ROOT')
 
 # redis
