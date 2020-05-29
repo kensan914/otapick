@@ -144,7 +144,7 @@ STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
 
 # media
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
+MEDIA_ROOT = env('MEDIA_ROOT')
 
 # redis
 BROKER_URL = env('REDIS_URL')
