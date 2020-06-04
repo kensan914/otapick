@@ -4,7 +4,7 @@ from main.models import Member
 
 
 class Command(BaseCommand):
-    help = 'メンバーの宣材写真を取得。' \
+    help = 'メンバーの宣材写真を取得。すでに登録済みのメンバーは取得しない' \
            'groupオプションでグループを指定可能。 (default:全メンバー)' \
            'forceオプションで現役メンバーは強制ダウンロード。個人アー写が変わったタイミングで実行。' \
            'fforceオプションで全てのメンバーを強制ダウンロード。'
