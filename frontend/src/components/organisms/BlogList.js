@@ -18,12 +18,12 @@ class BlogList extends React.Component {
 
   setBlogList(page) {
     console.log('スタートsetBlogList, ' + page);
-    const url = this.props.URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct, `?page=${page}&sort=${this.props.orderFormat}`);
+    const url = this.props.URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct);
     console.log('blogs', url);
 
     setTimeout(() => {
       axios
-        .get(url)
+        .get(url, { params: { page: page, sort: this.props.orderFormat, keyword: this.props.narrowingKeyword, post: this.props.narrowingPost } })
         .then(res => {
           if (res.data.length > 0) {
             const newBlogs = res.data.map((blog, index) =>
@@ -64,6 +64,9 @@ class BlogList extends React.Component {
   render() {
     const options = {
       itemSelector: '.grid-item',
+      // transitionDuration: "0.1s",
+      transitionDuration: 0,
+      stagger: 0
     };
 
     return (
@@ -80,7 +83,7 @@ class BlogList extends React.Component {
             ))
           }
         </Masonry>
-      </InfiniteScroll>
+      </InfiniteScroll >
     );
   };
 };

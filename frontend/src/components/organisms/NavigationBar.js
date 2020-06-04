@@ -1,22 +1,48 @@
 import React, { useState } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 import { withRouter } from 'react-router';
+import SearchDownshift from '../molecules/SearchDownshift'
 
 
 const NavigationBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  let hasAShadow = false;
+
+  React.useEffect(() => {
+    window.addEventListener('scroll', event => watchCurrentPosition(), true)
+    return () => window.removeEventListener('scroll')
+  }, []);
+
+  const watchCurrentPosition = () => {
+    if (scrollTop() === 0 && hasAShadow) {
+      const navabar = document.getElementById("otapick-navbar")
+      navabar.style.transition = "0s";
+      navabar.classList.remove("shadow");
+      hasAShadow = false;
+    } else if (scrollTop() !== 0 && !hasAShadow) {
+      const navabar = document.getElementById("otapick-navbar")
+      navabar.style.transition = "0.3s";
+      navabar.classList.add("shadow");
+      hasAShadow = true;
+    }
+  }
+
+  const scrollTop = () => {
+    return Math.max(
+      window.pageYOffset,
+      document.documentElement.scrollTop,
+      document.body.scrollTop);
+  }
 
   return (
-    <Navbar color="light" light expand="lg" className="static-top fixed-top border-bottom">
+    <Navbar color="light" light expand="lg" className="static-top fixed-top border-bottom"
+      id="otapick-navbar" style={{ transitionTimingFunction: "ease-out" }}>
       <NavbarBrand href="/"></NavbarBrand>
       <NavbarToggler onClick={toggle} />
 
       <Collapse isOpen={isOpen} navbar>
-        <form className="form-inline mt-3 mb-2 my-lg-0 justify-content-center col" autoComplete="off">
-          <input className="col form-control autocomplete" type="search" placeholder="Search"
-            aria-label="Search" name="q"></input>
-        </form>
+        <SearchDownshift URLJoin={props.URLJoin} baseURL={props.baseURL} history={props.history} />
         <Nav className="mx-4 mx-lg-0" navbar>
           <UncontrolledDropdown nav inNavbar id="nav-dropdown1" className="mr-3">
             <DropdownToggle nav caret>

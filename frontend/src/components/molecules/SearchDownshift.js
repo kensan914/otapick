@@ -1,0 +1,344 @@
+import React from 'react';
+import Downshift from 'downshift';
+import axios from 'axios';
+
+
+class SearchDownshift extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpenInit: false,
+      isOpen: false,
+      qvalue: "",
+      initSuggestionsBlogs: [],
+      initSuggestionsMembers: [],
+      suggestionsItems: [],
+      suggestionsType: "",
+      suggestionsStatus: "",
+    }
+    this.isCalledSetInitSearchSuggestions = false;
+    this.isCallingSetSearchSuggestions = false;
+
+    this.searchInputRef = React.createRef();
+  }
+
+  setInitSearchSuggestions() {
+    const url = this.props.URLJoin(this.props.baseURL, "api/searchSuggestions/init/");
+    setTimeout(() => {
+      axios
+        .get(url)
+        .then(res => {
+          const initSuggestionsBlogs = res.data['blogs'].map((blog, index) =>
+            ({
+              title: blog.title,
+              backgroundImage: blog.background_image,
+              url: blog.url,
+            })
+          );
+          const initSuggestionsMembers = res.data['members'].map((member, index) =>
+            ({
+              title: member.title,
+              backgroundImage: member.background_image,
+              url: member.url,
+            })
+          );
+          this.setState({
+            initSuggestionsBlogs: initSuggestionsBlogs,
+            initSuggestionsMembers: initSuggestionsMembers,
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }, 100);
+  }
+
+  setSearchSuggestions() {
+    const url = this.props.URLJoin(this.props.baseURL, "api/searchSuggestions/");
+    setTimeout(() => {
+      axios
+        .get(url, { params: { q: this.state.qvalue } })
+        .then(res => {
+          if (res.data["status"] === "success") {
+            const suggestionsItems = res.data["items"].map((item, index) =>
+              ({
+                title: item.title,
+                backgroundImage: item.background_image,
+                url: item.url,
+              })
+            );
+            this.setState({
+              suggestionsItems: suggestionsItems,
+              suggestionsType: res.data["type"],
+              suggestionsStatus: res.data["status"],
+            });
+          } else {
+            this.setState({
+              suggestionsItems: [],
+              suggestionsType: res.data["type"],
+              suggestionsStatus: res.data["status"],
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => { this.isCallingSetSearchSuggestions = false; })
+    }, 100);
+  }
+
+  onFocusInput() {
+    if (this.state.qvalue) {
+      if (!this.state.isOpen) { this.setState({ isOpenInit: false, isOpen: true }); }
+    } else {
+      if (!this.state.isOpenInit) { this.setState({ isOpenInit: true, isOpen: false }); }
+    }
+  }
+  onChangeInput(inputValue) {
+    if (inputValue !== null) this.setState({ qvalue: inputValue });
+    if (inputValue) {
+      this.setState({ isOpenInit: false, isOpen: true });
+      if (!this.isCallingSetSearchSuggestions) {
+        this.setSearchSuggestions();
+        this.isCallingSetSearchSuggestions = true;
+      }
+    } else if (inputValue === "") {
+      // 検索作業中にdeleteしてinputValueが0になった場合に限り、initDownshiftをview
+      if (this.state.isOpen) this.setState({ isOpenInit: true, isOpen: false });
+    }
+  }
+
+  documentClickHandler = e => {
+    // 他の箇所クリックしたとき、検索作業を終了
+    if (e.target.closest("#search-input") == null && e.target.closest("#downshift-box") == null) {
+      this.setState({ isOpenInit: false, isOpen: false });
+      document.removeEventListener('click', this.documentClickHandler);
+    }
+  }
+
+  resetInitSearchSuggestions = () => {
+    this.setState({
+      isOpenInit: false,
+      initSuggestionsBlogs: [],
+      initSuggestionsMembers: [],
+    })
+    this.isCalledSetInitSearchSuggestions = false;
+  }
+
+  resetSearchSuggestions = () => {
+    this.setState({
+      isOpen: false,
+      suggestionsItems: [],
+      suggestionsType: "",
+      suggestionsStatus: "",
+    });
+  }
+
+  lockScreen = () => {
+    if (document.getElementById("lock-screen-wrapper") === null) {
+      let lockScreenWrapper = document.createElement("div");
+      lockScreenWrapper.setAttribute("id", "lock-screen-wrapper");
+      document.body.appendChild(lockScreenWrapper);
+    }
+  }
+  unLockScreen = () => {
+    const lockScreenWrapper = document.getElementById("lock-screen-wrapper")
+    if (lockScreenWrapper !== null) lockScreenWrapper.remove();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // InitDownshiftがviewされたとき
+    if (prevState.isOpenInit !== this.state.isOpenInit && this.state.isOpenInit) {
+      if (!this.isCalledSetInitSearchSuggestions) { this.setInitSearchSuggestions(); this.isCalledSetInitSearchSuggestions = true; }
+      this.resetSearchSuggestions();
+      document.addEventListener('click', this.documentClickHandler);
+    }
+
+    // Downshiftがviewされたとき
+    if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
+      document.addEventListener('click', this.documentClickHandler);
+    }
+
+    // InitDownshiftまたはDownshiftがviewされたとき(検索作業が開始したとき)
+    if (!prevState.isOpenInit && !prevState.isOpen && (this.state.isOpenInit || this.state.isOpen)) {
+      this.lockScreen();
+    }
+    // InitDownshiftまたはDownshiftのviewが解除されたとき(検索作業が終了したとき)
+    else if (!this.state.isOpenInit && !this.state.isOpen && (prevState.isOpenInit || prevState.isOpen)) {
+      this.unLockScreen();
+    }
+  }
+
+  render() {
+    let suggestionsMessage;
+    const suggestionsMessageStyle = { borderRadius: "1rem" };
+    if (this.state.suggestionsType === "url") {
+      suggestionsMessage = this.state.suggestionsStatus === "success"
+        ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>有効なURLです。以下のブログが検出されました。</div>
+        : <>
+          <div className="alert alert-danger" role="alert" style={suggestionsMessageStyle}>このURLは有効ではありません。入力されたURLのページからブログが見つかりませんでした。</div>
+          <div className="mx-2">
+            <p>入力されたURLのページにブログ情報が含まれているか、今一度ご確認ください。</p>
+            <p>現在、<a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46公式ブログ</a>と<a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46公式ブログ</a>以外のサイトはサポートされておりません。ご了承ください。</p>
+            <hr />
+            <p>入力例1）https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000</p>
+            <p>入力例2）https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000</p>
+          </div>
+        </>
+    } else if (this.state.suggestionsType === "member") {
+      suggestionsMessage = this.state.suggestionsStatus === "success"
+        ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>以下のメンバーが見つかりました。</div>
+        : <>
+          <div className="alert alert-danger" role="alert" style={suggestionsMessageStyle}>該当するメンバーが見つかりませんでした。</div>
+          <div className="mx-2">
+            <p>入力された文字列に間違いがないか、以下を参考に今一度ご確認ください。</p>
+            <p><i class="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
+            <p><i class="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
+            <p><i class="fas fa-hand-point-right" />メンバーリストにお探しのメンバーがいるか確認してください。</p>
+            <hr />
+            <p>入力例1）平手友梨奈</p>
+            <p>入力例2）わたなべ</p>
+          </div>
+        </>
+    }
+
+    return (
+      <Downshift
+        onChange={selection => {
+          this.resetInitSearchSuggestions();
+          this.resetSearchSuggestions();
+          this.setState({ qvalue: "" });
+          this.searchInputRef.current.blur();
+          this.props.history.push(selection.url);
+        }}
+        onInputValueChange={(inputValue) => {
+          this.onChangeInput(inputValue);
+        }}
+        itemToString={() => null}
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          getMenuProps,
+          highlightedIndex,
+          selectedItem,
+        }) => (
+            <div className="mt-3 mb-2 my-lg-0 justify-content-center col">
+              <form className="form-inline" autoComplete="off">
+                <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="Search" value={this.state.qvalue}
+                  aria-label="Search" name="q" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef}></input>
+              </form>
+
+              <div {...getMenuProps()} style={{ "position": "absolute" }} id="downshift-box">
+                {this.state.isOpenInit &&
+                  <div className="container text-muted border search-suggestions-box"
+                    style={{ overflowY: "auto", overflowX: "hidden" }}>
+                    <div className="mt-3 mb-4">
+                      <h5>検索方法</h5>
+                      <p className="mx-2"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>からブログを検索いただけます。</p>
+                      <hr className="mb-0"/>
+                      <h5 className="my-2">メンバー</h5>
+                      <div className="row mx-1">
+                        {
+                          this.state.initSuggestionsMembers
+                            .map((item, index) => (
+                              <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
+                                <div className="m-1 search-suggestions-items"
+                                  {...getItemProps({
+                                    key: item.id,
+                                    index,
+                                    item,
+                                    style: {
+                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
+                                      position: "relative",
+                                      height: 100,
+                                    },
+                                  })}
+                                >
+                                  <div className="d-flex align-items-center justify-content-center search-suggestions-items-wraper"
+                                    style={{ backgroundColor: highlightedIndex === index ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
+                                    <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                        }
+                      </div>
+                      <hr className="mb-0"/>
+                      <h5 className="my-2">新着・人気ブログ</h5>
+                      <div className="row mx-1">
+                        {
+                          this.state.initSuggestionsBlogs
+                            .map((item, index) => (
+                              <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
+                                <div className="m-1 search-suggestions-items"
+                                  {...getItemProps({
+                                    key: item.id,
+                                    index: index + 6,
+                                    item,
+                                    style: {
+                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
+                                      position: "relative",
+                                      height: 100,
+                                    },
+                                  })}
+                                >
+                                  <div className="d-flex align-items-center justify-content-center search-suggestions-items-wraper"
+                                    style={{ backgroundColor: highlightedIndex === index + 6 ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
+                                    <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                {!this.state.isOpen || this.state.isOpenInit ? null : (
+                  <div className="container text-muted border py-2 search-suggestions-box"
+                    style={{ overflowY: "auto", overflowX: "hidden" }}>
+                    <div className="mt-2 mb-3">
+                      {suggestionsMessage}
+                      <div className="row mx-1">
+                        {
+                          this.state.suggestionsItems
+                            .map((item, index) => (
+                              <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
+                                <div className="m-1 search-suggestions-items"
+                                  {...getItemProps({
+                                    key: item.id,
+                                    index,
+                                    item,
+                                    style: {
+                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
+                                      position: "relative",
+                                      height: 100,
+                                    },
+                                  })}
+                                >
+                                  <div className="d-flex align-items-center justify-content-center search-suggestions-items-wraper"
+                                    style={{ backgroundColor: highlightedIndex === index ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
+                                    <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                        }
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+      </Downshift>
+    );
+  };
+};
+
+export default SearchDownshift;

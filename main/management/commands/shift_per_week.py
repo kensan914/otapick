@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from image.models import Image
 from main.models import Blog
-from main.scripts.blogRegister import support
+import otapick
 
 
 class Command(BaseCommand):
@@ -36,9 +36,9 @@ class Command(BaseCommand):
                 image.save()
 
         except Exception as e:
-            support.print_console(e)
+            otapick.print_console(e)
         else:
             if options['reverse']:
-                support.print_console('finished shift_per_week reverse!!')
+                otapick.print_console('finished shift_per_week reverse!!')
             else:
-                support.print_console('finished shift_per_week!!')
+                otapick.print_console('finished shift_per_week!!')

@@ -1,7 +1,7 @@
 from billiard.exceptions import SoftTimeLimitExceeded
 from config.celery import TransactionAwareTask
 from image.models import Image, Progress
-from main.scripts.blogRegister.compresser import compress_img
+import otapick
 from celery import shared_task
 import requests
 import os
@@ -103,7 +103,7 @@ def exe_save_img(group_id, writer_ct, blog_ct, img_url, is_thumbnail=False, craw
         img_file.close()
 
         if is_thumbnail:
-            compress_img(os.path.join(settings.MEDIA_ROOT, media))
+            otapick.ImageCompressor().edit(os.path.join(settings.MEDIA_ROOT, media))
         return media
     except:
         import traceback

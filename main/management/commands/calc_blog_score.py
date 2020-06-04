@@ -1,8 +1,7 @@
 from django.core.management.base import BaseCommand
 from image.models import Image
 from main.models import Blog
-from main.scripts.blogRegister import support
-
+import otapick
 
 class Command(BaseCommand):
     help = 'blogのscoreを計算し、上書き。' \
@@ -20,6 +19,6 @@ class Command(BaseCommand):
                 blog.save()
 
         except Exception as e:
-            support.print_console(e)
+            otapick.print_console(e)
         else:
-            support.print_console('finished calc_blog_score!!')
+            otapick.print_console('finished calc_blog_score!!')

@@ -136,7 +136,6 @@ class SearchByURLView(generic.ListView, BaseView):
         })
         ct = self.kwargs.get('ct')
         if ct:
-            # print("ct", ct)
             searchByBlogs_ctx['ct'] = ct
             if Member.objects.filter(belonging_group__group_id=group_id, ct=ct).exists():
                 searchByBlogs_ctx['member'] = Member.objects.get(belonging_group__group_id=group_id, ct=ct)

@@ -5,35 +5,53 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Provider, KeepAlive } from 'react-keep-alive';
 
 
-function App() {
-  return (
-    <div>
-      <BrowserRouter>
-        <Provider>
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.baseURL = "http://192.168.99.100:8000/";
+  }
 
-          <NavigationBar />
-          <div className="container mt-3 text-muted">
-            <Switch>
-              <Route exact path="/react">
-                <KeepAlive name="react">
+  // ex)URLJoin('http://www.google.com', 'a', undefined, '/b/cd', undifined, '?foo=123', '?bar=foo'); => 'http://www.google.com/a/b/cd/?foo=123&bar=foo' 
+  URLJoin = (...args) => {
+    args = args.filter(n => n !== undefined);
+    for (let i = args.length - 1; i >= 0; i--) {
+      if (args[i].startsWith('?')) continue;
+      if (!args[i].endsWith('/')) {
+        args[i] += '/';
+        break;
+      }
+    }
+    return args.join('/').replace(/[\/]+/g, '/').replace(/^(.+):\//, '$1://').replace(/^file:/, 'file:/').replace(/\/(\?|&|#[^!])/g, '$1').replace(/\?/g, '&').replace('&', '?')
+  }
+
+  render() {
+    return (
+      <div>
+        <BrowserRouter>
+          <Provider>
+
+            <NavigationBar URLJoin={this.URLJoin} baseURL={this.baseURL} />
+            <div className="container mt-3 text-muted">
+              <Switch>
+                <Route exact path="/react">
                   {/* <BlogListTemplate headlineTitle="ブログ一覧" /> */}
                   <div>testtest</div>
-                </KeepAlive>
-              </Route>
-              <Route exact path="/react/blogs/:groupID" render={({ match, location, history }) =>
-                <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} />}
-              />
-              <Route exact path="/react/blogs/:groupID/:ct" render={({ match, location, history }) =>
-                <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} />}
-              />
+                </Route>
+                <Route exact path="/react/blogs/:groupID" render={({ match, location, history }) =>
+                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} URLJoin={this.URLJoin} baseURL={this.baseURL} />}
+                />
+                <Route exact path="/react/blogs/:groupID/:ct" render={({ match, location, history }) =>
+                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} URLJoin={this.URLJoin} baseURL={this.baseURL} />}
+                />
 
-            </Switch>
-          </div>
+              </Switch>
+            </div>
 
-        </Provider>
-      </BrowserRouter>
-    </div>
-  );
+          </Provider>
+        </BrowserRouter>
+      </div>
+    );
+  }
 }
 
 export default App;

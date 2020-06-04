@@ -33,11 +33,6 @@ const CardTooltip = (props) => {
 
 class BlogCard extends React.Component {
   render() {
-    var thumbnail = this.props.thumbnail;
-    if (thumbnail == null) {
-      thumbnail = "/static/img/imageNotFound.jpg"
-    }
-
     return (
       <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3">
         <div className="otapick_card_back">
@@ -46,9 +41,8 @@ class BlogCard extends React.Component {
               <div className="l-thumbnail">
 
                 <a className="download-trigger" onClick={() => { this.props.history.push('/react/blogs/1/'); }}>
-                  {/* <a className="download-trigger" href=""> */}
                   <figure className="thumbnail-wrapper">
-                    <img className="card-img-top" src={thumbnail} style={{ borderRadius: "0" }} />
+                    <img className="card-img-top" src={this.props.thumbnail} style={{ borderRadius: "0" }} />
                   </figure>
                 </a>
                 <span className="more-button">
@@ -76,7 +70,6 @@ class BlogCard extends React.Component {
                   <Link to={`/react/blogs/${this.props.groupID}/${this.props.writerCt}`} className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.group}>
                     {this.props.writer}
                   </Link>
-                  {/* <a href="" className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.group}>{this.props.writer}</a> */}
                   <p className="card-text ml-3 small mb-2 pb-0 card-info">{this.props.postDate}</p>
                 </div>
 

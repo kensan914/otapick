@@ -55,15 +55,6 @@ class BlogListInfo extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    const sortButtonTitle = this.convertSortButtonTitle();
-    if (this.state.sortButtonTitle !== sortButtonTitle) {
-      this.setState({
-        sortButtonTitle: sortButtonTitle
-      });
-    };
-  }
-
   render() {
     var badgeStyle;
     if (this.props.group === "keyaki") badgeStyle = { backgroundColor: "rgba(50, 205, 50, 0.7)" };
@@ -71,18 +62,18 @@ class BlogListInfo extends React.Component {
 
     return (
       <div>
-        <div className="card my-4 otapick-card2">
+        <div className={"card otapick-card2 my-4 " + this.props.group}>
           <div className="card-body px-sm-5 py-4">
             <div className="row mx-2 justify-content-between">
               <h3>{this.state.title}</h3>
               <div className="row ml-2">
                 {this.props.narrowingKeyword &&
                   <span className="badge badge-success mr-2 badge-pill d-flex align-items-center"
-                    style={badgeStyle}>{this.props.narrowingKeyword}</span>
+                    style={badgeStyle}>"{this.props.narrowingKeyword}"</span>
                 }
-                {this.props.narrowingDate &&
+                {this.props.narrowingPost &&
                   <span className="badge badge-success mr-2 badge-pill d-flex align-items-center"
-                    style={badgeStyle}>{this.props.narrowingDate}</span>
+                    style={badgeStyle}>{this.props.narrowingPost}</span>
                 }
               </div>
             </div>
@@ -94,13 +85,13 @@ class BlogListInfo extends React.Component {
               <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
                 <div className="row justify-content-around">
                   <NarrowButton />
-                  <SortButton URLJoin={this.props.URLJoin} title={this.state.sortButtonTitle} />
+                  <SortButton title={this.state.sortButtonTitle} pushHistory={this.props.pushHistory} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <NarrowCard group={this.props.group} />
+        <NarrowCard group={this.props.group} pushHistory={this.props.pushHistory} />
       </div>
     );
   };

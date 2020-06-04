@@ -5,13 +5,7 @@ import re
 from config import settings
 from main.models import Blog
 from image.models import Image, Thumbnail
-from urllib3.exceptions import InsecureRequestWarning
-import urllib3
-from bs4 import BeautifulSoup
-
-from main.scripts.blogRegister.compresser import compress_img
-from main.scripts.blogRegister.parser import parse_blog
-import time
+import otapick
 
 
 class Command(BaseCommand):
@@ -44,7 +38,7 @@ class Command(BaseCommand):
                     thumbnail_path = os.path.join(settings.MEDIA_ROOT, thumbnail_m_path) # /www/var/otapick/media/blog_thumbnail/1_12/12345/kkk.jpg
                     os.makedirs(os.path.dirname(thumbnail_path), exist_ok=True)
                     shutil.copyfile(img0_path, thumbnail_path) # copy
-                    compress_img(thumbnail_path) # compress image
+                    otapick.ImageCompressor().edit(thumbnail_path) # compress image
                     Thumbnail.objects.create(picture=thumbnail_m_path, publisher=blog) # register thumbnail
                     print('「', blog.title, '」(' + blog.writer.full_kanji + ')のサムネイルを登録しました。')
 

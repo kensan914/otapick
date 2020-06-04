@@ -1,11 +1,11 @@
 from django.core.management.base import BaseCommand
-from main.scripts.initDB.groupListRegister import initGroup
-from main.scripts.initDB.memberListRegister import initMember
+import otapick
 
 
 class Command(BaseCommand):
-    help = 'Initialize database.'
+    help = 'Initialize database. member情報の変更の上書きにも対応しています。' \
+           'memberList.txtに変更を加え、コマンドを実行すれば、変更箇所だけDBに反映されます。'
 
     def handle(self, *args, **options):
-        initGroup()
-        initMember()
+        otapick.initGroup()
+        otapick.initMember()

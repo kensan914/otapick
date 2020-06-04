@@ -1,4 +1,3 @@
-import uuid
 from django.db import models
 
 
@@ -14,11 +13,15 @@ class Group(models.Model):
         return self.name
 
 
+def get_upload_to(instance, filename):
+    media_dir_1 = str(instance.belonging_group.group_id) + '_' + str(instance.ct)
+    return 'member_images/{0}/{1}'.format(media_dir_1, filename)
+
 class Member(models.Model):
     class Meta:
         db_table = 'member'
         unique_together = ('ct', 'belonging_group')
-        ordering = ['belonging_group', 'full_kana']
+        ordering = ['belonging_group', 'generation', 'full_kana']
 
     ct = models.CharField(verbose_name='ct', max_length=10)
     last_kanji = models.CharField(verbose_name='姓_漢', max_length=10)
@@ -32,6 +35,10 @@ class Member(models.Model):
     full_eng = models.CharField(verbose_name='氏名_英', max_length=50, default='')
     belonging_group = models.ForeignKey(Group, verbose_name='所属グループ', on_delete=models.PROTECT)
     graduate = models.BooleanField(verbose_name='卒業生', default=False)
+    independence = models.BooleanField(verbose_name='独立', default=True)
+    temporary = models.BooleanField(verbose_name='仮メンバー', default=False)
+    generation = models.IntegerField(verbose_name='期', default=1)
+    image = models.ImageField(verbose_name='宣材写真', upload_to=get_upload_to, null=True)
 
     def __str__(self):
         return self.full_kanji
