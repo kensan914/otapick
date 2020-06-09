@@ -110,7 +110,7 @@ class Command(BaseCommand):
 
         for new_post in new_posts[:4]:
             try:
-                media_path = new_post.thumbnail.picture.url
+                media_path = str(new_post.thumbnail.picture)
                 file_name = os.path.join(settings.MEDIA_ROOT, media_path)
                 file_names.append(file_name)
             except:
