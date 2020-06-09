@@ -1,3 +1,5 @@
+import os
+
 from django.core.management.base import BaseCommand
 import tweepy
 from datetime import date, timedelta, datetime
@@ -109,7 +111,7 @@ class Command(BaseCommand):
         for new_post in new_posts[:4]:
             try:
                 media_path = new_post.thumbnail.picture.url
-                file_name = settings.BASE_DIR + media_path
+                file_name = os.path.join(settings.MEDIA_ROOT, media_path)
                 file_names.append(file_name)
             except:
                 pass
