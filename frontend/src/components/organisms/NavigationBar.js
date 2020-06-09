@@ -7,33 +7,23 @@ import SearchDownshift from '../molecules/SearchDownshift'
 const NavigationBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  let hasAShadow = false;
 
+  const mounted = React.useRef(false)
   React.useEffect(() => {
-    window.addEventListener('scroll', event => watchCurrentPosition(), true)
-    return () => window.removeEventListener('scroll')
-  }, []);
-
-  const watchCurrentPosition = () => {
-    if (scrollTop() === 0 && hasAShadow) {
-      const navabar = document.getElementById("otapick-navbar")
-      navabar.style.transition = "0s";
-      navabar.classList.remove("shadow");
-      hasAShadow = false;
-    } else if (scrollTop() !== 0 && !hasAShadow) {
-      const navabar = document.getElementById("otapick-navbar")
-      navabar.style.transition = "0.3s";
-      navabar.classList.add("shadow");
-      hasAShadow = true;
+    if (mounted.current) {
+      if (props.isTop) {
+        const navabar = document.getElementById("otapick-navbar")
+        navabar.style.transition = "0s";
+        navabar.classList.remove("shadow");
+      } else {
+        const navabar = document.getElementById("otapick-navbar")
+        navabar.style.transition = "0.3s";
+        navabar.classList.add("shadow");
+      }
+    } else {
+      mounted.current = true
     }
-  }
-
-  const scrollTop = () => {
-    return Math.max(
-      window.pageYOffset,
-      document.documentElement.scrollTop,
-      document.body.scrollTop);
-  }
+  }, [props.isTop])
 
   return (
     <Navbar color="light" light expand="lg" className="static-top fixed-top border-bottom"

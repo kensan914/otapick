@@ -1231,20 +1231,33 @@ a.hinata {
 #downshift-box {
     width: 370px;
 }
+
 @media (min-width: 576px) {
-    #downshift-box { width: 535px; }
+    #downshift-box {
+        width: 535px;
+    }
 }
+
 @media (min-width: 768px) {
-    #downshift-box { width: 700px; }
+    #downshift-box {
+        width: 700px;
+    }
 }
+
 @media (min-width: 992px) {
-    #downshift-box { width: 535px; }
+    #downshift-box {
+        width: 535px;
+    }
 }
+
 @media (min-width: 1200px) {
-    #downshift-box { width: 700px; }
+    #downshift-box {
+        width: 700px;
+    }
 }
 
 /* lockScreen */
+
 #lock-screen-wrapper {
     z-index: 999;
     position: fixed;
@@ -1254,4 +1267,37 @@ a.hinata {
     bottom: 0px;
     background-color: rgb(0, 0, 0);
     opacity: 0.5;
+}
+
+/* otapick-totop-button */
+
+.otapick-totop-button {
+    width: 4rem;
+    height: 4rem;
+    position: fixed;
+    bottom: 3rem;
+    right: 3rem;
+    z-index: 100;
+    opacity: 0;
+    animation: 0.8s fadeIn forwards;
+}
+.otapick-totop-button.keyaki {
+    background-color: #66BB6A;
+}
+.otapick-totop-button.keyaki:hover {
+    background-color: #4CAF50;
+}
+.otapick-totop-buttonjm.hinata {
+    background-color: #64B5F6;
+}
+.otapick-totop-button.hinata:hover {
+    background-color: #03A9F4;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1.0; }
+}
+.otapick-totop-button-mobile {
+    width: 3rem;
+    height: 3rem;
 }

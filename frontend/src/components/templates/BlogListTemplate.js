@@ -4,13 +4,14 @@ import BlogList from '../organisms/BlogList';
 import Headline from '../molecules/Headline';
 import queryString from 'query-string';
 import { KeepAlive } from 'react-keep-alive';
+import ToTopButton from "../atoms/ToTopButton";
 
 
 class BlogListTemplate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      group: this.getGroup(this.props.match.params.groupID),
+      group: this.props.getGroup(this.props.match.params.groupID),
       orderFormat: "newer_post",
       narrowingKeyword: "",
       narrowingPost: "",
@@ -20,12 +21,6 @@ class BlogListTemplate extends React.Component {
       keepAliveNameInfo: this.addStrInfo(props.location.key),
     }
   };
-
-  getGroup(groupID) {
-    var group = "keyaki";
-    if (groupID == 2) group = "hinata";
-    return group;
-  }
 
   addStrInfo = (str) => str + "Info"
 
@@ -141,6 +136,7 @@ class BlogListTemplate extends React.Component {
           <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
             narrowingPost={this.state.narrowingPost} URLJoin={this.props.URLJoin} baseURL={this.props.baseURL} location={this.props.location} history={this.props.history} />
         </KeepAlive>
+        {!this.props.isTop && <ToTopButton group={this.state.group} />}
       </>
     );
   };
