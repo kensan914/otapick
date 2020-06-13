@@ -3,13 +3,15 @@ import NarrowButton from '../atoms/NarrowButton';
 import SortButton from '../atoms/SortButton';
 import NarrowCard from './NarrowCard';
 import axios from 'axios';
+import { URLJoin } from '../tools/support';
+import { withRouter } from 'react-router-dom';
 
 
 class BlogListInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: " ",
+      title: "",
       numOfHit: 0,
       sortButtonTitle: this.convertSortButtonTitle()
     }
@@ -18,7 +20,7 @@ class BlogListInfo extends React.Component {
 
   setBlogListInfo(groupID, ct) {
     const queryParams = this.props.location.search;
-    const url = this.props.URLJoin(this.props.baseURL, "api/blogs/info/", groupID, ct, queryParams);
+    const url = URLJoin(this.props.baseURL, "api/blogs/info/", groupID, ct, queryParams);
     console.log('info', url);
 
     setTimeout(() => {
@@ -65,7 +67,7 @@ class BlogListInfo extends React.Component {
         <div className={"card otapick-card2 my-4 " + this.props.group}>
           <div className="card-body px-sm-5 py-4">
             <div className="row mx-2 justify-content-between">
-              <h3>{this.state.title}</h3>
+              <h3 className="my-auto d-flex align-items-center">{!this.state.title ? "\u00A0" : this.state.title}</h3>
               <div className="row ml-2">
                 {this.props.narrowingKeyword &&
                   <span className="badge badge-success mr-2 badge-pill d-flex align-items-center"
@@ -97,4 +99,4 @@ class BlogListInfo extends React.Component {
   };
 };
 
-export default BlogListInfo;
+export default withRouter(BlogListInfo);

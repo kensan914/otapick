@@ -1,5 +1,5 @@
 body {
-    font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ', 'Helvetica Neue', Helvetica, Arial, sans-serif
+    font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ', 'Helvetica Neue', Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif,;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -397,9 +397,7 @@ footer.footer {
     }
 }
 
-    {
-    #autocomplete design#
-}
+/* autocomplete design */
 
 /* 各リスト項目のパディング設定 */
 
@@ -637,12 +635,9 @@ body {
     letter-spacing: .03em;
 }
 
-    {
-    #h1, h2, h3, h4, h5 {
-        font-family: 'Noto Sans JP', sans-serif;
-    }
-    #
-}
+/* h1, h2, h3, h4, h5 {
+    font-family: 'Noto Sans JP', sans-serif;
+} */
 
 /* introimage */
 
@@ -1013,9 +1008,7 @@ a.hinata {
     color: deepskyblue;
 }
 
-    {
-    #gradient-button#
-}
+/* gradient-button */
 
 .gradient-btn {
     font-size: 18px;
@@ -1105,9 +1098,7 @@ a.hinata {
     align-items: center;
 }
 
-    {
-    #image-back-button#
-}
+/* image-back-button */
 
 .otapick-back-button {
     width: 3rem;
@@ -1124,16 +1115,20 @@ a.hinata {
 .otapick-card2 {
     border-radius: 3rem;
     border-color: whitesmoke;
-    /* box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2); */
+    box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2);
 }
 
 .otapick-card2-mobile {
     border-radius: 2rem;
     border-color: whitesmoke;
-    /* box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2); */
+    box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2);
 }
 
-.otapick-card2::before {
+.otapick-card2.keyaki, .otapick-card2.hinata, .otapick-card2-mobile.keyaki, .otapick-card2-mobile.hinata {
+    box-shadow: none;
+}
+
+.otapick-card2.keyaki::before, .otapick-card2.hinata::before {
     content: "";
     height: 100%;
     width: 100%;
@@ -1142,29 +1137,11 @@ a.hinata {
     bottom: -4px;
     right: -4px;
     z-index: -1;
-    opacity: .8;
-    /* filter: blur(2px); */
-    /* background-color: #8eeeff; */
-    box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2);
-}
-
-.otapick-card2>.card-body::before {
-    content: "";
-    height: 100%;
-    width: 100%;
-    border-radius: 3rem;
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    z-index: -1;
-    opacity: .8;
-    /* filter: blur(3px); */
-    background-color: #eeeeee;
-    box-shadow: 0 3px 8px 2px rgba(128, 128, 128, 0.2);
+    box-shadow: -1px -1px 10px 4px rgba(128, 128, 128, 0.2);
 }
 
 .otapick-card2.keyaki::before {
-    background-image: linear-gradient(to right, #91fd9a 50%, #d185fd 100%);
+    background-image: linear-gradient(to right, #65f671 50%, #d185fd 100%);
 }
 
 .otapick-card2.hinata::before {
@@ -1193,7 +1170,7 @@ a.hinata {
 /* navbar-brand */
 
 .navbar-brand {
-    background: url(/static/img/otapick.png?20200417_2) no-repeat left center;
+    background: url('/static/img/otapick.png?20200417_2') no-repeat left center;
     background-size: contain;
     height: 50px;
     width: 170px;
@@ -1281,23 +1258,238 @@ a.hinata {
     opacity: 0;
     animation: 0.8s fadeIn forwards;
 }
+
 .otapick-totop-button.keyaki {
-    background-color: #66BB6A;
+    background-color: #9CCC65;
 }
+
 .otapick-totop-button.keyaki:hover {
-    background-color: #4CAF50;
+    background-color: #8BC34A;
 }
-.otapick-totop-buttonjm.hinata {
-    background-color: #64B5F6;
+
+.otapick-totop-button.hinata {
+    background-color: #29B6F6;
 }
+
 .otapick-totop-button.hinata:hover {
     background-color: #03A9F4;
 }
+
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1.0; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1.0;
+    }
 }
+
 .otapick-totop-button-mobile {
     width: 3rem;
     height: 3rem;
+}
+
+/* footerを下に固定 */
+
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* member card */
+
+.member-card, .member-card-header {
+    position: relative;
+}
+
+.member-card-overlay {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: calc(100% + 40px);
+    width: calc(100% + 40px);
+    margin: -20px;
+    position: absolute;
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    filter: blur(10px);
+    z-index: -1;
+}
+
+.member-card.keyaki .member-card-overlay {
+    background-color: #97ffa0;
+}
+
+.member-card.hinata .member-card-overlay {
+    background-color: #8eeeff;
+}
+
+.member-card {
+    box-shadow: 0 0 8px 2px rgba(128, 128, 128, 0.2);
+    border-radius: 2rem;
+    max-width: 250px;
+}
+
+.member-card-header {
+    color: #FFF;
+    height: 300px;
+    max-height: 300px;
+    left: 0;
+    text-align: center;
+    top: 0;
+    width: inherit;
+    cursor: pointer;
+    border-radius: 2rem 2rem 0 0;
+    overflow: hidden;
+}
+
+.member-card.keyaki .member-card-header {
+    /* background: #00ff1570; */
+    background: -moz-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #97ffa0c0 65%, #e8bcffe0 85%);
+    background: -webkit-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #97ffa0c0 65%, #e8bcffe0 85%);
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.45) 40%, #97ffa0c0 65%, #e8bcffe0 85%);
+}
+
+.member-card.hinata .member-card-header {
+    /* background: #00d9ff70; */
+    background: -moz-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #8eeeffc0 65%, #e0abffe0 90%);
+    background: -webkit-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #8eeeffc0 65%, #e0abffe0 90%);
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.45) 40%, #8eeeffc0 65%, #e0abffe0 90%);
+}
+
+.member-card.keyaki .member-card-header:hover {
+    /* background: #00c01070; */
+    background: -moz-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #79cc80c0 65%, #b392c5e0 85%);
+    background: -webkit-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #79cc80c0 65%, #b392c5e0 85%);
+    background: linear-gradient(150deg, rgba(200, 200, 200, 0.45) 40%, #79cc80c0 65%, #b392c5e0 85%);
+}
+
+.member-card.hinata .member-card-header:hover {
+    /* background: #009eb970; */
+    background: -moz-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #6ab2bea0 65%, #b187c9e0 90%);
+    background: -webkit-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #6ab2bea0 65%, #b187c9e0 90%);
+    background: linear-gradient(150deg, rgba(200, 200, 200, 0.45) 40%, #6ab2bea0 65%, #b187c9e0 90%);
+}
+
+/* ↓↓↓　アイコンの周りの円 */
+
+/* .member-card-header:before {
+    border-radius: 100%;
+    content: "";
+    height: 120px;
+    width: 120px;
+    left: 0;
+    margin: 50px auto;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+    -webkit-transform: scale(1.24, 1.24);
+    -moz-transform: scale(1.24, 1.24);
+    transform: scale(1.24, 1.24);
+} */
+
+/* .member-card.keyaki .member-card-header:before {
+    border: 2px solid #d185fd60;
+}
+.member-card.hinata .member-card-header:before {
+    border: 2px solid #d185fd60;
+} */
+
+.member-card-header img {
+    border-radius: 100%;
+    height: 140px;
+    width: 140px;
+    margin: 40px auto;
+    object-fit: cover;
+    box-shadow: 0 .1rem .25rem rgba(0,0,0,.075);
+}
+
+.member-card.keyaki .member-card-header img {
+    /* border: 5px solid #65f671; */
+    border: 3px solid rgb(250, 250, 250);
+}
+
+.member-card.hinata .member-card-header img {
+    /* border: 5px solid #8eeeff; */
+    border: 3px solid rgb(250, 250, 250);
+}
+
+.member-card-body {
+    text-align: center;
+    overflow: visible;
+}
+
+.waves {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0);
+    width: 100%;
+    height: 40px;
+    top: 260px;
+    /* ↑↑↑ 300px(親要素のheight) - 40px(waves自身のheight) */
+}
+
+/* end of member card */
+
+/* group-select-button */
+
+#keyaki-group-select-button, #hinata-group-select-button {
+    /* border: 1px solid gainsboro!important; */
+    border: 0;
+    background-color: rgba(255, 255, 255, 0)!important;
+    color: gray;
+    transition-duration: 0s!important;
+    height: 3rem;
+}
+
+#keyaki-group-select-button {
+    /* border-radius: 2rem 0 0 2rem!important; */
+}
+
+#hinata-group-select-button {
+    /* border-radius: 0 2rem 2rem 0!important; */
+}
+
+#keyaki-group-select-button:hover {
+    background-color: whitesmoke!important;
+}
+
+#hinata-group-select-button:hover {
+    background-color: whitesmoke!important;
+}
+
+#keyaki-group-select-button.active {
+    background-color: #4be057!important;
+    color: white;
+}
+
+#hinata-group-select-button.active {
+    background-color: #5de7ff!important;
+    color: white;
+}
+
+/* dropdown-item's active color */
+
+.dropdown-item:active {
+    background-color: silver!important;
+}
+
+.dropdown-item:focus {
+    outline: 0!important;
+}
+
+.otapick-hidden-button {
+    width: 3rem;
+    height: 3rem;
+    background-color: rgba(255, 255, 255, 0);
+    transition-duration: 0s!important;
+}
+.otapick-hidden-button:hover {
+    background-color: whitesmoke;
 }

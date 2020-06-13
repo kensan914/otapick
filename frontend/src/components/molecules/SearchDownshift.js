@@ -1,6 +1,9 @@
 import React from 'react';
 import Downshift from 'downshift';
 import axios from 'axios';
+import { URLJoin } from '../tools/support';
+import { NotFoundBlogs, NotFoundMembers } from '../atoms/NotFound';
+import { withRouter } from 'react-router-dom';
 
 
 class SearchDownshift extends React.Component {
@@ -23,7 +26,7 @@ class SearchDownshift extends React.Component {
   }
 
   setInitSearchSuggestions() {
-    const url = this.props.URLJoin(this.props.baseURL, "api/searchSuggestions/init/");
+    const url = URLJoin(this.props.baseURL, "api/searchSuggestions/init/");
     setTimeout(() => {
       axios
         .get(url)
@@ -54,7 +57,7 @@ class SearchDownshift extends React.Component {
   }
 
   setSearchSuggestions() {
-    const url = this.props.URLJoin(this.props.baseURL, "api/searchSuggestions/");
+    const url = URLJoin(this.props.baseURL, "api/searchSuggestions/");
     setTimeout(() => {
       axios
         .get(url, { params: { q: this.state.qvalue } })
@@ -134,6 +137,14 @@ class SearchDownshift extends React.Component {
     });
   }
 
+  // 画面遷移時などに。初期状態に戻す。
+  resetAll = () => {
+    this.resetInitSearchSuggestions();
+    this.resetSearchSuggestions();
+    this.setState({ qvalue: "" });
+    this.searchInputRef.current.blur();
+  }
+
   lockScreen = () => {
     if (document.getElementById("lock-screen-wrapper") === null) {
       let lockScreenWrapper = document.createElement("div");
@@ -142,8 +153,15 @@ class SearchDownshift extends React.Component {
     }
   }
   unLockScreen = () => {
-    const lockScreenWrapper = document.getElementById("lock-screen-wrapper")
+    const lockScreenWrapper = document.getElementById("lock-screen-wrapper");
     if (lockScreenWrapper !== null) lockScreenWrapper.remove();
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.state.qvalue) {
+      this.props.history.push('/search/?q=' + encodeURIComponent(this.state.qvalue));
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -167,6 +185,12 @@ class SearchDownshift extends React.Component {
     else if (!this.state.isOpenInit && !this.state.isOpen && (prevState.isOpenInit || prevState.isOpen)) {
       this.unLockScreen();
     }
+
+    // 画面遷移したとき
+    if (this.props.location !== prevProps.location) {
+      this.resetAll();
+      this.props.resetNavBar();
+    }
   }
 
   render() {
@@ -175,40 +199,16 @@ class SearchDownshift extends React.Component {
     if (this.state.suggestionsType === "url") {
       suggestionsMessage = this.state.suggestionsStatus === "success"
         ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>有効なURLです。以下のブログが検出されました。</div>
-        : <>
-          <div className="alert alert-danger" role="alert" style={suggestionsMessageStyle}>このURLは有効ではありません。入力されたURLのページからブログが見つかりませんでした。</div>
-          <div className="mx-2">
-            <p>入力されたURLのページにブログ情報が含まれているか、今一度ご確認ください。</p>
-            <p>現在、<a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46公式ブログ</a>と<a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46公式ブログ</a>以外のサイトはサポートされておりません。ご了承ください。</p>
-            <hr />
-            <p>入力例1）https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000</p>
-            <p>入力例2）https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000</p>
-          </div>
-        </>
+        : <NotFoundBlogs />
     } else if (this.state.suggestionsType === "member") {
       suggestionsMessage = this.state.suggestionsStatus === "success"
         ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>以下のメンバーが見つかりました。</div>
-        : <>
-          <div className="alert alert-danger" role="alert" style={suggestionsMessageStyle}>該当するメンバーが見つかりませんでした。</div>
-          <div className="mx-2">
-            <p>入力された文字列に間違いがないか、以下を参考に今一度ご確認ください。</p>
-            <p><i class="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
-            <p><i class="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
-            <p><i class="fas fa-hand-point-right" />メンバーリストにお探しのメンバーがいるか確認してください。</p>
-            <hr />
-            <p>入力例1）平手友梨奈</p>
-            <p>入力例2）わたなべ</p>
-          </div>
-        </>
+        : <NotFoundMembers />
     }
 
     return (
       <Downshift
         onChange={selection => {
-          this.resetInitSearchSuggestions();
-          this.resetSearchSuggestions();
-          this.setState({ qvalue: "" });
-          this.searchInputRef.current.blur();
           this.props.history.push(selection.url);
         }}
         onInputValueChange={(inputValue) => {
@@ -224,9 +224,9 @@ class SearchDownshift extends React.Component {
           selectedItem,
         }) => (
             <div className="mt-3 mb-2 my-lg-0 justify-content-center col">
-              <form className="form-inline" autoComplete="off">
+              <form className="form-inline" autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
                 <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="Search" value={this.state.qvalue}
-                  aria-label="Search" name="q" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef}></input>
+                  aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxlength='100'></input>
               </form>
 
               <div {...getMenuProps()} style={{ "position": "absolute" }} id="downshift-box">
@@ -235,8 +235,8 @@ class SearchDownshift extends React.Component {
                     style={{ overflowY: "auto", overflowX: "hidden" }}>
                     <div className="mt-3 mb-4">
                       <h5>検索方法</h5>
-                      <p className="mx-2"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>からブログを検索いただけます。</p>
-                      <hr className="mb-0"/>
+                      <p className="mx-2"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>を入力してください。</p>
+                      <hr className="mb-0" />
                       <h5 className="my-2">メンバー</h5>
                       <div className="row mx-1">
                         {
@@ -265,7 +265,7 @@ class SearchDownshift extends React.Component {
                             ))
                         }
                       </div>
-                      <hr className="mb-0"/>
+                      <hr className="mb-0" />
                       <h5 className="my-2">新着・人気ブログ</h5>
                       <div className="row mx-1">
                         {
@@ -341,4 +341,4 @@ class SearchDownshift extends React.Component {
   };
 };
 
-export default SearchDownshift;
+export default withRouter(SearchDownshift);

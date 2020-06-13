@@ -5,13 +5,14 @@ import Headline from '../molecules/Headline';
 import queryString from 'query-string';
 import { KeepAlive } from 'react-keep-alive';
 import ToTopButton from "../atoms/ToTopButton";
+import { URLJoin, getGroup } from '../tools/support';
 
 
 class BlogListTemplate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      group: this.props.getGroup(this.props.match.params.groupID),
+      group: getGroup(this.props.match.params.groupID),
       orderFormat: "newer_post",
       narrowingKeyword: "",
       narrowingPost: "",
@@ -33,7 +34,7 @@ class BlogListTemplate extends React.Component {
       if (index == 0) queryParams += `?${qsKey}=${queryParamsHash[qsKey]}`;
       else queryParams += `&${qsKey}=${queryParamsHash[qsKey]}`;
     })
-    this.props.history.push(this.props.URLJoin(this.props.match.url, queryParams));
+    this.props.history.push(URLJoin(this.props.match.url, queryParams));
   }
 
   componentDidMount() {
@@ -54,7 +55,7 @@ class BlogListTemplate extends React.Component {
         this.setState({
           groupID: groupID,
           ct: ct,
-          group: this.getGroup(groupID),
+          group: getGroup(groupID),
           keepAliveName: this.props.location.key,
           keepAliveNameInfo: this.addStrInfo(this.props.location.key),
           orderFormat: "newer_post",
@@ -69,7 +70,7 @@ class BlogListTemplate extends React.Component {
         this.setState({
           groupID: groupID,
           ct: ct,
-          group: this.getGroup(groupID),
+          group: getGroup(groupID),
           keepAliveName: this.props.location.key,
           keepAliveNameInfo: this.addStrInfo(this.props.location.key),
           orderFormat: "newer_post",
@@ -114,7 +115,10 @@ class BlogListTemplate extends React.Component {
         keepAliveNameInfo: this.addStrInfo(this.props.location.key),
       });
     }
-    if (Object.keys(willChangeState).length > 2) { this.setState(willChangeState); return; }
+    if (Object.keys(willChangeState).length > 2) {
+      this.setState(willChangeState);
+      return;
+    }
 
     // When the same link
     if (prevProps.location.key !== this.props.location.key) {
@@ -130,11 +134,11 @@ class BlogListTemplate extends React.Component {
         <Headline title={this.props.headlineTitle} />
         <KeepAlive name={this.state.keepAliveNameInfo}>
           <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} URLJoin={this.props.URLJoin} baseURL={this.props.baseURL} location={this.props.location} pushHistory={(qs) => this.pushHistory(qs)} />
+            narrowingPost={this.state.narrowingPost} baseURL={this.props.baseURL} pushHistory={(qs) => this.pushHistory(qs)} />
         </KeepAlive>
         <KeepAlive name={this.state.keepAliveName}>
           <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} URLJoin={this.props.URLJoin} baseURL={this.props.baseURL} location={this.props.location} history={this.props.history} />
+            narrowingPost={this.state.narrowingPost} baseURL={this.props.baseURL} />
         </KeepAlive>
         {!this.props.isTop && <ToTopButton group={this.state.group} />}
       </>

@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
-import { withRouter } from 'react-router';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import { Link } from 'react-router-dom';
 import SearchDownshift from '../molecules/SearchDownshift'
 
 
 const NavigationBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownToggle = () => setDropdownOpen(prevState => !prevState);
+  const [dropdownOpen2, setDropdownOpen2] = useState(false);
+  const dropdownToggle2 = () => setDropdownOpen2(prevState => !prevState);
 
   const mounted = React.useRef(false)
   React.useEffect(() => {
@@ -25,28 +30,34 @@ const NavigationBar = (props) => {
     }
   }, [props.isTop])
 
+  const resetNavBar = () => {
+    document.getElementById("otapick-navbar-collapse").classList.remove("show");
+    setDropdownOpen(false);
+    setDropdownOpen2(false);
+  }
+
   return (
     <Navbar color="light" light expand="lg" className="static-top fixed-top border-bottom"
       id="otapick-navbar" style={{ transitionTimingFunction: "ease-out" }}>
       <NavbarBrand href="/"></NavbarBrand>
       <NavbarToggler onClick={toggle} />
 
-      <Collapse isOpen={isOpen} navbar>
-        <SearchDownshift URLJoin={props.URLJoin} baseURL={props.baseURL} history={props.history} />
+      <Collapse isOpen={isOpen} navbar id="otapick-navbar-collapse">
+        <SearchDownshift baseURL={props.baseURL} resetNavBar={() => resetNavBar()} />
         <Nav className="mx-4 mx-lg-0" navbar>
-          <UncontrolledDropdown nav inNavbar id="nav-dropdown1" className="mr-3">
+          <Dropdown nav inNavbar id="nav-dropdown-blogs" className="mr-3" isOpen={dropdownOpen} toggle={dropdownToggle}>
             <DropdownToggle nav caret>
               ブログ一覧
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem onClick={() => props.history.push('/react/blogs/1')}>欅坂46</DropdownItem>
-              <DropdownItem onClick={() => props.history.push('/react/blogs/2')}>日向坂46</DropdownItem>
-              <DropdownItem onClick={() => props.history.push('/react/blogs/2/2')}>新着ブログ</DropdownItem>
-              <DropdownItem onClick={() => props.history.push('/react/blogs/1/13')}>人気ブログ</DropdownItem>
-              <DropdownItem onClick={() => props.history.push('/react/blogs/2/13')}>メンバーリスト</DropdownItem>
+              <DropdownItem tag={Link} to="/blogs/1">欅坂46</DropdownItem>
+              <DropdownItem tag={Link} to="/blogs/2">日向坂46</DropdownItem>
+              <DropdownItem tag={Link} to="/blogs/2/2">新着ブログ</DropdownItem>
+              <DropdownItem tag={Link} to="/blogs/1/13">人気ブログ</DropdownItem>
+              <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
             </DropdownMenu>
-          </UncontrolledDropdown>
-          <UncontrolledDropdown nav inNavbar id="nav-dropdown2" className="mr-3">
+          </Dropdown>
+          <Dropdown nav inNavbar id="nav-dropdown-official" className="mr-3" isOpen={dropdownOpen2} toggle={dropdownToggle2}>
             <DropdownToggle nav caret>
               公式
             </DropdownToggle>
@@ -58,7 +69,7 @@ const NavigationBar = (props) => {
                 日向坂46公式ブログ<i className="fas fa-external-link-alt" />
               </DropdownItem>
             </DropdownMenu>
-          </UncontrolledDropdown>
+          </Dropdown>
           <NavItem><NavLink href="/#howto" className="mr-3">つかい方</NavLink></NavItem>
           <NavItem><NavLink href="/support/" className="mr-0">サポート</NavLink></NavItem>
         </Nav>
@@ -67,4 +78,4 @@ const NavigationBar = (props) => {
   );
 };
 
-export default withRouter(NavigationBar);
+export default NavigationBar;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router';
 
 
 class ToTopButton extends React.Component {
@@ -24,4 +23,4 @@ class ToTopButton extends React.Component {
   };
 };
 
-export default withRouter(ToTopButton);
+export default ToTopButton;

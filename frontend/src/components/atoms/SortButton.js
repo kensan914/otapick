@@ -1,6 +1,5 @@
 import React from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { withRouter } from 'react-router';
 
 
 class SortButton extends React.Component {
@@ -24,4 +23,4 @@ class SortButton extends React.Component {
   };
 };
 
-export default withRouter(SortButton);
+export default SortButton;

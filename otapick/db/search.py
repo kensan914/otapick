@@ -39,10 +39,12 @@ def search_blogs_by_dy(origin_blogs, dy):
 
 
 def search_members(q_info):
+    # 全角⇒半角
+    cleaned_text = q_info['text'].translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
     members =  Member.objects.filter(
-        Q(full_kana__iregex=r'^%s' % q_info['text']) | Q(first_kana__iregex=r'^%s' % q_info['text']) |
-        Q(full_kanji__iregex=r'^%s' % q_info['text']) | Q(first_kanji__iregex=r'^%s' % q_info['text']) |
-        Q(full_eng__iregex=r'^%s' % q_info['text']) | Q(first_eng__iregex=r'^%s' % q_info['text'])
+        Q(full_kana__iregex=r'^%s' % cleaned_text) | Q(first_kana__iregex=r'^%s' % cleaned_text) |
+        Q(full_kanji__iregex=r'^%s' % cleaned_text) | Q(first_kanji__iregex=r'^%s' % cleaned_text) |
+        Q(full_eng__iregex=r'^%s' % cleaned_text) | Q(first_eng__iregex=r'^%s' % cleaned_text)
     )
     if members.exists(): return members
     else: return

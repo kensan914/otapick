@@ -4,6 +4,8 @@ import Loader from '../atoms/Loader';
 import Masonry from 'react-masonry-component';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
+import { URLJoin } from '../tools/support';
+import { withRouter } from 'react-router-dom';
 
 
 class BlogList extends React.Component {
@@ -18,7 +20,7 @@ class BlogList extends React.Component {
 
   setBlogList(page) {
     console.log('スタートsetBlogList, ' + page);
-    const url = this.props.URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct);
+    const url = URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct);
     console.log('blogs', url);
 
     setTimeout(() => {
@@ -32,15 +34,23 @@ class BlogList extends React.Component {
                 title: blog.title,
                 postDate: blog.post_date,
                 writer: blog.writer,
-                writerCt: blog.writer_ct,
                 numOfViews: blog.num_of_views,
                 numOfDownloads: blog.num_of_downloads,
                 thumbnail: blog.thumbnail,
+                url: blog.url,
+                officialUrl: blog.official_url,
               })
             );
-            this.setState(state => ({
-              blogs: state.blogs.concat(newBlogs),
-            }));
+            if (res.data.length < 20) {
+              this.setState(state => ({
+                blogs: state.blogs.concat(newBlogs),
+                hasMore: false,
+              }));
+            } else {
+              this.setState(state => ({
+                blogs: state.blogs.concat(newBlogs),
+              }));
+            }
           } else {
             this.setState({ hasMore: false });
           }
@@ -53,13 +63,6 @@ class BlogList extends React.Component {
         )
     }, 2000);
   };
-
-  componentDidMount() {
-    console.log('マウント');
-  }
-
-  componentDidUpdate() {
-  }
 
   render() {
     const options = {
@@ -75,11 +78,14 @@ class BlogList extends React.Component {
         loadMore={this.setBlogList}
         initialLoad={true}
         loader={<Loader />}
+        className="mb-5"
       >
         <Masonry options={options}>
           {
-            this.state.blogs.map(({ blogCt, title, postDate, writer, writerCt, numOfViews, numOfDownloads, thumbnail }, i) => (
-              <BlogCard key={i} id={i} groupID={this.props.groupID} group={this.props.group} blogCt={blogCt} thumbnail={thumbnail} title={title} writer={writer} writerCt={writerCt} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} />
+            this.state.blogs.map(({ blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
+              <BlogCard key={i} id={i} groupID={this.props.groupID} group={this.props.group} blogCt={blogCt} thumbnail={thumbnail}
+                title={title} writer={writer} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} url={url}
+                officialUrl={officialUrl} />
             ))
           }
         </Masonry>
@@ -89,4 +95,4 @@ class BlogList extends React.Component {
 };
 
 
-export default BlogList;
+export default withRouter(BlogList);

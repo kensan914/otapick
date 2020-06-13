@@ -1,25 +1,39 @@
-from django.shortcuts import get_object_or_404
+import urllib.parse
 from rest_framework import status, views
 from rest_framework.response import Response
 from api.serializers import *
+from config import settings
 from main.models import Member, Blog
 import otapick
 
 
-class MemberRetrieveAPIView(views.APIView):
-    def get(self, request, group_id, ct, *args, **kwargs):
-        member = get_object_or_404(Member, belonging_group__group_id=group_id, ct=ct)
-        serializer = MemberSerializer(instance=member)
-        return Response(serializer.data, status.HTTP_200_OK)
-
-memberRetrieveAPIView = MemberRetrieveAPIView.as_view()
-
-
+# {'keyaki': [[1期生], [2期生]], 'hinata': [[1期生], [2期生], [3期生]]} ☚今後、メンバーが増えてもこのクラスをいじる必要はない
 class MemberListAPIView(views.APIView):
-    def get(self, request, group_id, *args, **kwargs):
-        members = Member.objects.filter(belonging_group__group_id=group_id)
-        serializer = MemberSerializer(members, many=True)
-        return Response(serializer.data, status.HTTP_200_OK)
+    def generate_member_list(self, members): # generate member list separated by its generation.
+        member_dict = {}  # key is its generation.
+        for member in members:
+            if not str(member.generation) in member_dict: member_dict[str(member.generation)] = []
+            member_dict[str(member.generation)].append(member)
+        sorted_members = sorted(member_dict.items())  # [('1', [<石森>, <今泉>,...]), ('2', [<井上>, <遠藤>,...])]
+        member_list = [member_tuple[1] for member_tuple in sorted_members]  # [[<石森>, <今泉>,...], [<井上>, <遠藤>,...]]
+        return member_list
+
+    def get(self, request, *args, **kwargs):
+        keyaki_members = Member.objects.filter(belonging_group__group_id=1).exclude(generation=0)
+        keyaki_member_list = self.generate_member_list(keyaki_members)
+        for i, target in enumerate(keyaki_member_list):
+            keyaki_member_list[i] = MemberSerializer(target, many=True).data
+
+        hinata_members = Member.objects.filter(belonging_group__group_id=2).exclude(generation=0)
+        hinata_member_list = self.generate_member_list(hinata_members)
+        for i, target in enumerate(hinata_member_list):
+            hinata_member_list[i] = MemberSerializer(target, many=True).data
+
+        data = {
+            'keyaki': keyaki_member_list,
+            'hinata': hinata_member_list,
+        }
+        return Response(data, status.HTTP_200_OK)
 
 memberListAPIView = MemberListAPIView.as_view()
 
@@ -61,17 +75,26 @@ class BlogListInfoAPIView(views.APIView):
 blogListInfoAPIView = BlogListInfoAPIView.as_view()
 
 
-class SearchSuggestionsAPIView(views.APIView):
+class SearchAPIView(views.APIView):
     paginate_by = 20
-    query_set_length = 11
+    q = ''
 
-    # TODO
-    # mobileの実装次第でquery_setの制限は実装しないかも。
+    def serialize_blogs(self, blogs):
+        # TODO デプロイ時、直す
+        if settings.DEBUG:
+            return BlogSerializer(blogs, many=True).data
+        else:
+            return BlogSerializerVerOrderly(blogs, many=True).data
+
+        # return BlogSerializerVerOrderly(blogs, many=True).data
+
+    def serialize_members(self, members):
+        return MemberSerializer(members, many=True).data
 
     def get(self, request, *args, **kwargs):
-        q = self.request.GET.get('q')
-        if q:
-            result = otapick.parse_q(q)
+        self.q = self.request.GET.get('q')
+        if self.q:
+            result = otapick.parse_q(self.q)
             if result['type'] == 'url':
                 if result['class'] != 'unjust':
                     blogs = otapick.search_blogs(result)
@@ -82,17 +105,23 @@ class SearchSuggestionsAPIView(views.APIView):
                             elif result['group_id'] == 2:
                                 self.paginate_by = 12
                         blogs = blogs[self.paginate_by * ( result['page'] - 1 ): self.paginate_by * result['page']]
+                        blogs_data = self.serialize_blogs(blogs)
 
-                        ### query_setの制限 ###
-                        if len(blogs) > self.query_set_length:
-                            blogs = blogs[:self.query_set_length]
-                            blogs_data = BlogSerializerVerSS(blogs, many=True).data
-                            blogs_data.append(otapick.generate_watch_more('/react/search?q=' + q))
-                        else:
-                            blogs_data = BlogSerializerVerSS(blogs, many=True).data
-                        ### query_setの制限 ###
-
-                        return Response({'status': 'success', 'type': 'url', 'items': blogs_data}, status.HTTP_200_OK)
+                        if result['class'] == 'searchByLatest': title = '欅坂46 最新ブログ' if result['group_id'] == 1 else '日向坂46 最新ブログ'
+                        elif result['class'] == 'searchByMembers':
+                            try: title = Member.objects.get(belonging_group__group_id=result['group_id'], ct=result['ct']).full_kanji
+                            except : title = ''
+                        elif result['class'] == 'searchByBlogs': title = '欅坂46' if result['group_id'] == 1 else '日向坂46'
+                        else: title = ''
+                        data = {
+                            'status': 'success',
+                            'type': 'url',
+                            'title': title,
+                            'num_of_hit': blogs.count(),
+                            'group_id': result['group_id'],
+                            'items': blogs_data,
+                        }
+                        return Response(data, status.HTTP_200_OK)
                     else: return Response({'status': 'not_found_blogs', 'type': 'url', 'message': 'not found blogs'}, status.HTTP_200_OK)
                 else: return Response({'status': 'url_is_unjust', 'type': 'url', 'message': 'url is unjust'}, status.HTTP_200_OK)
 
@@ -100,25 +129,49 @@ class SearchSuggestionsAPIView(views.APIView):
                 if result['class'] == 'appropriate':
                     members = otapick.search_members(result)
                     if members is not None:
+                        members_data = self.serialize_members(members)
 
-                        ### query_setの制限 ###
-                        if len(members) > self.query_set_length:
-                            members = members[:self.query_set_length]
-                            members_data = MemberSerializerVerSS(members, many=True).data
-                            members_data.append(otapick.generate_watch_more('/react/search?q=' + q))
-                        else:
-                            members_data = MemberSerializerVerSS(members, many=True).data
-                        ### query_setの制限 ###
-
-                        return Response({'status': 'success', 'type': 'member', 'items': members_data}, status.HTTP_200_OK)
+                        data = {
+                            'status': 'success',
+                            'type': 'member',
+                            'num_of_hit': members.count(),
+                            'items': members_data,
+                        }
+                        return Response(data, status.HTTP_200_OK)
                     else: return Response({'status': 'not_found_member', 'type': 'member', 'message': 'not found member'}, status.HTTP_200_OK)
                 else: return Response({'status': 'text_is_unjust', 'type': 'member', 'message': 'url is unjust'}, status.HTTP_200_OK)
         else:
             return Response({'status': 'not_found_q', 'message': 'not found q params'}, status.HTTP_200_OK)
 
-    # def reduce_(self, result):
+searchAPIView = SearchAPIView.as_view()
 
 
+class SearchSuggestionsAPIView(SearchAPIView):
+    query_set_length = 11
+    # TODO
+    # mobileの実装次第でquery_setの制限は実装しないかも。
+
+    def serialize_blogs(self, blogs):
+        ### query_setの制限 ###
+        if len(blogs) > self.query_set_length:
+            blogs = blogs[:self.query_set_length]
+            blogs_data = BlogSerializerVerSS(blogs, many=True).data
+            blogs_data.append(otapick.generate_watch_more('/search?q=' + urllib.parse.quote(self.q)))
+        else:
+            blogs_data = BlogSerializerVerSS(blogs, many=True).data
+        ### query_setの制限 ###
+        return blogs_data
+
+    def serialize_members(self, members):
+        ### query_setの制限 ###
+        if len(members) > self.query_set_length:
+            members = members[:self.query_set_length]
+            members_data = MemberSerializerVerSS(members, many=True).data
+            members_data.append(otapick.generate_watch_more('/search?q=' + urllib.parse.quote(self.q)))
+        else:
+            members_data = MemberSerializerVerSS(members, many=True).data
+        ### query_setの制限 ###
+        return members_data
 
 searchSuggestionsAPIView = SearchSuggestionsAPIView.as_view()
 
@@ -133,14 +186,16 @@ class SearchSuggestionsInitAPIView(views.APIView):
         blogs = Blog.objects.all() if group_id is None else Blog.objects.filter(writer__belonging_group__group_id=group_id)
         blogs = otapick.sort_blogs(blogs, 'popularity')[:self.num_of_get]
         blogs_data = BlogSerializerVerSS(blogs, many=True).data
-        blogs_data.append(otapick.generate_watch_more('/react/blogs/1') if group_id == 1 else otapick.generate_watch_more('/react/blogs/2'))
+        blogs_data.append(otapick.generate_watch_more('/blogs/1') if group_id == 1 else otapick.generate_watch_more('/blogs/2'))
 
         members = Member.objects.filter(temporary=False) if group_id is None else Member.objects.filter(belonging_group_id=group_id, temporary=False)
         members = members.order_by('?')[:self.num_of_get]
         members_data = MemberSerializerVerSS(members, many=True).data
-        members_data.append(otapick.generate_watch_more('/react/members'))
+        members_data.append(otapick.generate_watch_more('/members'))
 
         return Response({'blogs': blogs_data, 'members': members_data}, status.HTTP_200_OK)
 
 
 searchSuggestionsInitAPIView = SearchSuggestionsInitAPIView.as_view()
+
+
