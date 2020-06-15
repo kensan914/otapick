@@ -1,5 +1,5 @@
 body {
-    font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ', 'Helvetica Neue', Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif,;
+    font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ', 'Helvetica Neue', Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif, ;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -125,7 +125,7 @@ header.masthead h1 {
 
 footer.footer {
     padding-top: 4rem;
-    padding-bottom: 4rem
+    padding-bottom: 4rem;
 }
 
 .share .row div {
@@ -1203,6 +1203,17 @@ a.hinata {
     transition: opacity .1s ease;
     z-index: 100;
     background-color: white;
+    max-height: 90vh;
+    overflow-y: scroll!important;
+    -ms-overflow-style: none;
+    /* IE, Edge 対応 */
+    scrollbar-width: none;
+    /* Firefox 対応 */
+}
+
+.search-suggestions-box::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none;
 }
 
 #downshift-box {
@@ -1257,22 +1268,29 @@ a.hinata {
     z-index: 100;
     opacity: 0;
     animation: 0.8s fadeIn forwards;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: white;
+    transition-duration: 0s!important;
 }
 
 .otapick-totop-button.keyaki {
-    background-color: #9CCC65;
+    /* background-color: #9CCC65; */
+    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%2398FB98%3B%7D%20.st5%7Bfill%3A%238EEEFF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2231.53%22%20y%3D%2229.44%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-27.0981%2046.713)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2235.61%22%20y%3D%2218.64%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-18.2665%2046.4346)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2240.51%22%20y%3D%2225.72%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-23.3782%2048.2538)%22%20class%3D%22st1%22%20width%3D%2212.09%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2227.17%22%20y%3D%2221.78%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2028.7177%20-19.6442)%22%20class%3D%22st2%22%20width%3D%2221.81%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2218.14%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2025.0795%20-18.1372)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2221.49%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-9.6895%2025.7279)%22%20class%3D%22st4%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2228.38%22%20y%3D%2237.16%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2039.7432%20-15.4948)%22%20class%3D%22st2%22%20width%3D%2220.39%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2233.02%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2035.6011%20-13.7791)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2236.37%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-20.211%2030.086)%22%20class%3D%22st5%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3C%2Fsvg%3E')
 }
 
 .otapick-totop-button.keyaki:hover {
-    background-color: #8BC34A;
+    /* background-color: #8BC34A; */
+    background-color: rgb(250, 250, 250);
 }
 
 .otapick-totop-button.hinata {
-    background-color: #29B6F6;
+    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%2398FB98%3B%7D%20.st5%7Bfill%3A%238EEEFF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2231.53%22%20y%3D%2229.44%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-27.0981%2046.713)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2235.61%22%20y%3D%2218.64%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-18.2665%2046.4346)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2240.51%22%20y%3D%2225.72%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-23.3782%2048.2538)%22%20class%3D%22st1%22%20width%3D%2212.09%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2227.17%22%20y%3D%2221.78%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2028.7177%20-19.6442)%22%20class%3D%22st2%22%20width%3D%2221.81%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2218.14%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2025.0795%20-18.1372)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2221.49%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-9.6895%2025.7279)%22%20class%3D%22st4%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2228.38%22%20y%3D%2237.16%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2039.7432%20-15.4948)%22%20class%3D%22st2%22%20width%3D%2220.39%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2233.02%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2035.6011%20-13.7791)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2236.37%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-20.211%2030.086)%22%20class%3D%22st5%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3C%2Fsvg%3E')/* background-color: #29B6F6; */
 }
 
 .otapick-totop-button.hinata:hover {
-    background-color: #03A9F4;
+    /* background-color: #03A9F4; */
+    background-color: rgb(250, 250, 250);
 }
 
 @keyframes fadeIn {
@@ -1408,7 +1426,7 @@ footer {
     width: 140px;
     margin: 40px auto;
     object-fit: cover;
-    box-shadow: 0 .1rem .25rem rgba(0,0,0,.075);
+    box-shadow: 0 .1rem .25rem rgba(0, 0, 0, .075);
 }
 
 .member-card.keyaki .member-card-header img {
@@ -1490,6 +1508,7 @@ footer {
     background-color: rgba(255, 255, 255, 0);
     transition-duration: 0s!important;
 }
+
 .otapick-hidden-button:hover {
     background-color: whitesmoke;
 }

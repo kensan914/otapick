@@ -16,53 +16,76 @@ class BlogList extends React.Component {
       blogs: [],
     };
     this.setBlogList = this.setBlogList.bind(this);
+
+    this.loading = false;
+    this.page = 1;
   }
 
   setBlogList(page) {
-    console.log('スタートsetBlogList, ' + page);
-    const url = URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct);
-    console.log('blogs', url);
+    if (this.state.hasMore && !this.loading) {
+      this.loading = true;
 
-    setTimeout(() => {
-      axios
-        .get(url, { params: { page: page, sort: this.props.orderFormat, keyword: this.props.narrowingKeyword, post: this.props.narrowingPost } })
-        .then(res => {
-          if (res.data.length > 0) {
-            const newBlogs = res.data.map((blog, index) =>
-              ({
-                blogCt: blog.blog_ct,
-                title: blog.title,
-                postDate: blog.post_date,
-                writer: blog.writer,
-                numOfViews: blog.num_of_views,
-                numOfDownloads: blog.num_of_downloads,
-                thumbnail: blog.thumbnail,
-                url: blog.url,
-                officialUrl: blog.official_url,
-              })
-            );
-            if (res.data.length < 20) {
-              this.setState(state => ({
-                blogs: state.blogs.concat(newBlogs),
-                hasMore: false,
-              }));
+      console.log('スタートsetBlogList, ' + page);
+      const url = URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct);
+      console.log('blogs', url);
+
+      setTimeout(() => {
+        axios
+          .get(url, { params: { page: page, sort: this.props.orderFormat, keyword: this.props.narrowingKeyword, post: this.props.narrowingPost } })
+          .then(res => {
+            if (res.data.length > 0) {
+              const newBlogs = res.data.map((blog, index) =>
+                ({
+                  blogCt: blog.blog_ct,
+                  title: blog.title,
+                  postDate: blog.post_date,
+                  writer: blog.writer,
+                  numOfViews: blog.num_of_views,
+                  numOfDownloads: blog.num_of_downloads,
+                  thumbnail: blog.thumbnail,
+                  url: blog.url,
+                  officialUrl: blog.official_url,
+                })
+              );
+              if (res.data.length < 20) {
+                this.setState(state => ({
+                  blogs: state.blogs.concat(newBlogs),
+                  hasMore: false,
+                }));
+              } else {
+                this.setState(state => ({
+                  blogs: state.blogs.concat(newBlogs),
+                }));
+              }
             } else {
-              this.setState(state => ({
-                blogs: state.blogs.concat(newBlogs),
-              }));
+              this.setState({ hasMore: false });
             }
-          } else {
-            this.setState({ hasMore: false });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        })
-        .finally(
-          () => { console.log("エンドsetBlogList, " + page) }
-        )
-    }, 2000);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+          .finally(
+            () => { 
+              console.log("エンドsetBlogList, " + page)
+              this.loading = false;
+              this.page += 1;
+            }
+          )
+      }, 2000);
+
+    } 
+    else console.log("setBlogList失敗");
   };
+
+  componentDidMount() {
+    this.setBlogList(this.page);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.hasMore !== this.state.hasMore && !this.state.hasMore) {
+      this.props.applyShowFooter(this.props.location);
+    }
+  }
 
   render() {
     const options = {
@@ -75,8 +98,8 @@ class BlogList extends React.Component {
     return (
       <InfiniteScroll
         hasMore={this.state.hasMore}
-        loadMore={this.setBlogList}
-        initialLoad={true}
+        loadMore={() => this.setBlogList(this.page)}
+        initialLoad={false}
         loader={<Loader />}
         className="mb-5"
       >

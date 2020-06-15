@@ -5,6 +5,7 @@ app_name = 'api'
 urlpatterns = [
     # path('member/<int:group_id>/<str:ct>/', views.memberRetrieveAPIView, name='memberRetrieveAPI'),
     path('members/', views.memberListAPIView, name='memberListAPI'),
+    path('blog/<int:group_id>/<int:blog_ct>/', views.blogDetailAPIView, name='blogDetailAPI'),
     path('blogs/<int:group_id>/', views.blogListAPIView, name='blogList_G_API'),
     path('blogs/<int:group_id>/<str:ct>/', views.blogListAPIView, name='blogList_M_API'),
     path('blogs/info/<int:group_id>/', views.blogListInfoAPIView, name='blogListInfo_G_API'),

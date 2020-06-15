@@ -8,6 +8,7 @@ import { scrollTop } from '../tools/support';
 import Footer from '../organisms/Footer';
 import KeepScrollTop from "../atoms/KeepScrollTop";
 import MemberListTemplate from "../templates/MemberListTemplate";
+import BlogViewTemplate from "../templates/BlogViewTemplate";
 
 
 class App extends React.Component {
@@ -16,8 +17,8 @@ class App extends React.Component {
     this.baseURL = "http://192.168.99.100:8000/";
     this.state = {
       isTop: true,
-      // hasFooter: false,
     }
+    this.footerRef = React.createRef();
   }
 
   watchCurrentPosition = () => {
@@ -39,7 +40,6 @@ class App extends React.Component {
     window.removeEventListener('scroll');
   }
 
-
   render() {
     return (
       <BrowserRouter>
@@ -54,10 +54,10 @@ class App extends React.Component {
                   <div>testtest</div>
                 </Route>
                 <Route exact path="/blogs/:groupID" render={({ match, location, history }) =>
-                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} baseURL={this.baseURL} isTop={this.state.isTop} />
+                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} baseURL={this.baseURL} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
                 <Route exact path="/blogs/:groupID/:ct" render={({ match, location, history }) =>
-                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} baseURL={this.baseURL} isTop={this.state.isTop} />
+                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} baseURL={this.baseURL} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
 
                 <Route exact path="/search/" render={({ match, location, history }) =>
@@ -68,11 +68,13 @@ class App extends React.Component {
                   <MemberListTemplate match={match} location={location} history={history} baseURL={this.baseURL} />
                 } />
 
+                <Route exact path="/blog/:groupID/:blogCt" render={({ match, location, history }) =>
+                  <BlogViewTemplate match={match} location={location} history={history} baseURL={this.baseURL} />
+                } />
               </Switch>
             </div>
 
-            <Footer />
-
+            <Footer ref={this.footerRef} />
           </Provider>
         </KeepScrollTop>
       </BrowserRouter>

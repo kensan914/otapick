@@ -17,7 +17,7 @@ class ToTopButton extends React.Component {
   render() {
     return (
       <button onClick={this.toTop} className={"btn rounded-circle p-0 otapick-totop-button shadow " + this.props.group}>
-        <i className="fas fa-chevron-up" style={{ color: "white" }}></i>
+        {/* <i className="fas fa-chevron-up" style={{ color: "white" }}></i> */}
       </button>
     );
   };

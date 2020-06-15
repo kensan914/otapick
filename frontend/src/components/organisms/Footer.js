@@ -1,5 +1,6 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouterInnerRef } from '../tools/withRouterInnerRef';
+
 
 // HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
 const hiddenFooterURLConditions = [
@@ -12,6 +13,27 @@ class Footer extends React.Component {
     this.state = {
       show: true,
     }
+    this.exclusiveKeys = [];
+  }
+
+  // 外部からフッターを表示する。引数にそのページのlocation
+  applyShowFooter(location) {
+    this.exclusiveKeys.push(location.key);
+    if (location === this.props.location) {
+      this.showFooter();
+    }
+  }
+
+  showFooter() {
+    if (!this.state.show) {
+      this.setState({ show: true });
+    }
+  }
+
+  hideFooter() {
+    if (this.state.show) {
+      this.setState({ show: false });
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -19,21 +41,17 @@ class Footer extends React.Component {
       let haveToHide = false;
       for (const hiddenFooterURLCondition of hiddenFooterURLConditions) {
         if (this.props.location.pathname.startsWith(hiddenFooterURLCondition)) {
-          haveToHide = true;
+          if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
           break;
         }
       }
       // hide
       if (haveToHide) {
-        if (this.state.show) {
-          this.setState({ show: false });
-        }
+        this.hideFooter();
       }
       // show
       else {
-        if (!this.state.show) {
-          this.setState({ show: true });
-        }
+        this.showFooter();
       }
     }
   }
@@ -42,7 +60,7 @@ class Footer extends React.Component {
     if (this.state.show) {
       return (
         <>
-          <footer className="footer bg-light text-muted">
+          <footer className={"footer bg-light text-muted " + this.props.class}>
             <div className="container">
               <div className="row">
 
@@ -130,4 +148,4 @@ class Footer extends React.Component {
 };
 
 
-export default withRouter(Footer);
+export default withRouterInnerRef(Footer);

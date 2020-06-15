@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { shortenNum } from '../tools/support';
 
 
 const DetailButton = (props) => {
@@ -38,19 +39,19 @@ class SuperBlogCard extends React.Component {
           <div className="l-thumbnail">
             <Link to={this.props.props.url}>
               <figure className="thumbnail-wrapper">
-                <img className={"card-img-top " + (this.props.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.thumbnail} style={{ borderRadius: "0" }} />
+                <img className={"card-img-top " + (this.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.thumbnail} style={{ borderRadius: "0" }} />
               </figure>
             </Link>
             <span className="more-button">
               <div className="row justify-content-around">
-                <div className="col-4 p-0 mr-2">
-                  <a href={this.props.props.officialUrl} style={{ color: "white" }} target="_blank" id={`to-official-page-${this.props.props.id}`}>
+                <div className="col-4 p-0 mr-2" id={`to-official-page-${this.props.props.id}`}>
+                  <a href={this.props.props.officialUrl} style={{ color: "white" }} target="_blank">
                     <i className="fas fa-external-link-alt"></i>
                   </a>
                 </div>
                 <CardTooltip target={`to-official-page-${this.props.props.id}`} title="公式ブログで確認" />
-                <div className="col-4 p-0 ml-2">
-                  <Link to={this.props.props.url} id={`to-download-page-${this.props.props.id}`} style={{color: "white"}}>
+                <div className="col-4 p-0 ml-2" id={`to-download-page-${this.props.props.id}`}>
+                  <Link to={this.props.props.url} style={{ color: "white" }}>
                     <i className="fas fa-download"></i>
                   </Link>
                 </div>
@@ -60,7 +61,7 @@ class SuperBlogCard extends React.Component {
           </div>
           <div className="card-body pb-0 px-3 px-sm-4 pt-3">
             <Link to={this.props.props.url} style={{ color: "dimgray" }}>
-              <h6 className={"card-title blog-title " + (this.props.props.orderly ? "newpost-title" : "")}>{!this.props.props.title ? "\u00A0" : this.props.props.title}</h6>
+              <h6 className={"card-title blog-title " + (this.props.orderly ? "newpost-title" : "")}>{!this.props.props.title ? "\u00A0" : this.props.props.title}</h6>
             </Link>
             <div className="row">
               <Link to={this.props.props.writer.url} className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.props.group}>
@@ -79,7 +80,7 @@ class SuperBlogCard extends React.Component {
                     </div>
                     &nbsp;
                     <div className="card-parameter-num">
-                      {this.props.props.numOfViews}
+                      {shortenNum(this.props.props.numOfViews)}
                     </div>
                   </div>
                 </div>
@@ -93,7 +94,7 @@ class SuperBlogCard extends React.Component {
                     </div>
                     &nbsp;
                     <div className="card-parameter-num">
-                      {this.props.props.numOfViews}
+                      {shortenNum(this.props.props.numOfDownloads)}
                     </div>
                   </div>
                 </div>
@@ -123,7 +124,7 @@ class BlogCard extends React.Component {
     return (
       <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3">
         <div className="otapick_card_back">
-          <SuperBlogCard props={this.props} orderly={true} />
+          <SuperBlogCard props={this.props} orderly={false} />
         </div>
       </div>
     );

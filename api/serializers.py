@@ -57,6 +57,14 @@ class BlogSerializer(serializers.ModelSerializer):
         return otapick.generate_official_url(blog=obj)
 
 
+class BlogSerializerVerDetail(BlogSerializer):
+    class Meta:
+        model = Blog
+        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'official_url']
+
+    post_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
+
+
 class BlogSerializerVerOrderly(BlogSerializer):
     thumbnail = serializers.SerializerMethodField()
     def get_thumbnail(self, obj):
@@ -96,3 +104,12 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return otapick.generate_url(blog=obj)
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['order', 'url', 'upload_date', 'num_of_downloads', 'd1_per_week',]
+
+    url = serializers.ImageField(source='picture')
+    upload_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')

@@ -38,6 +38,23 @@ class MemberListAPIView(views.APIView):
 memberListAPIView = MemberListAPIView.as_view()
 
 
+class BlogDetailAPIView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        group_id = self.kwargs.get('group_id')
+        blog_ct = self.kwargs.get('blog_ct')
+        if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct).exists():
+            blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+            blog_data = BlogSerializerVerDetail(blog).data
+            images = Image.objects.filter(publisher=blog).order_by('order')
+            blog_data['images'] = ImageSerializer(images, many=True).data
+            blog_data['status'] = 'success'
+            return Response(blog_data, status.HTTP_200_OK)
+        else:
+            return Response({'status': 'blog_not_found', 'message': 'blog not found'}, status.HTTP_200_OK)
+
+blogDetailAPIView = BlogDetailAPIView.as_view()
+
+
 class BlogListAPIView(views.APIView):
     paginate_by = 20
 

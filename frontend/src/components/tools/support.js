@@ -36,3 +36,39 @@ export const generateWavesVals = () => {
   for (let i = 0; i < wavesVals.length; i++) wavesVals[i] = getRandomIntInclusive(-30, 150);
   return wavesVals;
 }
+
+export const shortenNum = (num) => {
+  num = Number(num);
+  if (num < 1000) return num;
+  else if (1000 <= num && num < 10000) {
+    let num_min = num / 1000;
+    num_min = Math.floor(num_min * 10) / 10
+    return num_min + '千';
+  } else if (10000 <= num && num < 100000) {
+    let num_min = num / 10000;
+    num_min = Math.floor(num_min * 10) / 10
+    return num_min + '万';
+  } else if (100000 <= num && num < 1000000) {
+    let num_min = num / 10000;
+    num_min = Math.floor(num_min)
+    return num_min + '万';
+  } else if (1000000 <= num && num < 10000000) {
+    let num_min = num / 1000000;
+    num_min = Math.floor(num_min * 10) / 10
+    return num_min + 'M';
+  } else if (10000000 <= num && num < 100000000) {
+    let num_min = num / 1000000;
+    num_min = Math.floor(num_min)
+    return num_min + 'M';
+  } else if (100000000 <= num && num < 1000000000) {
+    let num_min = num / 100000000;
+    num_min = Math.floor(num_min * 10) / 10
+    return num_min + '億'
+  } else if (1000000000 <= num && num < 10000000000) {
+    let num_min = num / 100000000;
+    num_min = Math.floor(num_min)
+    return num_min + '億'
+  } else if (10000000000 <= num) {
+    return "-";
+  }
+}

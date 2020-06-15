@@ -37,13 +37,7 @@ class BlogListTemplate extends React.Component {
     this.props.history.push(URLJoin(this.props.match.url, queryParams));
   }
 
-  componentDidMount() {
-    console.log('componentDidMount');
-  }
-
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate ');
-
     const groupID = this.props.match.params.groupID;
     const prevGroupID = prevProps.match.params.groupID;
     const ct = this.props.match.params.ct;
@@ -138,7 +132,7 @@ class BlogListTemplate extends React.Component {
         </KeepAlive>
         <KeepAlive name={this.state.keepAliveName}>
           <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} baseURL={this.props.baseURL} />
+            narrowingPost={this.state.narrowingPost} baseURL={this.props.baseURL} applyShowFooter={this.props.applyShowFooter} />
         </KeepAlive>
         {!this.props.isTop && <ToTopButton group={this.state.group} />}
       </>
