@@ -1,3 +1,6 @@
+import otapick
+
+
 def generate_url(blog=None, member=None):
     if blog is not None:
         return '/blog/{}/{}'.format(blog.writer.belonging_group.group_id, blog.blog_ct)
@@ -28,11 +31,11 @@ def generate_memberimage_url(member):
     if hasattr(member, 'image'):
         if member.image:
             return member.image.url
-    return '/static/img/otapick_logo.png'
+    return otapick.OTAPICK_LOGO
 
 
 def generate_thumbnail_url(blog):
-    return blog.thumbnail.picture.url if hasattr(blog, 'thumbnail') else '/static/img/imageNotFound.jpg'
+    return blog.thumbnail.picture.url if hasattr(blog, 'thumbnail') else otapick.IMAGE_NOT_FOUND_URL
 
 
 def generate_writer_name(member):

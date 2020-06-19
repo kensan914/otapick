@@ -1,11 +1,12 @@
 import React from 'react';
 import BlogCard from '../molecules/BlogCard';
-import Loader from '../atoms/Loader';
+import { HorizontalLoader } from '../molecules/Loader';
 import Masonry from 'react-masonry-component';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
 import { withRouter } from 'react-router-dom';
+import { BASE_URL } from '../tools/env';
 
 
 class BlogList extends React.Component {
@@ -26,7 +27,7 @@ class BlogList extends React.Component {
       this.loading = true;
 
       console.log('スタートsetBlogList, ' + page);
-      const url = URLJoin(this.props.baseURL, "api/blogs/", this.props.groupID, this.props.ct);
+      const url = URLJoin(BASE_URL, "api/blogs/", this.props.groupID, this.props.ct);
       console.log('blogs', url);
 
       setTimeout(() => {
@@ -65,7 +66,7 @@ class BlogList extends React.Component {
             console.log(err);
           })
           .finally(
-            () => { 
+            () => {
               console.log("エンドsetBlogList, " + page)
               this.loading = false;
               this.page += 1;
@@ -73,7 +74,7 @@ class BlogList extends React.Component {
           )
       }, 2000);
 
-    } 
+    }
     else console.log("setBlogList失敗");
   };
 
@@ -100,7 +101,7 @@ class BlogList extends React.Component {
         hasMore={this.state.hasMore}
         loadMore={() => this.setBlogList(this.page)}
         initialLoad={false}
-        loader={<Loader />}
+        loader={<HorizontalLoader />}
         className="mb-5"
       >
         <Masonry options={options}>

@@ -72,7 +72,7 @@ class BlogSerializerVerOrderly(BlogSerializer):
             if Image.objects.filter(publisher=obj, order=0):
                 high_thumbnail = Image.objects.get(publisher=obj, order=0)
                 return high_thumbnail.picture.url
-        return '/static/img/imageNotFound_newpost.png'
+        return otapick.IMAGE_NOT_FOUND_ORDERLY_URL
 
 
 class MemberSerializerVerSS(serializers.ModelSerializer):

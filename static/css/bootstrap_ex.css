@@ -443,17 +443,30 @@ footer.footer {
 }
 
 .thumbnail {
-    background-repeat: no-repeat;
     width: 210px;
+    min-width: 210px;
     height: 210px;
+    background-repeat: no-repeat;
     padding: 11px;
     background-color: #FFFFFF;
-    box-shadow: 0 3px 18px -4px rgba(0, 0, 0, 0.8);
+    /* box-shadow: 0 3px 18px -4px rgba(0, 0, 0, 0.8); */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
+    position: relative;
+    border-radius: 1rem;
+}
+
+@media(min-width:992px) {
+    .thumbnail {
+        width: 250px;
+        min-width: 250px;
+        height: 250px;
+    }
 }
 
 .save_img_checkbox {
     top: 10px;
     right: 10px;
+    position: absolute;
 }
 
 .keyaki div.thumbnail.checked {
@@ -1511,4 +1524,20 @@ footer {
 
 .otapick-hidden-button:hover {
     background-color: whitesmoke;
+}
+
+.modal-content {
+    border-radius: 1rem;
+}
+
+.notfound-message {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 1rem;
+}
+
+.notfound-message-body {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 1rem;
 }

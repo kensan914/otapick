@@ -6,6 +6,8 @@ import { URLJoin } from '../tools/support';
 import axios from 'axios';
 import { getGroup, generateWavesVals } from '../tools/support';
 import { UncontrolledCollapse } from 'reactstrap';
+import { BASE_URL } from "../tools/env";
+import { LoaderScreen } from "../molecules/Loader";
 
 
 class MemberListByGeneration extends React.Component {
@@ -58,7 +60,7 @@ class MemberListTemplate extends React.Component {
   }
 
   getMembers = () => {
-    const url = URLJoin(this.props.baseURL, "api/members/");
+    const url = URLJoin(BASE_URL, "api/members/");
 
     setTimeout(() => {
       axios
@@ -144,7 +146,9 @@ class MemberListTemplate extends React.Component {
         <MemberListInfo group={this.state.group} numOfHit={numOfHit} changeGroup={(group) => this.changeGroup(group)} />
 
         <div className="container">
-          {membersComponent}
+          {membersComponent.length === 0
+            ? <LoaderScreen type="horizontal" />
+            : membersComponent}
         </div>
       </>
     );

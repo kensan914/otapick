@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 class BackButton extends React.Component {
   goBack = () => {
-    this.props.history.goBack();
+    history.back();
   };
 
   render() {

@@ -7,7 +7,9 @@ import axios from 'axios';
 import { URLJoin } from '../tools/support';
 import queryString from 'query-string';
 import MemberCard from "../molecules/MemberCard";
-import { NotFoundBlogs, NotFoundMembers } from "../atoms/NotFound";
+import { NotFoundMessage } from "../atoms/NotFound";
+import { withRouter } from 'react-router-dom';
+import { BASE_URL } from "../tools/env";
 
 
 class BlogSearchListTemplate extends React.Component {
@@ -28,13 +30,18 @@ class BlogSearchListTemplate extends React.Component {
   };
 
   search() {
-    const url = URLJoin(this.props.baseURL, "api/search/");
+    const url = URLJoin(BASE_URL, "api/search/");
 
     setTimeout(() => {
       axios
         .get(url, { params: { q: queryString.parse(this.props.location.search).q } })
         .then(res => {
           if (res.data["status"] === "success" && res.data["type"] === "url") {
+            // redirect to blog view
+            if (res.data["items"].length == 1) {
+              this.props.history.replace(res.data["items"][0].url);
+            }
+
             const blogs = res.data["items"].map((blog, index) =>
               ({
                 blogCt: blog.blog_ct,
@@ -140,14 +147,14 @@ class BlogSearchListTemplate extends React.Component {
       );
     } else if (this.state.searchType === "url") {
       contents = (
-        <div className="container px-4 pb-5">
-          <NotFoundBlogs />
+        <div className="pb-5">
+          <NotFoundMessage type="blog" />
         </div>
       );
     } else if (this.state.searchType === "member") {
       contents = (
-        <div className="container px-4 pb-5">
-          <NotFoundMembers />
+        <div className="pb-5">
+          <NotFoundMessage type="member" />
         </div>
       );
     }
@@ -162,4 +169,4 @@ class BlogSearchListTemplate extends React.Component {
   };
 };
 
-export default BlogSearchListTemplate;
+export default withRouter(BlogSearchListTemplate);

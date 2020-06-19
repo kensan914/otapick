@@ -2,8 +2,9 @@ import React from 'react';
 import Downshift from 'downshift';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
-import { NotFoundBlogs, NotFoundMembers } from '../atoms/NotFound';
+import { NotFoundBlogsContent, NotFoundMembersContent } from '../atoms/NotFound';
 import { withRouter } from 'react-router-dom';
+import { BASE_URL } from '../tools/env';
 
 
 class SearchDownshift extends React.Component {
@@ -26,7 +27,7 @@ class SearchDownshift extends React.Component {
   }
 
   setInitSearchSuggestions() {
-    const url = URLJoin(this.props.baseURL, "api/searchSuggestions/init/");
+    const url = URLJoin(BASE_URL, "api/searchSuggestions/init/");
     setTimeout(() => {
       axios
         .get(url)
@@ -57,7 +58,7 @@ class SearchDownshift extends React.Component {
   }
 
   setSearchSuggestions() {
-    const url = URLJoin(this.props.baseURL, "api/searchSuggestions/");
+    const url = URLJoin(BASE_URL, "api/searchSuggestions/");
     setTimeout(() => {
       axios
         .get(url, { params: { q: this.state.qvalue } })
@@ -199,11 +200,11 @@ class SearchDownshift extends React.Component {
     if (this.state.suggestionsType === "url") {
       suggestionsMessage = this.state.suggestionsStatus === "success"
         ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>有効なURLです。以下のブログが検出されました。</div>
-        : <NotFoundBlogs />
+        : <NotFoundBlogsContent />
     } else if (this.state.suggestionsType === "member") {
       suggestionsMessage = this.state.suggestionsStatus === "success"
         ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>以下のメンバーが見つかりました。</div>
-        : <NotFoundMembers />
+        : <NotFoundMembersContent />
     }
 
     return (

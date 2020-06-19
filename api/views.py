@@ -1,8 +1,12 @@
+import os
 import urllib.parse
+import zipfile
+from django.http import FileResponse, HttpResponse
 from rest_framework import status, views
 from rest_framework.response import Response
 from api.serializers import *
 from config import settings
+from image.models import Progress
 from main.models import Member, Blog
 import otapick
 
@@ -39,18 +43,101 @@ memberListAPIView = MemberListAPIView.as_view()
 
 
 class BlogDetailAPIView(views.APIView):
+    def accept_image_download(self, group_id, blog_ct, blog):
+        # for graduate member
+        if blog.writer.graduate:
+            blog_data = BlogSerializerVerDetail(blog).data
+            blog_data.update({'status': 'get_image_failed', 'message': 'get image failed'})
+            return Response(blog_data, status.HTTP_200_OK)
+
+        data, status_code = otapick.accept_image_download(group_id, blog_ct)
+        blog_data = BlogSerializerVerDetail(blog).data
+        data.update(blog_data)
+        return Response(data, status_code)
+
     def get(self, request, *args, **kwargs):
         group_id = self.kwargs.get('group_id')
         blog_ct = self.kwargs.get('blog_ct')
         if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct).exists():
             blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
-            blog_data = BlogSerializerVerDetail(blog).data
-            images = Image.objects.filter(publisher=blog).order_by('order')
-            blog_data['images'] = ImageSerializer(images, many=True).data
-            blog_data['status'] = 'success'
-            return Response(blog_data, status.HTTP_200_OK)
+            if Progress.objects.filter(target=blog).exists():
+                progress = Progress.objects.get(target=blog)
+                if progress.num == 100 and progress.ready:
+                    blog_data = BlogSerializerVerDetail(blog).data
+                    images = Image.objects.filter(publisher=blog).order_by('order')
+                    blog_data['images'] = ImageSerializer(images, many=True).data
+                    blog_data['status'] = 'success'
+                    blog_data['BLOG_VIEW_KEY'] = otapick.BLOG_VIEW_KEY
+                    return Response(blog_data, status.HTTP_200_OK)
+                else: return self.accept_image_download(group_id, blog_ct, blog)
+            else: return self.accept_image_download(group_id, blog_ct, blog)
         else:
-            return Response({'status': 'blog_not_found', 'message': 'blog not found'}, status.HTTP_200_OK)
+            data, status_code = otapick.accept_blog_download(group_id, blog_ct)
+            if data['status'] != 'blog_not_found':
+                return self.accept_image_download(group_id, blog_ct, Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct))
+            return Response(data, status_code)
+
+    def put(self, request, *args, **kwargs):
+        group_id = self.kwargs.get('group_id')
+        blog_ct = self.kwargs.get('blog_ct')
+
+        # inform of blog view
+        if 'action' in request.data and request.data['action'] == 'view':
+            if 'key' in request.data and request.data['key'] == otapick.BLOG_VIEW_KEY:
+                if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
+                    blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+                    otapick.increment_num_of_views(blog, num=1)
+                    return Response({'status': 'success'}, status.HTTP_200_OK)
+                else: return Response({'status': 'blog_not_found'}, status.HTTP_200_OK)
+            else: return Response({'status': 'unjust_key'}, status.HTTP_200_OK)
+
+        # inform of image download for mobile
+        elif 'action' in request.data and request.data['action'] == 'download' and 'image_order' in request.data:
+            if 'key' in request.data and request.data['key'] == otapick.IMAGE_DOWNLOAD_KEY:
+                if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
+                    blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+                    if Image.objects.filter(publisher=blog, order=request.data['image_order']).exists():
+                        image = Image.objects.filter(publisher=blog, order=request.data['image_order'])
+                        otapick.increment_num_of_downloads(image, blog, num=1)
+                        otapick.edit_num_of_most_downloads(blog)
+                        return Response({'status': 'success'}, status.HTTP_200_OK)
+                    else: return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
+                else: return Response({'status': 'blog_not_found'}, status.HTTP_200_OK)
+            else: return Response({'status': 'unjust_key'}, status.HTTP_200_OK)
+        else: return Response({'status': 'failed'}, status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        group_id = self.kwargs.get('group_id')
+        blog_ct = self.kwargs.get('blog_ct')
+        order_list = request.data # [0, 2, 3]
+
+        try:
+            if len(order_list) <= 0:
+                return Response({'status': 'data_error'}, status.HTTP_200_OK)
+
+            if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
+                blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+                if Image.objects.filter(publisher=blog, order__in=order_list).exists():
+                    images = Image.objects.filter(publisher=blog, order__in=order_list)
+
+                    # rewrite num_of_downloads
+                    otapick.increment_num_of_downloads(images, blog, num=1)
+                    otapick.edit_num_of_most_downloads(blog)
+
+                    if len(images) == 1:
+                        return FileResponse(images[0].picture, as_attachment=True)
+                    else:
+                        response = HttpResponse(content_type='application/zip')
+                        file_zip = zipfile.ZipFile(response, 'w')
+                        for upload_image in images:
+                            file_zip.writestr(os.path.basename(upload_image.picture.name), upload_image.picture.read())
+
+                        zip_name = 'otapick_' + str(group_id) + '_' + str(blog_ct) + '.zip'
+                        response['Content-Disposition'] = 'attachment; filename="{}"'.format(zip_name)
+                        return response
+                else: return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
+            else: return Response({'status': 'blog_not_found'}, status.HTTP_200_OK)
+        except: return Response({'status': 'failed'}, status.HTTP_200_OK)
 
 blogDetailAPIView = BlogDetailAPIView.as_view()
 
@@ -214,5 +301,3 @@ class SearchSuggestionsInitAPIView(views.APIView):
 
 
 searchSuggestionsInitAPIView = SearchSuggestionsInitAPIView.as_view()
-
-

@@ -43,7 +43,7 @@ const NavigationBar = (props) => {
       <NavbarToggler onClick={toggle} />
 
       <Collapse isOpen={isOpen} navbar id="otapick-navbar-collapse">
-        <SearchDownshift baseURL={props.baseURL} resetNavBar={() => resetNavBar()} />
+        <SearchDownshift resetNavBar={() => resetNavBar()} />
         <Nav className="mx-4 mx-lg-0" navbar>
           <Dropdown nav inNavbar id="nav-dropdown-blogs" className="mr-3" isOpen={dropdownOpen} toggle={dropdownToggle}>
             <DropdownToggle nav caret>

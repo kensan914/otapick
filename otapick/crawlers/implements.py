@@ -1,5 +1,5 @@
 from otapick.crawlers.abstracts import Code
-from otapick.crawlers.generics import ImageCrawler
+from otapick.crawlers.generics import ImageCrawler, ImagesCrawler
 
 
 class MemberImageCrawler(ImageCrawler):
@@ -30,3 +30,21 @@ class MemberImageCrawlerEx(ImageCrawler):
 
     def crawl(self, member_name):
         return super().crawl(member_name=member_name, base_url='https://48pedia.org/')
+
+
+class BlogImageCrawler(ImagesCrawler):
+    keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
+    hinata_url = ['https://www.hinatazaka46.com/s/official/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
+
+    def get_tag(self, soup, **kwargs):
+        if kwargs['group_id'] == 1:
+            article_tag = soup.find('div', class_='box-article')
+        elif kwargs['group_id'] == 2:
+            article_tag = soup.find('div', class_='c-blog-article__text')
+        else:
+            return
+        img_tags = article_tag.find_all('img')
+        return img_tags
+
+    def crawl(self, group_id, blog_ct):
+        return super().crawl(group_id=group_id, blog_ct=blog_ct)

@@ -38,11 +38,13 @@ class Downloader(metaclass=ABCMeta):
             file = open(path, 'wb')
             urllib3.disable_warnings(InsecureRequestWarning)
             response = requests.get(url, verify=False)
-            data = response.content
-            file.write(data)
-
+            if response.status_code == 200:
+                data = response.content
+                file.write(data)
+                result = True
+            else: result = False
             file.close()
-            return True
+            return result
         except:
             return False
 

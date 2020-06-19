@@ -14,9 +14,9 @@ import BlogViewTemplate from "../templates/BlogViewTemplate";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.baseURL = "http://192.168.99.100:8000/";
     this.state = {
       isTop: true,
+      accessedBlogs: [], // ["1_34360", "2_34230"]
     }
     this.footerRef = React.createRef();
   }
@@ -33,6 +33,15 @@ class App extends React.Component {
     }
   }
 
+  setAccessedBlog = (blogID) => {
+    this.setState(function (state) {
+      state.accessedBlogs.push(blogID)
+      return {
+        accessedBlogs: state.accessedBlogs
+      };
+    });
+  }
+
   componentDidMount() {
     window.addEventListener('scroll', event => this.watchCurrentPosition(), true);
   }
@@ -46,7 +55,7 @@ class App extends React.Component {
         <KeepScrollTop>
           <Provider>
 
-            <NavigationBar baseURL={this.baseURL} isTop={this.state.isTop} />
+            <NavigationBar isTop={this.state.isTop} />
             <div className="container mt-3 text-muted">
               <Switch>
                 <Route exact path="/react">
@@ -54,22 +63,22 @@ class App extends React.Component {
                   <div>testtest</div>
                 </Route>
                 <Route exact path="/blogs/:groupID" render={({ match, location, history }) =>
-                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} baseURL={this.baseURL} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
                 <Route exact path="/blogs/:groupID/:ct" render={({ match, location, history }) =>
-                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} baseURL={this.baseURL} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
 
                 <Route exact path="/search/" render={({ match, location, history }) =>
-                  <BlogSearchListTemplate match={match} location={location} history={history} baseURL={this.baseURL} />
+                  <BlogSearchListTemplate match={match} location={location} history={history} />
                 } />
 
                 <Route exact path="/members/" render={({ match, location, history }) =>
-                  <MemberListTemplate match={match} location={location} history={history} baseURL={this.baseURL} />
+                  <MemberListTemplate match={match} location={location} history={history} />
                 } />
 
                 <Route exact path="/blog/:groupID/:blogCt" render={({ match, location, history }) =>
-                  <BlogViewTemplate match={match} location={location} history={history} baseURL={this.baseURL} />
+                  <BlogViewTemplate match={match} location={location} history={history} accessedBlogs={this.state.accessedBlogs} setAccessedBlog={(blogID) => this.setAccessedBlog(blogID)} />
                 } />
               </Switch>
             </div>

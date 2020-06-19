@@ -13,4 +13,6 @@ urlpatterns = [
     path('searchSuggestions/', views.searchSuggestionsAPIView, name='searchSuggestionsAPI'),
     path('searchSuggestions/init/', views.searchSuggestionsInitAPIView, name='searchSuggestionsInitAPI'),
     path('search/', views.searchAPIView, name='searchAPI'),
+    # path('blog/view/<int:group_id>/<int:blog_ct>/', views.blogViewAPIView, name='blogViewAPI'),
+    # path('blog/download/<int:group_id>/<int:blog_ct>/', views.blogDownloadAPIView, name='blogDownloadAPI'),
 ]

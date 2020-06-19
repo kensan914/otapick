@@ -5,6 +5,7 @@ import NarrowCard from './NarrowCard';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
 import { withRouter } from 'react-router-dom';
+import { BASE_URL } from '../tools/env';
 
 
 class BlogListInfo extends React.Component {
@@ -20,7 +21,7 @@ class BlogListInfo extends React.Component {
 
   setBlogListInfo(groupID, ct) {
     const queryParams = this.props.location.search;
-    const url = URLJoin(this.props.baseURL, "api/blogs/info/", groupID, ct, queryParams);
+    const url = URLJoin(BASE_URL, "api/blogs/info/", groupID, ct, queryParams);
     console.log('info', url);
 
     setTimeout(() => {

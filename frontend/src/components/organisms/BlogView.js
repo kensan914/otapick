@@ -1,11 +1,7 @@
 import React from 'react';
-import BlogCard from '../molecules/BlogCard';
-import Loader from '../atoms/Loader';
-import Masonry from 'react-masonry-component';
-import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
-import { URLJoin } from '../tools/support';
-import { withRouter } from 'react-router-dom';
+import { saveAs } from "file-saver";
+import DownloadModal from '../molecules/DownloadModal';
 
 
 class BlogView extends React.Component {
@@ -13,12 +9,43 @@ class BlogView extends React.Component {
     super(props);
     this.state = {
       allCheck: false,
-      check: [],
+      check: Array(this.props.images.length).fill(false),
+      showAleart: false,
     }
+    this.modalRef = React.createRef();
   }
 
   handleSubmit(e) {
     e.preventDefault();
+    if (this.state.check.includes(true)) {
+      let orderList = [];
+      for (const [index, val] of this.state.check.entries()) {
+        if (val) orderList.push(index);
+      }
+      axios
+        .post(this.props.blogViewURL, orderList, {
+          headers: {
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+          },
+          responseType: 'blob'
+        })
+        .then(res => {
+          this.modalRef.current.toggleModal();
+          this.setState({
+            allCheck: false,
+            check: Array(this.props.images.length).fill(false),
+            showAleart: false,
+          })
+
+          const blob = new Blob([res.data], {
+            type: res.data.type
+          });
+          const fileName = res.headers["content-disposition"].match(/filename="(.*)"/)[1];
+          saveAs(blob, fileName);
+        });
+    } else {
+      if (!this.state.showAleart) this.setState({ showAleart: true });
+    }
   }
 
   handleAllCheckChange(e) {
@@ -56,14 +83,9 @@ class BlogView extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.images !== this.props.images && this.props.images.length > 0) {
-      this.setState({ check: Array(this.props.images.length).fill(false) });
-    }
-  }
-
   render() {
     return (
+      <>
       <form onSubmit={(e) => this.handleSubmit(e)}>
         <div className="col-md-3 col-lg-2 ml-auto" style={{ width: 200 }}>
           <div className="custom-control custom-checkbox">
@@ -78,16 +100,14 @@ class BlogView extends React.Component {
 
             {
               this.props.images.map((image, index) => (
-                <div className="col-6 col-md-4 col-lg-3 mb-5">
-                  <div className="row">
-                    <div className="mx-auto image-box" style={{ position: "relative", cursor: "pointer" }} onClick={() => this.changeCheck(image.order)}>
-                      <div className={this.props.group}>
-                        <div className={"thumbnail img-thumbnail " + (this.state.check[image.order] ? "checked" : "")}
-                          style={{ background: `url(${image.url})`, backgroundSize: "cover", backgroundPosition: "center", }}>
-                        </div>
+                <div className="col-6 col-md-4 col-xl-3 mb-5">
+                  <div style={{ cursor: "pointer" }} onClick={() => this.changeCheck(image.order)}>
+                    <div className={this.props.group}>
+                      <div className={"thumbnail img-thumbnail mx-auto " + (this.state.check[image.order] ? "checked" : "")}
+                        style={{ background: `url(${image.url})`, backgroundSize: "cover", backgroundPosition: "center" }}>
+                        <input className="save_img_checkbox" type="checkbox"
+                          onChange={(e) => this.handleCheckChange(e)} name={image.order} checked={this.state.check[image.order]} />
                       </div>
-                      <input className="save_img_checkbox" style={{ position: "absolute" }} type="checkbox"
-                        onChange={(e) => this.handleCheckChange(e)} name={image.order} checked={this.state.check[image.order]} />
                     </div>
                   </div>
                 </div>
@@ -96,18 +116,20 @@ class BlogView extends React.Component {
 
           </div>
         </div>
-        {/* <div className="alert alert-danger py-2 mb-5 mt-0" role="alert" id="choice-image-alert" style="display:none;">
+        {this.state.showAleart &&
+          <div className="alert alert-danger py-2 mb-5 mt-0" role="alert" style={{ borderRadius: "1rem" }}>
             画像を選択してください。
-      </div> */}
+          </div>
+        }
         <div className="mx-auto mb-5" style={{ width: 150 }}>
-
           <button type="submit" className={"gradient-btn " + this.props.group} style={{ width: 150 }}>
             <b>保存</b>
           </button>
-
         </div>
-
       </form>
+
+      <DownloadModal  ref={this.modalRef} group={this.props.group} />
+      </>
     );
   };
 };

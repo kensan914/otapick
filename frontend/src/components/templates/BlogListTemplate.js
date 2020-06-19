@@ -128,11 +128,11 @@ class BlogListTemplate extends React.Component {
         <Headline title={this.props.headlineTitle} />
         <KeepAlive name={this.state.keepAliveNameInfo}>
           <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} baseURL={this.props.baseURL} pushHistory={(qs) => this.pushHistory(qs)} />
+            narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} />
         </KeepAlive>
         <KeepAlive name={this.state.keepAliveName}>
           <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} baseURL={this.props.baseURL} applyShowFooter={this.props.applyShowFooter} />
+            narrowingPost={this.state.narrowingPost} applyShowFooter={this.props.applyShowFooter} />
         </KeepAlive>
         {!this.props.isTop && <ToTopButton group={this.state.group} />}
       </>

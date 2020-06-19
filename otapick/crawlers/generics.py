@@ -38,5 +38,9 @@ class ImagesCrawler(Crawler, ABC):
             return
         for img_tag in img_tags:
             img_url = img_tag.get('src')
-            url_list.append(img_url)
+            # Omit fake image URL.
+            if img_url == '' or img_url is None or not img_url.startswith('http'):
+                continue
+            else:
+                url_list.append(img_url)
         return url_list
