@@ -98,7 +98,8 @@ class Headline extends React.Component {
       if (this.props.type === "blogs" || this.props.type === "images") {
         modeSelectButtonGroup = (
           <ButtonGroup size="lg">
-            <Button className={"rounded-pill mode-select-button recommend " + (this.props.mode === "recommend" && "active")}>おすすめ</Button>
+            <Button className={"rounded-pill mode-select-button recommend " + (this.props.mode === "recommend" && "active")}
+              onClick={() => this.props.history.push(`/${this.props.type}/`)}>おすすめ</Button>
             <Button className={"rounded-pill d-flex align-items-center mode-select-button keyaki " + (this.props.mode === "keyaki" && "active")}
               onClick={() => this.props.history.push(`/${this.props.type}/1`)}>
               欅坂46<ModeSelectButtonDropdown group="keyaki" members={this.state.keyakiMembers} type={this.props.type} />

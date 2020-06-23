@@ -102,7 +102,7 @@ class BlogListTemplate extends React.Component {
         keepAliveNameInfo: this.addStrInfo(this.props.location.key),
       });
     }
-    if ((qs.post === undefined ? "" : qs.post) != this.state.narrowingPost){
+    if ((qs.post === undefined ? "" : qs.post) != this.state.narrowingPost) {
       willChangeState = Object.assign(willChangeState, {
         narrowingPost: qs.post === undefined ? "" : qs.post,
         keepAliveName: this.props.location.key,
@@ -125,11 +125,13 @@ class BlogListTemplate extends React.Component {
   render() {
     return (
       <>
-        <Headline title={this.props.headlineTitle} type="blogs" mode={this.state.group} />
-        <KeepAlive name={this.state.keepAliveNameInfo}>
-          <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} />
-        </KeepAlive>
+        <Headline title={this.props.headlineTitle} type="blogs" mode={this.state.group ? this.state.group : "recommend"} />
+        {(typeof this.state.groupID != "undefined" || typeof this.state.ct != "undefined") &&
+          <KeepAlive name={this.state.keepAliveNameInfo}>
+            <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
+              narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} />
+          </KeepAlive>
+        }
         <KeepAlive name={this.state.keepAliveName}>
           <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
             narrowingPost={this.state.narrowingPost} applyShowFooter={this.props.applyShowFooter} />

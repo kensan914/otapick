@@ -62,6 +62,11 @@ class App extends React.Component {
                   {/* <BlogListTemplate headlineTitle="ブログ一覧" /> */}
                   <div>testtest</div>
                 </Route>
+
+                <Route exact path="/blogs/" render={({ match, location, history }) =>
+                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                } />
+
                 <Route exact path="/blogs/:groupID" render={({ match, location, history }) =>
                   <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
