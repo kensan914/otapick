@@ -1470,8 +1470,7 @@ footer {
 
 /* group-select-button */
 
-#keyaki-group-select-button, #hinata-group-select-button {
-    /* border: 1px solid gainsboro!important; */
+#keyaki-group-select-button, #hinata-group-select-button, .mode-select-button {
     border: 0;
     background-color: rgba(255, 255, 255, 0)!important;
     color: gray;
@@ -1479,30 +1478,62 @@ footer {
     height: 3rem;
 }
 
-#keyaki-group-select-button {
-    /* border-radius: 2rem 0 0 2rem!important; */
+.mode-select-dropdown-button {
+    border: 0;
+    background-color: rgba(255, 255, 255, 0)!important;
+    color: inherit;
+    transition-duration: 0s!important;
 }
 
-#hinata-group-select-button {
-    /* border-radius: 0 2rem 2rem 0!important; */
-}
-
-#keyaki-group-select-button:hover {
+#keyaki-group-select-button:hover, #hinata-group-select-button:hover, .mode-select-button:hover {
     background-color: whitesmoke!important;
+    color: gray;
 }
 
-#hinata-group-select-button:hover {
-    background-color: whitesmoke!important;
+.mode-select-dropdown-button:hover {
+    background-color: rgba(220, 220, 220, 0.7)!important;
+    color: inherit;
 }
 
-#keyaki-group-select-button.active {
+.mode-select-button.keyaki.active .mode-select-dropdown-button:hover {
+    background-color: #45ce51!important;
+    color: inherit;
+}
+
+.mode-select-button.hinata.active .mode-select-dropdown-button:hover {
+    background-color: #56d6ec!important;
+    color: inherit;
+}
+
+.mode-select-button.recommend.active, .mode-select-button.recommend.active:hover {
+    background-color: dimgray!important;
+    /* background-image: url("/static/img/watch_more.png"); */
+    /* background-size: cover; */
+    color: white;
+}
+
+#keyaki-group-select-button.active, .mode-select-button.keyaki.active, #keyaki-group-select-button.active:hover, .mode-select-button.keyaki.active:hover {
     background-color: #4be057!important;
     color: white;
 }
 
-#hinata-group-select-button.active {
+#hinata-group-select-button.active, .mode-select-button.hinata.active, #hinata-group-select-button.active:hover, .mode-select-button.hinata.active:hover {
     background-color: #5de7ff!important;
     color: white;
+}
+
+.mode-select-button:active, .mode-select-dropdown-button:active {
+    color: gray!important;
+}
+
+.mode-select-button.active:active, .mode-select-button.active .mode-select-dropdown-button:active {
+    color: white!important;
+}
+
+#keyaki-group-select-button:focus, #hinata-group-select-button:focus, .mode-select-button:focus, .mode-select-dropdown-button:focus {
+    /* outline: none;
+    border: 0!important;
+    box-shadow: none!important; */
 }
 
 /* dropdown-item's active color */
@@ -1540,4 +1571,10 @@ footer {
 .notfound-message-body {
     background-color: rgba(255, 255, 255, 0.85);
     border-radius: 1rem;
+}
+
+.mode-select-dropdown-menu{
+    z-index: 90;
+    max-height: 50vh;
+    overflow-y: scroll!important;
 }

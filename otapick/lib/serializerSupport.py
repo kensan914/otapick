@@ -1,7 +1,7 @@
 import otapick
 
 
-def generate_url(blog=None, member=None):
+def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
     if blog is not None:
         return '/blog/{}/{}'.format(blog.writer.belonging_group.group_id, blog.blog_ct)
     elif member is not None:
@@ -9,7 +9,13 @@ def generate_url(blog=None, member=None):
         if member.independence: ct = member.ct
         elif member.belonging_group.group_id == 1: ct = 1002
         elif member.belonging_group.group_id == 2: ct = 1000
-        return '/blogs/{}/{}'.format(member.belonging_group.group_id, ct)
+
+        blogs_url = '/blogs/{}/{}'.format(member.belonging_group.group_id, ct)
+        images_url = '/images/{}/{}'.format(member.belonging_group.group_id, ct)
+        if needBlogs ^ needImages:
+            if needBlogs: return blogs_url
+            if needImages: return images_url
+        return {'blogs': blogs_url, 'images': images_url}
 
 
 def generate_official_url(blog=None, member=None):

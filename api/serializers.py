@@ -33,7 +33,7 @@ class MemberSerializerMin(serializers.ModelSerializer):
         return otapick.generate_writer_name(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj)
+        return otapick.generate_url(member=obj, needBlogs=True, needImages=False)
 
 
 class BlogSerializer(serializers.ModelSerializer):
@@ -88,7 +88,7 @@ class MemberSerializerVerSS(serializers.ModelSerializer):
         return otapick.generate_memberimage_url(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj)
+        return otapick.generate_url(member=obj, needBlogs=True, needImages=False)
 
 
 class BlogSerializerVerSS(serializers.ModelSerializer):

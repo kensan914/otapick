@@ -11,7 +11,8 @@ const DetailButton = (props) => {
           <i className="fas fa-bars" style={{ color: "gray" }}></i>
         </DropdownToggle>
         <DropdownMenu>
-          <DropdownItem tag={Link} to={props.url} className="download-trigger">ブログ一覧へ</DropdownItem>
+          <DropdownItem tag={Link} to={props.blogsUrl} className="download-trigger">ブログ一覧へ</DropdownItem>
+          <DropdownItem tag={Link} to={props.imagesUrl} className="download-trigger">画像一覧へ</DropdownItem>
           <DropdownItem href={props.offcialUrl} target="_blank">公式サイトで確認</DropdownItem>
         </DropdownMenu>
       </div>
@@ -25,7 +26,7 @@ class MemberCard extends React.Component {
     return (
       <div className="col-6 col-md-4 col-xl-3 my-2">
         <div className={"member-card mx-auto " + this.props.belongingGroup}>
-          <div className="member-card-header" onClick={() => this.props.history.push(this.props.url)}>
+          <div className="member-card-header" onClick={() => this.props.history.push(this.props.blogsUrl)}>
             <div className="member-card-overlay"
               style={{ backgroundImage: `url(${this.props.image})` }}>
             </div>
@@ -47,7 +48,7 @@ class MemberCard extends React.Component {
           </svg>
 
           <div className="member-card-body">
-            <DetailButton url={this.props.url} offcialUrl={this.props.offcialUrl} />
+            <DetailButton blogsUrl={this.props.blogsUrl} imagesUrl={this.props.imagesUrl} offcialUrl={this.props.offcialUrl} />
           </div>
         </div>
       </div>

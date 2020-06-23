@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 
-
+// TODO historyが0の時、すなわち初期状態はトップに戻るように。
 class BackButton extends React.Component {
   goBack = () => {
     history.back();

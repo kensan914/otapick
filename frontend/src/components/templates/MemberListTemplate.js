@@ -29,7 +29,7 @@ class MemberListByGeneration extends React.Component {
         <UncontrolledCollapse toggler={"#" + togglerID} defaultOpen={this.props.isOpen}>
           <div className="row mb-5">
             {this.props.members.map(({ image, url, offcialUrl, ct, lastKanji, firstKanji, lastKana, firstKana, belongingGroup }, i) => (
-              <MemberCard key={i} ct={ct} image={image} url={url} offcialUrl={offcialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
+              <MemberCard key={i} ct={ct} image={image} blogsUrl={url["blogs"]} imagesUrl={url["images"]} offcialUrl={offcialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
                 firstKana={firstKana} belongingGroup={belongingGroup} wavesVals={this.props.wavesVals} />
             ))}
           </div>
@@ -112,8 +112,7 @@ class MemberListTemplate extends React.Component {
         .catch(err => {
           console.log(err);
         })
-        .finally(
-        )
+        .finally()
     }, 300);
   }
 

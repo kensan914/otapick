@@ -125,7 +125,7 @@ class BlogListTemplate extends React.Component {
   render() {
     return (
       <>
-        <Headline title={this.props.headlineTitle} />
+        <Headline title={this.props.headlineTitle} type="blogs" mode={this.state.group} />
         <KeepAlive name={this.state.keepAliveNameInfo}>
           <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
             narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} />
