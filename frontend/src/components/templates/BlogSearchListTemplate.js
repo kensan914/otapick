@@ -1,5 +1,5 @@
 import React from "react";
-import BlogSearchListInfo from '../molecules/BlogSearchListInfo';
+import BlogSearchListInfo from '../molecules/info/BlogSearchListInfo';
 import Headline from '../molecules/Headline';
 import { getGroup, generateWavesVals } from '../tools/support';
 import { OrderlyBlogCard } from '../molecules/BlogCard';
@@ -9,13 +9,14 @@ import queryString from 'query-string';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from "../atoms/NotFound";
 import { withRouter } from 'react-router-dom';
-import { BASE_URL } from "../tools/env";
+import { BASE_URL, DELAY_TIME } from "../tools/env";
+import { BlogViewLoader, LoaderScreen } from "../molecules/Loader";
 
 
 class BlogSearchListTemplate extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.initState = {
       groupID: 0,
       group: "",
       title: "",
@@ -25,7 +26,8 @@ class BlogSearchListTemplate extends React.Component {
       searchStatus: "",
       searchType: "",
       wavesVals: [],
-    }
+    };
+    this.state = this.initState;
     this.search();
   };
 
@@ -112,11 +114,12 @@ class BlogSearchListTemplate extends React.Component {
         })
         .finally(
         )
-    }, 300);
+    }, DELAY_TIME);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.location.search !== this.props.location.search) {
+      this.setState(this.initState);
       this.search();
     }
   }
@@ -157,6 +160,8 @@ class BlogSearchListTemplate extends React.Component {
           <NotFoundMessage type="member" />
         </div>
       );
+    } else {
+      contents = (<LoaderScreen type="horizontal" />);
     }
 
     return (

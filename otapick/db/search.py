@@ -4,7 +4,6 @@ from main.models import Member, Blog
 '''
 search_blogs() search_members()
 引数として渡されたqパラメータ情報(parse_q()で返されたdictionary)から、それぞれ合致したクエリセットを返す。
-
 '''
 
 def search_blogs(q_info):

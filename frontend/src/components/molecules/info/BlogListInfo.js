@@ -1,11 +1,11 @@
 import React from 'react';
-import NarrowButton from '../atoms/NarrowButton';
-import SortButton from '../atoms/SortButton';
-import NarrowCard from './NarrowCard';
+import NarrowButton from '../../atoms/NarrowButton';
+import SortButton from '../../atoms/SortButton';
+import NarrowCard from '../NarrowCard';
 import axios from 'axios';
-import { URLJoin } from '../tools/support';
+import { URLJoin } from '../../tools/support';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL } from '../tools/env';
+import { BASE_URL, DELAY_TIME } from '../../tools/env';
 
 
 class BlogListInfo extends React.Component {
@@ -16,10 +16,10 @@ class BlogListInfo extends React.Component {
       numOfHit: 0,
       sortButtonTitle: this.convertSortButtonTitle()
     }
-    this.setBlogListInfo(this.props.groupID, this.props.ct);
+    this.getBlogListInfo(this.props.groupID, this.props.ct);
   }
 
-  setBlogListInfo(groupID, ct) {
+  getBlogListInfo(groupID, ct) {
     const queryParams = this.props.location.search;
     const url = URLJoin(BASE_URL, "api/blogs/info/", groupID, ct, queryParams);
     console.log('info', url);
@@ -36,7 +36,7 @@ class BlogListInfo extends React.Component {
         .catch(err => {
           console.log(err);
         });
-    }, 500);
+    }, DELAY_TIME);
   }
 
   convertSortButtonTitle() {
@@ -88,7 +88,7 @@ class BlogListInfo extends React.Component {
               <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
                 <div className="row justify-content-around">
                   <NarrowButton />
-                  <SortButton title={this.state.sortButtonTitle} pushHistory={this.props.pushHistory} />
+                  <SortButton type="images" title={this.state.sortButtonTitle} pushHistory={this.props.pushHistory} />
                 </div>
               </div>
             </div>

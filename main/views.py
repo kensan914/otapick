@@ -419,9 +419,9 @@ class AutocompleteView(View):
 autocomplete = AutocompleteView.as_view()
 
 
-class ReactView(View):
+class IndexView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'frontend/index.html', BaseView.context)
 
 
-react = ReactView.as_view()
+indexView = IndexView.as_view()

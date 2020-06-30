@@ -5,6 +5,7 @@ import { withRouterInnerRef } from '../tools/withRouterInnerRef';
 // HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
 const hiddenFooterURLConditions = [
   "/blogs",
+  "/images",
 ]
 
 class Footer extends React.Component {
@@ -36,23 +37,31 @@ class Footer extends React.Component {
     }
   }
 
+  checkFooter() {
+    let haveToHide = false;
+    for (const hiddenFooterURLCondition of hiddenFooterURLConditions) {
+      if (this.props.location.pathname.startsWith(hiddenFooterURLCondition)) {
+        if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
+        break;
+      }
+    }
+    // hide
+    if (haveToHide) {
+      this.hideFooter();
+    }
+    // show
+    else {
+      this.showFooter();
+    }
+  }
+
+  componentDidMount() {
+    this.checkFooter();
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
-      let haveToHide = false;
-      for (const hiddenFooterURLCondition of hiddenFooterURLConditions) {
-        if (this.props.location.pathname.startsWith(hiddenFooterURLCondition)) {
-          if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
-          break;
-        }
-      }
-      // hide
-      if (haveToHide) {
-        this.hideFooter();
-      }
-      // show
-      else {
-        this.showFooter();
-      }
+      this.checkFooter();
     }
   }
 
@@ -95,20 +104,24 @@ class Footer extends React.Component {
                     <span className="font-weight-bold">公式リンク</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
                     <li>
-                      <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46 公式ブログ <i
-                        className="fas fa-external-link-alt"></i></a>
+                      <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">
+                        欅坂46 公式ブログ<i className="fas fa-external-link-alt"></i>
+                      </a>
                     </li>
                     <li>
-                      <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/?ima=0000">欅坂46 公式サイト <i
-                        className="fas fa-external-link-alt"></i></a>
+                      <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/?ima=0000">
+                        欅坂46 公式サイト <i className="fas fa-external-link-alt"></i>
+                      </a>
                     </li>
                     <li>
-                      <a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46 公式ブログ <i
-                        className="fas fa-external-link-alt"></i></a>
+                      <a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">
+                        日向坂46 公式ブログ <i className="fas fa-external-link-alt"></i>
+                      </a>
                     </li>
                     <li>
-                      <a target="_blank" href="https://www.hinatazaka46.com/s/official/?ima=0000">日向坂46 公式サイト <i
-                        className="fas fa-external-link-alt"></i></a>
+                      <a target="_blank" href="https://www.hinatazaka46.com/s/official/?ima=0000">
+                        日向坂46 公式サイト <i className="fas fa-external-link-alt"></i>
+                      </a>
                     </li>
                   </ul>
                 </div>

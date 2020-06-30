@@ -20,11 +20,17 @@ class Image(models.Model):
         unique_together = ('publisher', 'order')
 
     order = models.IntegerField(verbose_name='順番')
-    picture = models.ImageField(verbose_name='イメージ', upload_to=get_upload_to)
+    picture = models.ImageField(verbose_name='イメージ(original)', upload_to=get_upload_to)
+    picture_250x = models.ImageField(verbose_name='イメージ(250x)', null=True)
+    picture_500x = models.ImageField(verbose_name='イメージ(500x)', null=True)
     upload_date = models.DateTimeField(verbose_name='アップロード日', auto_now_add=True)
     publisher = models.ForeignKey(Blog, verbose_name='掲載ブログ', on_delete=models.CASCADE)
     num_of_downloads = models.IntegerField(verbose_name='ダウンロード数', default=0)
     d1_per_week = models.IntegerField(verbose_name='ダウンロード数(1週目)', default=0)
+    num_of_views = models.IntegerField(verbose_name='閲覧数', default=0)
+    v1_per_week = models.IntegerField(verbose_name='閲覧数(1週目)', default=0)
+    v2_per_week = models.IntegerField(verbose_name='閲覧数(2週目)', default=0)
+    v3_per_week = models.IntegerField(verbose_name='閲覧数(3週目)', default=0)
 
     def __str__(self):
         return str(self.publisher.title) + '/' + str(self.order)

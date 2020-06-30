@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 import tweepy
 from datetime import date, timedelta, datetime
+import otapick
 from main.models import Blog
 from config import settings
 import pytz
@@ -71,14 +72,7 @@ class Command(BaseCommand):
 
         for new_post in new_posts[:4]:
             blog_title = self.shorten_text(new_post.title, max_length=10)
-            member_name = new_post.writer.full_kanji
-
-            # 新メンバー対処
-            if member_name == '欅坂46新二期生':
-                member_name = '新二期生'
-            elif member_name == '日向坂46新三期生':
-                member_name = '新三期生'
-            # 新メンバー対処
+            member_name = otapick.generate_writer_name(new_post.writer)
 
             text += '「' + blog_title + '」#' + member_name + '\n'
 

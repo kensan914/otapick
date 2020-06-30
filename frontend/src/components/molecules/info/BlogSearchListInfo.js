@@ -19,7 +19,6 @@ export class BlogSearchListInfo extends React.Component {
               <div className="col-12 col-md-6 col-lg-7 col-xl-8">
                 <div className="">検索結果（<b>{this.props.numOfHit}</b>件）</div>
               </div>
-
             </div>
           </div>
         </div>

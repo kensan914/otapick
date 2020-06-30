@@ -3,16 +3,16 @@ import Headline from '../molecules/Headline';
 import { getGroup } from '../tools/support';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
-import BlogViewInfo from "../molecules/BlogInfo";
+import BlogViewInfo from "../molecules/info/BlogViewInfo";
 import BlogView from "../organisms/BlogView";
 import { BlogViewLoader, LoaderScreen } from "../molecules/Loader";
-import { LOAD_IMG_URL, BASE_URL } from "../tools/env";
+import { LOAD_IMG_URL, BASE_URL, DELAY_TIME } from "../tools/env";
 import { withRouter } from 'react-router-dom';
 import { NotFoundMessage } from "../atoms/NotFound";
-import BlogSearchListInfo from "../molecules/BlogSearchListInfo";
+import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
 
 
-class BlogViewTemplate extends React.Component {
+export class ViewTemplate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,18 +25,18 @@ class BlogViewTemplate extends React.Component {
       numOfViews: 0,
       numOfDownloads: 0,
       officialUrl: "",
+      url: "",
       images: [],
       status: "",
       progress: 0,
       loadingImageUrl: "",
-      BLOG_VIEW_KEY: "",
+      VIEW_KEY: "",
     }
     this.blogViewURL = URLJoin(BASE_URL, "api/blog/", this.state.groupID, this.state.blogCt);
   };
 
   getBlog() {
     setTimeout(() => {
-
       axios
         .get(this.blogViewURL)
         .then(res => {
@@ -49,6 +49,7 @@ class BlogViewTemplate extends React.Component {
               numOfViews: res.data["num_of_views"],
               numOfDownloads: res.data["num_of_downloads"],
               officialUrl: res.data["official_url"],
+              url: res.data["url"],
             }
           }
 
@@ -56,7 +57,7 @@ class BlogViewTemplate extends React.Component {
             this.setState(Object.assign({
               images: res.data["images"],
               status: res.data["status"],
-              BLOG_VIEW_KEY: res.data["BLOG_VIEW_KEY"],
+              VIEW_KEY: res.data["VIEW_KEY"],
             }, blogData));
           } else if (res.data["status"] === "start_download" || res.data["status"] === "downloading") {
             this.setState(Object.assign({
@@ -80,19 +81,35 @@ class BlogViewTemplate extends React.Component {
         })
         .finally(
         )
-    }, 100);
+    }, DELAY_TIME);
   }
 
-  putView() {
-    axios
-      .put(this.blogViewURL, {
-        action: 'view',
-        key: this.state.BLOG_VIEW_KEY,
-      }, {
-        headers: {
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
-        }
+  incrementNumOfViews(order = -1) {
+    if (order < 0) {
+      this.setState(prevState => (
+        { numOfViews: prevState.numOfViews + 1 }
+      ));
+    } else {
+      this.setState(prevState => {
+        let images = prevState.images;
+        if (images.length > order) images[Number(order)].num_of_views += 1;
+        return { images: images };
       });
+    }
+  }
+
+  incrementNumOfDownloads(order = -1, num = 1) {
+    if (order < 0) {
+      this.setState(prevState => (
+        { numOfDownloads: prevState.numOfDownloads + num }
+      ));
+    } else {
+      this.setState(prevState => {
+        let images = prevState.images;
+        if (images.length > order) images[Number(order)].num_of_downloads += num;
+        return { images: images };
+      });
+    }
   }
 
   componentDidMount() {
@@ -100,17 +117,6 @@ class BlogViewTemplate extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // blog が view されたとき
-    if (prevState.status !== this.state.status && this.state.status === "success") {
-      if (this.state.BLOG_VIEW_KEY) {
-        if (!this.props.accessedBlogs.includes(`${this.state.groupID}_${this.state.blogCt}_${this.props.location.key}`)) {
-          console.log("描画されました。");
-          this.putView();
-          this.props.setAccessedBlog(`${this.state.groupID}_${this.state.blogCt}_${this.props.location.key}`);
-        }
-      }
-    }
-
     // blog の読み込みが開始したとき
     if (prevState.status !== this.state.status && this.state.status === "accepted") {
       this.reqCount = 0;
@@ -134,6 +140,46 @@ class BlogViewTemplate extends React.Component {
   componentWillUnmount() {
     clearInterval(this.intervalReqID);
   }
+}
+
+
+class BlogViewTemplate extends ViewTemplate {
+  constructor(props) {
+    super(props);
+  }
+
+  putView() {
+    axios
+      .put(this.blogViewURL, {
+        action: 'view',
+        key: this.state.VIEW_KEY,
+      }, {
+        headers: {
+          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+        }
+      })
+      .then(res => {
+        if (res.data["status"] == "success") {
+          this.incrementNumOfViews();
+        }
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // blog が view されたとき
+    if (prevState.status !== this.state.status && this.state.status === "success") {
+      if (this.state.VIEW_KEY) {
+        if (!this.props.accessedBlogs.includes(`${this.state.groupID}_${this.state.blogCt}_${this.props.location.key}`)) {
+          console.log("描画されました。");
+          this.putView();
+          this.props.setAccessedBlog(`${this.state.groupID}_${this.state.blogCt}_${this.props.location.key}`);
+        }
+      }
+    }
+
+    // accepted
+    super.componentDidUpdate(prevProps, prevState);
+  }
 
   render() {
     let contents;
@@ -141,7 +187,7 @@ class BlogViewTemplate extends React.Component {
       contents = (<LoaderScreen type="horizontal" />);
     } else if (this.state.status === "success") {
       if (this.state.images.length > 0) {
-        contents = (<BlogView group={this.state.group} images={this.state.images} blogViewURL={this.blogViewURL} />);
+        contents = (<BlogView group={this.state.group} images={this.state.images} blogViewURL={this.blogViewURL} incrementNumOfDownloads={(order, num) => this.incrementNumOfDownloads(order, num)} />);
       } else {
         contents = (<div className="pb-5"><NotFoundMessage type="image" /></div>);
       }
@@ -161,7 +207,7 @@ class BlogViewTemplate extends React.Component {
         {contents}
       </>
     );
-  };
-};
+  }
+}
 
 export default withRouter(BlogViewTemplate);

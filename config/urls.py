@@ -22,17 +22,15 @@ from config import settings
 from django.views.static import serve
 
 urlpatterns = [
-    path('', main.views.top, name='top'),
-    path('support/', main.views.support, name='support'),
-    path('search/', include('main.urls')),
-    path('download/', include('image.urls')),
     path('api/', include('api.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 
-    path('react/', main.views.react, name='react'),
-
+    # TODO 旧URLをリダイレクト処理したい
 ]
 
 #Debug=Falseでもadminへアクセスできてしまうため、対処
 if settings.DEBUG:
     urlpatterns += [path('admin/', admin.site.urls)]
+
+# catch all other URL
+urlpatterns += [re_path(r'.*', main.views.indexView, name="indexView")]

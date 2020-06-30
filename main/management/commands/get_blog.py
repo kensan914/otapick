@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from main.scripts.blogRegister.registerer import register_latest
+import otapick
 
 
 class Command(BaseCommand):
@@ -29,7 +29,7 @@ class Command(BaseCommand):
             unregister_num = options['unregister']
 
         if options['group']:
-            register_latest(group_id=options['group'], up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
+            otapick.register_blogs(group_id=options['group'], up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
         else:
-            register_latest(group_id=1, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
-            register_latest(group_id=2, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
+            otapick.register_blogs(group_id=1, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
+            otapick.register_blogs(group_id=2, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)

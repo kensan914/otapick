@@ -4,7 +4,7 @@ from otapick.image.abstracts import ImageEditor
 
 ### 引数widthで指定した幅に圧縮（比率固定） ###
 class ImageCompressor(ImageEditor):
-    resize_width = 236
+    resize_width = 500
 
     def exe_edit(self, img):
         img_width, img_height = img.size
@@ -13,7 +13,7 @@ class ImageCompressor(ImageEditor):
         img.thumbnail((int(self.resize_width), int(resize_height)), Image.ANTIALIAS)
         return img
 
-    def edit(self, img_path, width=236):
+    def edit(self, img_path, width=500):
         self.resize_width = width
         super().edit(img_path=img_path)
 

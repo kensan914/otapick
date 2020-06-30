@@ -1,11 +1,11 @@
 import os
+import random
 import urllib.parse
 import zipfile
 from django.http import FileResponse, HttpResponse
 from rest_framework import status, views
 from rest_framework.response import Response
 from api.serializers import *
-from config import settings
 from image.models import Progress
 from main.models import Member, Blog
 import otapick
@@ -67,7 +67,7 @@ class BlogDetailAPIView(views.APIView):
                     images = Image.objects.filter(publisher=blog).order_by('order')
                     blog_data['images'] = ImageSerializer(images, many=True).data
                     blog_data['status'] = 'success'
-                    blog_data['BLOG_VIEW_KEY'] = otapick.BLOG_VIEW_KEY
+                    blog_data['VIEW_KEY'] = otapick.VIEW_KEY
                     return Response(blog_data, status.HTTP_200_OK)
                 else: return self.accept_image_download(group_id, blog_ct, blog)
             else: return self.accept_image_download(group_id, blog_ct, blog)
@@ -83,10 +83,10 @@ class BlogDetailAPIView(views.APIView):
 
         # inform of blog view
         if 'action' in request.data and request.data['action'] == 'view':
-            if 'key' in request.data and request.data['key'] == otapick.BLOG_VIEW_KEY:
+            if 'key' in request.data and request.data['key'] == otapick.VIEW_KEY:
                 if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
                     blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
-                    otapick.increment_num_of_views(blog, num=1)
+                    otapick.increment_num_of_views(blog=blog, num=1)
                     return Response({'status': 'success'}, status.HTTP_200_OK)
                 else: return Response({'status': 'blog_not_found'}, status.HTTP_200_OK)
             else: return Response({'status': 'unjust_key'}, status.HTTP_200_OK)
@@ -151,15 +151,24 @@ class BlogListAPIView(views.APIView):
         narrowing_keyword = self.request.GET.get('keyword')
         narrowing_post = self.request.GET.get('post')
         page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+        random_seed = self.request.GET.get('random_seed') if self.request.GET.get('random_seed') is not None else 0
 
-        narrowing_blogs = \
-            Blog.objects.filter(writer__belonging_group__group_id=group_id) if ct is None \
-            else Blog.objects.filter(writer__belonging_group__group_id=group_id, writer__ct=ct)
-        narrowing_blogs = otapick.sort_blogs(narrowing_blogs, order_format)
-        narrowing_blogs = otapick.narrowdown_blogs_keyword(narrowing_blogs, narrowing_keyword)
-        narrowing_blogs = otapick.narrowdown_blogs_post(narrowing_blogs, narrowing_post)
+        if group_id is not None:
+            blogs = \
+                Blog.objects.filter(writer__belonging_group__group_id=group_id) if ct is None \
+                else Blog.objects.filter(writer__belonging_group__group_id=group_id, writer__ct=ct)
+            blogs = otapick.sort_blogs(blogs, order_format)
+            blogs = otapick.narrowdown_blogs_keyword(blogs, narrowing_keyword)
+            blogs = otapick.narrowdown_blogs_post(blogs, narrowing_post)
+            blogs = blogs[self.paginate_by * (page - 1): self.paginate_by * page]
+        # recommend
+        else:
+            # ↓画像を持つブログのみ
+            thumbnails = Image.objects.filter(order=0).order_by('?')[self.paginate_by * (page - 1): self.paginate_by * page]
+            blogs = [thumbnail.publisher for thumbnail in thumbnails]
+            # ↓画像を持たないブログを含む
+            # blogs = Blog.objects.all().order_by('?')[self.paginate_by * (page - 1): self.paginate_by * page]
 
-        blogs = narrowing_blogs[self.paginate_by * ( page - 1 ): self.paginate_by * page]
         serializer = BlogSerializer(blogs, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -179,18 +188,113 @@ class BlogListInfoAPIView(views.APIView):
 blogListInfoAPIView = BlogListInfoAPIView.as_view()
 
 
+class ImageDetailAPIView(views.APIView):
+    def put(self, request, *args, **kwargs):
+        group_id = self.kwargs.get('group_id')
+        blog_ct = self.kwargs.get('blog_ct')
+        order = self.kwargs.get('order')
+
+        # inform of blog view
+        if 'action' in request.data and request.data['action'] == 'view':
+            if 'key' in request.data and request.data['key'] == otapick.VIEW_KEY:
+                if Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order).exists():
+                    image = Image.objects.get(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+                    otapick.increment_num_of_views(image=image, num=1)
+                    return Response({'status': 'success'}, status.HTTP_200_OK)
+                else: return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
+            else: return Response({'status': 'unjust_key'}, status.HTTP_200_OK)
+
+        # inform of image download for mobile
+        elif 'action' in request.data and request.data['action'] == 'download':
+            if 'key' in request.data and request.data['key'] == otapick.IMAGE_DOWNLOAD_KEY:
+                if Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order).exists():
+                    image = Image.objects.get(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+                    otapick.increment_num_of_downloads(image, image.publisher, num=1)
+                    otapick.edit_num_of_most_downloads(image.publisher)
+                    return Response({'status': 'success'}, status.HTTP_200_OK)
+                else: return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
+            else: return Response({'status': 'unjust_key'}, status.HTTP_200_OK)
+        else: return Response({'status': 'failed'}, status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        group_id = self.kwargs.get('group_id')
+        blog_ct = self.kwargs.get('blog_ct')
+        order = self.kwargs.get('order')
+
+        try:
+            if Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order).exists():
+                image = Image.objects.get(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+                # rewrite num_of_downloads
+                otapick.increment_num_of_downloads(image, image.publisher, num=1)
+                otapick.edit_num_of_most_downloads(image.publisher)
+                return FileResponse(image.picture, as_attachment=True)
+            else: return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
+        except: return Response({'status': 'failed'}, status.HTTP_200_OK)
+
+imageDetailAPIView = ImageDetailAPIView.as_view()
+
+
+class ImageListAPIView(views.APIView):
+    paginate_by = 20
+
+    def get(self, request, *args, **kwargs):
+        group_id, ct = otapick.shape_ct(self.kwargs.get('group_id'), self.kwargs.get('ct'))
+        page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+        random_seed = self.request.GET.get('random_seed') if self.request.GET.get('random_seed') is not None else 0
+        order_format = self.request.GET.get('sort')
+
+        # filter
+        if group_id is not None:
+            images = \
+                Image.objects.filter(publisher__writer__belonging_group__group_id=group_id) if ct is None \
+                else Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct)
+        # recommend
+        else:
+            images = Image.objects.all()
+
+        # sort and slice
+        result = otapick.sort_images(images, order_format)
+        # success sorted
+        if result is not None:
+            images = result
+        # hove to sort by recommend
+        else:
+            if images.count() > 1000:
+                images = images.order_by('?')
+            else:
+                images = list(images)
+                random.seed(random_seed)
+                random.shuffle(images)
+
+        images = images[self.paginate_by * (page - 1): self.paginate_by * page]
+        images_data = ImageSerializer(images, many=True).data
+
+        blogs = [image.publisher for image in images]
+        blogs_data = BlogSerializer(blogs, many=True).data
+
+        data = []
+        for image_data, blog_data in zip(images_data, blogs_data):
+            data.append({'image': image_data, 'blog': blog_data})
+        return Response(data, status.HTTP_200_OK)
+
+imageListAPIView = ImageListAPIView.as_view()
+
+
+class ImageListInfoAPIView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        group_id, ct = otapick.shape_ct(self.kwargs.get('group_id'), self.kwargs.get('ct'))
+        order_format = self.request.GET.get('sort')
+        return Response(otapick.ImageListInfo(group_id, ct, order_format).get_result(), status.HTTP_200_OK)
+
+imageListInfoAPIView = ImageListInfoAPIView.as_view()
+
+
 class SearchAPIView(views.APIView):
     paginate_by = 20
     q = ''
 
     def serialize_blogs(self, blogs):
-        # TODO デプロイ時、直す
-        if settings.DEBUG:
-            return BlogSerializer(blogs, many=True).data
-        else:
-            return BlogSerializerVerOrderly(blogs, many=True).data
-
-        # return BlogSerializerVerOrderly(blogs, many=True).data
+        return BlogSerializer(blogs, many=True).data
 
     def serialize_members(self, members):
         return MemberSerializer(members, many=True).data
@@ -252,9 +356,7 @@ searchAPIView = SearchAPIView.as_view()
 
 class SearchSuggestionsAPIView(SearchAPIView):
     query_set_length = 11
-    # TODO
-    # mobileの実装次第でquery_setの制限は実装しないかも。
-
+    # TODO mobileの実装次第でquery_setの制限は実装しないかも。
     def serialize_blogs(self, blogs):
         ### query_setの制限 ###
         if len(blogs) > self.query_set_length:

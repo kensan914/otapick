@@ -1,7 +1,8 @@
+from image.models import Progress
 from main.models import Group, Member
 
 
-def initGroup():
+def init_group():
     fin = open('static/courpus/groupList.txt', 'rt', encoding='utf-8')
     lines = fin.readlines()
     fin.close()
@@ -21,7 +22,7 @@ def initGroup():
             print(group['name'], 'is registered!')
 
 
-def createDict(line, keyList):
+def create_dict(line, keyList):
     member = {}
     for key, val in zip(keyList, list(line.split(' '))):
         if val.lower() == 'true':
@@ -34,7 +35,7 @@ def createDict(line, keyList):
     return member
 
 
-def initMember():
+def init_member():
     fin = open('static/courpus/memberList.txt', 'rt', encoding='utf-8')
     lines = fin.readlines()
     fin.close()
@@ -43,7 +44,7 @@ def initMember():
                'first_eng', 'group_id', 'graduate', 'independence', 'temporary', 'generation']
     for line in lines:
         line = line.replace('\n', '')
-        member = createDict(line, keyList)
+        member = create_dict(line, keyList)
 
         if not Member.objects.filter(ct=member['ct'], belonging_group__group_id=member['group_id']).exists():
             Member.objects.create(
@@ -77,3 +78,10 @@ def initMember():
                     print('{}の{}を{}に変更しました。'.format(target_member.full_kanji, key, val))
                     target_member.__dict__[key] = val
                 target_member.save()
+
+def init_progress(blog):
+    if not Progress.objects.filter(target=blog).exists():
+        progress = Progress(target=blog)
+        progress.num = 100
+        progress.ready = True
+        progress.save()

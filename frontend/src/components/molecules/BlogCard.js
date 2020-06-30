@@ -11,7 +11,7 @@ const DetailButton = (props) => {
         <DropdownToggle id="thumbnailDetail" color="light" className="p-0 card-detail-button rounded-circle">
           <i className="fas fa-bars" style={{ color: "gray" }}></i>
         </DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu className="bold">
           <DropdownItem tag={Link} to={props.url}>ダウンロードページへ</DropdownItem>
           <DropdownItem href={props.officialUrl} target="_blank">公式ブログで確認</DropdownItem>
         </DropdownMenu>
@@ -39,7 +39,11 @@ class SuperBlogCard extends React.Component {
           <div className="l-thumbnail">
             <Link to={this.props.props.url}>
               <figure className="thumbnail-wrapper">
-                <img className={"card-img-top " + (this.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.thumbnail} style={{ borderRadius: "0" }} />
+                {this.props.orderly
+                  ? <img className="card-img-top newpost-thumbnail" style={{ borderRadius: "0" }} src={this.props.props.thumbnail["500x"]} />
+                  : <img className="card-img-top" style={{ borderRadius: "0" }} src={this.props.props.thumbnail["250x"]}
+                    srcSet={`${this.props.props.thumbnail["250x"]} 1x, ${this.props.props.thumbnail["500x"]} 2x`} />
+                }
               </figure>
             </Link>
             <span className="more-button">
@@ -61,10 +65,10 @@ class SuperBlogCard extends React.Component {
           </div>
           <div className="card-body pb-0 px-3 px-sm-4 pt-3">
             <Link to={this.props.props.url} style={{ color: "dimgray" }}>
-              <h6 className={"card-title blog-title " + (this.props.orderly ? "newpost-title" : "")}>{!this.props.props.title ? "\u00A0" : this.props.props.title}</h6>
+              <h6 className={"card-title blog-title " + (this.props.orderly ? "omit-title" : "")}>{!this.props.props.title ? "\u00A0" : this.props.props.title}</h6>
             </Link>
             <div className="row">
-              <Link to={this.props.props.writer.url} className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.props.group}>
+              <Link to={this.props.props.writer.url["blogs"]} className={"card-text ml-3 small mb-2 pb-0 card-info writer-name " + this.props.props.group}>
                 {this.props.props.writer.name}
               </Link>
               <p className="card-text ml-3 small mb-2 pb-0 card-info">{this.props.props.postDate}</p>

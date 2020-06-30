@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import Headline from '../molecules/Headline';
-import MemberListInfo from '../molecules/MemberListInfo';
+import MemberListInfo from '../molecules/info/MemberListInfo';
 import MemberCard from "../molecules/MemberCard";
 import { URLJoin } from '../tools/support';
 import axios from 'axios';
 import { getGroup, generateWavesVals } from '../tools/support';
 import { UncontrolledCollapse } from 'reactstrap';
-import { BASE_URL } from "../tools/env";
+import { BASE_URL, DELAY_TIME } from "../tools/env";
 import { LoaderScreen } from "../molecules/Loader";
 
 
@@ -29,7 +29,7 @@ class MemberListByGeneration extends React.Component {
         <UncontrolledCollapse toggler={"#" + togglerID} defaultOpen={this.props.isOpen}>
           <div className="row mb-5">
             {this.props.members.map(({ image, url, offcialUrl, ct, lastKanji, firstKanji, lastKana, firstKana, belongingGroup }, i) => (
-              <MemberCard key={i} ct={ct} image={image} blogsUrl={url["blogs"]} imagesUrl={url["images"]} offcialUrl={offcialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
+              <MemberCard key={i} ct={ct} image={image} url={url} offcialUrl={offcialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
                 firstKana={firstKana} belongingGroup={belongingGroup} wavesVals={this.props.wavesVals} />
             ))}
           </div>
@@ -113,7 +113,7 @@ class MemberListTemplate extends React.Component {
           console.log(err);
         })
         .finally()
-    }, 300);
+    }, DELAY_TIME);
   }
 
   setTogglerMemory(group, index) {

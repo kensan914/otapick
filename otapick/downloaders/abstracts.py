@@ -38,15 +38,18 @@ class Downloader(metaclass=ABCMeta):
             file = open(path, 'wb')
             urllib3.disable_warnings(InsecureRequestWarning)
             response = requests.get(url, verify=False)
+            # exclude gif
+            if response.headers['Content-Type'] == 'image/gif':
+                return 'not_image'
             if response.status_code == 200:
                 data = response.content
                 file.write(data)
                 result = True
-            else: result = False
+            else: return
             file.close()
             return result
         except:
-            return False
+            return
 
     def exe_edit(self, path):
         pass
@@ -56,8 +59,10 @@ class Downloader(metaclass=ABCMeta):
         self.set_media_dir_path_list(**kwargs)
         success, path, media = self.generate_filepath(**kwargs)
         if not success: return
-        if self.exe_download(kwargs['url'], path):
+        download_result = self.exe_download(kwargs['url'], path)
+        if not download_result: return
+        elif download_result == 'not_image':
+            return 'not_image'
+        else:
             self.exe_edit(path)
             return media
-        else:
-            return

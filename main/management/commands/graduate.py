@@ -1,9 +1,6 @@
 from django.core.management.base import BaseCommand
-from image import imgScraper
-from image.models import Progress
-from main.models import Blog
-from main.scripts.blogRegister.registerer_ex import register_external
-from main.scripts.blogRegister.textScraper import save_text
+import otapick
+from main.models import Member, Blog
 
 
 class Command(BaseCommand):
@@ -26,28 +23,18 @@ class Command(BaseCommand):
 
         # crawl external
         if options['external']:
-            register_external(options['group'], options['ct'])
+            otapick.register_external(options['group'], options['ct'])
             print('finished crawl external!!')
             quit()
 
-        blogs = Blog.objects.filter(writer__belonging_group__group_id=options['group'], writer__ct=options['ct'])
-
-        if not blogs:
+        if Member.objects.filter(belonging_group__group_id=options['group'], ct=options['ct']):
+            member = Member.objects.get(belonging_group__group_id=options['group'], ct=options['ct'])
+        else:
             print('member not found.')
-            quit()
+            return
 
-        for blog in blogs:
-            if Progress.objects.filter(target=blog).exists():
-                progress = Progress.objects.get(target=blog)
-                if progress.num < 100 or not progress.ready:
-                    progress.delete()
+        otapick.download_images_by(member=member)
 
-            if not Progress.objects.filter(target=blog).exists():
-                progress_instance = Progress.objects.create(target=blog)
-                imgScraper.update(progress_instance.id, options['group'], blog.blog_ct, options['ct'])
-                progress_instance.num = 100
-                progress_instance.ready = True
-                progress_instance.save()
-
-            save_text(blog)
-            print(blog.title, 'saved!!')
+        # 本文DOMを所得
+        for blog in Blog.objects.filter(writer=member):
+            otapick.register_text(blog)

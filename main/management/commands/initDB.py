@@ -7,5 +7,5 @@ class Command(BaseCommand):
            'memberList.txtに変更を加え、コマンドを実行すれば、変更箇所だけDBに反映されます。'
 
     def handle(self, *args, **options):
-        otapick.initGroup()
-        otapick.initMember()
+        otapick.init_group()
+        otapick.init_member()

@@ -4,11 +4,13 @@ import BlogListTemplate from '../templates/BlogListTemplate';
 import BlogSearchListTemplate from '../templates/BlogSearchListTemplate';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Provider } from 'react-keep-alive';
-import { scrollTop } from '../tools/support';
+import { scrollTop, setUserAgent } from '../tools/support';
 import Footer from '../organisms/Footer';
 import KeepScrollTop from "../atoms/KeepScrollTop";
 import MemberListTemplate from "../templates/MemberListTemplate";
 import BlogViewTemplate from "../templates/BlogViewTemplate";
+import ImageListTemplate from "../templates/ImageListTemplate";
+import ImageViewTemplate from "../templates/ImageViewTemplate";
 
 
 class App extends React.Component {
@@ -16,9 +18,11 @@ class App extends React.Component {
     super(props);
     this.state = {
       isTop: true,
-      accessedBlogs: [], // ["1_34360", "2_34230"]
+      accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"]
+      accessedImages: [], // ["1_34360_0_2341234", "2_34230_3_51451345"]
     }
     this.footerRef = React.createRef();
+    setUserAgent();
   }
 
   watchCurrentPosition = () => {
@@ -42,6 +46,15 @@ class App extends React.Component {
     });
   }
 
+  setAccessedImage = (imageID) => {
+    this.setState(function (state) {
+      state.accessedImages.push(imageID)
+      return {
+        accessedImages: state.accessedImages
+      };
+    });
+  }
+
   componentDidMount() {
     window.addEventListener('scroll', event => this.watchCurrentPosition(), true);
   }
@@ -58,20 +71,24 @@ class App extends React.Component {
             <NavigationBar isTop={this.state.isTop} />
             <div className="container mt-3 text-muted">
               <Switch>
-                <Route exact path="/react">
-                  {/* <BlogListTemplate headlineTitle="ブログ一覧" /> */}
-                  <div>testtest</div>
-                </Route>
-
                 <Route exact path="/blogs/" render={({ match, location, history }) =>
-                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                  <BlogListTemplate match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
-
                 <Route exact path="/blogs/:groupID" render={({ match, location, history }) =>
-                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                  <BlogListTemplate match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
                 <Route exact path="/blogs/:groupID/:ct" render={({ match, location, history }) =>
-                  <BlogListTemplate headlineTitle="ブログ一覧" match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                  <BlogListTemplate match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                } />
+
+                <Route exact path="/images/" render={({ match, location, history }) =>
+                  <ImageListTemplate match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                } />
+                <Route exact path="/images/:groupID" render={({ match, location, history }) =>
+                  <ImageListTemplate match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+                } />
+                <Route exact path="/images/:groupID/:ct" render={({ match, location, history }) =>
+                  <ImageListTemplate match={match} location={location} history={history} isTop={this.state.isTop} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
                 } />
 
                 <Route exact path="/search/" render={({ match, location, history }) =>
@@ -84,6 +101,10 @@ class App extends React.Component {
 
                 <Route exact path="/blog/:groupID/:blogCt" render={({ match, location, history }) =>
                   <BlogViewTemplate match={match} location={location} history={history} accessedBlogs={this.state.accessedBlogs} setAccessedBlog={(blogID) => this.setAccessedBlog(blogID)} />
+                } />
+
+                <Route exact path="/image/:groupID/:blogCt/:order" render={({ match, location, history }) =>
+                  <ImageViewTemplate match={match} location={location} history={history} accessedImages={this.state.accessedImages} setAccessedImage={(imageID) => this.setAccessedImage(imageID)}/>
                 } />
               </Switch>
             </div>

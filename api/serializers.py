@@ -16,7 +16,7 @@ class MemberSerializer(serializers.ModelSerializer):
         return otapick.generate_memberimage_url(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj)
+        return otapick.generate_url(member=obj, needBlogs=True, needImages=True)
 
     def get_official_url(self, obj):
         return otapick.generate_official_url(member=obj)
@@ -25,7 +25,7 @@ class MemberSerializer(serializers.ModelSerializer):
 class MemberSerializerMin(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['name', 'ct', 'url']
+        fields = ['name', 'ct', 'url', 'image']
     name = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
@@ -33,14 +33,15 @@ class MemberSerializerMin(serializers.ModelSerializer):
         return otapick.generate_writer_name(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj, needBlogs=True, needImages=False)
+        return otapick.generate_url(member=obj, needBlogs=True, needImages=True)
 
 
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url']
+        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url']
 
+    group_id = serializers.IntegerField(source='writer.belonging_group.group_id')
     post_date = serializers.DateTimeField(format='%y/%m/%d')
     writer = MemberSerializerMin(read_only=True)
     thumbnail = serializers.SerializerMethodField()
@@ -60,19 +61,13 @@ class BlogSerializer(serializers.ModelSerializer):
 class BlogSerializerVerDetail(BlogSerializer):
     class Meta:
         model = Blog
-        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'official_url']
+        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'official_url', 'url']
 
     post_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
+    url = serializers.SerializerMethodField()
 
-
-class BlogSerializerVerOrderly(BlogSerializer):
-    thumbnail = serializers.SerializerMethodField()
-    def get_thumbnail(self, obj):
-        if hasattr(obj, 'thumbnail'):
-            if Image.objects.filter(publisher=obj, order=0):
-                high_thumbnail = Image.objects.get(publisher=obj, order=0)
-                return high_thumbnail.picture.url
-        return otapick.IMAGE_NOT_FOUND_ORDERLY_URL
+    def get_url(self, obj):
+        return otapick.generate_url(blog=obj)
 
 
 class MemberSerializerVerSS(serializers.ModelSerializer):
@@ -88,7 +83,7 @@ class MemberSerializerVerSS(serializers.ModelSerializer):
         return otapick.generate_memberimage_url(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj, needBlogs=True, needImages=False)
+        return otapick.generate_url(member=obj, needBlogs=False, needImages=True)
 
 
 class BlogSerializerVerSS(serializers.ModelSerializer):
@@ -100,7 +95,7 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     def get_background_image(self, obj):
-        return otapick.generate_thumbnail_url(blog=obj)
+        return otapick.generate_thumbnail_url_SS(blog=obj)
 
     def get_url(self, obj):
         return otapick.generate_url(blog=obj)
@@ -109,7 +104,18 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['order', 'url', 'upload_date', 'num_of_downloads', 'd1_per_week',]
+        exclude = ('id', 'picture', 'picture_250x', 'picture_500x', 'publisher',)
 
-    url = serializers.ImageField(source='picture')
+    src = serializers.SerializerMethodField()
     upload_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
+    url = serializers.SerializerMethodField()
+
+    def get_src(self, obj):
+        return {
+            'originals': obj.picture.url,
+            '250x': obj.picture_250x.url,
+            '500x': obj.picture_500x.url,
+        }
+
+    def get_url(self, obj):
+        return '/image/{}/{}/{}'.format(obj.publisher.writer.belonging_group.group_id, obj.publisher.blog_ct, obj.order)

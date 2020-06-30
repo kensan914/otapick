@@ -4,9 +4,9 @@ import { HorizontalLoader } from '../molecules/Loader';
 import Masonry from 'react-masonry-component';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
-import { URLJoin } from '../tools/support';
+import { URLJoin, getGroup, os } from '../tools/support';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL } from '../tools/env';
+import { BASE_URL, DELAY_TIME } from '../tools/env';
 
 
 class BlogList extends React.Component {
@@ -37,13 +37,14 @@ class BlogList extends React.Component {
             if (res.data.length > 0) {
               const newBlogs = res.data.map((blog, index) =>
                 ({
+                  groupID: blog.group_id,
                   blogCt: blog.blog_ct,
                   title: blog.title,
                   postDate: blog.post_date,
                   writer: blog.writer,
                   numOfViews: blog.num_of_views,
                   numOfDownloads: blog.num_of_downloads,
-                  thumbnail: blog.thumbnail,
+                  thumbnail: os === "mac" ? blog.thumbnail["500x"] : blog.thumbnail["250x"],
                   url: blog.url,
                   officialUrl: blog.official_url,
                 })
@@ -72,7 +73,7 @@ class BlogList extends React.Component {
               this.page += 1;
             }
           )
-      }, 2000);
+      }, DELAY_TIME);
 
     }
     else console.log("setBlogList失敗");
@@ -106,8 +107,8 @@ class BlogList extends React.Component {
       >
         <Masonry options={options}>
           {
-            this.state.blogs.map(({ blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
-              <BlogCard key={i} id={i} groupID={this.props.groupID} group={this.props.group} blogCt={blogCt} thumbnail={thumbnail}
+            this.state.blogs.map(({ groupID, blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
+              <BlogCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
                 title={title} writer={writer} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} url={url}
                 officialUrl={officialUrl} />
             ))

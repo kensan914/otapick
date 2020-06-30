@@ -4,7 +4,7 @@ import axios from 'axios';
 import { URLJoin } from '../tools/support';
 import { NotFoundBlogsContent, NotFoundMembersContent } from '../atoms/NotFound';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL } from '../tools/env';
+import { BASE_URL, DELAY_TIME } from '../tools/env';
 
 
 class SearchDownshift extends React.Component {
@@ -54,7 +54,7 @@ class SearchDownshift extends React.Component {
         .catch(err => {
           console.log(err);
         })
-    }, 100);
+    }, DELAY_TIME);
   }
 
   setSearchSuggestions() {
@@ -88,7 +88,7 @@ class SearchDownshift extends React.Component {
           console.log(err);
         })
         .finally(() => { this.isCallingSetSearchSuggestions = false; })
-    }, 100);
+    }, DELAY_TIME);
   }
 
   onFocusInput() {
@@ -238,7 +238,7 @@ class SearchDownshift extends React.Component {
                       <h5>検索方法</h5>
                       <p className="mx-2"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>を入力してください。</p>
                       <hr className="mb-0" />
-                      <h5 className="my-2">メンバー</h5>
+                      <h5 className="my-2">メンバーから画像を探す</h5>
                       <div className="row mx-1">
                         {
                           this.state.initSuggestionsMembers

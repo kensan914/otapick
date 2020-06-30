@@ -1,4 +1,6 @@
 import otapick
+from image.models import Image
+from main.models import Member
 
 
 def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
@@ -7,8 +9,8 @@ def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
     elif member is not None:
         ct = ''
         if member.independence: ct = member.ct
-        elif member.belonging_group.group_id == 1: ct = 1002
-        elif member.belonging_group.group_id == 2: ct = 1000
+        elif member.belonging_group.group_id == 1: ct = Member.objects.get(belonging_group__group_id=1, temporary=True).ct
+        elif member.belonging_group.group_id == 2: ct = Member.objects.get(belonging_group__group_id=2, temporary=True).ct
 
         blogs_url = '/blogs/{}/{}'.format(member.belonging_group.group_id, ct)
         images_url = '/images/{}/{}'.format(member.belonging_group.group_id, ct)
@@ -41,11 +43,24 @@ def generate_memberimage_url(member):
 
 
 def generate_thumbnail_url(blog):
-    return blog.thumbnail.picture.url if hasattr(blog, 'thumbnail') else otapick.IMAGE_NOT_FOUND_URL
+    keys = ['originals', '250x', '500x']
+    if Image.objects.filter(publisher=blog, order=0).exists():
+        thumbnail = Image.objects.get(publisher=blog, order=0)
+        if bool(thumbnail.picture_250x) and bool(thumbnail.picture_500x):
+            return dict(zip(keys, [thumbnail.picture.url, thumbnail.picture_250x.url, thumbnail.picture_500x.url]))
+    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(3)]))
+
+
+def generate_thumbnail_url_SS(blog):
+    if Image.objects.filter(publisher=blog, order=0).exists():
+        thumbnail = Image.objects.get(publisher=blog, order=0)
+        if bool(thumbnail.picture_250x):
+            return thumbnail.picture_250x.url
+    return otapick.IMAGE_NOT_FOUND_URL
 
 
 def generate_writer_name(member):
-    if member.ct == '1002' or member.ct == '1000':
+    if member.temporary:
         return member.first_kanji
     else:
         return member.full_kanji

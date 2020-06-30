@@ -52,8 +52,8 @@ const NavigationBar = (props) => {
             <DropdownMenu right>
               <DropdownItem tag={Link} to="/blogs/1">欅坂46</DropdownItem>
               <DropdownItem tag={Link} to="/blogs/2">日向坂46</DropdownItem>
-              <DropdownItem tag={Link} to="/blogs/2/2">新着ブログ</DropdownItem>
-              <DropdownItem tag={Link} to="/blogs/1/13">人気ブログ</DropdownItem>
+              <DropdownItem tag={Link} to="/images/1/51">新着ブログ</DropdownItem>
+              <DropdownItem tag={Link} to="/images/2/14">人気ブログ</DropdownItem>
               <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
             </DropdownMenu>
           </Dropdown>

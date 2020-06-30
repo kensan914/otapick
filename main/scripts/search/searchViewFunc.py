@@ -129,7 +129,7 @@ def get_blog(group_id, blog_ct):
         blog = Blog.objects.get(writer__in=writer_belonging, blog_ct=blog_ct)
     except:
         try:
-            subprocess.call(['python', os.path.join(BASE_DIR, 'manage.py'), 'keepUpLatest'])
+            subprocess.call(['python', os.path.join(BASE_DIR, 'manage.py'), 'get_blog'])
         except:
             print("subprocess.check_call() failed")
         try:

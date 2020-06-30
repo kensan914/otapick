@@ -72,3 +72,32 @@ export const shortenNum = (num) => {
     return "-";
   }
 }
+
+
+const UAParser = require('ua-parser-js')
+export let device;
+
+export const setUserAgent = () => {
+  const result = UAParser();
+  if (typeof result.device.type == "undefined") {
+    device = "pc";
+  } else {
+    device = "mobile";
+  }
+}
+
+export const generateKeepAliveName = (key) => {
+  if (typeof key == "undefined") {
+    return "keepAliveInit";
+  } else {
+    return key;
+  }
+}
+
+export const generateKeepAliveNameInfo = (key) => {
+  if (typeof key == "undefined") {
+    return "keepAliveInitInfo";
+  } else {
+    return key + "info";
+  }
+}
