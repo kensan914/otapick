@@ -72,8 +72,10 @@ class ImageView extends React.Component {
     let imageObjct = new Image();
     imageObjct.onload = setTimeout(() => {
       const mainImage = document.getElementById("main-image");
-      mainImage.removeAttribute("srcset")
-      mainImage.setAttribute('src', imageObjct.src);
+      if (mainImage !== null) {
+        mainImage.removeAttribute("srcset")
+        mainImage.setAttribute('src', imageObjct.src);
+      }
     }, DELAY_TIME)
     imageObjct.src = this.props.image.src["originals"];
   }
