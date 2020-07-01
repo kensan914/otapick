@@ -2,14 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import { saveAs } from "file-saver";
 import { DELAY_TIME } from '../tools/env';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip, Button } from 'reactstrap';
-import { URLJoin } from '../tools/support';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
+import { URLJoin, generateAlt } from '../tools/support';
 import { ViewTooltip } from '../molecules/info/BlogViewInfo';
 import { Link } from 'react-router-dom';
 import WriterCard from '../atoms/WriterCard';
 
 
-export const downloadImage = (url, incrementNumOfDownloads=null) => {
+export const downloadImage = (url, incrementNumOfDownloads = null) => {
   axios
     .post(url, {}, {
       headers: {
@@ -82,19 +82,20 @@ class ImageView extends React.Component {
 
   render() {
     return (
-      <div className={"card otapick-card2 my-4 " + this.props.group}>
+      <div className={"card otapick-card2 my-4 mx-auto image-view " + this.props.group}>
         <div className="card-body">
 
-          <div className="d-flex">
-            <div className="col-lg-6 p-0">
+          <div className="row m-0">
+            <div className="col-12 col-lg-6 p-0">
               <img className="image-of-image-view" src={this.props.image.src["250x"]} id="main-image"
                 srcSet={`${this.props.image.src["250x"]} 1x, ${this.props.image.src["500x"]} 2x`}
-                onContextMenu={(e) => e.preventDefault()} onMouseDown={(e) => e.preventDefault()} />
+                onContextMenu={(e) => e.preventDefault()} onMouseDown={(e) => e.preventDefault()}
+                alt={generateAlt(this.props.group, this.props.writer.name)} />
             </div>
-            <div className="col-lg-6 p-0">
-              <div className="ml-4 image-view-text">
+            <div className="col-12 col-lg-6 p-0">
+              <div className="ml-3 ml-lg-4 image-view-text">
 
-                <div className="d-flex justify-content-between my-2">
+                <div className="d-flex justify-content-between mt-3 mt-lg-2 mb-2 image-view-header">
                   <div className="d-flex align-items-center p-0 col-7 col-md-8 col-lg-9">
                     <div id="num-of-image-views-icon">
                       <i className="fas fa-eye" style={{ color: "gray" }}></i>
@@ -118,27 +119,29 @@ class ImageView extends React.Component {
                   </div>
                 </div>
 
-                <hr className="mt-3 mb-4" />
+                <div><hr className="mt-2 mt-lg-3 mb-4 mr-3" /></div>
 
-                <div className="d-flex mb-3">
-                  <i class="fas fa-link mr-3" id="image-view-blog-icon"></i>
-                  <ViewTooltip target={"image-view-blog-icon"} title="掲載ブログ" />
-                  <Link to={this.props.blogUrl} className="image-view-blog-title">
-                    {this.props.title.length > 50
-                      ? <h5>{this.props.title}</h5>
-                      : <h3>{this.props.title}</h3>
-                    }
-                  </Link>
+                <div className="image-view-body">
+                  <div className="d-flex mb-3">
+                    <i class="fas fa-link mr-3" id="image-view-blog-icon"></i>
+                    <ViewTooltip target={"image-view-blog-icon"} title="掲載ブログ" />
+                    <Link to={this.props.blogUrl} className="image-view-blog-title">
+                      {this.props.title.length > 50
+                        ? <h5>{this.props.title}</h5>
+                        : <h3>{this.props.title}</h3>
+                      }
+                    </Link>
+                  </div>
+
+                  <div className="d-flex align-items-center">
+                    <i class="fas fa-pencil-alt mr-3" id="image-view-writer-icon"></i>
+                    <ViewTooltip target={"image-view-writer-icon"} title="ブログを書いたメンバー" />
+                    <WriterCard writer={this.props.writer} />
+                  </div>
                 </div>
 
-                <div className="d-flex align-items-center">
-                  <i class="fas fa-pencil-alt mr-3" id="image-view-writer-icon"></i>
-                  <ViewTooltip target={"image-view-writer-icon"} title="ブログを書いたメンバー" />
-                  <WriterCard writer={this.props.writer} />
-                </div>
 
-
-                <div className="image-view-footer my-2">
+                <div className="image-view-footer mt-5 mt-lg-2 mb-2">
                   <a className="btn btn-primary rounded-pill image-view-to-official-button py-0" id="image-view-to-official-button"
                     role="button" target="_blank" href={this.props.officialUrl}>
                     <h6 className="omit-title m-0 image-view-to-official-title">

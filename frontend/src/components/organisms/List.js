@@ -157,7 +157,7 @@ class ImageList_ extends List {
                   url: item.image.url,
                   blogUrl: item.blog.url,
                   officialUrl: item.blog.official_url,
-                  writer: item.blog.writer
+                  writer: item.blog.writer,
                 })
               );
               if (res.data.length < 20) {

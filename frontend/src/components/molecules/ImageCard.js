@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { UncontrolledDropdown, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip, Button } from 'reactstrap';
+import React from 'react';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { shortenNum } from '../tools/support';
-import axios from 'axios';
+import { generateAlt } from '../tools/support';
 import { URLJoin } from '../tools/support';
 import { downloadImage } from '../organisms/ImageView';
 
@@ -97,7 +96,8 @@ class SuperImageCard extends React.Component {
         <Link to={this.props.props.url}>
           <div className="image-card-wrapper">
             <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.src["250x"]}
-              srcSet={`${this.props.props.src["250x"]} 1x, ${this.props.props.src["500x"]} 2x`} />
+              srcSet={`${this.props.props.src["250x"]} 1x, ${this.props.props.src["500x"]} 2x`}
+              alt={generateAlt(this.props.props.group, this.props.props.writer.name)} />
           </div>
         </Link>
 

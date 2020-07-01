@@ -16,9 +16,9 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}{{ static_update }}" />
   </head>
 <body>
+  <div id="root"></div>
   {% csrf_token %}
-  <div id="root"><!-- React --></div>
 </body>
 
-<script src="{% static "frontend/main.js" %}"></script>
+<script src="{% static "frontend/main.js" %}{{ static_update }}"></script>
 </html>

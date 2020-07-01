@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom';
 import { NotFoundMessage } from "../atoms/NotFound";
 import ImageView from "../organisms/ImageView";
 import { ViewTemplate } from "./BlogViewTemplate";
+import BackButton from "../atoms/BackButton";
 
 
 class ImageViewTemplate extends ViewTemplate {
@@ -65,7 +66,7 @@ class ImageViewTemplate extends ViewTemplate {
     }
     return (
       <>
-        <Headline title="" />
+        <BackButton fixed={true} className="in-image-view" />
         {contents}
       </>
     );

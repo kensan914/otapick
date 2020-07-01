@@ -101,3 +101,13 @@ export const generateKeepAliveNameInfo = (key) => {
     return key + "info";
   }
 }
+
+export const generateAlt = (group, writerName) => {
+  let groupName;
+  if (group === "keyaki") {
+    groupName = "欅坂46";
+  } else if (group === "hinata") {
+    groupName = "日向坂46";
+  }
+  return `${writerName}(${groupName})のブログ画像`;
+}

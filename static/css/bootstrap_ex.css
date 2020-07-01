@@ -1111,7 +1111,7 @@ a.hinata {
     align-items: center;
 }
 
-/* image-back-button */
+/* otapick-back-button */
 
 .otapick-back-button {
     width: 3rem;
@@ -1121,6 +1121,38 @@ a.hinata {
 .otapick-back-button-mobile {
     width: 3rem;
     height: 3rem;
+}
+
+.otapick-back-button-fixed {
+    position: fixed;
+    top: calc( 3rem + 50px );
+    left: 2rem;
+    width: 3rem;
+    height: 3rem;
+    z-index: 100;
+    background-color: white;
+    transition-duration: 0s!important;
+    border: none;
+}
+
+.otapick-back-button-fixed:hover, .otapick-back-button-fixed:active {
+    background-color: whitesmoke!important;
+}
+
+.otapick-back-button-fixed.in-image-view {
+    visibility: visible;
+}
+
+@media (max-width: 1200px) {
+    .otapick-back-button-fixed.in-image-view {
+        visibility: hidden;
+    }
+}
+
+@media (max-width: 992px) {
+    .otapick-back-button-fixed.in-image-view {
+        visibility: visible;
+    }
 }
 
 /* otapick-card2 */
@@ -1749,6 +1781,12 @@ footer {
 
 /* image view */
 
+@media (max-width: 992px) {
+    .image-view {
+        max-width: 500px;
+    }
+}
+
 .image-of-image-view {
     border-radius: 2rem;
     width: 100%;
@@ -1757,11 +1795,22 @@ footer {
 .image-view-text {
     height: 100%;
     position: relative;
+
+    display: flex;
+    flex-flow: column;
+}
+
+.image-view-header {
+    flex: 0 1 auto;
+}
+
+.image-view-body {
+    flex: 1 1 auto;
 }
 
 .image-view-footer {
-    position: absolute;
-    bottom: 0;
+    flex: 0 1 40px;
+
     display: inline-block;
     text-align: right;
     width: 100%;
