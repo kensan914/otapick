@@ -1,6 +1,6 @@
 import React from "react";
 import Headline from '../molecules/Headline';
-import { getGroup } from '../tools/support';
+import { getGroup, checkMatchParams } from '../tools/support';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
 import BlogViewInfo from "../molecules/info/BlogViewInfo";
@@ -15,7 +15,7 @@ import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
 export class ViewTemplate extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.initState = {
       group: getGroup(this.props.match.params.groupID),
       groupID: this.props.match.params.groupID,
       blogCt: this.props.match.params.blogCt,
@@ -31,7 +31,8 @@ export class ViewTemplate extends React.Component {
       progress: 0,
       loadingImageUrl: "",
       VIEW_KEY: "",
-    }
+    };
+    this.state = this.initState;
     this.blogViewURL = URLJoin(BASE_URL, "api/blog/", this.state.groupID, this.state.blogCt);
   };
 
@@ -54,11 +55,18 @@ export class ViewTemplate extends React.Component {
           }
 
           if (res.data["status"] === "success") {
-            this.setState(Object.assign({
-              images: res.data["images"],
-              status: res.data["status"],
-              VIEW_KEY: res.data["VIEW_KEY"],
-            }, blogData));
+            // order error
+            if (typeof this.props.order !== "undefined" && res.data["images"].length <= this.props.order) {
+              this.setState(Object.assign({
+                status: "get_image_failed"
+              }, blogData));
+            } else {
+              this.setState(Object.assign({
+                images: res.data["images"],
+                status: res.data["status"],
+                VIEW_KEY: res.data["VIEW_KEY"],
+              }, blogData));
+            }
           } else if (res.data["status"] === "start_download" || res.data["status"] === "downloading") {
             this.setState(Object.assign({
               progress: res.data["progress"],
@@ -146,6 +154,12 @@ export class ViewTemplate extends React.Component {
 class BlogViewTemplate extends ViewTemplate {
   constructor(props) {
     super(props);
+    checkMatchParams(props.history, props.match.params.groupID, props.match.params.blogCt);
+
+    this.initBlogState = {
+      mode: "view", // "view" or "download"
+    }
+    this.state = Object.assign(this.initState, this.initBlogState);
   }
 
   putView() {
@@ -163,6 +177,13 @@ class BlogViewTemplate extends ViewTemplate {
           this.incrementNumOfViews();
         }
       });
+  }
+
+  changeMode = (mode) => {
+    if (mode !== this.state.mode) {
+      if (mode === "view" || mode === "download") this.setState({ mode: mode });
+      else this.setState({ mode: "" });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -187,25 +208,26 @@ class BlogViewTemplate extends ViewTemplate {
       contents = (<LoaderScreen type="horizontal" />);
     } else if (this.state.status === "success") {
       if (this.state.images.length > 0) {
-        contents = (<BlogView group={this.state.group} images={this.state.images} blogViewURL={this.blogViewURL} incrementNumOfDownloads={(order, num) => this.incrementNumOfDownloads(order, num)} />);
+        contents = (<BlogView group={this.state.group} images={this.state.images} blogViewURL={this.blogViewURL} incrementNumOfDownloads={(order, num) => this.incrementNumOfDownloads(order, num)}
+          mode={this.state.mode} blogUrl={this.state.url} officialUrl={this.state.officialUrl} writer={this.state.writer} blogCt={this.state.blogCt} blogTitle={this.state.title} groupID={this.state.groupID} />);
       } else {
-        contents = (<div className="pb-5"><NotFoundMessage type="image" /></div>);
+        contents = (<NotFoundMessage type="image" margin={true} />);
       }
     } else if (this.state.status === "accepted") {
       contents = (<BlogViewLoader progress={this.state.progress} loadingImageUrl={LOAD_IMG_URL} />);
     } else if (this.state.status === "blog_not_found" || this.state.status === "get_image_failed") {
-      contents = (<div className="pb-5"><NotFoundMessage type="blogFailed" /></div>);
+      contents = (<NotFoundMessage type="blogFailed" margin={true} />);
     }
     return (
-      <>
-        <Headline title="保存" />
+      <div className="container mt-3 text-muted">
+        <Headline title="ブログ詳細" type="blogView" mode={this.state.mode} changeMode={(mode) => this.changeMode(mode)} />
         {this.state.status !== "blog_not_found"
           ? <BlogViewInfo group={this.state.group} title={this.state.title} writer={this.state.writer} postDate={this.state.postDate}
             officialUrl={this.state.officialUrl} numOfViews={this.state.numOfViews} numOfDownloads={this.state.numOfDownloads} />
           : <BlogSearchListInfo group={this.state.group} title={this.state.title} numOfHit={0} />
         }
         {contents}
-      </>
+      </div>
     );
   }
 }

@@ -3,6 +3,8 @@ import axios from 'axios';
 import { saveAs } from "file-saver";
 import DownloadModal from '../molecules/DownloadModal';
 import { DELAY_TIME } from '../tools/env';
+import Masonry from 'react-masonry-component';
+import ImageCard from '../molecules/ImageCard';
 
 
 class BlogView extends React.Component {
@@ -85,65 +87,109 @@ class BlogView extends React.Component {
     });
   }
 
-  componentDidMount() {
+  loadOriginalImage() {
     let imageObjcts = [];
     for (const [index, image] of this.props.images.entries()) {
-      imageObjcts.push(new Image());
-      imageObjcts[index].onload = setTimeout(() => {
-        document.getElementById(`image_${image.order}`).style.backgroundImage = 'url(' + imageObjcts[index].src + ')';
-      }, DELAY_TIME)
-      imageObjcts[index].src = image.src["originals"];
+      if (this.props.mode === "view") {
+        imageObjcts.push(new Image());
+        imageObjcts[index].onload = setTimeout(() => {
+          const targetImage = document.getElementById(`image_${image.order}`);
+          if (targetImage !== null) {
+            targetImage.removeAttribute("srcset")
+            targetImage.setAttribute('src', imageObjcts[index].src);
+          }
+        }, DELAY_TIME)
+        imageObjcts[index].src = image.src["originals"];
+      } else if (this.props.mode === "download") {
+        imageObjcts.push(new Image());
+        imageObjcts[index].onload = setTimeout(() => {
+          document.getElementById(`image_${image.order}`).style.backgroundImage = 'url(' + imageObjcts[index].src + ')';
+        }, DELAY_TIME)
+        imageObjcts[index].src = image.src["originals"];
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.loadOriginalImage();
+  }
+
+  componentDidUpdate(prevProps) {
+    // mode が変わったとき
+    if (prevProps.mode !== this.props.mode) {
+      this.loadOriginalImage();
     }
   }
 
   render() {
-    return (
-      <>
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <div className="col-md-3 col-lg-2 ml-auto" style={{ width: 200 }}>
-            <div className="custom-control custom-checkbox">
-              <input name="allCheck" type="checkbox" className="custom-control-input" id="allCheck"
-                checked={this.state.allCheck} onChange={(e) => this.handleAllCheckChange(e)} />
-              <label className="custom-control-label" for="allCheck">すべて選択</label>
+    if (this.props.mode === "view") {
+      const options = {
+        itemSelector: '.grid-item',
+        transitionDuration: 0,
+        stagger: 0,
+      };
+
+      return (
+        <div className="container">
+          <Masonry options={options} className="mt-3 image-list-in-blog-view">
+            {this.props.images.map(({ src, url, order }, i) => (
+              <div className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2">
+                <ImageCard key={i} id={i} groupID={this.props.groupID} group={this.props.group} blogCt={this.props.blogCt} blogTitle={this.props.blogTitle}
+                  src={src} url={url} blogUrl={this.props.blogUrl} officialUrl={this.props.officialUrl} writer={this.props.writer} imageID={`image_${order}`} />
+              </div >
+            ))}
+          </Masonry>
+        </div>
+      );
+    } else if (this.props.mode === "download") {
+      return (
+        <>
+          <form onSubmit={(e) => this.handleSubmit(e)}>
+            <div className="col-md-3 col-lg-2 ml-auto" style={{ width: 200 }}>
+              <div className="custom-control custom-checkbox">
+                <input name="allCheck" type="checkbox" className="custom-control-input" id="allCheck"
+                  checked={this.state.allCheck} onChange={(e) => this.handleAllCheckChange(e)} />
+                <label className="custom-control-label" for="allCheck">すべて選択</label>
+              </div>
             </div>
-          </div>
 
-          <div className="container my-4">
-            <div className="row text-center">
+            <div className="container my-4">
+              <div className="row text-center">
 
-              {
-                this.props.images.map((image, index) => (
-                  <div className="col-6 col-md-4 col-xl-3 mb-5">
-                    <div style={{ cursor: "pointer" }} onClick={() => this.changeCheck(image.order)}>
-                      <div className={this.props.group}>
-                        <div className={"thumbnail img-thumbnail mx-auto " + (this.state.check[image.order] ? "checked" : "")} id={`image_${image.order}`}
-                          style={{ background: `-webkit-image-set( url(${image.src["250x"]}) 1x, url(${image.src["500x"]}) 2x )`, backgroundSize: "cover", backgroundPosition: "center" }}>
-                          <input className="save_img_checkbox" type="checkbox"
-                            onChange={(e) => this.handleCheckChange(e)} name={image.order} checked={this.state.check[image.order]} />
+                {
+                  this.props.images.map((image, index) => (
+                    <div className="col-6 col-md-4 col-xl-3 mb-5">
+                      <div style={{ cursor: "pointer" }} onClick={() => this.changeCheck(image.order)}>
+                        <div className={this.props.group}>
+                          <div className={"thumbnail img-thumbnail mx-auto " + (this.state.check[image.order] ? "checked" : "")} id={`image_${image.order}`}
+                            style={{ background: `-webkit-image-set( url(${image.src["250x"]}) 1x, url(${image.src["500x"]}) 2x )`, backgroundSize: "cover", backgroundPosition: "center" }}>
+                            <input className="save_img_checkbox" type="checkbox"
+                              onChange={(e) => this.handleCheckChange(e)} name={image.order} checked={this.state.check[image.order]} />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
-              }
+                  ))
+                }
 
+              </div>
             </div>
-          </div>
-          {this.state.showAleart &&
-            <div className="alert alert-danger py-2 mb-5 mt-0" role="alert" style={{ borderRadius: "1rem" }}>
-              画像を選択してください。
-          </div>
-          }
-          <div className="mx-auto mb-5" style={{ width: 150 }}>
-            <button type="submit" className={"gradient-btn " + this.props.group} style={{ width: 150 }}>
-              <b>保存</b>
-            </button>
-          </div>
-        </form>
+            {this.state.showAleart &&
+              <div className="alert alert-danger py-2 mb-5 mt-0" role="alert" style={{ borderRadius: "1rem" }}>
+                画像を選択してください。
+            </div>
+            }
+            <div className="mx-auto mb-5" style={{ width: 150 }}>
+              <button type="submit" className={"gradient-btn " + this.props.group} style={{ width: 150 }}>
+                <b>保存</b>
+              </button>
+            </div>
+          </form>
 
-        <DownloadModal ref={this.modalRef} group={this.props.group} />
-      </>
-    );
+          <DownloadModal ref={this.modalRef} group={this.props.group} />
+        </>
+      );
+    }
   };
 };
 

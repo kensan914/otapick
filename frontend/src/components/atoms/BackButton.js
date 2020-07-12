@@ -1,14 +1,26 @@
 import React from 'react';
 import { withRouter } from 'react-router';
+import { initLocationKey } from '../tools/support';
+import { Button } from 'reactstrap';
 
-// TODO historyが0の時、すなわち初期状態はトップに戻るように。
+
 class BackButton extends React.Component {
   goBack = () => {
-    history.back();
+    if (initLocationKey === this.props.location.key) {
+      this.props.history.push("/")
+    } else {
+      history.back();
+    }
   };
 
   render() {
-    if (this.props.fixed) {
+    if (this.props.mini) {
+      return (
+        <Button className="rounded-circle transparent-button-mobile" id="mobile-back-button" onClick={this.goBack}>
+          <i className="fas fa-chevron-left" />
+        </Button>
+      );
+    } else if (this.props.fixed) {
       return (
         <button onClick={this.goBack}
           className={"btn btn-light rounded-circle p-0 otapick-back-button-fixed shadow-sm " + (typeof this.props.className != "undefined" && this.props.className)}>

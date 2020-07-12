@@ -19,4 +19,7 @@ urlpatterns = [
     path('images/info/<int:group_id>/', views.imageListInfoAPIView, name='imageListInfo_G_API'),
     path('images/info/<int:group_id>/<str:ct>/', views.imageListInfoAPIView, name='imageListInfo_M_API'),
     path('image/<int:group_id>/<int:blog_ct>/<int:order>/', views.imageDetailAPIView, name='imageDetailAPI'),
+    path('relatedImages/<int:group_id>/<int:blog_ct>/<int:order>/', views.relatedImageListAPIView, name='relatedImageListAPI'),
+    path('home/', views.homeAPIView, name='homeAPI'),
+    path('home/additional/', views.homeAdditionalAPIView, name='homeAdditionalAPI'),
 ]

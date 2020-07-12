@@ -1,10 +1,10 @@
 import os
-import random
 import urllib.parse
 import zipfile
 from django.http import FileResponse, HttpResponse
 from rest_framework import status, views
 from rest_framework.response import Response
+import otapick.db.scores.controller
 from api.serializers import *
 from image.models import Progress
 from main.models import Member, Blog
@@ -72,10 +72,11 @@ class BlogDetailAPIView(views.APIView):
                 else: return self.accept_image_download(group_id, blog_ct, blog)
             else: return self.accept_image_download(group_id, blog_ct, blog)
         else:
-            data, status_code = otapick.accept_blog_download(group_id, blog_ct)
-            if data['status'] != 'blog_not_found':
-                return self.accept_image_download(group_id, blog_ct, Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct))
-            return Response(data, status_code)
+            # blogが見つからないたびにget_blogコマンドを実行していた。使わない方向で。
+            # data, status_code = otapick.accept_blog_download(group_id, blog_ct)
+            # if data['status'] != 'blog_not_found':
+            #     return self.accept_image_download(group_id, blog_ct, Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct))
+            return Response({'status': 'blog_not_found', 'message': 'blog not found'}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
         group_id = self.kwargs.get('group_id')
@@ -151,7 +152,7 @@ class BlogListAPIView(views.APIView):
         narrowing_keyword = self.request.GET.get('keyword')
         narrowing_post = self.request.GET.get('post')
         page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
-        random_seed = self.request.GET.get('random_seed') if self.request.GET.get('random_seed') is not None else 0
+        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
 
         if group_id is not None:
             blogs = \
@@ -163,11 +164,10 @@ class BlogListAPIView(views.APIView):
             blogs = blogs[self.paginate_by * (page - 1): self.paginate_by * page]
         # recommend
         else:
-            # ↓画像を持つブログのみ
-            thumbnails = Image.objects.filter(order=0).order_by('?')[self.paginate_by * (page - 1): self.paginate_by * page]
-            blogs = [thumbnail.publisher for thumbnail in thumbnails]
-            # ↓画像を持たないブログを含む
-            # blogs = Blog.objects.all().order_by('?')[self.paginate_by * (page - 1): self.paginate_by * page]
+            blog_ids = Image.objects.filter(order=0).values_list('publisher__id', flat=True)
+            blogs = Blog.objects.filter(id__in=blog_ids)
+            blogs_id_list = otapick.sort_by_recommend_score(blogs, page, random_seed, self.paginate_by)
+            blogs = [blogs.get(id=pk) for pk in blogs_id_list]
 
         serializer = BlogSerializer(blogs, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
@@ -240,7 +240,7 @@ class ImageListAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
         group_id, ct = otapick.shape_ct(self.kwargs.get('group_id'), self.kwargs.get('ct'))
         page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
-        random_seed = self.request.GET.get('random_seed') if self.request.GET.get('random_seed') is not None else 0
+        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
         order_format = self.request.GET.get('sort')
 
         # filter
@@ -248,6 +248,9 @@ class ImageListAPIView(views.APIView):
             images = \
                 Image.objects.filter(publisher__writer__belonging_group__group_id=group_id) if ct is None \
                 else Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct)
+            if not images.exists():
+                return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
+
         # recommend
         else:
             images = Image.objects.all()
@@ -257,25 +260,14 @@ class ImageListAPIView(views.APIView):
         # success sorted
         if result is not None:
             images = result
+            images = images[self.paginate_by * (page - 1): self.paginate_by * page]
+
         # hove to sort by recommend
         else:
-            if images.count() > 1000:
-                images = images.order_by('?')
-            else:
-                images = list(images)
-                random.seed(random_seed)
-                random.shuffle(images)
+            images_id_list = otapick.sort_by_recommend_score(images, page, random_seed, self.paginate_by)
+            images = [images.get(id=pk) for pk in images_id_list]
 
-        images = images[self.paginate_by * (page - 1): self.paginate_by * page]
-        images_data = ImageSerializer(images, many=True).data
-
-        blogs = [image.publisher for image in images]
-        blogs_data = BlogSerializer(blogs, many=True).data
-
-        data = []
-        for image_data, blog_data in zip(images_data, blogs_data):
-            data.append({'image': image_data, 'blog': blog_data})
-        return Response(data, status.HTTP_200_OK)
+        return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
 
 imageListAPIView = ImageListAPIView.as_view()
 
@@ -287,6 +279,47 @@ class ImageListInfoAPIView(views.APIView):
         return Response(otapick.ImageListInfo(group_id, ct, order_format).get_result(), status.HTTP_200_OK)
 
 imageListInfoAPIView = ImageListInfoAPIView.as_view()
+
+
+class RelatedImageListAPIView(ImageListAPIView):
+    def get(self, request, *args, **kwargs):
+        group_id = self.kwargs.get('group_id')
+        blog_ct = self.kwargs.get('blog_ct')
+        order = self.kwargs.get('order')
+        page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+
+        blogs = Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+        if blogs.exists() and Image.objects.filter(publisher=blogs[0], order=order).exists():
+            images_id_list = otapick.sort_images_by_related(blogs[0], order, page, self.paginate_by)
+            images = [Image.objects.get(id=pk) for pk in images_id_list]
+            print(len(images_id_list))
+            return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
+        else:
+            return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
+
+relatedImageListAPIView = RelatedImageListAPIView.as_view()
+
+
+class HomeAPIView(ImageListAPIView):
+    def get(self, request, *args, **kwargs):
+        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
+        page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+
+        images = Image.objects.all()
+        images_id_list = otapick.sort_by_recommend_score(images, page, random_seed, self.paginate_by)
+        images = [images.get(id=pk) for pk in images_id_list]
+
+        return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
+
+homeAPIView = HomeAPIView.as_view()
+
+
+class HomeAdditionalAPIView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
+        return Response(otapick.get_additional_data(random_seed), status.HTTP_200_OK)
+
+homeAdditionalAPIView = HomeAdditionalAPIView.as_view()
 
 
 class SearchAPIView(views.APIView):
@@ -392,7 +425,12 @@ class SearchSuggestionsInitAPIView(views.APIView):
         blogs = Blog.objects.all() if group_id is None else Blog.objects.filter(writer__belonging_group__group_id=group_id)
         blogs = otapick.sort_blogs(blogs, 'popularity')[:self.num_of_get]
         blogs_data = BlogSerializerVerSS(blogs, many=True).data
-        blogs_data.append(otapick.generate_watch_more('/blogs/1') if group_id == 1 else otapick.generate_watch_more('/blogs/2'))
+        if group_id == 1:
+            blogs_data.append(otapick.generate_watch_more('/blogs/1'))
+        elif group_id == 2:
+            blogs_data.append(otapick.generate_watch_more('/blogs/2'))
+        else:
+            blogs_data.append(otapick.generate_watch_more('/blogs/'))
 
         members = Member.objects.filter(temporary=False) if group_id is None else Member.objects.filter(belonging_group_id=group_id, temporary=False)
         members = members.order_by('?')[:self.num_of_get]

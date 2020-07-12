@@ -4,18 +4,21 @@ import Headline from '../molecules/Headline';
 import queryString from 'query-string';
 import { KeepAlive } from 'react-keep-alive';
 import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo } from '../tools/support';
+import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo, checkMatchParams, isMobile } from '../tools/support';
 import ImageListInfo from "../molecules/info/ImageListInfo";
 
 
 class ImageListTemplate extends React.Component {
   constructor(props) {
     super(props);
+    checkMatchParams(props.history, props.match.params.groupID, props.match.params.ct);
+
+    const qs = queryString.parse(props.location.search);
     this.state = {
-      group: getGroup(this.props.match.params.groupID),
-      groupID: this.props.match.params.groupID,
-      orderFormat: "recommend",
-      ct: this.props.match.params.ct,
+      group: getGroup(props.match.params.groupID),
+      groupID: props.match.params.groupID,
+      orderFormat: typeof qs.sort == "undefined" ? "recommend" : qs.sort,
+      ct: props.match.params.ct,
       keepAliveName: generateKeepAliveName(props.location.key),
       keepAliveNameInfo: generateKeepAliveNameInfo(props.location.key),
     }
@@ -38,6 +41,7 @@ class ImageListTemplate extends React.Component {
     const prevGroupID = prevProps.match.params.groupID;
     const ct = this.props.match.params.ct;
     const prevCt = prevProps.match.params.ct;
+    const qs = queryString.parse(this.props.location.search);
 
     // When the group changed
     if (ct === undefined) {
@@ -48,7 +52,7 @@ class ImageListTemplate extends React.Component {
           group: getGroup(groupID),
           keepAliveName: generateKeepAliveName(this.props.location.key),
           keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
-          orderFormat: "recommend",
+          orderFormat: typeof qs.sort == "undefined" ? "recommend" : qs.sort,
         });
         return;
       }
@@ -62,14 +66,13 @@ class ImageListTemplate extends React.Component {
           group: getGroup(groupID),
           keepAliveName: generateKeepAliveName(this.props.location.key),
           keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
-          orderFormat: "recommend",
+          orderFormat: typeof qs.sort == "undefined" ? "recommend" : qs.sort,
         });
         return;
       }
     }
 
     // When the order format changed
-    const qs = queryString.parse(this.props.location.search);
     if (qs.sort && this.state.orderFormat !== qs.sort) {
       this.setState({
         orderFormat: qs.sort,
@@ -96,7 +99,7 @@ class ImageListTemplate extends React.Component {
 
   render() {
     return (
-      <>
+      <div className="container mt-3 text-muted">
         <Headline title="画像一覧" type="images" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
 
         {(typeof this.state.groupID != "undefined" || typeof this.state.ct != "undefined")
@@ -104,15 +107,15 @@ class ImageListTemplate extends React.Component {
             <ImageListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat}
               pushHistory={(qs) => this.pushHistory(qs)} />
           </KeepAlive>
-          : <div className="py-2"></div>
+          : (!isMobile && <div className="py-2"></div>)
         }
 
         <KeepAlive name={this.state.keepAliveName}>
           <ImageList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} applyShowFooter={this.props.applyShowFooter}
-            orderFormat={this.state.orderFormat} />
+            orderFormat={this.state.orderFormat} fluid={false} />
         </KeepAlive>
         {!this.props.isTop && <ToTopButton />}
-      </>
+      </div>
     );
   };
 };

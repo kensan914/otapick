@@ -84,14 +84,14 @@ class NarrowCard extends React.Component {
             <div className="card card-body">
               <h5 className="mb-3"><b>絞り込み</b></h5>
 
-              <div className="form-group row mx-2">
+              <div className="form-group row mx-0 mx-sm-2">
                 <label for="keyword_form" className="col-md-2 col-form-label col-form-label-sm">キーワード</label>
                 <div className="col-md-10">
                   <input type="text" value={this.state.kwvalue} onChange={(e) => this.handleChangeKw(e)} maxlength='20'
                     className="form-control form-control-sm" id="keyword_form" placeholder="例)握手会" name="keyword" autocomplete="off" />
                 </div>
               </div>
-              <div className="form-group row mx-2">
+              <div className="form-group row mx-0 mx-sm-2">
                 <label for="month_picker" className="col-md-2 col-form-label col-form-label-sm">投稿月</label>
                 <div className="col-md-10">
                   <Picker

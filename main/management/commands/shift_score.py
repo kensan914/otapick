@@ -1,44 +1,28 @@
+import time
 from django.core.management.base import BaseCommand
+import otapick.db.scores.controller
 from image.models import Image
 from main.models import Blog
 import otapick
 
 
 class Command(BaseCommand):
-    help = 'Blogのパラメータ、v1_per_week、v2_per_week、v3_per_weekを一つずつずらす。' \
-           'v1_per_week、Imageのパラメータ、d1_per_weekはリセット。' \
-           '1週間ごと(毎週月曜日00:00)に実行。'
+    help = 'Blogのパラメータ、v1_per_day、v2_per_day、v3_per_dayを一つずつずらす。' \
+           'v1_per_day、Imageのパラメータ、d1_per_dayはリセット。' \
+           '1日ごと(毎日00:00)に実行。'
 
     def add_arguments(self, parser):
         parser.add_argument('-r', '--reverse', action='store_true',
-                            help='間違えて実行してしまったときに元に戻す。ただ、消えてしまったv3_per_week, d1_per_weekは修復不可。')
+                            help='間違えて実行してしまったときに元に戻す。ただ、消えてしまったv3_per_day, d1_per_dayは修復不可。')
 
     def handle(self, *args, **options):
-        try:
-            if options['reverse']:
-                blogs = Blog.objects.exclude(v2_per_week=0, v3_per_week=0)
-                for blog in blogs:
-                    blog.v1_per_week = blog.v2_per_week
-                    blog.v2_per_week = blog.v3_per_week
-                    blog.v3_per_week = 0
-                    blog.save()
-            else:
-                blogs = Blog.objects.exclude(v1_per_week=0, v2_per_week=0, v3_per_week=0)
-                for blog in blogs:
-                    blog.v3_per_week = blog.v2_per_week
-                    blog.v2_per_week = blog.v1_per_week
-                    blog.v1_per_week = 0
-                    blog.save()
-
-            images = Image.objects.exclude(d1_per_week=0)
-            for image in images:
-                image.d1_per_week = 0
-                image.save()
-
-        except Exception as e:
-            otapick.print_console(e)
+        if options['reverse']:
+            otapick.shift_score(blogs=Blog.objects.all(), order=False)
+            otapick.shift_score(images=Image.objects.all(), order=False)
         else:
-            if options['reverse']:
-                otapick.print_console('finished shift_per_week reverse!!')
-            else:
-                otapick.print_console('finished shift_per_week!!')
+            start = time.time()
+            otapick.shift_score(blogs=Blog.objects.all(), order=True)
+            otapick.print_console('finished shift_per_day blogs!!: {}s'.format(round(time.time() - start, 2)))
+            start = time.time()
+            otapick.shift_score(images=Image.objects.all(), order=True)
+            otapick.print_console('finished shift_per_day images!!: {}s'.format(round(time.time() - start, 2)))

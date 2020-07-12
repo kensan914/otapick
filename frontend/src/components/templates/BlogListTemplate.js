@@ -5,19 +5,22 @@ import Headline from '../molecules/Headline';
 import queryString from 'query-string';
 import { KeepAlive } from 'react-keep-alive';
 import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo } from '../tools/support';
+import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo, checkMatchParams, isMobile } from '../tools/support';
 
 
 class BlogListTemplate extends React.Component {
   constructor(props) {
     super(props);
+    checkMatchParams(props.history, props.match.params.groupID, props.match.params.ct);
+
+    const qs = queryString.parse(props.location.search);
     this.state = {
-      group: getGroup(this.props.match.params.groupID),
-      orderFormat: "newer_post",
-      narrowingKeyword: "",
-      narrowingPost: "",
-      groupID: this.props.match.params.groupID,
-      ct: this.props.match.params.ct,
+      group: getGroup(props.match.params.groupID),
+      orderFormat: typeof qs.sort == "undefined" ? "newer_post" : qs.sort,
+      narrowingKeyword: typeof qs.keyword == "undefined" ? "" : qs.keyword,
+      narrowingPost: typeof qs.post == "undefined" ? "" : qs.post,
+      groupID: props.match.params.groupID,
+      ct: props.match.params.ct,
       keepAliveName: generateKeepAliveName(props.location.key),
       keepAliveNameInfo: generateKeepAliveNameInfo(props.location.key),
     }
@@ -40,6 +43,7 @@ class BlogListTemplate extends React.Component {
     const prevGroupID = prevProps.match.params.groupID;
     const ct = this.props.match.params.ct;
     const prevCt = prevProps.match.params.ct;
+    const qs = queryString.parse(this.props.location.search);
 
     // When the group changed
     if (ct === undefined) {
@@ -50,7 +54,7 @@ class BlogListTemplate extends React.Component {
           group: getGroup(groupID),
           keepAliveName: generateKeepAliveName(this.props.location.key),
           keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
-          orderFormat: "newer_post",
+          orderFormat: typeof qs.sort == "undefined" ? "newer_post" : qs.sort,
           narrowingKeyword: "",
           narrowingPost: "",
         });
@@ -66,7 +70,7 @@ class BlogListTemplate extends React.Component {
           group: getGroup(groupID),
           keepAliveName: generateKeepAliveName(this.props.location.key),
           keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
-          orderFormat: "newer_post",
+          orderFormat: typeof qs.sort == "undefined" ? "newer_post" : qs.sort,
           narrowingKeyword: "",
           narrowingPost: "",
         });
@@ -75,7 +79,6 @@ class BlogListTemplate extends React.Component {
     }
 
     // When the order format changed
-    const qs = queryString.parse(this.props.location.search);
     if (qs.sort && this.state.orderFormat !== qs.sort) {
       this.setState({
         orderFormat: qs.sort,
@@ -123,21 +126,21 @@ class BlogListTemplate extends React.Component {
 
   render() {
     return (
-      <>
+      <div className="container mt-3 text-muted">
         <Headline title="ブログ一覧" type="blogs" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
         {(typeof this.state.groupID != "undefined" || typeof this.state.ct != "undefined")
           ? <KeepAlive name={this.state.keepAliveNameInfo}>
             <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
               narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} />
           </KeepAlive>
-          : <div className="py-2"></div>
+          : (!isMobile && <div className="py-2"></div>)
         }
         <KeepAlive name={this.state.keepAliveName}>
           <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
             narrowingPost={this.state.narrowingPost} applyShowFooter={this.props.applyShowFooter} />
         </KeepAlive>
         {!this.props.isTop && <ToTopButton />}
-      </>
+      </div>
     );
   };
 };

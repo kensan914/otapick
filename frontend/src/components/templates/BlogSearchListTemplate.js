@@ -10,7 +10,7 @@ import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from "../atoms/NotFound";
 import { withRouter } from 'react-router-dom';
 import { BASE_URL, DELAY_TIME } from "../tools/env";
-import { BlogViewLoader, LoaderScreen } from "../molecules/Loader";
+import { LoaderScreen } from "../molecules/Loader";
 
 
 class BlogSearchListTemplate extends React.Component {
@@ -72,7 +72,7 @@ class BlogSearchListTemplate extends React.Component {
               ({
                 image: member.image,
                 url: member.url,
-                offcialUrl: member.official_url,
+                officialUrl: member.official_url,
                 ct: member.ct,
                 lastKanji: member.last_kanji,
                 firstKanji: member.first_kanji,
@@ -133,9 +133,11 @@ class BlogSearchListTemplate extends React.Component {
           officialUrl={officialUrl} />
       ))
     } else if (this.state.members.length > 0) {
-      itemsComponent = this.state.members.map(({ image, url, offcialUrl, ct, lastKanji, firstKanji, lastKana, firstKana, belongingGroup }, i) => (
-        <MemberCard key={i} ct={ct} image={image} url={url} offcialUrl={offcialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
-          firstKana={firstKana} belongingGroup={belongingGroup} wavesVals={this.state.wavesVals} />
+      itemsComponent = this.state.members.map(({ image, url, officialUrl, ct, lastKanji, firstKanji, lastKana, firstKana, belongingGroup }, i) => (
+        <div className="col-6 col-md-4 col-xl-3 my-2 px-1 px-sm-3">
+          <MemberCard key={i} ct={ct} image={image} url={url} officialUrl={officialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
+            firstKana={firstKana} belongingGroup={belongingGroup} wavesVals={this.state.wavesVals} />
+        </div>
       ))
     } else itemsComponent = null;
 
@@ -165,11 +167,11 @@ class BlogSearchListTemplate extends React.Component {
     }
 
     return (
-      <>
+      <div className="container mt-3 text-muted">
         <Headline title="検索" />
         <BlogSearchListInfo group={this.state.group} title={this.state.title} numOfHit={this.state.numOfHit} />
         {contents}
-      </>
+      </div>
     );
   };
 };

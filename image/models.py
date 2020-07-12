@@ -26,11 +26,14 @@ class Image(models.Model):
     upload_date = models.DateTimeField(verbose_name='アップロード日', auto_now_add=True)
     publisher = models.ForeignKey(Blog, verbose_name='掲載ブログ', on_delete=models.CASCADE)
     num_of_downloads = models.IntegerField(verbose_name='ダウンロード数', default=0)
-    d1_per_week = models.IntegerField(verbose_name='ダウンロード数(1週目)', default=0)
+    d1_per_day = models.IntegerField(verbose_name='ダウンロード数(1日)', default=0)
     num_of_views = models.IntegerField(verbose_name='閲覧数', default=0)
-    v1_per_week = models.IntegerField(verbose_name='閲覧数(1週目)', default=0)
-    v2_per_week = models.IntegerField(verbose_name='閲覧数(2週目)', default=0)
-    v3_per_week = models.IntegerField(verbose_name='閲覧数(3週目)', default=0)
+    v1_per_day = models.IntegerField(verbose_name='閲覧数(1日目)', default=0)
+    v2_per_day = models.IntegerField(verbose_name='閲覧数(2日目)', default=0)
+    v3_per_day = models.IntegerField(verbose_name='閲覧数(3日目)', default=0)
+    score = models.FloatField(verbose_name='スコア(人気順)', default=0)
+    changed = models.BooleanField(verbose_name='変更有(スコア計算用)', default=0)
+    recommend_score = models.FloatField(verbose_name='スコア(おすすめ順）', default=False)
 
     def __str__(self):
         return str(self.publisher.title) + '/' + str(self.order)

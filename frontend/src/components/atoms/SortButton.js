@@ -5,8 +5,8 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from
 class SortButton extends React.Component {
   render() {
     return (
-      <UncontrolledDropdown style={{ border: "solid 1px silver", borderRadius: "5%" }} className={"col-5 p-0 " + this.props.className}>
-        <DropdownToggle caret color="light" className="blogList-detail-btn" style={{ width: "100%" }}>
+      <UncontrolledDropdown className={"p-0 " + this.props.className} style={this.props.style}>
+        <DropdownToggle caret color="light" className="blogList-detail-btn sort-button">
           <i className="fas fa-sort"></i>{this.props.title}
         </DropdownToggle>
 

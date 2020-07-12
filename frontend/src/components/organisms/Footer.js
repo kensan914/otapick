@@ -6,6 +6,8 @@ import { withRouterInnerRef } from '../tools/withRouterInnerRef';
 const hiddenFooterURLConditions = [
   "/blogs",
   "/images",
+  "/image",
+  "/",
 ]
 
 class Footer extends React.Component {
@@ -40,7 +42,13 @@ class Footer extends React.Component {
   checkFooter() {
     let haveToHide = false;
     for (const hiddenFooterURLCondition of hiddenFooterURLConditions) {
-      if (this.props.location.pathname.startsWith(hiddenFooterURLCondition)) {
+      if (hiddenFooterURLCondition === "/") {
+        if (this.props.location.pathname === "/") {
+          if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
+          break;
+        }
+      }
+      else if (this.props.location.pathname.startsWith(hiddenFooterURLCondition)) {
         if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
         break;
       }

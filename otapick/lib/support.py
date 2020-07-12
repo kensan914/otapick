@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 from django.utils.timezone import make_aware
 import otapick
-from image.models import Image
 
 
 def clean_text(text):
@@ -72,37 +71,3 @@ def generate_watch_more(url):
         'background_image': otapick.WATCH_MORE_IMG_URL,
         'url': url,
     }
-
-
-def increment_num_of_views(blog=None, image=None, num=0):
-    if blog is not None:
-        blog.num_of_views += num
-        blog.v1_per_week += num
-        blog.save()
-    elif image is not None:
-        image.num_of_views += num
-        image.v1_per_week += num
-        image.save()
-
-
-def increment_num_of_downloads(images, blog, num):
-    if hasattr(images, '__iter__'):
-        for image in images:
-            image.num_of_downloads += num
-            image.d1_per_week += num
-            image.save()
-    else:
-        images.num_of_downloads += num
-        images.d1_per_week += num
-        images.save()
-
-    total_num_of_downloads = 0
-    for image in Image.objects.filter(publisher=blog):
-        total_num_of_downloads += image.num_of_downloads
-    blog.num_of_downloads = total_num_of_downloads
-    blog.save()
-
-
-def edit_num_of_most_downloads(blog):
-    blog.num_of_most_downloads = Image.objects.filter(publisher=blog).order_by('-num_of_downloads')[0].num_of_downloads
-    blog.save()

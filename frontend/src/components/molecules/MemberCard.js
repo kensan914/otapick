@@ -1,19 +1,21 @@
 import React from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
+import { generateAlt, isMobile } from '../tools/support';
+import { MobileBottomMenu } from './MobileMenu';
 
 
 const DetailButton = (props) => {
   return (
     <UncontrolledDropdown className="text-center mx-auto py-3" style={{ overflowY: "visible" }}>
       <div className="card-detail-button-super">
-        <DropdownToggle id="thumbnailDetail" color="light" className="p-0 card-detail-button rounded-circle">
+        <DropdownToggle color="light" className="p-0 card-detail-button rounded-circle">
           <i className="fas fa-bars" style={{ color: "gray" }}></i>
         </DropdownToggle>
         <DropdownMenu>
           <DropdownItem tag={Link} to={props.url["images"]}>画像一覧へ</DropdownItem>
           <DropdownItem tag={Link} to={props.url["blogs"]}>ブログ一覧へ</DropdownItem>
-          <DropdownItem href={props.offcialUrl} target="_blank">公式サイトで確認</DropdownItem>
+          <DropdownItem href={props.officialUrl} target="_blank">公式サイトで確認</DropdownItem>
         </DropdownMenu>
       </div>
     </UncontrolledDropdown>
@@ -24,13 +26,13 @@ const DetailButton = (props) => {
 class MemberCard extends React.Component {
   render() {
     return (
-      <div className="col-6 col-md-4 col-xl-3 my-2">
+      <>
         <div className={"member-card mx-auto " + this.props.belongingGroup}>
-          <div className="member-card-header" onClick={() => this.props.history.push(this.props.url["images"])}>
+          <div className={"member-card-header " + (!isMobile ? "pc" : "")} onClick={() => {console.log(this.props.url["images"]);this.props.history.push(this.props.url["images"]);}}>
             <div className="member-card-overlay"
               style={{ backgroundImage: `url(${this.props.image})` }}>
             </div>
-            <img src={this.props.image} className="mb-4" />
+            <img src={this.props.image} className="mb-3 mb-sm-4" alt={generateAlt(this.props.belongingGroup, (this.props.lastKanji + this.props.firstKanji), "member")} />
             <h4 className="m-0">{this.props.lastKanji} {this.props.firstKanji}</h4>
             <p style={{ color: "whitesmoke" }}>{this.props.lastKana} {this.props.firstKana}</p>
           </div>
@@ -48,10 +50,21 @@ class MemberCard extends React.Component {
           </svg>
 
           <div className="member-card-body">
-            <DetailButton url={this.props.url} offcialUrl={this.props.offcialUrl} />
+            {isMobile
+              ? <MobileBottomMenu id={this.props.id} type="memberCard" title={`${this.props.lastKanji} ${this.props.firstKanji}`}
+                url={this.props.url} officialUrl={this.props.officialUrl} className="mx-auto py-3"/>
+              : <DetailButton url={this.props.url} officialUrl={this.props.officialUrl} />
+            }
           </div>
         </div>
-      </div>
+        {this.props.message &&
+          <div className="card-message mx-auto py-2">
+            <i className="fas fa-crown" style={{ color: "gold" }}></i>
+            {"\u00A0"}
+            <b>{this.props.message}</b>
+          </div>
+        }
+      </>
     );
   }
 }

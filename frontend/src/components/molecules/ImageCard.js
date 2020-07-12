@@ -1,9 +1,10 @@
 import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { generateAlt } from '../tools/support';
+import { generateAlt, isMobile, isSmp } from '../tools/support';
 import { URLJoin } from '../tools/support';
 import { downloadImage } from '../organisms/ImageView';
+import { MobileBottomMenu } from './MobileMenu';
 
 
 class DownloadButton extends React.Component {
@@ -21,7 +22,7 @@ class ToBlogButton extends React.Component {
       <>
         {this.props.title != "" &&
           <Link to={this.props.url} className="btn btn-primary rounded-pill image-to-blog-button image-card-button text-left d-flex align-items-center"
-            role="button" title="掲載されているブログを確認">
+            role="button" title={`「${this.props.title}」を確認`}>
             <h6 className="omit-title m-0" style={{ fontSize: 14 }}>{this.props.title}</h6>
           </Link>
         }
@@ -75,11 +76,13 @@ class SuperImageCard extends React.Component {
   }
 
   setIsOpenMenu = (willOpen) => {
-    if (willOpen && !this.isHover) {
-      this.setState({ isOpenMenu: willOpen });
-    } else if (!willOpen && this.isHover) {
-      if (!this.detailButtonRef.current.state.dropdownOpen) {
+    if (!isMobile) {
+      if (willOpen && !this.isHover) {
         this.setState({ isOpenMenu: willOpen });
+      } else if (!willOpen && this.isHover) {
+        if (!this.detailButtonRef.current.state.dropdownOpen) {
+          this.setState({ isOpenMenu: willOpen });
+        }
       }
     }
   }
@@ -90,28 +93,51 @@ class SuperImageCard extends React.Component {
 
   render() {
     return (
-      <div className="image-card" ref={(imageCardRef) => this.imageCardRef = imageCardRef}
-        onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }}
-        onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}>
-        <Link to={this.props.props.url}>
-          <div className="image-card-wrapper">
-            <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.src["250x"]}
-              srcSet={`${this.props.props.src["250x"]} 1x, ${this.props.props.src["500x"]} 2x`}
-              alt={generateAlt(this.props.props.group, this.props.props.writer.name)} />
-          </div>
-        </Link>
+      <>
+        <div className="image-card" ref={(imageCardRef) => this.imageCardRef = imageCardRef}
+          onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }}
+          onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}>
+          <Link to={this.props.props.url}>
+            <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
+              <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.src["250x"]}
+                srcSet={!isSmp ? `${this.props.props.src["250x"]} 1x, ${this.props.props.src["500x"]} 2x` : ""}
+                alt={generateAlt(this.props.props.group, this.props.props.writer.name)} id={this.props.props.imageID} />
+            </div>
+          </Link>
 
-        {this.state.isOpenMenu &&
-          <>
-            {this.imageCardRef.clientHeight > 100 &&
-              <DownloadButton group={this.props.props.group} url={this.props.props.url} />
+          {(this.state.isOpenMenu && !isMobile) &&
+            <>
+              {this.imageCardRef.clientHeight > 100 &&
+                <DownloadButton group={this.props.props.group} url={this.props.props.url} />
+              }
+              <ToBlogButton url={this.props.props.blogUrl} title={this.props.props.blogTitle} />
+              <DetailButton url={this.props.props.url} officialUrl={this.props.props.officialUrl} ref={this.detailButtonRef} hideMenu={() => this.hideMenu()}
+                writer={this.props.props.writer} />
+            </>
+          }
+        </div>
+
+        {(this.props.props.message || isMobile) &&
+          <div className="image-card-footer" >
+            <div className={"image-card-message " + (isMobile ? "mobile" : "")}>
+              {this.props.props.message &&
+                <Link to={this.props.props.url} onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }} onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}
+                  style={{ textDecoration: "none" }}>
+                  <div className={"card-message mx-auto py-2 " + (!isMobile ? "pc" : "")}>
+                    <i className="fas fa-crown" style={{ color: "gold" }}></i>
+                    {"\u00A0"}
+                    <b>{this.props.props.message}</b>
+                  </div>
+                </Link>
+              }
+            </div>
+            {isMobile &&
+              <MobileBottomMenu id={this.props.props.id} type="imageCard" title={`${this.props.props.blogTitle}（${this.props.props.writer.name}）`}
+                url={this.props.props.url} officialUrl={this.props.props.officialUrl} writer={this.props.props.writer} />
             }
-            <ToBlogButton url={this.props.props.blogUrl} title={this.props.props.blogTitle} />
-            <DetailButton url={this.props.props.url} officialUrl={this.props.props.officialUrl} ref={this.detailButtonRef} hideMenu={() => this.hideMenu()}
-              writer={this.props.props.writer} />
-          </>
+          </div>
         }
-      </div>
+      </>
     );
   }
 }
@@ -120,9 +146,7 @@ class SuperImageCard extends React.Component {
 class ImageCard extends React.Component {
   render() {
     return (
-      <div className="grid-item col-6 col-md-4 col-lg-3 my-3 px-2 px-sm-2">
-        <SuperImageCard props={this.props} orderly={false} />
-      </div>
+      <SuperImageCard props={this.props} orderly={false} />
     );
   };
 };

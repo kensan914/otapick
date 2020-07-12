@@ -1,11 +1,17 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { setInitLocationKey } from '../tools/support';
 
-class KeepScrollTop extends Component {
+
+class LocationAdmin extends Component {
+  componentDidMount() {
+    setInitLocationKey(this.props.location.key);
+    window.scrollTo(0, 0);
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
-
       document.activeElement.blur();
     }
   }
@@ -15,4 +21,4 @@ class KeepScrollTop extends Component {
   }
 }
 
-export default withRouter(KeepScrollTop);
+export default withRouter(LocationAdmin);

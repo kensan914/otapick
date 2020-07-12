@@ -3,9 +3,10 @@ import NarrowButton from '../../atoms/NarrowButton';
 import SortButton from '../../atoms/SortButton';
 import NarrowCard from '../NarrowCard';
 import axios from 'axios';
-import { URLJoin } from '../../tools/support';
+import { URLJoin, isSmp, isMobile } from '../../tools/support';
 import { withRouter } from 'react-router-dom';
 import { BASE_URL, DELAY_TIME } from '../../tools/env';
+import { MobileBottomMenu } from '../MobileMenu';
 
 
 class BlogListInfo extends React.Component {
@@ -60,13 +61,13 @@ class BlogListInfo extends React.Component {
 
   render() {
     var badgeStyle;
-    if (this.props.group === "keyaki") badgeStyle = { backgroundColor: "rgba(50, 205, 50, 0.7)" };
-    else if (this.props.group === "hinata") badgeStyle = { backgroundColor: "rgba(0, 191, 255, 0.75)" };
+    if (this.props.group === "keyaki") badgeStyle = { backgroundColor: "rgba(50, 205, 50, 0.7)", height: 33 };
+    else if (this.props.group === "hinata") badgeStyle = { backgroundColor: "rgba(0, 191, 255, 0.75)", height: 33 };
 
     return (
       <div>
-        <div className={"card otapick-card2 my-4 " + this.props.group}>
-          <div className="card-body px-sm-5 py-4">
+        <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : "my-4 ") + this.props.group}>
+          <div className="card-body px-4 px-sm-5 py-4">
             <div className="row mx-2 justify-content-between">
               <h3 className="my-auto d-flex align-items-center">{!this.state.title ? "\u00A0" : this.state.title}</h3>
               <div className="row ml-2">
@@ -80,15 +81,19 @@ class BlogListInfo extends React.Component {
                 }
               </div>
             </div>
-            <hr />
+            <hr className="info-hr" />
             <div className="row justify-content-between">
               <div className="col-12 col-md-6 col-lg-7 col-xl-8">
-                <div className="">検索結果（<b>{this.state.numOfHit}</b>件）</div>
+                <div className="info-discription my-1 my-sm-0">検索結果（<b>{this.state.numOfHit}</b>件）</div>
               </div>
               <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
                 <div className="row justify-content-around">
                   <NarrowButton />
-                  <SortButton type="images" title={this.state.sortButtonTitle} pushHistory={this.props.pushHistory} />
+                  {isMobile
+                    ? <MobileBottomMenu id="sortBlog" type="sortBlog" sortButtonTitle={this.state.sortButtonTitle} pushHistory={this.props.pushHistory}
+                      className="col-5" />
+                    : <SortButton className="col-5" type="blogs" title={this.state.sortButtonTitle} pushHistory={this.props.pushHistory} />
+                  }
                 </div>
               </div>
             </div>

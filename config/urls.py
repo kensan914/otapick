@@ -31,6 +31,8 @@ urlpatterns = [
 #Debug=Falseでもadminへアクセスできてしまうため、対処
 if settings.DEBUG:
     urlpatterns += [path('admin/', admin.site.urls)]
+    urlpatterns += [path('admin', admin.site.urls)]
 
-# catch all other URL
-urlpatterns += [re_path(r'.*', main.views.indexView, name="indexView")]
+# catch all other URL ('api'で始まらない文字列にマッチ)
+urlpatterns += [re_path(r'^(?!api).+$', main.views.indexView, name="indexView")]
+urlpatterns += [path('', main.views.indexView, name="indexView")]

@@ -25,9 +25,10 @@ class MemberSerializer(serializers.ModelSerializer):
 class MemberSerializerMin(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['name', 'ct', 'url', 'image']
+        fields = ['name', 'ct', 'url', 'official_url', 'image']
     name = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+    official_url = serializers.SerializerMethodField()
 
     def get_name(self, obj):
         return otapick.generate_writer_name(member=obj)
@@ -35,11 +36,15 @@ class MemberSerializerMin(serializers.ModelSerializer):
     def get_url(self, obj):
         return otapick.generate_url(member=obj, needBlogs=True, needImages=True)
 
+    def get_official_url(self, obj):
+        return otapick.generate_official_url(member=obj)
+
 
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url']
+        # fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', ]
+        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', 'score', 'recommend_score']
 
     group_id = serializers.IntegerField(source='writer.belonging_group.group_id')
     post_date = serializers.DateTimeField(format='%y/%m/%d')
@@ -104,18 +109,15 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        exclude = ('id', 'picture', 'picture_250x', 'picture_500x', 'publisher',)
+        # fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views',]
+        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views', 'recommend_score']
 
     src = serializers.SerializerMethodField()
     upload_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
     url = serializers.SerializerMethodField()
 
     def get_src(self, obj):
-        return {
-            'originals': obj.picture.url,
-            '250x': obj.picture_250x.url,
-            '500x': obj.picture_500x.url,
-        }
+        return otapick.generate_image_src(obj)
 
     def get_url(self, obj):
         return '/image/{}/{}/{}'.format(obj.publisher.writer.belonging_group.group_id, obj.publisher.blog_ct, obj.order)

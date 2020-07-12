@@ -1,46 +1,56 @@
 import React, { useState } from 'react';
 import BackButton from '../atoms/BackButton';
-import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from 'reactstrap';
+import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip, Tooltip } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import { URLJoin } from '../tools/support';
+import { URLJoin, isMobile, isSmp } from '../tools/support';
 import { BASE_URL } from "../tools/env";
 import { Link } from 'react-router-dom';
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from '../tools/env';
+import { MobileTopMenu } from './MobileMenu';
 
 
-const ModeSelectButtonDropdown = (props) => {
+export const ModeSelectButtonDropdown = (props) => {
   const [dropdownOpen, setOpen] = useState(false);
-
   const toggle = () => setOpen(!dropdownOpen);
 
   let contents = [];
-  for (const [index, membersDividedByGeneration] of props.members.entries()) {
+  if (typeof props.members != "undefined") {
+    for (const [index, membersDividedByGeneration] of props.members.entries()) {
+      contents.push(
+        <>
+          <DropdownItem header><h6 className="m-0">{`${index + 1}期生`}</h6></DropdownItem>
+          <DropdownItem divider />
+          {membersDividedByGeneration.map(({ url, full_kanji }, j) => (
+            <DropdownItem tag={Link} to={url[props.type]}>{full_kanji}</DropdownItem>
+          ))}
+          {index != props.members.length - 1 && <DropdownItem divider />}
+        </>
+      );
+    }
+  } else {
     contents.push(
       <>
-        <DropdownItem header><h6 className="m-0">{`${index + 1}期生`}</h6></DropdownItem>
-        <DropdownItem divider />
-        {membersDividedByGeneration.map(({ url, full_kanji }, j) => (
-          <DropdownItem tag={Link} to={url[props.type]}>{full_kanji}</DropdownItem>
-        ))}
-        {index != props.members.length - 1 && <DropdownItem divider />}
+        <DropdownItem tag={Link} to={`/${props.type}/1`}>欅坂46</DropdownItem>
+        <DropdownItem tag={Link} to={`/${props.type}/2`}>日向坂46</DropdownItem>
       </>
-    );
+    )
   }
 
   return (
-    <ButtonDropdown direction="right" isOpen={dropdownOpen} toggle={toggle} onClick={(e) => e.stopPropagation()}>
-      <DropdownToggle className={"rounded-circle mode-select-dropdown-button " + props.group} >
-        <i class="fas fa-angle-down"></i>
+    <ButtonDropdown direction="right" isOpen={dropdownOpen} toggle={toggle} onClick={(e) => e.stopPropagation()}
+      className={"mode-select-dropdown-button-super " + (props.fixed ? "fixed" : "")}>
+      <DropdownToggle className={"rounded-circle mode-select-dropdown-button " + (props.fixed ? "fixed p-0 " : " ") + props.group} >
+        <i className="fas fa-angle-down"></i>
       </DropdownToggle>
-      <DropdownMenu className="mode-select-dropdown-menu">
+      <DropdownMenu className={"mode-select-dropdown-menu" + (typeof props.members != "undefined" && "-members")}>
         {contents}
       </DropdownMenu>
     </ButtonDropdown>
   );
 }
 
-
-class TypeChangeButton extends React.Component {
+export class TypeChangeButton extends React.Component {
   changeType(currentType, groupID, ct) {
     let url;
     if (currentType === "blogs") {
@@ -60,11 +70,11 @@ class TypeChangeButton extends React.Component {
     }
     return (
       <>
-        <Button className="rounded-circle p-0 type-change-button ml-1" id="type-change-button"
+        <Button className="rounded-circle p-0 type-change-button ml-1" id={this.props.id}
           onClick={() => this.changeType(this.props.type, this.props.groupID, this.props.ct)}>
-          <i class="fas fa-sync-alt" style={{ color: "gray" }}></i>
+          <i className="fas fa-sync-alt" style={{ color: "gray" }}></i>
         </Button>
-        <UncontrolledTooltip placement="bottom" target="type-change-button">
+        <UncontrolledTooltip placement="bottom" target={this.props.id}>
           {tooltipContent}
         </UncontrolledTooltip>
       </>
@@ -82,7 +92,7 @@ class Headline extends React.Component {
   };
 
   componentDidMount() {
-    if (typeof this.props.type != "undefined") {
+    if (this.props.type === "blogs" || this.props.type === "images") {
       const url = URLJoin(BASE_URL, "api/members/");
       axios
         .get(url)
@@ -117,47 +127,171 @@ class Headline extends React.Component {
     }
   }
 
-  render() {
-    if (typeof this.props.type == "undefined") {
-      return (
-        <div className="row d-flex align-items-center">
-          <BackButton />
-          <h3 className="ml-3 my-0">{this.props.title}</h3>
-        </div>
-      );
-    } else {
-      let modeSelectButtonGroup;
-      if (this.props.type === "blogs" || this.props.type === "images") {
-        modeSelectButtonGroup = (
-          <ButtonGroup size="lg">
-            <Button className={"rounded-pill mode-select-button recommend " + (this.props.mode === "recommend" && "active")}
-              onClick={() => this.props.history.push(`/${this.props.type}/`)}>おすすめ</Button>
-            <Button className={"rounded-pill d-flex align-items-center mode-select-button keyaki " + (this.props.mode === "keyaki" && "active")}
-              onClick={() => this.props.history.push(`/${this.props.type}/1`)}>
-              欅坂46<ModeSelectButtonDropdown group="keyaki" members={this.state.keyakiMembers} type={this.props.type} />
-            </Button>
-            <Button className={"rounded-pill d-flex align-items-center mode-select-button hinata " + (this.props.mode === "hinata" && "active")}
-              onClick={() => this.props.history.push(`/${this.props.type}/2`)}>
-              日向坂46<ModeSelectButtonDropdown group="hinata" members={this.state.hinataMembers} type={this.props.type} />
-            </Button>
-          </ButtonGroup>
-        );
+  getModeSelectButtonGroup = (fixed) => {
+    if (this.props.type === "blogs" || this.props.type === "images") {
+      const contents = (<>
+        <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "recommend" ? "active" : "")}
+          onClick={() => this.props.history.push(`/${this.props.type}/`)}><b>おすすめ</b></Button>
+        <Button className={"rounded-pill mode-select-button keyaki " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === "keyaki" ? "active" : "")}
+          onClick={() => this.props.history.push(`/${this.props.type}/1`)}>
+          <b>欅坂46</b>
+          {fixed
+            ? <MobileTopMenu id="modeSelectKeyaki" type="modeSelect" members={this.state.keyakiMembers} group="keyaki" blogsORimages={this.props.type} />
+            : <ModeSelectButtonDropdown group="keyaki" members={this.state.keyakiMembers} type={this.props.type} fixed={fixed} />
+          }
+
+        </Button>
+        <Button className={"rounded-pill mode-select-button hinata " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === "hinata" ? "active" : "")}
+          onClick={() => this.props.history.push(`/${this.props.type}/2`)}>
+          <b>日向坂46</b>
+          {fixed
+            ? <MobileTopMenu id="modeSelectHinata" type="modeSelect" members={this.state.hinataMembers} group="hinata" blogsORimages={this.props.type} />
+            : <ModeSelectButtonDropdown group="hinata" members={this.state.hinataMembers} type={this.props.type} fixed={fixed} />
+          }
+
+        </Button>
+      </>);
+
+      if (isMobile || fixed) {
+        return <>{contents}</>;
+      } else {
+        return <ButtonGroup size="lg">{contents}</ButtonGroup>;
       }
-
-      return (
-        <div className="row justify-content-between mr-0">
-          <div className="d-flex align-items-center">
-            <BackButton />
-            <h3 className="ml-3 my-0">{this.props.title}</h3>
-            {(this.props.type === "blogs" || this.props.type === "images") &&
-              <TypeChangeButton history={this.props.history} type={this.props.type} groupID={this.props.groupID} ct={this.props.ct} />}
-          </div>
-
-          {modeSelectButtonGroup}
-        </div>
+    } else if (this.props.type === "blogView" && !isMobile) {
+      const contents = (
+        <>
+          <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "view" ? "active" : "")}
+            onClick={() => this.props.changeMode("view")}><b>閲覧する</b></Button>
+          <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "download" ? "active" : "")}
+            onClick={() => this.props.changeMode("download")}><b>保存する</b></Button>
+        </>
       );
+      if (fixed) {
+        return <>{contents}</>;
+      } else {
+        return <ButtonGroup size="lg">{contents}</ButtonGroup>;
+      }
+    } else if (this.props.type === "members") {
+      const contents = (
+        <>
+          <Button className={"rounded-pill mode-select-button keyaki " + (fixed ? "fixed " : " ") + (this.props.group === "keyaki" ? "active" : "")}
+            onClick={() => this.props.changeGroup("keyaki")}>欅坂46</Button>
+          <Button className={"rounded-pill mode-select-button hinata " + (fixed ? "fixed " : " ") + (this.props.group === "hinata" ? "active" : "")}
+            onClick={() => this.props.changeGroup("hinata")}>日向坂46</Button>
+        </>
+      );
+      if (isMobile || fixed) {
+        return <>{contents}</>;
+      } else {
+        return <ButtonGroup size="lg">{contents}</ButtonGroup>;
+      }
     }
-  };
-};
+  }
+
+  getModeSelectButtonGroupVerHome = (fixed) => {
+    if (this.props.type === "home") {
+      const contetns = (<>
+        <Button className={"rounded-pill mode-select-button active " + (fixed ? "fixed" : "")}
+          onClick={() => this.props.history.push("/")}><b>ホーム</b></Button>
+        <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center" : "")}
+          onClick={() => this.props.history.push("/images/")}>
+          <b>画像一覧</b>
+
+          {fixed
+            ? <MobileTopMenu id="modeSelectVewHomeImages" type="modeSelectVewHome" blogsORimages="images" />
+            : <ModeSelectButtonDropdown type="images" fixed={fixed} />
+          }
+        </Button>
+        <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center" : "")}
+          onClick={() => this.props.history.push("/blogs/")}>
+          <b>ブログ一覧</b>
+
+
+          {fixed
+            ? <MobileTopMenu id="modeSelectVewHomeBlogs" type="modeSelectVewHome" blogsORimages="blogs" />
+            : <ModeSelectButtonDropdown type="blogs" fixed={fixed} />
+          }
+
+        </Button>
+      </>);
+
+      if (isMobile || fixed) {
+        return (
+          <>{contetns}</>);
+      } else {
+        return (
+          <ButtonGroup size="lg" className="ml-3 my-0">
+            {contetns}
+          </ButtonGroup>);
+      }
+    }
+  }
+
+  getTypeChangeButton = (fixed) => {
+    let typeChangeButtonID;
+    if (fixed) typeChangeButtonID = "type-change-button-fixed";
+    else typeChangeButtonID = "type-change-button";
+
+    if (this.props.type === "blogs" || this.props.type === "images") {
+      return <TypeChangeButton id={typeChangeButtonID} history={this.props.history} type={this.props.type} groupID={this.props.groupID} ct={this.props.ct} />
+    }
+  }
+
+  render() {
+    const fixedTypeChangeButton = this.getTypeChangeButton(true);
+    const fixedModeSelectButtonGroupVerHome = this.getModeSelectButtonGroupVerHome(true);
+    const fixedModeSelectButtonGroup = this.getModeSelectButtonGroup(true);
+
+    return (
+      <>
+        {/* fixed headline */}
+        <div className="fixed-headline border-bottom text-muted" style={{ top: NAVBAR_HEIGHT, height: SUB_NAVBAR_HEIGHT }} id="otapick-sub-navbar">
+          <BackButton mini={true} />
+
+          {(this.props.title && (fixedModeSelectButtonGroupVerHome || fixedModeSelectButtonGroup)) &&
+            <>
+              <h1>{this.props.title}</h1>
+              {!isMobile && fixedTypeChangeButton}
+              <div className={"vertical-hr " + (isMobile ? "mx-2" : "mx-4")} style={{ height: SUB_NAVBAR_HEIGHT - 20 }}></div>
+            </>
+          }
+          {/* only title ver */}
+          {(this.props.title && (!fixedModeSelectButtonGroupVerHome && !fixedModeSelectButtonGroup)) &&
+            <>
+              <h1>{this.props.title}</h1>
+              {!isMobile && fixedTypeChangeButton}
+            </>
+          }
+
+          <div className="fixed-headline-contents-wrapper" style={{ height: SUB_NAVBAR_HEIGHT }}>
+            <div className="fixed-headline-contents-wrapper2" style={{ height: SUB_NAVBAR_HEIGHT }}>
+              <div className={"text-muted fixed-headline-contents"}>
+                {fixedModeSelectButtonGroupVerHome}
+                {fixedModeSelectButtonGroup}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* headline */}
+        {!isMobile &&
+          <>
+            <div className="row justify-content-between mr-0">
+              <div className="d-flex align-items-center">
+                <BackButton />
+                {this.getModeSelectButtonGroupVerHome(false)}
+                {this.props.title &&
+                  <h3 className="ml-3 my-0">{this.props.title}</h3>
+                }
+                {this.getTypeChangeButton(false)}
+              </div>
+              {this.getModeSelectButtonGroup(false)}
+            </div>
+          </>
+        }
+      </>
+    );
+  }
+}
 
 export default withRouter(Headline);

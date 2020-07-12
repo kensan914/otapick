@@ -1,77 +1,70 @@
 import React from "react";
-import Headline from '../molecules/Headline';
-import axios from 'axios';
-import { URLJoin } from '../tools/support';
-import { BlogViewLoader, LoaderScreen } from "../molecules/Loader";
-import { LOAD_IMG_URL, BASE_URL } from "../tools/env";
-import { withRouter } from 'react-router-dom';
-import { NotFoundMessage } from "../atoms/NotFound";
+import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile } from '../tools/support';
+import { BASE_URL } from "../tools/env";
 import ImageView from "../organisms/ImageView";
-import { ViewTemplate } from "./BlogViewTemplate";
+import { KeepAlive } from 'react-keep-alive';
+import { ImageList } from '../organisms/List';
+import ToTopButton from "../atoms/ToTopButton";
 import BackButton from "../atoms/BackButton";
+import Headline from "../molecules/Headline";
 
 
-class ImageViewTemplate extends ViewTemplate {
+class ImageViewTemplate extends React.Component {
   constructor(props) {
     super(props);
-    this.state["order"] = this.props.match.params.order;
-    this.imageViewURL = URLJoin(BASE_URL, "api/image/", this.state.groupID, this.state.blogCt, this.props.match.params.order);
-  }
+    checkMatchParams(props.history, props.match.params.groupID, props.match.params.blogCt, props.match.params.order);
 
-  putView() {
-    axios
-      .put(this.imageViewURL, {
-        action: 'view',
-        key: this.state.VIEW_KEY,
-      }, {
-        headers: {
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
-        }
-      })
-      .then(res => {
-        if (res.data["status"] == "success") {
-          this.incrementNumOfViews(this.state.order);
-        }
-      });
+    this.state = {
+      group: getGroup(props.match.params.groupID),
+      groupID: props.match.params.groupID,
+      blogCt: props.match.params.blogCt,
+      order: props.match.params.order,
+      keepAliveName: generateKeepAliveName(props.location.key),
+      keepAliveNameView: generateKeepAliveNameInfo(props.location.key),
+      imageViewURL: URLJoin(BASE_URL, "api/image/", props.match.params.groupID, props.match.params.blogCt, props.match.params.order),
+      blogViewURL: URLJoin(BASE_URL, "api/blog/", props.match.params.groupID, props.match.params.blogCt),
+    };
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // image が view されたとき
-    if (prevState.status !== this.state.status && this.state.status === "success") {
-      if (this.state.VIEW_KEY) {
-        if (!this.props.accessedImages.includes(`${this.state.groupID}_${this.state.blogCt}_${this.state.order}_${this.props.location.key}`)) {
-          console.log("描画されました。");
-          this.putView();
-          this.props.setAccessedImage(`${this.state.groupID}_${this.state.blogCt}_${this.state.order}_${this.props.location.key}`);
-        }
-      }
-    }
+    const groupID = this.props.match.params.groupID;
+    const prevGroupID = prevProps.match.params.groupID;
+    const blogCt = this.props.match.params.blogCt;
+    const prevBlogCt = prevProps.match.params.blogCt;
+    const order = this.props.match.params.order;
+    const prevOrder = prevProps.match.params.order;
 
-    // accepted
-    super.componentDidUpdate(prevProps, prevState);
+    // When the image changed
+    if (prevGroupID !== groupID || prevBlogCt !== blogCt || prevOrder !== order) {
+      this.setState({
+        group: getGroup(groupID), groupID: groupID, blogCt: blogCt, order: order,
+        keepAliveName: generateKeepAliveName(this.props.location.key), keepAliveNameView: generateKeepAliveNameInfo(this.props.location.key),
+        imageViewURL: URLJoin(BASE_URL, "api/image/", groupID, blogCt, order), blogViewURL: URLJoin(BASE_URL, "api/blog/", groupID, blogCt),
+      });
+      return;
+    }
   }
 
   render() {
-    let contents;
-    if (this.state.status === "") {
-      contents = (<LoaderScreen type="horizontal" />);
-    } else if (this.state.status === "success") {
-      contents = (
-        <ImageView group={this.state.group} image={this.state.images[this.state.order]} officialUrl={this.state.officialUrl}
-          title={this.state.title} blogUrl={this.state.url} writer={this.state.writer} incrementNumOfDownloads={() => this.incrementNumOfDownloads(this.state.order)} />);
-    } else if (this.state.status === "accepted") {
-      contents = (<BlogViewLoader progress={this.state.progress} loadingImageUrl={LOAD_IMG_URL} />);
-    } else if (this.state.status === "blog_not_found" || this.state.status === "get_image_failed") {
-      contents = (<div className="pb-5"><NotFoundMessage type="blogFailed" /></div>);
-    }
     return (
       <>
-        <BackButton fixed={true} className="in-image-view" />
-        {contents}
+        {isMobile && <Headline title="画像詳細" />}
+        {!isMobile && <BackButton fixed={true} className="in-image-view" />}
+        <KeepAlive name={this.state.keepAliveNameView}>
+          <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
+            accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} />
+        </KeepAlive>
+        <KeepAlive name={this.state.keepAliveName}>
+          <div className="container-fluid text-muted mt-3 list-container-fluid">
+            <ImageList groupID={this.state.groupID} group={this.state.group} applyShowFooter={this.props.applyShowFooter} related={true}
+              url={URLJoin(BASE_URL, "api/relatedImages/", this.state.groupID, this.state.blogCt, this.state.order)} keepAliveName={this.state.keepAliveName} />
+          </div>
+        </KeepAlive>
+        {!this.props.isTop && <ToTopButton />}
       </>
     );
   }
 }
 
 
-export default withRouter(ImageViewTemplate);
+export default ImageViewTemplate;

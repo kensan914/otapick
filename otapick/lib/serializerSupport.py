@@ -48,6 +48,11 @@ def generate_thumbnail_url(blog):
         thumbnail = Image.objects.get(publisher=blog, order=0)
         if bool(thumbnail.picture_250x) and bool(thumbnail.picture_500x):
             return dict(zip(keys, [thumbnail.picture.url, thumbnail.picture_250x.url, thumbnail.picture_500x.url]))
+        else:
+            otapick.compress_blog_image(thumbnail)
+            if bool(thumbnail.picture_250x) and bool(thumbnail.picture_500x):
+                return dict(zip(keys, [thumbnail.picture.url, thumbnail.picture_250x.url, thumbnail.picture_500x.url]))
+
     return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(3)]))
 
 
@@ -64,3 +69,16 @@ def generate_writer_name(member):
         return member.first_kanji
     else:
         return member.full_kanji
+
+
+def generate_image_src(image):
+    keys = ['originals', '250x', '500x']
+    if image is not None:
+        if bool(image.picture):
+            if bool(image.picture_250x) and bool(image.picture_500x):
+                return dict(zip(keys, [image.picture.url, image.picture_250x.url, image.picture_500x.url]))
+            else: # originalは存在するが圧縮されていない場合
+                otapick.compress_blog_image(image)
+                if bool(image.picture_250x) and bool(image.picture_500x):
+                    return dict(zip(keys, [image.picture.url, image.picture_250x.url, image.picture_500x.url]))
+    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(3)]))

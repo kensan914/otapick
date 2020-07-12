@@ -1,3 +1,4 @@
+import time
 from django.core.management.base import BaseCommand
 from image.models import Image
 from main.models import Blog
@@ -5,20 +6,30 @@ import otapick
 
 class Command(BaseCommand):
     help = 'blogのscoreを計算し、上書き。' \
-           '3時間ごとに実行。'
+           '3時間ごとに実行。' \
+           'recommend_scoreにも対応。'
+
+    def add_arguments(self, parser):
+        parser.add_argument('-r', '--recommend', action='store_true')
 
     def handle(self, *args, **options):
-        blogs = Blog.objects.exclude(num_of_views=0)
-        try:
-            for blog in blogs:
-                max_d1_per_week = 0
-                if Image.objects.filter(publisher=blog).exists():
-                    max_d1_per_week = Image.objects.filter(publisher=blog).order_by('-d1_per_week')[0].d1_per_week
-                score = blog.v1_per_week * 3 + blog.v2_per_week * 2 + blog.v3_per_week + max_d1_per_week * 3
-                blog.score = score
-                blog.save()
+        if options['recommend']:
+            start = time.time()
+            high_score_members, divided_blogs, divided_images  = otapick.init_calc_recommend_score()
+            print(high_score_members)
+            otapick.print_console('init_calc_recommend_score!!: {}s'.format(round(time.time() - start, 2)))
 
-        except Exception as e:
-            otapick.print_console(e)
+            start = time.time()
+            otapick.calc_recommend_score(high_score_members, divided_blogs=divided_blogs)
+            otapick.print_console('finished calc_recommend_score blogs!!: {}s'.format(round(time.time() - start, 2)))
+
+            start = time.time()
+            otapick.calc_recommend_score(high_score_members, divided_images=divided_images)
+            otapick.print_console('finished calc_recommend_score images!!: {}s'.format(round(time.time() - start, 2)))
         else:
-            otapick.print_console('finished calc_blog_score!!')
+            start = time.time()
+            otapick.calc_score(blogs=Blog.objects.all())
+            otapick.print_console('finished calc_score blogs!!: {}s'.format(round(time.time() - start, 2)))
+            start = time.time()
+            otapick.calc_score(images=Image.objects.all())
+            otapick.print_console('finished calc_score images!!: {}s'.format(round(time.time() - start, 2)))

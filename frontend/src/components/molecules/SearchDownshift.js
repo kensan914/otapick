@@ -1,10 +1,12 @@
 import React from 'react';
 import Downshift from 'downshift';
 import axios from 'axios';
-import { URLJoin } from '../tools/support';
+import { URLJoin, isMobile, isSmp, lockScreen, unLockScreen, documentScrollHandler } from '../tools/support';
 import { NotFoundBlogsContent, NotFoundMembersContent } from '../atoms/NotFound';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME } from '../tools/env';
+import { BASE_URL, DELAY_TIME, MOBILE_TOP_MENU_MT, NAVBAR_LS_ZINDEX } from '../tools/env';
+import { Button } from 'reactstrap';
+import { HorizontalLoader } from './Loader';
 
 
 class SearchDownshift extends React.Component {
@@ -16,6 +18,7 @@ class SearchDownshift extends React.Component {
       qvalue: "",
       initSuggestionsBlogs: [],
       initSuggestionsMembers: [],
+      initSuggestionsStatus: "",
       suggestionsItems: [],
       suggestionsType: "",
       suggestionsStatus: "",
@@ -24,6 +27,7 @@ class SearchDownshift extends React.Component {
     this.isCallingSetSearchSuggestions = false;
 
     this.searchInputRef = React.createRef();
+    this.lockScreenID = "searchdownshift";
   }
 
   setInitSearchSuggestions() {
@@ -49,6 +53,7 @@ class SearchDownshift extends React.Component {
           this.setState({
             initSuggestionsBlogs: initSuggestionsBlogs,
             initSuggestionsMembers: initSuggestionsMembers,
+            initSuggestionsStatus: "success",
           });
         })
         .catch(err => {
@@ -93,9 +98,15 @@ class SearchDownshift extends React.Component {
 
   onFocusInput() {
     if (this.state.qvalue) {
-      if (!this.state.isOpen) { this.setState({ isOpenInit: false, isOpen: true }); }
+      if (!this.state.isOpen) {
+        if (typeof this.props.navbarToggle != "undefined") this.props.navbarToggle();
+        this.setState({ isOpenInit: false, isOpen: true });
+      }
     } else {
-      if (!this.state.isOpenInit) { this.setState({ isOpenInit: true, isOpen: false }); }
+      if (!this.state.isOpenInit) {
+        if (typeof this.props.navbarToggle != "undefined") this.props.navbarToggle();
+        this.setState({ isOpenInit: true, isOpen: false });
+      }
     }
   }
   onChangeInput(inputValue) {
@@ -108,16 +119,14 @@ class SearchDownshift extends React.Component {
       }
     } else if (inputValue === "") {
       // 検索作業中にdeleteしてinputValueが0になった場合に限り、initDownshiftをview
-      if (this.state.isOpen) this.setState({ isOpenInit: true, isOpen: false });
+      if (this.state.isOpen) this.setState({ isOpenInit: true, isOpen: false, suggestionsStatus: "" });
     }
   }
 
-  documentClickHandler = e => {
-    // 他の箇所クリックしたとき、検索作業を終了
-    if (e.target.closest("#search-input") == null && e.target.closest("#downshift-box") == null) {
-      this.setState({ isOpenInit: false, isOpen: false });
-      document.removeEventListener('click', this.documentClickHandler);
-    }
+  // 検索作業を終了
+  endSearchWork() {
+    this.setState({ isOpenInit: false, isOpen: false });
+    this.removeEventListeners();
   }
 
   resetInitSearchSuggestions = () => {
@@ -125,6 +134,7 @@ class SearchDownshift extends React.Component {
       isOpenInit: false,
       initSuggestionsBlogs: [],
       initSuggestionsMembers: [],
+      initSuggestionsStatus: "",
     })
     this.isCalledSetInitSearchSuggestions = false;
   }
@@ -144,18 +154,7 @@ class SearchDownshift extends React.Component {
     this.resetSearchSuggestions();
     this.setState({ qvalue: "" });
     this.searchInputRef.current.blur();
-  }
-
-  lockScreen = () => {
-    if (document.getElementById("lock-screen-wrapper") === null) {
-      let lockScreenWrapper = document.createElement("div");
-      lockScreenWrapper.setAttribute("id", "lock-screen-wrapper");
-      document.body.appendChild(lockScreenWrapper);
-    }
-  }
-  unLockScreen = () => {
-    const lockScreenWrapper = document.getElementById("lock-screen-wrapper");
-    if (lockScreenWrapper !== null) lockScreenWrapper.remove();
+    this.removeEventListeners();
   }
 
   handleSubmit(e) {
@@ -165,32 +164,88 @@ class SearchDownshift extends React.Component {
     }
   }
 
+  documentClickHandler = e => {
+    // 他の箇所クリックしたとき、検索作業を終了
+    if (e.target.closest("#search-input") == null && e.target.closest("#downshift-box") == null) {
+      this.endSearchWork();
+    }
+  }
+
+  documentTouchmoveHandler = e => {
+    // スマホスクロール無効(menubox以外) https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
+    const downshiftBox = document.getElementById("downshift-box");
+    const searchSuggestionhBox = document.getElementById("search-suggestions-box");
+
+    if (e.target.closest("#downshift-box") === downshiftBox && searchSuggestionhBox.scrollTop !== 0 && searchSuggestionhBox.scrollTop + searchSuggestionhBox.clientHeight !== searchSuggestionhBox.scrollHeight) {
+      e.stopPropagation();
+    } else {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+    }
+  }
+
+  addEventListeners() {
+    if (isMobile) {
+      document.addEventListener('mousewheel', documentScrollHandler, { passive: false });
+      document.addEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+      const searchSuggestionhBox = document.getElementById("search-suggestions-box");
+      searchSuggestionhBox.scrollTop = 1;
+      // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
+      searchSuggestionhBox.addEventListener('scroll', e => {
+        if (searchSuggestionhBox.scrollTop === 0) {
+          searchSuggestionhBox.scrollTop = 1;
+        }
+        else if (searchSuggestionhBox.scrollTop + searchSuggestionhBox.clientHeight === searchSuggestionhBox.scrollHeight) {
+          searchSuggestionhBox.scrollTop = searchSuggestionhBox.scrollTop - 1;
+        }
+      });
+    }
+    document.addEventListener('mousedown', this.documentClickHandler);
+  }
+
+  removeEventListeners() {
+    if (isMobile) {
+      document.removeEventListener('mousewheel', documentScrollHandler, { passive: false });
+      document.removeEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+    }
+    document.removeEventListener('mousedown', this.documentClickHandler);
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // InitDownshiftがviewされたとき
     if (prevState.isOpenInit !== this.state.isOpenInit && this.state.isOpenInit) {
       if (!this.isCalledSetInitSearchSuggestions) { this.setInitSearchSuggestions(); this.isCalledSetInitSearchSuggestions = true; }
+      else this.addEventListeners();
       this.resetSearchSuggestions();
-      document.addEventListener('click', this.documentClickHandler);
     }
 
     // Downshiftがviewされたとき
     if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
-      document.addEventListener('click', this.documentClickHandler);
     }
 
     // InitDownshiftまたはDownshiftがviewされたとき(検索作業が開始したとき)
     if (!prevState.isOpenInit && !prevState.isOpen && (this.state.isOpenInit || this.state.isOpen)) {
-      this.lockScreen();
+      lockScreen(this.lockScreenID, NAVBAR_LS_ZINDEX);
     }
     // InitDownshiftまたはDownshiftのviewが解除されたとき(検索作業が終了したとき)
     else if (!this.state.isOpenInit && !this.state.isOpen && (prevState.isOpenInit || prevState.isOpen)) {
-      this.unLockScreen();
+      unLockScreen(this.lockScreenID);
+    }
+
+    // initSuggestionsのデータ読み込みが完了したとき
+    if (prevState.initSuggestionsStatus.length === 0 && this.state.initSuggestionsStatus.length > 0) {
+      this.addEventListeners();
+    }
+    // initSuggestionsのデータ読み込みが完了したとき
+    else if (prevState.suggestionsStatus.length === 0 && this.state.suggestionsStatus.length > 0) {
+      this.addEventListeners();
     }
 
     // 画面遷移したとき
     if (this.props.location !== prevProps.location) {
       this.resetAll();
-      this.props.resetNavBar();
+      if (typeof this.props.resetNavBar != "undefined") this.props.resetNavBar();
     }
   }
 
@@ -199,12 +254,19 @@ class SearchDownshift extends React.Component {
     const suggestionsMessageStyle = { borderRadius: "1rem" };
     if (this.state.suggestionsType === "url") {
       suggestionsMessage = this.state.suggestionsStatus === "success"
-        ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>有効なURLです。以下のブログが検出されました。</div>
+        ? <div className="alert alert-success search-suggestions-title" role="alert" style={suggestionsMessageStyle}>有効なURLです。以下のブログが検出されました。</div>
         : <NotFoundBlogsContent />
     } else if (this.state.suggestionsType === "member") {
       suggestionsMessage = this.state.suggestionsStatus === "success"
-        ? <div className="alert alert-success" role="alert" style={suggestionsMessageStyle}>以下のメンバーが見つかりました。</div>
+        ? <div className="alert alert-success search-suggestions-title" role="alert" style={suggestionsMessageStyle}>以下のメンバーが見つかりました。</div>
         : <NotFoundMembersContent />
+    }
+
+    let downshiftBoxStyle; // PC or mobile で表示位置の変更
+    if (isMobile) {
+      downshiftBoxStyle = { position: "fixed", top: MOBILE_TOP_MENU_MT };
+    } else {
+      downshiftBoxStyle = { position: "absolute" };
     }
 
     return (
@@ -224,24 +286,30 @@ class SearchDownshift extends React.Component {
           highlightedIndex,
           selectedItem,
         }) => (
-            <div className="mt-3 mb-2 my-lg-0 justify-content-center col">
+            <div className={"my-0 justify-content-center col " + (isMobile ? "pr-2" : "")}>
               <form className="form-inline" autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
                 <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="Search" value={this.state.qvalue}
                   aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxlength='100'></input>
               </form>
 
-              <div {...getMenuProps()} style={{ "position": "absolute" }} id="downshift-box">
+              <div {...getMenuProps()} style={downshiftBoxStyle} id="downshift-box" className={isMobile && "mobile"}>
                 {this.state.isOpenInit &&
-                  <div className="container text-muted border search-suggestions-box"
-                    style={{ overflowY: "auto", overflowX: "hidden" }}>
-                    <div className="mt-3 mb-4">
-                      <h5>検索方法</h5>
-                      <p className="mx-2"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>を入力してください。</p>
+                  <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2" : "")}
+                    style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
+                    {isMobile &&
+                      <Button className="rounded-circle transparent-button-mobile float-right mt-1"
+                        onClick={() => this.endSearchWork()}>
+                        <i className="fas fa-times" />
+                      </Button>
+                    }
+                    <div className={"mt-3 " + (isSmp ? "mb-2" : "mb-4")}>
+                      <h5 className="search-suggestions-title">検索方法</h5>
+                      <p className="mx-2 search-suggestions-discription"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>を入力してください。</p>
                       <hr className="mb-0" />
-                      <h5 className="my-2">メンバーから画像を探す</h5>
-                      <div className="row mx-1">
-                        {
-                          this.state.initSuggestionsMembers
+                      <h5 className="my-2 search-suggestions-title">メンバーから画像を探す</h5>
+                      <div className={"row " + (isSmp ? "mx-0" : "mx-1")}>
+                        {this.state.initSuggestionsMembers.length > 0
+                          ? this.state.initSuggestionsMembers
                             .map((item, index) => (
                               <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
                                 <div className="m-1 search-suggestions-items"
@@ -254,6 +322,7 @@ class SearchDownshift extends React.Component {
                                       backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
                                       position: "relative",
                                       height: 100,
+                                      backgroundSize: "cover",
                                     },
                                   })}
                                 >
@@ -264,13 +333,14 @@ class SearchDownshift extends React.Component {
                                 </div>
                               </div>
                             ))
+                          : <HorizontalLoader />
                         }
                       </div>
                       <hr className="mb-0" />
-                      <h5 className="my-2">新着・人気ブログ</h5>
-                      <div className="row mx-1">
-                        {
-                          this.state.initSuggestionsBlogs
+                      <h5 className="my-2 search-suggestions-title">新着・人気ブログ</h5>
+                      <div className={"row " + (isSmp ? "mx-0" : "mx-1")}>
+                        {this.state.initSuggestionsBlogs.length > 0
+                          ? this.state.initSuggestionsBlogs
                             .map((item, index) => (
                               <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
                                 <div className="m-1 search-suggestions-items"
@@ -283,6 +353,7 @@ class SearchDownshift extends React.Component {
                                       backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
                                       position: "relative",
                                       height: 100,
+                                      backgroundSize: "cover",
                                     },
                                   })}
                                 >
@@ -293,6 +364,7 @@ class SearchDownshift extends React.Component {
                                 </div>
                               </div>
                             ))
+                          : <HorizontalLoader />
                         }
                       </div>
                     </div>
@@ -300,11 +372,20 @@ class SearchDownshift extends React.Component {
                 }
 
                 {!this.state.isOpen || this.state.isOpenInit ? null : (
-                  <div className="container text-muted border py-2 search-suggestions-box"
-                    style={{ overflowY: "auto", overflowX: "hidden" }}>
-                    <div className="mt-2 mb-3">
+                  <div className={"container text-muted border search-suggestions-box " + (isSmp ? "px-2 " : "") + (!isMobile ? "py-2 " : "mobile ") + ((!isSmp && isMobile) ? "pb-2" : "")}
+                    style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
+                    {isMobile &&
+                      <div className="col text-right p-0">
+                        <Button className="rounded-circle transparent-button-mobile mt-1"
+                          onClick={() => this.endSearchWork()}>
+                          <i className="fas fa-times" />
+                        </Button>
+                      </div>
+                    }
+                    <div className={"mb-3 " + (!isMobile ? "mt-2" : "")}>
                       {suggestionsMessage}
                       <div className="row mx-1">
+                        {this.state.suggestionsStatus === "" && <HorizontalLoader />}
                         {
                           this.state.suggestionsItems
                             .map((item, index) => (

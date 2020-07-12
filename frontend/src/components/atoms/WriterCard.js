@@ -2,6 +2,8 @@ import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
+import { isMobile } from '../tools/support';
+import { MobileBottomMenu } from '../molecules/MobileMenu';
 
 
 class DetailButton extends React.Component {
@@ -40,8 +42,12 @@ class WriterCard extends React.Component {
       <div className="rounded-pill d-flex writer-card p-1 align-items-center border shadow-sm"
         onClick={() => this.props.history.push(this.props.writer.url["images"])}>
         <img className="rounded-circle writer-card-image" src={this.props.writer.image}></img>
-        <div className="mx-2">{this.props.writer.name}</div>
-        <DetailButton writer={this.props.writer} />
+        <h6 className="mx-2 mb-0">{this.props.writer.name}</h6>
+        {isMobile
+          ? <MobileBottomMenu id="writer-card-menu" type="writerCard" title={this.props.writer.name}
+            url={this.props.writer.url} officialUrl={this.props.writer.official_url} />
+          : <DetailButton writer={this.props.writer} />
+        }
       </div>
     );
   };

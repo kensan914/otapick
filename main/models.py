@@ -4,6 +4,7 @@ from django.db import models
 class Group(models.Model):
     class Meta:
         db_table = 'group'
+        ordering = ['group_id']
 
     name = models.CharField(verbose_name='グループ名', max_length=30, unique=True)
     group_id = models.IntegerField(verbose_name='グループID', unique=True)
@@ -58,10 +59,12 @@ class Blog(models.Model):
     num_of_downloads = models.IntegerField(verbose_name='総ダウンロード数', default=0)
     num_of_most_downloads = models.IntegerField(verbose_name='最大ダウンロード数', default=0)
     num_of_views = models.IntegerField(verbose_name='閲覧数', default=0)
-    v1_per_week = models.IntegerField(verbose_name='閲覧数(1週目)', default=0)
-    v2_per_week = models.IntegerField(verbose_name='閲覧数(2週目)', default=0)
-    v3_per_week = models.IntegerField(verbose_name='閲覧数(3週目)', default=0)
+    v1_per_day = models.IntegerField(verbose_name='閲覧数(1日目)', default=0)
+    v2_per_day = models.IntegerField(verbose_name='閲覧数(2日目)', default=0)
+    v3_per_day = models.IntegerField(verbose_name='閲覧数(3日目)', default=0)
     score = models.FloatField(verbose_name='スコア(人気順)', default=0)
+    changed = models.BooleanField(verbose_name='変更有(スコア計算用)', default=0)
+    recommend_score = models.FloatField(verbose_name='スコア(おすすめ順）', default=0)
 
     def __str__(self):
         return self.title
