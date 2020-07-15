@@ -1,7 +1,7 @@
 import React from "react";
 import BlogSearchListInfo from '../molecules/info/BlogSearchListInfo';
 import Headline from '../molecules/Headline';
-import { getGroup, generateWavesVals } from '../tools/support';
+import { getGroup, generateWavesVals, updateMeta, gtagTo } from '../tools/support';
 import { OrderlyBlogCard } from '../molecules/BlogCard';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
@@ -67,6 +67,8 @@ class BlogSearchListTemplate extends React.Component {
               searchStatus: res.data["status"],
               searchType: res.data["type"],
             });
+
+            updateMeta({ title: `${res.data["title"]}｜ブログ検索結果`, discription: "" });
           } else if (res.data["status"] === "success" && res.data["type"] === "member") {
             const members = res.data["items"].map((member, index) =>
               ({
@@ -92,6 +94,8 @@ class BlogSearchListTemplate extends React.Component {
               searchType: res.data["type"],
               wavesVals: generateWavesVals(),
             });
+
+            updateMeta({ title: `"${queryString.parse(this.props.location.search).q}"｜メンバー検索結果`, discription: "" });
           } else {
             let title;
             if (res.data["type"] === "url") title = "ブログが見つかりませんでした。";
@@ -107,13 +111,18 @@ class BlogSearchListTemplate extends React.Component {
               searchStatus: res.data["status"],
               searchType: res.data["type"],
             });
+
+            if (res.data["type"] === "url") updateMeta({ title: "Not Found Blog", discription: "" });
+            else if (res.data["type"] === "member") updateMeta({ title: "Not Found Member", discription: "" });
+            else updateMeta({ title: "Not Found", discription: "" });
           }
         })
         .catch(err => {
           console.log(err);
         })
-        .finally(
-        )
+        .finally(() => {
+          gtagTo(this.props.location.pathname);
+        })
     }, DELAY_TIME);
   }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import BackButton from '../atoms/BackButton';
-import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip, Tooltip } from 'reactstrap';
+import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { URLJoin, isMobile, isSmp } from '../tools/support';
@@ -31,6 +31,8 @@ export const ModeSelectButtonDropdown = (props) => {
   } else {
     contents.push(
       <>
+        <DropdownItem header>グループ選択</DropdownItem>
+        <DropdownItem divider />
         <DropdownItem tag={Link} to={`/${props.type}/1`}>欅坂46</DropdownItem>
         <DropdownItem tag={Link} to={`/${props.type}/2`}>日向坂46</DropdownItem>
       </>
@@ -175,9 +177,9 @@ class Headline extends React.Component {
       const contents = (
         <>
           <Button className={"rounded-pill mode-select-button keyaki " + (fixed ? "fixed " : " ") + (this.props.group === "keyaki" ? "active" : "")}
-            onClick={() => this.props.changeGroup("keyaki")}>欅坂46</Button>
+            onClick={() => this.props.changeGroup("keyaki")}><b>欅坂46</b></Button>
           <Button className={"rounded-pill mode-select-button hinata " + (fixed ? "fixed " : " ") + (this.props.group === "hinata" ? "active" : "")}
-            onClick={() => this.props.changeGroup("hinata")}>日向坂46</Button>
+            onClick={() => this.props.changeGroup("hinata")}><b>日向坂46</b></Button>
         </>
       );
       if (isMobile || fixed) {
@@ -245,14 +247,14 @@ class Headline extends React.Component {
     return (
       <>
         {/* fixed headline */}
-        <div className="fixed-headline border-bottom text-muted" style={{ top: NAVBAR_HEIGHT, height: SUB_NAVBAR_HEIGHT }} id="otapick-sub-navbar">
-          <BackButton mini={true} />
+        <div className="fixed-headline border-bottom text-muted pl-0 pl-lg-3" style={{ top: NAVBAR_HEIGHT, height: SUB_NAVBAR_HEIGHT }} id="otapick-sub-navbar">
+          <BackButton mini={true} className="mr-0 mr-lg-2" />
 
           {(this.props.title && (fixedModeSelectButtonGroupVerHome || fixedModeSelectButtonGroup)) &&
             <>
               <h1>{this.props.title}</h1>
               {!isMobile && fixedTypeChangeButton}
-              <div className={"vertical-hr " + (isMobile ? "mx-2" : "mx-4")} style={{ height: SUB_NAVBAR_HEIGHT - 20 }}></div>
+              <div className={"vertical-hr " + (isMobile ? "ml-3" : "mx-2")}></div>
             </>
           }
           {/* only title ver */}

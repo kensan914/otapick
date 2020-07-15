@@ -154,7 +154,7 @@ export class NotFoundMessage extends React.Component {
     }
 
     return (
-      <div className={"notfound-message p-4 shadow-sm " + (this.props.margin && "notfound-message-margin-bottom")}
+      <div className={"notfound-message py-4 px-3 px-sm-4 shadow-sm text-muted " + (this.props.margin && "notfound-message-margin-bottom")}
         style={{ backgroundImage: `url(${BACKGROUNG_IMG_URL})` }}>
         {content}
       </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouterInnerRef } from '../tools/withRouterInnerRef';
+import { Link } from 'react-router-dom';
 
 
 // HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
@@ -82,27 +83,27 @@ class Footer extends React.Component {
               <div className="row">
 
                 <div className="col-xl-3 col-lg-12 col-xs-12 text-center mb-5">
-                  <a className="navbar-brand ml-4 ml-xl-0" href=""></a>
+                  <Link className="navbar-brand ml-4 ml-xl-0" to="/" />
                 </div>
 
                 <div className="col-xl-3 col-lg-4 col-xs-12">
                   <ul className="footer-menu">
-                    <span className="font-weight-bold">ブログを探す</span>
+                    <span className="font-weight-bold">画像を探す</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
                     <li>
-                      <a href="">欅坂46 ブログ一覧</a>
+                      <Link to="/images/1">欅坂46 画像一覧</Link>
                     </li>
                     <li>
-                      <a href="">日向坂46 ブログ一覧</a>
+                      <Link to="/images/2">日向坂46 画像一覧</Link>
                     </li>
                     <li>
-                      <a href="">新着ブログ</a>
+                      <Link to="/blogs/1">欅坂46 ブログ一覧</Link>
                     </li>
                     <li>
-                      <a href="">人気ブログ</a>
+                      <Link to="/blogs/2">日向坂46 ブログ一覧</Link>
                     </li>
                     <li>
-                      <a href="">メンバーリスト</a>
+                      <Link to="/members">メンバーリスト</Link>
                     </li>
                   </ul>
                 </div>
@@ -138,7 +139,7 @@ class Footer extends React.Component {
                   <ul className="footer-menu">
                     <span className="font-weight-bold">ヲタピックについて</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
-                    <li>
+                    {/* <li>
                       <a href="">つかい方</a>
                     </li>
                     <li>
@@ -146,7 +147,7 @@ class Footer extends React.Component {
                     </li>
                     <li>
                       <a href="">お問い合わせ</a>
-                    </li>
+                    </li> */}
                     <li>
                       <a target="_blank" href="https://twitter.com/otapick">公式Twitter<i
                         className="fas fa-external-link-alt"></i></a>

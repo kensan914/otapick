@@ -1,5 +1,6 @@
 import React from 'react';
-import { isSmp } from '../../tools/support';
+import { isSmp, isMobile } from '../../tools/support';
+
 
 
 export class BlogSearchListInfo extends React.Component {
@@ -10,10 +11,10 @@ export class BlogSearchListInfo extends React.Component {
   render() {
     return (
       <>
-        <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : "my-4 ") + this.props.group}>
+        <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : (isMobile ? "mb-3 mt-1 " : "my-4 ")) + this.props.group}>
           <div className="card-body px-4 px-sm-5 py-4">
             <div className="row mx-2 justify-content-between">
-              <h3 className="my-auto d-flex align-items-center">{!this.props.title ? "\u00A0" : this.props.title}</h3>
+              <h2 className="my-auto d-flex align-items-center">{!this.props.title ? "\u00A0" : this.props.title}</h2>
             </div>
             <hr className="info-hr" />
             <div className="row justify-content-between">

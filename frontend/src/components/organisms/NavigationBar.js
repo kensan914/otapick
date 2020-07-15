@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import SearchDownshift from '../molecules/SearchDownshift'
 import { isMobile, isSmp } from '../tools/support';
@@ -56,11 +56,9 @@ const NavigationBar = (props) => {
                 画像一覧
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag={Link} to="/images">おすすめ画像(総合)</DropdownItem>
-                <DropdownItem tag={Link} to="/images/1">おすすめ画像(欅坂46)</DropdownItem>
-                <DropdownItem tag={Link} to="/images/2">おすすめ画像(日向坂46)</DropdownItem>
-                <DropdownItem tag={Link} to="/images/1/?sort=popularity">人気画像(欅坂46)</DropdownItem>
-                <DropdownItem tag={Link} to="/images/2/?sort=popularity">人気画像(日向坂46)</DropdownItem>
+                <DropdownItem tag={Link} to="/images/1">欅坂46</DropdownItem>
+                <DropdownItem tag={Link} to="/images/2">日向坂46</DropdownItem>
+                <DropdownItem tag={Link} to="/images">おすすめ画像</DropdownItem>
                 <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -70,11 +68,9 @@ const NavigationBar = (props) => {
                 ブログ一覧
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag={Link} to="/blogs">おすすめブログ(総合)</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/1">新着ブログ(欅坂46)</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/2">新着ブログ(日向坂46)</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/1/?sort=popularity">人気ブログ(欅坂46)</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/2/?sort=popularity">人気ブログ(日向坂46)</DropdownItem>
+                <DropdownItem tag={Link} to="/blogs/1">欅坂46</DropdownItem>
+                <DropdownItem tag={Link} to="/blogs/2">日向坂46</DropdownItem>
+                <DropdownItem tag={Link} to="/blogs">おすすめブログ</DropdownItem>
                 <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -98,9 +94,12 @@ const NavigationBar = (props) => {
                 ヲタピック
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag={Link} to="/blogs/1">つかい方</DropdownItem>
+                {/* <DropdownItem tag={Link} to="/blogs/1">つかい方</DropdownItem>
                 <DropdownItem tag={Link} to="/blogs/2">サポート</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/2">お問い合わせ</DropdownItem>
+                <DropdownItem tag={Link} to="/blogs/2">お問い合わせ</DropdownItem> */}
+                <DropdownItem href="https://twitter.com/otapick" target="_blank">
+                  公式Twitter{"\u00A0"}<i className="fab fa-twitter" />
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </Nav>

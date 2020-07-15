@@ -28,7 +28,7 @@ class MemberCard extends React.Component {
     return (
       <>
         <div className={"member-card mx-auto " + this.props.belongingGroup}>
-          <div className={"member-card-header " + (!isMobile ? "pc" : "")} onClick={() => {console.log(this.props.url["images"]);this.props.history.push(this.props.url["images"]);}}>
+          <div className={"member-card-header " + (!isMobile ? "pc" : "")} onClick={() => { this.props.history.push(this.props.url["images"]); }}>
             <div className="member-card-overlay"
               style={{ backgroundImage: `url(${this.props.image})` }}>
             </div>
@@ -52,7 +52,7 @@ class MemberCard extends React.Component {
           <div className="member-card-body">
             {isMobile
               ? <MobileBottomMenu id={this.props.id} type="memberCard" title={`${this.props.lastKanji} ${this.props.firstKanji}`}
-                url={this.props.url} officialUrl={this.props.officialUrl} className="mx-auto py-3"/>
+                url={this.props.url} officialUrl={this.props.officialUrl} className="mx-auto py-3" />
               : <DetailButton url={this.props.url} officialUrl={this.props.officialUrl} />
             }
           </div>

@@ -28,6 +28,8 @@ class SearchDownshift extends React.Component {
 
     this.searchInputRef = React.createRef();
     this.lockScreenID = "searchdownshift";
+
+    this.isRender = true;
   }
 
   setInitSearchSuggestions() {
@@ -187,19 +189,21 @@ class SearchDownshift extends React.Component {
 
   addEventListeners() {
     if (isMobile) {
-      document.addEventListener('mousewheel', documentScrollHandler, { passive: false });
-      document.addEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
       const searchSuggestionhBox = document.getElementById("search-suggestions-box");
-      searchSuggestionhBox.scrollTop = 1;
-      // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
-      searchSuggestionhBox.addEventListener('scroll', e => {
-        if (searchSuggestionhBox.scrollTop === 0) {
-          searchSuggestionhBox.scrollTop = 1;
-        }
-        else if (searchSuggestionhBox.scrollTop + searchSuggestionhBox.clientHeight === searchSuggestionhBox.scrollHeight) {
-          searchSuggestionhBox.scrollTop = searchSuggestionhBox.scrollTop - 1;
-        }
-      });
+      if (searchSuggestionhBox !== null) {
+        document.addEventListener('mousewheel', documentScrollHandler, { passive: false });
+        document.addEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+        searchSuggestionhBox.scrollTop = 1;
+        // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
+        searchSuggestionhBox.addEventListener('scroll', e => {
+          if (searchSuggestionhBox.scrollTop === 0) {
+            searchSuggestionhBox.scrollTop = 1;
+          }
+          else if (searchSuggestionhBox.scrollTop + searchSuggestionhBox.clientHeight === searchSuggestionhBox.scrollHeight) {
+            searchSuggestionhBox.scrollTop = searchSuggestionhBox.scrollTop - 1;
+          }
+        });
+      }
     }
     document.addEventListener('mousedown', this.documentClickHandler);
   }
@@ -213,40 +217,46 @@ class SearchDownshift extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // InitDownshiftがviewされたとき
-    if (prevState.isOpenInit !== this.state.isOpenInit && this.state.isOpenInit) {
-      if (!this.isCalledSetInitSearchSuggestions) { this.setInitSearchSuggestions(); this.isCalledSetInitSearchSuggestions = true; }
-      else this.addEventListeners();
-      this.resetSearchSuggestions();
-    }
+    if (this.isRender) {
+      // InitDownshiftがviewされたとき
+      if (prevState.isOpenInit !== this.state.isOpenInit && this.state.isOpenInit) {
+        if (!this.isCalledSetInitSearchSuggestions) { this.setInitSearchSuggestions(); this.isCalledSetInitSearchSuggestions = true; }
+        else this.addEventListeners();
+        this.resetSearchSuggestions();
+      }
 
-    // Downshiftがviewされたとき
-    if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
-    }
+      // Downshiftがviewされたとき
+      if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
+      }
 
-    // InitDownshiftまたはDownshiftがviewされたとき(検索作業が開始したとき)
-    if (!prevState.isOpenInit && !prevState.isOpen && (this.state.isOpenInit || this.state.isOpen)) {
-      lockScreen(this.lockScreenID, NAVBAR_LS_ZINDEX);
-    }
-    // InitDownshiftまたはDownshiftのviewが解除されたとき(検索作業が終了したとき)
-    else if (!this.state.isOpenInit && !this.state.isOpen && (prevState.isOpenInit || prevState.isOpen)) {
-      unLockScreen(this.lockScreenID);
-    }
+      // InitDownshiftまたはDownshiftがviewされたとき(検索作業が開始したとき)
+      if (!prevState.isOpenInit && !prevState.isOpen && (this.state.isOpenInit || this.state.isOpen)) {
+        lockScreen(this.lockScreenID, NAVBAR_LS_ZINDEX);
+      }
+      // InitDownshiftまたはDownshiftのviewが解除されたとき(検索作業が終了したとき)
+      else if (!this.state.isOpenInit && !this.state.isOpen && (prevState.isOpenInit || prevState.isOpen)) {
+        unLockScreen(this.lockScreenID);
+      }
 
-    // initSuggestionsのデータ読み込みが完了したとき
-    if (prevState.initSuggestionsStatus.length === 0 && this.state.initSuggestionsStatus.length > 0) {
-      this.addEventListeners();
-    }
-    // initSuggestionsのデータ読み込みが完了したとき
-    else if (prevState.suggestionsStatus.length === 0 && this.state.suggestionsStatus.length > 0) {
-      this.addEventListeners();
-    }
+      // initSuggestionsのデータ読み込みが完了したとき
+      if (prevState.initSuggestionsStatus.length === 0 && this.state.initSuggestionsStatus.length > 0) {
+        this.addEventListeners();
+      }
+      // suggestionsのデータ読み込みが完了したとき
+      else if (prevState.suggestionsStatus.length === 0 && this.state.suggestionsStatus.length > 0) {
+        this.addEventListeners();
+      }
 
-    // 画面遷移したとき
-    if (this.props.location !== prevProps.location) {
-      this.resetAll();
-      if (typeof this.props.resetNavBar != "undefined") this.props.resetNavBar();
+      // 画面遷移したとき
+      if (this.props.location !== prevProps.location) {
+        this.resetAll();
+        if (typeof this.props.resetNavBar != "undefined") this.props.resetNavBar();
+      }
     }
+  }
+
+  componentWillUnmount() {
+    this.isRender = false;
   }
 
   render() {
@@ -400,6 +410,7 @@ class SearchDownshift extends React.Component {
                                       backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
                                       position: "relative",
                                       height: 100,
+                                      backgroundSize: "cover",
                                     },
                                   })}
                                 >

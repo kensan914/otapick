@@ -13,10 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
-
 import main.views
 from config import settings
 from django.views.static import serve
@@ -24,8 +22,6 @@ from django.views.static import serve
 urlpatterns = [
     path('api/', include('api.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-
-    # TODO 旧URLをリダイレクト処理したい
 ]
 
 #Debug=Falseでもadminへアクセスできてしまうため、対処

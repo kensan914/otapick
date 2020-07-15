@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tooltip } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { isSmp } from '../../tools/support';
+import { isSmp, isMobile } from '../../tools/support';
 
 
 export const ViewTooltip = (props) => {
@@ -28,11 +28,11 @@ class BlogViewInfo extends React.Component {
     else if (this.props.group === "hinata") officialLinkTitle = "hinatazaka.com";
 
     return (
-      <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : "my-4 ") + this.props.group}>
+      <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : (isMobile ? "mb-3 mt-1 " : "my-4 ")) + this.props.group}>
         <div className="card-body px-4 px-sm-5 py-4">
           {this.props.title.length > 0
-            ? (this.props.title.length > 50 ? <h5>{this.props.title}</h5> : <h4>{this.props.title}</h4>)
-            : <h4>{"\u00A0"}</h4>
+            ? (this.props.title.length > 50 ? <h3 className="smaller">{this.props.title}</h3> : <h3>{this.props.title}</h3>)
+            : <h3>{"\u00A0"}</h3>
           }
           <div className="row download-info mt-3">
             {!Object.keys(this.props.writer).length

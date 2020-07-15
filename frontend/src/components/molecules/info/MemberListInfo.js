@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, ButtonGroup } from 'reactstrap';
 import { isSmp, isMobile } from '../../tools/support';
 
 
@@ -17,10 +16,10 @@ export class MemberListInfo extends React.Component {
   render() {
     return (
       <>
-        <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : "my-4 ") + this.props.group}>
+        <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : (isMobile ? "mb-3 mt-1 " : "my-4 ")) + this.props.group}>
           <div className="card-body px-4 px-sm-5 py-4">
             <div className="row mx-2 justify-content-between">
-              <h3 className="my-auto d-flex align-items-center">{this.getTitle(this.props.group)}</h3>
+              <h2 className="my-auto d-flex align-items-center">{this.getTitle(this.props.group)}</h2>
             </div>
             <hr className="info-hr" />
             <div className="row justify-content-between">

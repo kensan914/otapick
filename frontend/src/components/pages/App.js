@@ -4,7 +4,7 @@ import BlogListTemplate from '../templates/BlogListTemplate';
 import BlogSearchListTemplate from '../templates/BlogSearchListTemplate';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Provider } from 'react-keep-alive';
-import { setUserAgent, setBodyPadding, watchCurrentPosition, getIsMobile } from '../tools/support';
+import { setUserAgent, setBodyPadding, watchCurrentPosition, getIsMobile, isMobile } from '../tools/support';
 import Footer from '../organisms/Footer';
 import LocationAdmin from "../atoms/LocationAdmin";
 import MemberListTemplate from "../templates/MemberListTemplate";
@@ -12,9 +12,10 @@ import BlogViewTemplate from "../templates/BlogViewTemplate";
 import ImageListTemplate from "../templates/ImageListTemplate";
 import ImageViewTemplate from "../templates/ImageViewTemplate";
 import HomeTemplate from "../templates/HomeTemplate";
-import { NotFoundMessage } from "../atoms/NotFound";
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, setEnvConstant } from "../tools/env";
 import NavigationAdmin from "../atoms/NavigationAdmin";
+import NotFound404 from "./NotFound404";
+import BottomNavigationBar from "../organisms/BottomNavigationBar";
 
 
 class App extends React.Component {
@@ -24,14 +25,17 @@ class App extends React.Component {
       isShowNBShadow: false,
       isShowNB: true,
       isShowSubNB: false,
+      isTop: true,
       accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"]
       accessedImages: [], // ["1_34360_0_2341234", "2_34230_3_51451345"]
+      bottomNavbarRef: null,
+      footerRef: null,
     }
-    this.footerRef = React.createRef();
     setUserAgent();
     setEnvConstant();
     if (getIsMobile()) setBodyPadding(NAVBAR_HEIGHT + SUB_NAVBAR_HEIGHT);
     else setBodyPadding(NAVBAR_HEIGHT);
+
     this.startPos = 0;
   }
 
@@ -53,41 +57,22 @@ class App extends React.Component {
     });
   }
 
-  setStateIsShowNBShadow = (bool) => {
-    if (bool !== null) {
-      if (bool && !this.state.isShowNBShadow) {
-        this.setState({ isShowNBShadow: true });
-      } else if (!bool && this.state.isShowNBShadow) {
-        this.setState({ isShowNBShadow: false });
-      }
-    }
-  }
+  setBottomNavbarRef = node => this.setState({ bottomNavbarRef: node });
 
-  setStateIsShowNB = (bool) => {
-    if (bool !== null) {
-      if (bool && !this.state.isShowNB) {
-        this.setState({ isShowNB: true });
-      } else if (!bool && this.state.isShowNB) {
-        this.setState({ isShowNB: false });
-      }
-    }
-  }
+  setFooterRef = node => this.setState({ footerRef: node });
 
-  setStateIsShowSubNB = (bool) => {
-    if (bool !== null) {
-      if (bool && !this.state.isShowSubNB) {
-        this.setState({ isShowSubNB: true });
-      } else if (!bool && this.state.isShowSubNB) {
-        this.setState({ isShowSubNB: false });
+  setScrollState = (stateList) => {
+    for (const [key, value] of Object.entries(stateList)) {
+      if ((value && !this.state[key]) || (!value && this.state[key])) {
+        this.setState(stateList);
+        break;
       }
     }
   }
 
   scrollHandler = e => {
     const result = watchCurrentPosition(this.startPos);
-    this.setStateIsShowNBShadow(result.isShowNBShadow);
-    this.setStateIsShowNB(result.isShowNB);
-    this.setStateIsShowSubNB(result.isShowSubNB);
+    this.setScrollState(result.stateList);
     this.startPos = result.startPos;
   }
 
@@ -105,54 +90,66 @@ class App extends React.Component {
           <Provider>
 
             <NavigationBar />
-            <NavigationAdmin isShowNBShadow={this.state.isShowNBShadow} isShowNB={this.state.isShowNB} isShowSubNB={this.state.isShowSubNB} />
+            <NavigationAdmin isShowNBShadow={this.state.isShowNBShadow} isShowNB={this.state.isShowNB} isShowSubNB={this.state.isShowSubNB} isTop={this.state.isTop} scrollHandler={this.scrollHandler} />
+            {isMobile && <BottomNavigationBar ref={this.setBottomNavbarRef} />}
 
             <Switch>
-              <Route exact path="/" render={({ match, location, history }) =>
-                <HomeTemplate match={match} location={location} history={history} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+              <Route exact path="/" render={() =>
+                <HomeTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
 
-              <Route exact path="/blogs/" render={({ match, location, history }) =>
-                <BlogListTemplate match={match} location={location} history={history} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+              <Route exact path="/blogs/" render={() =>
+                <BlogListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
-              <Route exact path="/blogs/:groupID" render={({ match, location, history }) =>
-                <BlogListTemplate match={match} location={location} history={history} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+              <Route exact path="/blogs/:groupID" render={() =>
+                <BlogListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
-              <Route exact path="/blogs/:groupID/:ct" render={({ match, location, history }) =>
-                <BlogListTemplate match={match} location={location} history={history} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
-              } />
-
-              <Route exact path="/images/" render={({ match, location, history }) =>
-                <ImageListTemplate match={match} location={location} history={history} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
-              } />
-              <Route exact path="/images/:groupID" render={({ match, location, history }) =>
-                <ImageListTemplate match={match} location={location} history={history} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
-              } />
-              <Route exact path="/images/:groupID/:ct" render={({ match, location, history }) =>
-                <ImageListTemplate match={match} location={location} history={history} applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+              <Route exact path="/blogs/:groupID/:ct" render={() =>
+                <BlogListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
 
-              <Route exact path="/search/" render={({ match, location, history }) =>
-                <BlogSearchListTemplate match={match} location={location} history={history} />
+              <Route exact path="/images/" render={() =>
+                <ImageListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
+              } />
+              <Route exact path="/images/:groupID" render={() =>
+                <ImageListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
+              } />
+              <Route exact path="/images/:groupID/:ct" render={() =>
+                <ImageListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
 
-              <Route exact path="/members/" render={({ match, location, history }) =>
-                <MemberListTemplate match={match} location={location} history={history} />
+              <Route exact path="/search/" render={() => <BlogSearchListTemplate />} />
+
+              <Route exact path="/members/" render={() => <MemberListTemplate />} />
+
+              <Route exact path="/blog/:groupID/:blogCt" render={() =>
+                <BlogViewTemplate accessedBlogs={this.state.accessedBlogs} setAccessedBlog={(blogID) => this.setAccessedBlog(blogID)} />
               } />
 
-              <Route exact path="/blog/:groupID/:blogCt" render={({ match, location, history }) =>
-                <BlogViewTemplate match={match} location={location} history={history} accessedBlogs={this.state.accessedBlogs} setAccessedBlog={(blogID) => this.setAccessedBlog(blogID)} />
+              <Route exact path="/image/:groupID/:blogCt/:order" render={() =>
+                <ImageViewTemplate accessedImages={this.state.accessedImages} setAccessedImage={(imageID) => this.setAccessedImage(imageID)}
+                  applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
 
-              <Route exact path="/image/:groupID/:blogCt/:order" render={({ match, location, history }) =>
-                <ImageViewTemplate match={match} location={location} history={history} accessedImages={this.state.accessedImages} setAccessedImage={(imageID) => this.setAccessedImage(imageID)}
-                  applyShowFooter={(l) => this.footerRef.current.applyShowFooter(l)} />
+              {/* past URL */}
+              <Route exact path="/search/group/blog/:groupID" render={() =>
+                <BlogListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
+              <Route exact path="/search/member/blog/:groupID/:ct" render={() =>
+                <BlogListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
+              } />
+              <Route exact path="/download/:groupID/:blogCt" render={() =>
+                <BlogViewTemplate accessedBlogs={this.state.accessedBlogs} setAccessedBlog={(blogID) => this.setAccessedBlog(blogID)} />
+              } />
+              <Route exact path="/search/member/" render={() => <MemberListTemplate />} />
+              {/* end of past URL */}
 
-              <Route render={() => <div className="container mt-3 text-muted py-5"><NotFoundMessage type="404" margin={true} /></div>} />
+              <Route render={() =>
+                <NotFound404 footerRef={this.state.footerRef} applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
+              } />
             </Switch>
 
-            <Footer ref={this.footerRef} />
+            <Footer ref={this.setFooterRef} />
           </Provider>
         </LocationAdmin>
       </BrowserRouter>

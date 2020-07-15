@@ -5,6 +5,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Lato', 'Noto Sans JP', 'ヒラギノ角ゴ', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: 700;
+    word-break: break-all;
 }
 
 .keyaki header.masthead {
@@ -1222,6 +1223,18 @@ a.hinata {
     background-image: linear-gradient(to right, #8eeeff 50%, #d185fd 100%);
 }
 
+.otapick-card2 h2 {
+    font-size: 28px;
+}
+
+.otapick-card2 h3 {
+    font-size: 24px;
+}
+
+.otapick-card2 h3.smaller {
+    font-size: 20px;
+}
+
 .download-info {
     font-size: 1.3rem;
 }
@@ -1359,12 +1372,22 @@ a.hinata {
 }
 
 @media (min-width: 576px) {
-    #downshift-box, #mobile-top-menu, #downshift-box.mobile, #mobile-top-menu.mobile {
+    #downshift-box, #downshift-box.mobile {
         width: 535px;
     }
-    #downshift-box.mobile-top-menu.right #mobile-top-menu.mobile-top-menu.right {
+    #mobile-top-menu, #mobile-top-menu.mobile {
+        width: 400px;
+    }
+    #downshift-box.mobile-top-menu.right, #mobile-top-menu.mobile-top-menu.right {
         right: 5px;
         left: initial;
+        transform: none;
+        -webkit-transform: none;
+        -ms-transform: none;
+    }
+    #downshift-box.mobile-top-menu.left, #mobile-top-menu.mobile-top-menu.left {
+        right: initial;
+        left: 100px;
         transform: none;
         -webkit-transform: none;
         -ms-transform: none;
@@ -1375,20 +1398,29 @@ a.hinata {
 }
 
 @media (min-width: 768px) {
-    #downshift-box, #mobile-top-menu {
+    #downshift-box {
         width: 700px;
+    }
+    #downshift-box.mobile-top-menu.left, #mobile-top-menu.mobile-top-menu.left {
+        left: 150px;
     }
 }
 
 @media (min-width: 992px) {
-    #downshift-box, #mobile-top-menu {
+    #downshift-box {
         width: 535px;
+    }
+    #downshift-box.mobile-top-menu.left, #mobile-top-menu.mobile-top-menu.left {
+        left: 150px;
     }
 }
 
 @media (min-width: 1200px) {
-    #downshift-box, #mobile-top-menu {
+    #downshift-box {
         width: 700px;
+    }
+    #downshift-box.mobile-top-menu.left, #mobile-top-menu.mobile-top-menu.left {
+        left: 200px;
     }
 }
 
@@ -1430,26 +1462,29 @@ a.hinata {
 /* otapick-totop-button */
 
 .otapick-totop-button {
-    width: 4rem;
-    height: 4rem;
     position: fixed;
-    bottom: 3rem;
-    right: 3rem;
     z-index: 100;
     opacity: 0;
     animation: 0.8s fadeIn forwards;
     background-position: center;
     background-repeat: no-repeat;
     background-color: white;
-    transition-duration: 0s!important;
+    transition-duration: 0s;
 }
 
-.otapick-totop-button {
-    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%2398FB98%3B%7D%20.st5%7Bfill%3A%238EEEFF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2231.53%22%20y%3D%2229.44%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-27.0981%2046.713)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2235.61%22%20y%3D%2218.64%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-18.2665%2046.4346)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2240.51%22%20y%3D%2225.72%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-23.3782%2048.2538)%22%20class%3D%22st1%22%20width%3D%2212.09%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2227.17%22%20y%3D%2221.78%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2028.7177%20-19.6442)%22%20class%3D%22st2%22%20width%3D%2221.81%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2218.14%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2025.0795%20-18.1372)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2221.49%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-9.6895%2025.7279)%22%20class%3D%22st4%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2228.38%22%20y%3D%2237.16%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2039.7432%20-15.4948)%22%20class%3D%22st2%22%20width%3D%2220.39%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2233.02%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2035.6011%20-13.7791)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2236.37%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-20.211%2030.086)%22%20class%3D%22st5%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3C%2Fsvg%3E')
+#otapick-totop-button {
+    opacity: 0;
+    visibility: hidden;
 }
 
-.otapick-totop-button:hover {
-    background-color: rgb(250, 250, 250);
+#otapick-totop-button.show {
+    animation: fadeIn .2s;
+    opacity: 1;
+    visibility: visible;
+}
+
+#otapick-totop-button.hide {
+    animation: fadeOut .2s;
 }
 
 @keyframes fadeIn {
@@ -1461,22 +1496,21 @@ a.hinata {
     }
 }
 
-@media (max-width: 800px) {
-    .otapick-totop-button {
-        width: 4rem;
-        height: 4rem;
-        bottom: 2rem;
-        right: 2rem;
+@keyframes fadeOut {
+    0% {
+        opacity: 1.0;
+    }
+    100% {
+        opacity: 0;
     }
 }
 
-@media (max-width: 575.9px) {
-    .otapick-totop-button {
-        width: 3rem;
-        height: 3rem;
-        bottom: 1rem;
-        right: 1rem;
-    }
+.otapick-totop-button {
+    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%2398FB98%3B%7D%20.st5%7Bfill%3A%238EEEFF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2231.53%22%20y%3D%2229.44%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-27.0981%2046.713)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2235.61%22%20y%3D%2218.64%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-18.2665%2046.4346)%22%20class%3D%22st0%22%20width%3D%2222.61%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2240.51%22%20y%3D%2225.72%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-23.3782%2048.2538)%22%20class%3D%22st1%22%20width%3D%2212.09%22%20height%3D%2253.25%22%2F%3E%3Crect%20x%3D%2227.17%22%20y%3D%2221.78%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2028.7177%20-19.6442)%22%20class%3D%22st2%22%20width%3D%2221.81%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2218.14%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2025.0795%20-18.1372)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2221.49%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-9.6895%2025.7279)%22%20class%3D%22st4%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2228.38%22%20y%3D%2237.16%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2039.7432%20-15.4948)%22%20class%3D%22st2%22%20width%3D%2220.39%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2231.37%22%20y%3D%2233.02%22%20transform%3D%22matrix(0.7071%200.7071%20-0.7071%200.7071%2035.6011%20-13.7791)%22%20class%3D%22st3%22%20width%3D%226.13%22%20height%3D%226.13%22%2F%3E%3Crect%20x%3D%2214.91%22%20y%3D%2236.37%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-20.211%2030.086)%22%20class%3D%22st5%22%20width%3D%2222.61%22%20height%3D%226.13%22%2F%3E%3C%2Fsvg%3E')
+}
+
+.otapick-totop-button:hover {
+    background-color: rgb(250, 250, 250);
 }
 
 /* footerを下に固定 */
@@ -1744,6 +1778,23 @@ footer {
     border-radius: 1rem;
 }
 
+.notfound-message-margin-bottom {
+    margin-bottom: 18rem;
+}
+
+@media (max-width: 575.99px) {
+    .notfound-message-margin-bottom {
+        margin-bottom: 3rem;
+    }
+    .notfound-message {
+        border-radius: 0;
+    }
+    .notfound-message span {
+        font-size: 35px;
+        font-weight: 700;
+    }
+}
+
 .mode-select-dropdown-menu {
     z-index: 90;
     max-height: 50vh;
@@ -1840,36 +1891,20 @@ footer {
     background-color: white;
 }
 
-/* .image-card-download-button.keyaki {
-    background-color: #4be057;
-}
-
-.image-card-download-button.keyaki:hover {
-    background-color: #45ce51;
-}
-
-.image-card-download-button.hinata {
-    background-color: #5de7ff;
-}
-
-.image-card-download-button:hover {
-    background-color: #56d6ec;
-} */
-
 .image-card-button {
     transition-duration: 0s!important;
     border: none;
-    color: black;
+    color: rgb(40, 40, 40);
     background-color: rgba(255, 255, 255, 0.7);
 }
 
 .image-card-button:hover {
-    color: black!important;
+    color: rgb(40, 40, 40)!important;
     background-color: rgba(255, 255, 255)!important;
 }
 
 .image-card-button:active {
-    color: black!important;
+    color: rgb(40, 40, 40)!important;
     background-color: rgb(230, 230, 230)!important;
 }
 
@@ -2089,10 +2124,6 @@ footer {
     }
 }
 
-.notfound-message-margin-bottom {
-    margin-bottom: 18rem;
-}
-
 .transparent-button-mobile {
     padding: 0;
     width: 38px;
@@ -2100,6 +2131,7 @@ footer {
     color: dimgray!important;
     background-color: #ffffff00!important;
     border: none;
+    transition-duration: 0s!important;
 }
 
 .transparent-button-mobile:hover, .transparent-button-mobile:active {
@@ -2129,6 +2161,10 @@ footer {
     display: inline-block;
     vertical-align: top;
     width: calc(100% - 30px);
+}
+
+.image-view-blog-title h3 {
+    font-size: 28px;
 }
 
 .image-view-blog-title h3.smaller {
@@ -2175,6 +2211,7 @@ footer {
     align-items: center;
     display: -webkit-flex;
     display: flex;
+    padding-right: 5px;
 }
 
 .fixed-headline-contents-wrapper {
@@ -2187,7 +2224,7 @@ footer {
     align-items: center;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding: 0 3px;
+    padding-left: 6px;
 }
 
 .fixed-headline-contents-wrapper::-webkit-scrollbar {
@@ -2211,14 +2248,72 @@ footer {
     margin: 0;
     padding: 0;
     padding-top: 1px;
-    /* vertical-align: middle; */
-    /* display: inline-block; */
-    /* vertical-align:text-bottom; */
     vertical-align: bottom;
 }
 
+.bottom-navbar {
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 995;
+    width: auto;
+    background-color: white;
+}
+
+.bottom-navbar .container, .bottom-navbar .d-flex {
+    height: 100%;
+}
+
+.bottom-navbar .container {
+    max-width: 480px;
+}
+
+.bottom-navbar-button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+}
+
+.bottom-navbar-button {
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+}
+
+.bottom-navbar-button {
+    color: rgb(100, 100, 100)!important;
+}
+
+.bottom-navbar-button.active {
+    color: rgb(20, 20, 20)!important;
+}
+
+.bottom-navbar-button:hover, .bottom-navbar-button:active {
+    background-color: white!important;
+}
+
+.bottom-navbar-button-title {
+    font-size: 10px;
+}
+
+.bottom-navbar-button-icon {
+    font-size: 20px;
+}
+
 .vertical-hr {
-    background-color: silver;
-    width: 1.6px;
+    background-color: rgb(222, 226, 230);
+    width: 1px;
     display: inline-block;
+    height: 100%;
+}
+
+#mobile-back-button.mobile:hover, #mobile-back-button.mobile:active {
+    background-color: white!important;
+}
+
+.rmp-container {
+    z-index: 999!important;
 }

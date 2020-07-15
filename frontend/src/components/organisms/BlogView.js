@@ -5,6 +5,7 @@ import DownloadModal from '../molecules/DownloadModal';
 import { DELAY_TIME } from '../tools/env';
 import Masonry from 'react-masonry-component';
 import ImageCard from '../molecules/ImageCard';
+import { addLongPressEventListeners, isMobile } from '../tools/support';
 
 
 class BlogView extends React.Component {
@@ -112,6 +113,10 @@ class BlogView extends React.Component {
 
   componentDidMount() {
     this.loadOriginalImage();
+
+    for (const image of this.props.images) {
+      addLongPressEventListeners(document.getElementById(`image_${image.order}`), () => this.props.putDownload(image.order));
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -131,6 +136,9 @@ class BlogView extends React.Component {
 
       return (
         <div className="container">
+          {isMobile &&
+            <div className="alert alert-success mb-1" role="alert" style={{ borderRadius: "1rem", fontSize: 14 }}>画像を長押しして保存をおこなってください</div>
+          }
           <Masonry options={options} className="mt-3 image-list-in-blog-view">
             {this.props.images.map(({ src, url, order }, i) => (
               <div className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2">

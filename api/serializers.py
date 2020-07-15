@@ -43,8 +43,7 @@ class MemberSerializerMin(serializers.ModelSerializer):
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        # fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', ]
-        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', 'score', 'recommend_score']
+        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', ]
 
     group_id = serializers.IntegerField(source='writer.belonging_group.group_id')
     post_date = serializers.DateTimeField(format='%y/%m/%d')
@@ -109,8 +108,7 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        # fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views',]
-        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views', 'recommend_score']
+        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views',]
 
     src = serializers.SerializerMethodField()
     upload_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')

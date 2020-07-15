@@ -49,19 +49,21 @@ class MobileMenu extends React.Component {
     // menuがviewされたとき(作業が開始したとき)
     if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
       if (isMobile) {
-        document.addEventListener('mousewheel', documentScrollHandler, { passive: false });
-        document.addEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
         const scrollMenuBox = document.getElementById(this.scrollBoxID);
-        scrollMenuBox.scrollTop = 1;
-        // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
-        scrollMenuBox.addEventListener('scroll', e => {
-          if (scrollMenuBox.scrollTop === 0) {
-            scrollMenuBox.scrollTop = 1;
-          }
-          else if (scrollMenuBox.scrollTop + scrollMenuBox.clientHeight === scrollMenuBox.scrollHeight) {
-            scrollMenuBox.scrollTop = scrollMenuBox.scrollTop - 1;
-          }
-        });
+        if (scrollMenuBox !== null) {
+          document.addEventListener('mousewheel', documentScrollHandler, { passive: false });
+          document.addEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+          scrollMenuBox.scrollTop = 1;
+          // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
+          scrollMenuBox.addEventListener('scroll', e => {
+            if (scrollMenuBox.scrollTop === 0) {
+              scrollMenuBox.scrollTop = 1;
+            }
+            else if (scrollMenuBox.scrollTop + scrollMenuBox.clientHeight === scrollMenuBox.scrollHeight) {
+              scrollMenuBox.scrollTop = scrollMenuBox.scrollTop - 1;
+            }
+          });
+        }
       }
       document.addEventListener('mousedown', this.documentClickHandler);
       this.lockScreenCustom();
@@ -129,16 +131,25 @@ export class MobileTopMenu_ extends MobileMenu {
     if (this.props.type === "navbarMenu") {
       contents =
         <>
-          <MobileMenuTitle title="ヲタピックについて" />
-          <MobileMenuLink router={true} href="/blogs/1" title="つかい方" />
-          <MobileMenuLink router={true} href="/blogs/1" title="サポート" />
-          <MobileMenuLink router={true} href="/blogs/1" title="お問い合わせ" />
+          <MobileMenuTitle title="クイックアクセス" />
+          <MobileMenuLink router={true} href="/images" title="画像一覧" />
+          <MobileMenuLink router={true} href="/blogs" title="ブログ一覧" />
+          <MobileMenuLink router={true} href="/members" title="メンバーリスト" />
+
           <MobileMenuHr />
           <MobileMenuTitle title="公式リンク" />
           <MobileMenuLink router={false} href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000"
             target="_blank" title="欅坂46公式ブログ" icon={true} />
           <MobileMenuLink router={false} href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000"
             target="_blank" title="日向坂46公式ブログ" icon={true} />
+
+          <MobileMenuHr />
+          <MobileMenuTitle title="ヲタピックについて" />
+          {/* <MobileMenuLink router={true} href="/blogs/1" title="つかい方" />
+          <MobileMenuLink router={true} href="/blogs/1" title="サポート" />
+          <MobileMenuLink router={true} href="/blogs/1" title="お問い合わせ" /> */}
+          <MobileMenuLink router={false} href="https://twitter.com/otapick"
+            target="_blank" title="公式Twitter" icon={true} />
         </>
     } else if (this.props.type === "modeSelect") {
       contents = [];
@@ -176,8 +187,8 @@ export class MobileTopMenu_ extends MobileMenu {
       <>
         {triggerButton}
         {this.state.isOpen &&
-          <div style={mobileTopMenuStyle} id={this.boxID} className={"mobile mobile-top-menu mobile-menu " + (this.props.type === "navbarMenu" ? "right" : "")}
-            onClick={(e) => e.stopPropagation()}>
+          <div style={mobileTopMenuStyle} id={this.boxID} onClick={(e) => e.stopPropagation()}
+            className={"mobile mobile-top-menu mobile-menu " + (this.props.type === "navbarMenu" ? "right" : "left")}>
             <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2" : "")}
               style={Object.assign({ overflowY: "auto", overflowX: "hidden" }, searchSuggestionsBoxStyle)} id={this.scrollBoxID}>
               <Button className="rounded-circle transparent-button-mobile float-right mt-1"

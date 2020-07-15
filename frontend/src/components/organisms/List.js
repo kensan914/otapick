@@ -4,11 +4,12 @@ import { HorizontalLoader } from '../molecules/Loader';
 import Masonry from 'react-masonry-component';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
-import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp } from '../tools/support';
+import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp, updateMeta } from '../tools/support';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME } from '../tools/env';
+import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION } from '../tools/env';
 import ImageCard from '../molecules/ImageCard';
 import MemberCard from "../molecules/MemberCard";
+import { NotFoundMessage } from '../atoms/NotFound';
 
 
 class List extends React.Component {
@@ -17,6 +18,7 @@ class List extends React.Component {
     this.state = {
       hasMore: true,
       items: [],
+      status: "",
     };
     this.getItemList = this.getItemList.bind(this);
 
@@ -29,8 +31,12 @@ class List extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.hasMore !== this.state.hasMore && !this.state.hasMore) {
-      this.props.applyShowFooter(this.props.location);
+    // KeepAliveにより、UnMountされずにDOM上に保存されているコンポーネントは、裏でcomponentDidUpdateが常に働いているため、
+    // このようにそのページのlocation.keyと照合して適切に実行制限をかけてあげる必要がある。
+    if (this.props.keepAliveName === generateKeepAliveName(this.props.location.key)) {
+      if (prevState.hasMore !== this.state.hasMore && !this.state.hasMore) {
+        this.props.applyShowFooter(this.props.location);
+      }
     }
   }
 
@@ -53,9 +59,18 @@ class List extends React.Component {
           loader={<HorizontalLoader />}
           className="mb-5"
         >
-          <Masonry options={options}>
-            {this.generateCards()}
-          </Masonry>
+          {this.state.status === "success" &&
+            <Masonry options={options}>
+              {this.generateCards()}
+            </Masonry>
+          }
+          {this.state.status === "blog_not_found" &&
+            <div><NotFoundMessage type="blogFailed" margin={true} /></div>
+          }
+          {(this.state.status === "image_not_found" && !this.props.related) &&
+            <div><NotFoundMessage type="imageFailed" margin={true} /></div>
+          }
+
         </InfiniteScroll >
       </>
     );
@@ -72,10 +87,7 @@ class BlogList_ extends List {
   getItemList(page) {
     if (this.state.hasMore && !this.loading) {
       this.loading = true;
-
-      console.log('スタートgetBlogList, ' + page);
       const url = URLJoin(BASE_URL, "api/blogs/", this.props.groupID, this.props.ct);
-      console.log('blogs', url);
 
       setTimeout(() => {
         axios
@@ -101,38 +113,46 @@ class BlogList_ extends List {
                 this.setState(state => ({
                   items: state.items.concat(newBlogs),
                   hasMore: false,
+                  status: "success",
                 }));
               } else {
                 this.setState(state => ({
                   items: state.items.concat(newBlogs),
+                  status: "success",
                 }));
               }
             } else {
-              this.setState({ hasMore: false });
+              if (page == 1) {
+                this.setState({ hasMore: false, status: "blog_not_found" })
+              } else this.setState({ hasMore: false });
             }
+
+            // // おすすめのMeta情報を更新
+            // if (page == 1 && typeof this.props.groupID === "undefined" && typeof this.props.ct === "undefined") {
+            //   updateMeta({ title: "欅坂46・日向坂46のおすすめブログ一覧", discription: BLOGS_DISCRIPTION });
+            // }
           })
           .catch(err => {
             console.log(err);
           })
           .finally(
             () => {
-              console.log("エンドgetBlogList, " + page)
               this.loading = false;
               this.page += 1;
             }
           )
       }, DELAY_TIME);
     }
-    else console.log("getBlogList失敗");
   };
 
-  generateCards = () =>
-    this.state.items.map(({ groupID, blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
+  generateCards = () => {
+    return (this.state.items.map(({ groupID, blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
       <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3 blog-card">
         <BlogCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
           title={title} writer={writer} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} url={url} officialUrl={officialUrl} />
       </div>
-    ))
+    )));
+  }
 }
 
 
@@ -148,16 +168,12 @@ class ImageList_ extends List {
     if (this.state.hasMore && !this.loading) {
       this.loading = true;
 
-      console.log('スタートgetImageList, ' + page);
-
       let url;
       if (typeof this.props.url == "undefined") {
         url = URLJoin(BASE_URL, "api/images/", this.props.groupID, this.props.ct);
       } else {
         url = this.props.url;
       }
-
-      console.log('images', url);
 
       setTimeout(() => {
         axios
@@ -189,7 +205,9 @@ class ImageList_ extends List {
                 }));
               }
             } else {
-              this.setState({ hasMore: false });
+              if (page == 1) {
+                this.setState({ hasMore: false, status: "image_not_found" });
+              } else this.setState({ hasMore: false });
             }
 
             // relatedImageTitle表示
@@ -200,23 +218,13 @@ class ImageList_ extends List {
           })
           .finally(
             () => {
-              console.log("エンドgetImageList, " + page)
               this.loading = false;
               this.page += 1;
             }
           )
       }, DELAY_TIME);
     }
-    else console.log("getImageList失敗");
   };
-
-  componentDidUpdate(prevProps, prevState) {
-    // KeepAliveにより、UnMountされずにDOM上に保存されているコンポーネントは、裏でcomponentDidUpdateが常に働いているため、
-    // このようにそのページのlocation.keyと照合して適切に実行制限をかけてあげる必要がある。
-    if (this.props.keepAliveName === generateKeepAliveName(this.props.location.key)) {
-      super.componentDidUpdate(prevProps, prevState);
-    }
-  }
 
   generateCards = () =>
     this.state.items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => (

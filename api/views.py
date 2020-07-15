@@ -68,6 +68,7 @@ class BlogDetailAPIView(views.APIView):
                     blog_data['images'] = ImageSerializer(images, many=True).data
                     blog_data['status'] = 'success'
                     blog_data['VIEW_KEY'] = otapick.VIEW_KEY
+                    blog_data['DOWNLOAD_KEY'] = otapick.DOWNLOAD_KEY
                     return Response(blog_data, status.HTTP_200_OK)
                 else: return self.accept_image_download(group_id, blog_ct, blog)
             else: return self.accept_image_download(group_id, blog_ct, blog)
@@ -94,7 +95,7 @@ class BlogDetailAPIView(views.APIView):
 
         # inform of image download for mobile
         elif 'action' in request.data and request.data['action'] == 'download' and 'image_order' in request.data:
-            if 'key' in request.data and request.data['key'] == otapick.IMAGE_DOWNLOAD_KEY:
+            if 'key' in request.data and request.data['key'] == otapick.DOWNLOAD_KEY:
                 if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
                     blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
                     if Image.objects.filter(publisher=blog, order=request.data['image_order']).exists():
@@ -206,7 +207,7 @@ class ImageDetailAPIView(views.APIView):
 
         # inform of image download for mobile
         elif 'action' in request.data and request.data['action'] == 'download':
-            if 'key' in request.data and request.data['key'] == otapick.IMAGE_DOWNLOAD_KEY:
+            if 'key' in request.data and request.data['key'] == otapick.DOWNLOAD_KEY:
                 if Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order).exists():
                     image = Image.objects.get(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
                     otapick.increment_num_of_downloads(image, image.publisher, num=1)
@@ -389,7 +390,6 @@ searchAPIView = SearchAPIView.as_view()
 
 class SearchSuggestionsAPIView(SearchAPIView):
     query_set_length = 11
-    # TODO mobileの実装次第でquery_setの制限は実装しないかも。
     def serialize_blogs(self, blogs):
         ### query_setの制限 ###
         if len(blogs) > self.query_set_length:

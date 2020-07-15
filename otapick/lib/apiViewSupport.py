@@ -17,6 +17,7 @@ class ListInfo:
         self.order_format = order_format
         self.title = ''
         self.num_of_hit = 0
+        self.meta_title = ''
 
 
 class BlogListInfo(ListInfo):
@@ -26,40 +27,60 @@ class BlogListInfo(ListInfo):
         self.narrowing_post = narrowing_post
 
     def get_result(self):
-        if self.ct is None:
+        if self.group_id is None:
+            self.title = "おすすめ"
+            self.meta_title = "欅坂46・日向坂46のおすすめ"
+            narrowing_blogs = Blog.objects.all()
+        elif self.ct is None:
             if Group.objects.filter(group_id=self.group_id).exists():
-                self.title = Group.objects.get(group_id=self.group_id).name
+                group_name = Group.objects.get(group_id=self.group_id).name
+                self.title = group_name
+                self.meta_title = group_name
             else:
                 return {'status': 'not_found_group'}
             narrowing_blogs = Blog.objects.filter(writer__belonging_group__group_id=self.group_id)
         else:
             if Member.objects.filter(belonging_group__group_id=self.group_id, ct=self.ct).exists():
-                self.title = Member.objects.get(belonging_group__group_id=self.group_id, ct=self.ct).full_kanji
+                member = Member.objects.get(belonging_group__group_id=self.group_id, ct=self.ct)
+                self.title = member.full_kanji
+                self.meta_title = '{}({})'.format(member.full_kanji, member.belonging_group.name)
             else:
                 return {'status': 'not_found_member'}
             narrowing_blogs = Blog.objects.filter(writer__belonging_group__group_id=self.group_id, writer__ct=self.ct)
         narrowing_blogs = blog.narrowdown_blogs_keyword(narrowing_blogs, self.narrowing_keyword)
         narrowing_blogs = blog.narrowdown_blogs_post(narrowing_blogs, self.narrowing_post)
         self.num_of_hit = narrowing_blogs.count()
-        return {'title': self.title, 'num_of_hit': self.num_of_hit}
+        return {'title': self.title, 'num_of_hit': self.num_of_hit, 'meta_title': self.meta_title}
 
 
 class ImageListInfo(ListInfo):
     def get_result(self):
-        if self.ct is None:
+        if self.group_id == 0:
+            self.title = "ホーム"
+            self.meta_title = "欅坂46・日向坂46のブログ画像を保存するなら"
+            images = Image.objects.all()
+        elif self.group_id is None:
+            self.title = "おすすめ"
+            self.meta_title = "欅坂46・日向坂46のおすすめ"
+            images = Image.objects.all()
+        elif self.ct is None:
             if Group.objects.filter(group_id=self.group_id).exists():
-                self.title = Group.objects.get(group_id=self.group_id).name
+                group_name = Group.objects.get(group_id=self.group_id).name
+                self.title = group_name
+                self.meta_title = group_name
             else:
                 return {'status': 'not_found_group'}
             images = Image.objects.filter(publisher__writer__belonging_group__group_id=self.group_id)
         else:
             if Member.objects.filter(belonging_group__group_id=self.group_id, ct=self.ct).exists():
-                self.title = Member.objects.get(belonging_group__group_id=self.group_id, ct=self.ct).full_kanji
+                member = Member.objects.get(belonging_group__group_id=self.group_id, ct=self.ct)
+                self.title = member.full_kanji
+                self.meta_title = '{}({})'.format(member.full_kanji, member.belonging_group.name)
             else:
                 return {'status': 'not_found_member'}
             images = Image.objects.filter(publisher__writer__belonging_group__group_id=self.group_id, publisher__writer__ct=self.ct)
         self.num_of_hit = images.count()
-        return {'title': self.title, 'num_of_hit': self.num_of_hit}
+        return {'title': self.title, 'num_of_hit': self.num_of_hit, 'meta_title': self.meta_title}
 
 
 def sort_by_recommend_score(queryset, page, random_seed, paginate_by):

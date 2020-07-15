@@ -6,12 +6,13 @@ import queryString from 'query-string';
 import { KeepAlive } from 'react-keep-alive';
 import ToTopButton from "../atoms/ToTopButton";
 import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo, checkMatchParams, isMobile } from '../tools/support';
+import { withRouter } from "react-router-dom";
 
 
 class BlogListTemplate extends React.Component {
   constructor(props) {
     super(props);
-    checkMatchParams(props.history, props.match.params.groupID, props.match.params.ct);
+    this.isRender = checkMatchParams(props.history, props.match.params.groupID, props.match.params.ct);
 
     const qs = queryString.parse(props.location.search);
     this.state = {
@@ -126,23 +127,27 @@ class BlogListTemplate extends React.Component {
 
   render() {
     return (
-      <div className="container mt-3 text-muted">
-        <Headline title="ブログ一覧" type="blogs" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
-        {(typeof this.state.groupID != "undefined" || typeof this.state.ct != "undefined")
-          ? <KeepAlive name={this.state.keepAliveNameInfo}>
+      <>{this.isRender &&
+        <div className="container mt-3 text-muted">
+          <Headline title="ブログ一覧" type="blogs" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
+
+          <KeepAlive name={this.state.keepAliveNameInfo}>
             <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-              narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} />
+              narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} keepAliveNameInfo={this.state.keepAliveNameInfo} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false} />
           </KeepAlive>
-          : (!isMobile && <div className="py-2"></div>)
-        }
-        <KeepAlive name={this.state.keepAliveName}>
-          <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} applyShowFooter={this.props.applyShowFooter} />
-        </KeepAlive>
-        {!this.props.isTop && <ToTopButton />}
-      </div>
+          {(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") &&
+            (!isMobile && <div className="py-2"></div>)
+          }
+          <KeepAlive name={this.state.keepAliveName}>
+            <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
+              narrowingPost={this.state.narrowingPost} applyShowFooter={this.props.applyShowFooter} keepAliveName={this.state.keepAliveName} />
+          </KeepAlive>
+
+          <ToTopButton />
+        </div>
+      }</>
     );
   };
 };
 
-export default BlogListTemplate;
+export default withRouter(BlogListTemplate);

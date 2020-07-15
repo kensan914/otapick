@@ -2,12 +2,13 @@ import React from "react";
 import Headline from '../molecules/Headline';
 import MemberListInfo from '../molecules/info/MemberListInfo';
 import MemberCard from "../molecules/MemberCard";
-import { URLJoin } from '../tools/support';
+import { URLJoin, updateMeta, gtagTo } from '../tools/support';
 import axios from 'axios';
 import { getGroup, generateWavesVals } from '../tools/support';
 import { Collapse } from 'reactstrap';
-import { BASE_URL, DELAY_TIME } from "../tools/env";
+import { BASE_URL, DELAY_TIME, MEMBERS_DISCRIPTION } from "../tools/env";
 import { LoaderScreen } from "../molecules/Loader";
+import { withRouter } from "react-router-dom";
 
 
 class MemberListByGeneration extends React.Component {
@@ -49,6 +50,7 @@ class MemberListTemplate extends React.Component {
       togglerMemory: { "keyaki": [], "hinata": [] },
     }
     this.getMembers();
+    this.isRender = true;
   };
 
   changeGroup = (group) => {
@@ -65,53 +67,59 @@ class MemberListTemplate extends React.Component {
       axios
         .get(url)
         .then(res => {
-          let keyakiMembers = [];
-          for (const members of res.data["keyaki"]) {
-            keyakiMembers.push(members.map((member, index) =>
-              ({
-                image: member.image,
-                url: member.url,
-                officialUrl: member.official_url,
-                ct: member.ct,
-                lastKanji: member.last_kanji,
-                firstKanji: member.first_kanji,
-                lastKana: member.last_kana,
-                firstKana: member.first_kana,
-                belongingGroup: getGroup(member.belonging_group),
-              })
-            ))
+          if (this.isRender) {
+            let keyakiMembers = [];
+            for (const members of res.data["keyaki"]) {
+              keyakiMembers.push(members.map((member, index) =>
+                ({
+                  image: member.image,
+                  url: member.url,
+                  officialUrl: member.official_url,
+                  ct: member.ct,
+                  lastKanji: member.last_kanji,
+                  firstKanji: member.first_kanji,
+                  lastKana: member.last_kana,
+                  firstKana: member.first_kana,
+                  belongingGroup: getGroup(member.belonging_group),
+                })
+              ))
+            }
+            let hinataMembers = [];
+            for (const members of res.data["hinata"]) {
+              hinataMembers.push(members.map((member, index) =>
+                ({
+                  image: member.image,
+                  url: member.url,
+                  officialUrl: member.official_url,
+                  ct: member.ct,
+                  lastKanji: member.last_kanji,
+                  firstKanji: member.first_kanji,
+                  lastKana: member.last_kana,
+                  firstKana: member.first_kana,
+                  belongingGroup: getGroup(member.belonging_group),
+                })
+              ))
+            }
+            let togglerMemoryKeyaki = new Array(keyakiMembers.length);
+            togglerMemoryKeyaki.fill(true);
+            let togglerMemoryHinata = new Array(hinataMembers.length);
+            togglerMemoryHinata.fill(true);
+            this.setState({
+              keyakiMembers: keyakiMembers,
+              hinataMembers: hinataMembers,
+              wavesVals: generateWavesVals(),
+              togglerMemory: { "keyaki": togglerMemoryKeyaki, "hinata": togglerMemoryHinata },
+            });
+
+            updateMeta({ title: "欅坂46・日向坂46｜メンバーリスト", discription: MEMBERS_DISCRIPTION });
           }
-          let hinataMembers = [];
-          for (const members of res.data["hinata"]) {
-            hinataMembers.push(members.map((member, index) =>
-              ({
-                image: member.image,
-                url: member.url,
-                officialUrl: member.official_url,
-                ct: member.ct,
-                lastKanji: member.last_kanji,
-                firstKanji: member.first_kanji,
-                lastKana: member.last_kana,
-                firstKana: member.first_kana,
-                belongingGroup: getGroup(member.belonging_group),
-              })
-            ))
-          }
-          let togglerMemoryKeyaki = new Array(keyakiMembers.length);
-          togglerMemoryKeyaki.fill(true);
-          let togglerMemoryHinata = new Array(hinataMembers.length);
-          togglerMemoryHinata.fill(true);
-          this.setState({
-            keyakiMembers: keyakiMembers,
-            hinataMembers: hinataMembers,
-            wavesVals: generateWavesVals(),
-            togglerMemory: { "keyaki": togglerMemoryKeyaki, "hinata": togglerMemoryHinata },
-          })
         })
         .catch(err => {
           console.log(err);
         })
-        .finally()
+        .finally(() => {
+          gtagTo(this.props.location.pathname);
+        })
     }, DELAY_TIME);
   }
 
@@ -119,6 +127,10 @@ class MemberListTemplate extends React.Component {
     let newToggleMemory = this.state.togglerMemory;
     newToggleMemory[group][index] = !newToggleMemory[group][index];
     this.setState({ togglerMemory: newToggleMemory });
+  }
+
+  componentWillUnmount() {
+    this.isRender = false;
   }
 
   render() {
@@ -153,4 +165,4 @@ class MemberListTemplate extends React.Component {
   };
 };
 
-export default MemberListTemplate;
+export default withRouter(MemberListTemplate);

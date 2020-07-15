@@ -1,9 +1,9 @@
 import React from 'react';
 import SortButton from '../../atoms/SortButton';
 import axios from 'axios';
-import { URLJoin, isSmp, isMobile } from '../../tools/support';
+import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from '../../tools/support';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME } from '../../tools/env';
+import { BASE_URL, DELAY_TIME, IMAGES_DISCRIPTION, HOME_TITLE } from '../../tools/env';
 import { MobileBottomMenu } from '../MobileMenu';
 
 
@@ -13,7 +13,8 @@ class ImageListInfo extends React.Component {
     this.state = {
       title: "",
       numOfHit: 0,
-      sortButtonTitle: this.convertSortButtonTitle()
+      sortButtonTitle: this.convertSortButtonTitle(),
+      metaTitle: "",
     }
     this.getBlogListInfo(this.props.groupID, this.props.ct);
   }
@@ -21,19 +22,40 @@ class ImageListInfo extends React.Component {
   getBlogListInfo(groupID, ct) {
     const queryParams = this.props.location.search;
     const url = URLJoin(BASE_URL, "api/images/info/", groupID, ct, queryParams);
-    console.log('info', url);
 
     setTimeout(() => {
       axios
         .get(url)
         .then(res => {
-          this.setState({
-            title: res.data.title,
-            numOfHit: res.data.num_of_hit,
-          });
+          if (res.data.status) {
+            this.setState({
+              title: "画像が見つかりませんでした。",
+              numOfHit: 0,
+              status: "not_found",
+              metaTitle: this.props.home ? HOME_TITLE : "Not Found Image",
+            });
+            if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key)) {
+              if (!this.props.home) updateMeta({ title: "Not Found Image", discription: IMAGES_DISCRIPTION });
+              else updateMeta({ title: HOME_TITLE, discription: "" });
+            }
+          } else {
+            this.setState({
+              title: res.data.title,
+              numOfHit: res.data.num_of_hit,
+              status: "success",
+              metaTitle: this.props.home ? HOME_TITLE : res.data.meta_title,
+            });
+            if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key)) {
+              if (!this.props.home) updateMeta({ title: `${res.data.meta_title}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
+              else updateMeta({ title: HOME_TITLE, discription: "" });
+            }
+          }
         })
         .catch(err => {
           console.log(err);
+        })
+        .finally(() => {
+          gtagTo(this.props.location.pathname);
         });
     }, DELAY_TIME);
   }
@@ -57,29 +79,45 @@ class ImageListInfo extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key)) {
+      if (this.props.location !== prevProps.location) {
+        if (!this.props.home) updateMeta({ title: `${this.state.metaTitle}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
+        else updateMeta({ title: this.state.metaTitle, discription: "" });
+      }
+    }
+  }
+
   render() {
     return (
-      <div>
-        <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : "my-4 ") + this.props.group}>
-          <div className="card-body px-4 px-sm-5 py-4">
-            <h3 className="my-auto mx-2 d-flex align-items-center">{!this.state.title ? "\u00A0" : this.state.title}</h3>
-            <hr className="info-hr" />
-            <div className="row justify-content-between">
-              <div className="col-12 col-md-6 col-lg-7 col-xl-8">
-                <div className="info-discription my-1 my-sm-0">検索結果（<b>{this.state.numOfHit}</b>件）</div>
-              </div>
-              <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
-                {isMobile
-                  ? <MobileBottomMenu id="sortImage" type="sortImage" sortButtonTitle={this.state.sortButtonTitle} pushHistory={this.props.pushHistory}
-                    className={isSmp ? "mx-auto" : "ml-auto"} style={isSmp ? { width: "90%" } : { width: "9rem" }} />
-                  : <SortButton className={isSmp ? "mx-auto" : "ml-auto"} type="images" title={this.state.sortButtonTitle}
-                    pushHistory={this.props.pushHistory} style={isSmp ? { width: "90%" } : { width: "9rem" }} />
-                }
+      <>
+        {!this.props.hide &&
+          <div>
+            <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : (isMobile ? "mb-3 mt-1 " : "my-4 ")) + this.props.group}>
+              <div className="card-body px-4 px-sm-5 py-4">
+                <h2 className="my-auto mx-2 d-flex align-items-center">{!this.state.title ? "\u00A0" : this.state.title}</h2>
+                <hr className="info-hr" />
+                <div className="row justify-content-between">
+                  <div className="col-12 col-md-6 col-lg-7 col-xl-8">
+                    <div className="info-discription my-1 my-sm-0">検索結果（<b>{this.state.numOfHit}</b>件）</div>
+                  </div>
+
+                  {this.state.status === "success" &&
+                    <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
+                      {isMobile
+                        ? <MobileBottomMenu id="sortImage" type="sortImage" sortButtonTitle={this.state.sortButtonTitle} pushHistory={this.props.pushHistory}
+                          className={isSmp ? "mx-auto" : "ml-auto"} style={isSmp ? { width: "90%" } : { width: "9rem" }} />
+                        : <SortButton className={isSmp ? "mx-auto" : "ml-auto"} type="images" title={this.state.sortButtonTitle}
+                          pushHistory={this.props.pushHistory} style={isSmp ? { width: "90%" } : { width: "9rem" }} />
+                      }
+                    </div>
+                  }
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        }
+      </>
     );
   };
 };

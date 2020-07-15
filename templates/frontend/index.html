@@ -2,23 +2,43 @@
 
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>react</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="{% static 'css/bootstrap_ex.css' %}{{ static_update }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
-      integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-    <!-- favicon -->
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}{{ static_update }}" />
-  </head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>欅坂46・日向坂46のブログ画像を保存するなら｜ヲタピック</title>
+  <meta name="description"
+    content="『ヲタピック』は、欅坂46・日向坂46の画像や写真を効率よく閲覧・保存ができるサービスです。公式ブログやメンバーリストから推しメンの高画質な画像や写真を探して保存しましょう(PC・スマホ対応)。かっこいい画像も、かわいい画像も、保存しよう、いくらでも。#欅坂46 #日向坂46">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="{% static 'css/bootstrap_ex.css' %}{{ static_update }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+    integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <!-- favicon -->
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}{{ static_update }}" />
+
+  {% if not debug %}
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-134426000-2"></script>
+  <script>
+    const $gaMeasurementID = 'UA-134426000-2';
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+  </script>
+  <!-- Global Adsense -->
+  {% endif %}
+  
+  <script data-ad-client="ca-pub-3712313672767903" async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
 <body>
   <div id="root"></div>
   {% csrf_token %}
 </body>
 
 <script src="{% static "frontend/main.js" %}{{ static_update }}"></script>
+
 </html>

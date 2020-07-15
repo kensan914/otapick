@@ -32,7 +32,7 @@ $.ajaxSetup({
     }
 });
 
-$('img').longpress(function(e) {
+$('img').longpress(function (e) {
     if (location.pathname.startsWith('/download')) {
         $.ajax({
             url: "/download/inform_of_download/",
@@ -45,6 +45,6 @@ $('img').longpress(function(e) {
         })
     }
 },
-function(){},
-300
+    function () { },
+    300
 );

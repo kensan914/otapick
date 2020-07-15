@@ -7,4 +7,4 @@ WATCH_MORE_IMG_URL = '/static/img/watch_more.png' # watch more button's backgrou
 
 ### Key ###
 VIEW_KEY = "5JxxqfpXH8sF_zQMw4xg"
-IMAGE_DOWNLOAD_KEY = "fMHSr_sp6PYhsfZ4YSAt"
+DOWNLOAD_KEY = "fMHSr_sp6PYhsfZ4YSAt"

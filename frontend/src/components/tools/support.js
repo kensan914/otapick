@@ -1,4 +1,4 @@
-import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS } from './env';
+import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DISCRIPTION, SITE_NAME, HOME_TITLE, GA_TRACKING_ID, DEBUG } from './env';
 
 // ex)URLJoin('http://www.google.com', 'a', undefined, '/b/cd', undifined, '?foo=123', '?bar=foo'); => 'http://www.google.com/a/b/cd/?foo=123&bar=foo' 
 export const URLJoin = (...args) => {
@@ -171,10 +171,11 @@ export const checkMatchParams = (history, ...args) => {
     if (typeof arg !== "undefined") {
       if (isNaN(arg)) {
         history.replace("/notFound");
-        break;
+        return false;
       }
     }
   }
+  return true;
 }
 
 
@@ -202,36 +203,46 @@ export const setBodyPadding = (pxVal) => {
 // scrollの監視
 export const watchCurrentPosition = (startPos) => {
   const currentPos = scrollTop();
-  let result = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, startPos: currentPos };
+  let stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null };
+  
 
   if (currentPos === 0) {
-    result.isShowNBShadow = false;
-    result.isShowNB = true;
-    result.isShowSubNB = false;
+    stateList.isShowNBShadow = false;
+    stateList.isShowNB = true;
+    stateList.isShowSubNB = false;
+    stateList.isTop = true;
   } else {
     if (currentPos > startPos) { // down
       if (currentPos < SHOW_NAVBAR_POS) {
-        result.isShowNB = true;
-        result.isShowNBShadow = true;
+        stateList.isShowNB = true;
+        stateList.isShowNBShadow = true;
       } else if (currentPos >= SHOW_NAVBAR_POS) {
         if (isMobile) {
-          result.isShowNBShadow = false;
-          result.isShowNB = false;
+          stateList.isShowNBShadow = false;
+          stateList.isShowNB = false;
         } else {
-          result.isShowNBShadow = true;
-          result.isShowNB = true;
+          stateList.isShowNBShadow = true;
+          stateList.isShowNB = true;
         }
       }
-    } else if (startPos > currentPos) { // up
-      result.isShowNB = true;
-      result.isShowNBShadow = true;
-    }
+      stateList.isShowSubNB = false;
 
-    if (currentPos < SHOW_SUB_NAVBAR_POS) {
-      result.isShowSubNB = false;
-    } else result.isShowSubNB = true;
+    } else if (startPos > currentPos) { // up
+      stateList.isShowNB = true;
+      stateList.isShowNBShadow = true;
+      if (currentPos < SHOW_SUB_NAVBAR_POS) {
+        stateList.isShowSubNB = false;
+      } else stateList.isShowSubNB = true;
+    }
+    stateList.isTop = false;
   }
-  return result;
+
+  // PC, mobile: subNBが選択された状態の時、常に表示. 
+  if (document.getElementById("mobile-top-menu") !== null) {
+    stateList.isShowNB = true;
+    stateList.isShowSubNB = true;
+  }
+  return {stateList: stateList, startPos: currentPos};
 }
 
 
@@ -239,4 +250,54 @@ export const watchCurrentPosition = (startPos) => {
 export const documentScrollHandler = e => {
   // スクロール無効
   e.preventDefault();
+}
+
+
+// 長押しEvent
+export const addLongPressEventListeners = (elm, longPressedFunc) => {
+  let longpressTimer;
+  elm.addEventListener("touchstart", e => {
+    longpressTimer = setTimeout(() => {
+      longPressedFunc();
+    }, LONG_PRESS_TIME);
+  })
+  elm.addEventListener("touchend", e => {
+    clearTimeout(longpressTimer);
+  });
+  elm.addEventListener("touchmove", e => {
+    clearTimeout(longpressTimer);
+  });
+}
+
+
+// metaタグ更新
+// metaData: metaデータを保持したオブジェクト ex) {title: "メンバーリスト", discription: "...",}
+export const updateMeta = (metaData) => {
+  // update title
+  if ("title" in metaData) {
+    document.title = `${metaData.title}｜${SITE_NAME}`;
+  } else {
+    document.title = `${HOME_TITLE}｜${SITE_NAME}`;
+  }
+
+  // update meta
+  const headMetaList = document.head.children;
+  for (const headMeta of headMetaList) {
+    const metaName = headMeta.getAttribute("name");
+    if (metaName !== null) {
+      if (metaName.indexOf("description") !== -1) {
+        headMeta.setAttribute('content', metaData.discription + DISCRIPTION);
+      }
+    }
+  }
+}
+
+
+// Global site tag (gtag.js) - Google Analytics
+export const gtagTo = (pathname) => {
+  if (!DEBUG) {
+    gtag('config', GA_TRACKING_ID, {
+      'page_path': pathname
+    });
+  }
 }

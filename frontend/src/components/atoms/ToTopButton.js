@@ -1,4 +1,6 @@
 import React from 'react';
+import { TOTOP_BUTTON_DIAMETER, TOTOP_BUTTON_M, BOTTOM_NAVBAR_HEIGHT } from '../tools/env';
+import { isMobile } from '../tools/support';
 
 
 class ToTopButton extends React.Component {
@@ -15,8 +17,16 @@ class ToTopButton extends React.Component {
   };
 
   render() {
+    let totopButtonStyle = { width: TOTOP_BUTTON_DIAMETER, height: TOTOP_BUTTON_DIAMETER, right: TOTOP_BUTTON_M };
+    if (isMobile) {
+      Object.assign(totopButtonStyle, { bottom: TOTOP_BUTTON_M + BOTTOM_NAVBAR_HEIGHT });
+    } else {
+      Object.assign(totopButtonStyle, { bottom: TOTOP_BUTTON_M });
+    }
+
     return (
-      <button onClick={this.toTop} className={"btn rounded-circle p-0 otapick-totop-button shadow"}></button>
+      <button onClick={this.toTop} id="otapick-totop-button" className={"btn rounded-circle p-0 otapick-totop-button shadow"}
+        style={totopButtonStyle} />
     );
   };
 };
