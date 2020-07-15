@@ -1,6 +1,6 @@
 import time
 from main.scripts.blogRegister.parser import parse_blog, extract_blogs
-from main.scripts.blogRegister import support
+import otapick
 from main.models import Blog
 from image.models import Thumbnail
 from main.scripts.blogRegister.unregisterer import unregister, extract_cts
@@ -12,13 +12,13 @@ def register_latest(group_id, up_limit=100, all_check=False, unregister_num=1):
     simultime_post_date = ""
     correct_cts_list = []
 
-    for page, is_last in support.lastone(range(up_limit)):
+    for page, is_last in otapick.lastone(range(up_limit)):
         blogs = extract_blogs(group_id, page)
 
         if not bool(blogs):
-            support.print_console("register unacquired　blog...")
+            otapick.print_console("register unacquired　blog...")
             exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, is_latest=True)
-            support.print_console("finished!!")
+            otapick.print_console("finished!!")
             break
         if len(correct_cts_list) < unregister_num:
             correct_cts_list.append(extract_cts(blogs, group_id))
@@ -46,7 +46,7 @@ def register_latest(group_id, up_limit=100, all_check=False, unregister_num=1):
                 exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, is_latest=True)
                 break
             time.sleep(sleep_time_pagetransition)
-            support.print_console('go next page.')
+            otapick.print_console('go next page.')
             continue
         break
 
@@ -91,7 +91,7 @@ def exe_registration(blog_list, post_date, group_id, all_check, is_latest):
     for blog_object in blog_objects:
         blog_object.save()
         if is_latest:
-            support.print_console('register 「' + blog_object.title + '」 written by ' + blog_object.writer.full_kanji)
+            otapick.print_console('register 「' + blog_object.title + '」 written by ' + blog_object.writer.full_kanji)
 
     # save new image(thumbnail)
     for image_object in image_objects:

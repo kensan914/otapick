@@ -13,22 +13,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
-
 import main.views
 from config import settings
 from django.views.static import serve
 
 urlpatterns = [
-    path('', main.views.top, name='top'),
-    path('support/', main.views.support, name='support'),
-    path('search/', include('main.urls')),
-    path('download/', include('image.urls')),
+    path('api/', include('api.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
 #Debug=Falseでもadminへアクセスできてしまうため、対処
 if settings.DEBUG:
     urlpatterns += [path('admin/', admin.site.urls)]
+    urlpatterns += [path('admin', admin.site.urls)]
+
+# catch all other URL ('api'で始まらない文字列にマッチ)
+urlpatterns += [re_path(r'^(?!api).+$', main.views.indexView, name="indexView")]
+urlpatterns += [path('', main.views.indexView, name="indexView")]

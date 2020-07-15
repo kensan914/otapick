@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptSettings">
-    <option name="languageLevel" value="ES6" />
+    <option name="languageLevel" value="JSX" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.7.3 (sftp://otapick@otapick.com:1226/var/www/otapick_env/bin/python)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.7.6 Docker Compose (python at [C:\Users\kente\OneDrive\デスクトップ\otapick\docker-compose.yml])" project-jdk-type="Python SDK" />
 </project>

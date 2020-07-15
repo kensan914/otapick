@@ -4,6 +4,7 @@ from django.db import models
 class Group(models.Model):
     class Meta:
         db_table = 'group'
+        ordering = ['group_id']
 
     name = models.CharField(verbose_name='グループ名', max_length=30, unique=True)
     group_id = models.IntegerField(verbose_name='グループID', unique=True)
@@ -13,10 +14,15 @@ class Group(models.Model):
         return self.name
 
 
+def get_upload_to(instance, filename):
+    media_dir_1 = str(instance.belonging_group.group_id) + '_' + str(instance.ct)
+    return 'member_images/{0}/{1}'.format(media_dir_1, filename)
+
 class Member(models.Model):
     class Meta:
         db_table = 'member'
         unique_together = ('ct', 'belonging_group')
+        ordering = ['belonging_group', 'generation', 'full_kana']
 
     ct = models.CharField(verbose_name='ct', max_length=10)
     last_kanji = models.CharField(verbose_name='姓_漢', max_length=10)
@@ -30,6 +36,10 @@ class Member(models.Model):
     full_eng = models.CharField(verbose_name='氏名_英', max_length=50, default='')
     belonging_group = models.ForeignKey(Group, verbose_name='所属グループ', on_delete=models.PROTECT)
     graduate = models.BooleanField(verbose_name='卒業生', default=False)
+    independence = models.BooleanField(verbose_name='独立', default=True)
+    temporary = models.BooleanField(verbose_name='仮メンバー', default=False)
+    generation = models.IntegerField(verbose_name='期', default=1)
+    image = models.ImageField(verbose_name='宣材写真', upload_to=get_upload_to, null=True)
 
     def __str__(self):
         return self.full_kanji
@@ -49,10 +59,12 @@ class Blog(models.Model):
     num_of_downloads = models.IntegerField(verbose_name='総ダウンロード数', default=0)
     num_of_most_downloads = models.IntegerField(verbose_name='最大ダウンロード数', default=0)
     num_of_views = models.IntegerField(verbose_name='閲覧数', default=0)
-    v1_per_week = models.IntegerField(verbose_name='閲覧数(1週目)', default=0)
-    v2_per_week = models.IntegerField(verbose_name='閲覧数(2週目)', default=0)
-    v3_per_week = models.IntegerField(verbose_name='閲覧数(3週目)', default=0)
+    v1_per_day = models.IntegerField(verbose_name='閲覧数(1日目)', default=0)
+    v2_per_day = models.IntegerField(verbose_name='閲覧数(2日目)', default=0)
+    v3_per_day = models.IntegerField(verbose_name='閲覧数(3日目)', default=0)
     score = models.FloatField(verbose_name='スコア(人気順)', default=0)
+    changed = models.BooleanField(verbose_name='変更有(スコア計算用)', default=0)
+    recommend_score = models.FloatField(verbose_name='スコア(おすすめ順）', default=0)
 
     def __str__(self):
         return self.title

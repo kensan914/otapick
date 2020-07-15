@@ -1,6 +1,6 @@
 from django import forms
 import bootstrap_datepicker_plus as datetimepicker
-from main.scripts.searchViewFunc import kw_placeholder
+from main.scripts.search.searchViewFunc import kw_placeholder
 
 
 class SearchForm(forms.Form):
