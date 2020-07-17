@@ -293,7 +293,6 @@ class RelatedImageListAPIView(ImageListAPIView):
         if blogs.exists() and Image.objects.filter(publisher=blogs[0], order=order).exists():
             images_id_list = otapick.sort_images_by_related(blogs[0], order, page, self.paginate_by)
             images = [Image.objects.get(id=pk) for pk in images_id_list]
-            print(len(images_id_list))
             return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
         else:
             return Response({'status': 'image_not_found'}, status.HTTP_200_OK)

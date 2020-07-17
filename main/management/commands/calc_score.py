@@ -14,10 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['recommend']:
-            start = time.time()
             high_score_members, divided_blogs, divided_images  = otapick.init_calc_recommend_score()
-            print(high_score_members)
-            otapick.print_console('init_calc_recommend_score!!: {}s'.format(round(time.time() - start, 2)))
 
             start = time.time()
             otapick.calc_recommend_score(high_score_members, divided_blogs=divided_blogs)
