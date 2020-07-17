@@ -125,9 +125,7 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
     for record in divided_records[2]:
         update_record.append(recommend_score_evaluator.evaluate(record))
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(8)
     random_upper_limit = divided_records[2].aggregate(Max('recommend_score'))['recommend_score__max']
-    print(random_upper_limit)
 
     # (recommend_score0のブログまたは画像50件にボーナス)
     update_record = []
@@ -135,9 +133,7 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         diff_recommend_score = random_upper_limit - record.recommend_score
         record.recommend_score += random.uniform(0, diff_recommend_score)
         update_record.append(record)
-        otapick.print_console('{}(id: {})   {}'.format(str(record), record.id, record.recommend_score))
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(9)
 
     ### mid blogs and images and graduate member blogs and images ###
     # (リセット)
@@ -146,14 +142,12 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         record.recommend_score = 0
         update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(5)
 
     # (score > 0のblogまたはimageを評価)
     update_record = []
     for record in divided_records[1].exclude(score=0):
         update_record.append(recommend_score_evaluator.evaluate(record))
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(6)
 
     # (上位メンバーのブログまたは画像各5件)
     update_record = []
@@ -167,18 +161,14 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
             for record in records:
                 record.recommend_score = random.uniform(4, random_upper_limit)
                 update_record.append(record)
-                # print(str(image), image.publisher.writer.full_kanji, image.publisher.post_date, image.recommend_score)
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(6.5)
 
     # (他20件)
     update_record = []
     for record in divided_records[1].filter(recommend_score=0).order_by('?')[:20]:
         record.recommend_score = random.uniform(4, random_upper_limit)
         update_record.append(record)
-        # print(str(image), image.publisher.writer.full_kanji, image.publisher.post_date, image.recommend_score)
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(7)
 
     ### old blogs and images ###
     # (リセット)
@@ -187,7 +177,6 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         record.recommend_score = 0
         update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(1)
 
     # (score上位10件)
     update_record = []
@@ -195,7 +184,6 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         record.recommend_score = random.uniform(5, random_upper_limit)
         update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(2)
 
     # (上位メンバーのブログまたは画像各2件)
     update_record = []
@@ -210,7 +198,6 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
                 record.recommend_score = random.uniform(4, random_upper_limit)
                 update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(3)
 
     # (他10件)
     update_record = []
@@ -218,7 +205,6 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         record.recommend_score = random.uniform(4, random_upper_limit)
         update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
-    print(4)
 
 
 def calc_score(blogs=None, images=None):

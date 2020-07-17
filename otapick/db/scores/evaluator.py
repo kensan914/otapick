@@ -83,11 +83,6 @@ class RecommendScoreEvaluator:
             score = self.add_bonus_the_day(score, post_date=record_post_date)
 
         record.recommend_score = score
-        if score > 9:
-            if self.mode == 'blog':
-                otapick.print_console('{}({})(id: {})   {}({})'.format(str(record), record.writer.full_kanji, record.id, scores, score))
-            elif self.mode == 'image':
-                otapick.print_console('{}({})(id: {})   {}({})'.format(str(record), record.publisher.writer.full_kanji, record.id, scores, score))
         return record
 
     def add_bonus(self, score, diff_post):
@@ -103,8 +98,6 @@ class RecommendScoreEvaluator:
             random.shuffle(bonus_choice)
             bonus = bonus_choice[0] # bonus_choiceからランダムに値を取得し、bonusに格納
             bonus += random.uniform(0, diff_score_decimal) # 小数部分のランダム値も追加
-            # print("ボーナスあげちゃう")
-            # print('score: {}, bonus: {}, bonus_choice: {}, diff_post: {}, post: {}'.format(score, bonus, bonus_choice, diff_post, image.publisher.post_date))
         else:
             bonus = 0
         score += bonus
