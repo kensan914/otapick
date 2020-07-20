@@ -63,6 +63,7 @@ class App extends React.Component {
 
   setScrollState = (stateList) => {
     for (const [key, value] of Object.entries(stateList)) {
+      if (value === null) continue;
       if ((value && !this.state[key]) || (!value && this.state[key])) {
         this.setState(stateList);
         break;
