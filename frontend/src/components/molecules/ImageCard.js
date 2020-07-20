@@ -99,7 +99,7 @@ class SuperImageCard extends React.Component {
           onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}>
           <Link to={this.props.props.url}>
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
-              <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.src["250x"]}
+              <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={isSmp ? this.props.props.src["250x"] : ""}
                 srcSet={!isSmp ? `${this.props.props.src["250x"]} 1x, ${this.props.props.src["500x"]} 2x` : ""}
                 alt={generateAlt(this.props.props.group, this.props.props.writer.name)} id={this.props.props.imageID} />
             </div>

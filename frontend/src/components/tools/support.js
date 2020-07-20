@@ -4,8 +4,8 @@ import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DISCRIPTION, SIT
 export const URLJoin = (...args) => {
   args = args.filter(n => n !== undefined);
   for (let i = args.length - 1; i >= 0; i--) {
-    if (args[i].startsWith('?')) continue;
-    if (!args[i].endsWith('/')) {
+    if (args[i].toString().startsWith('?')) continue;
+    if (!args[i].toString().endsWith('/')) {
       args[i] += '/';
       break;
     }
@@ -204,45 +204,46 @@ export const setBodyPadding = (pxVal) => {
 export const watchCurrentPosition = (startPos) => {
   const currentPos = scrollTop();
   let stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null };
-  
 
-  if (currentPos === 0) {
-    stateList.isShowNBShadow = false;
-    stateList.isShowNB = true;
-    stateList.isShowSubNB = false;
-    stateList.isTop = true;
-  } else {
-    if (currentPos > startPos) { // down
-      if (currentPos < SHOW_NAVBAR_POS) {
+  if (startPos !== currentPos) { // window以外のscrollを発火させない
+    if (currentPos === 0) {
+      stateList.isShowNBShadow = false;
+      stateList.isShowNB = true;
+      stateList.isShowSubNB = false;
+      stateList.isTop = true;
+    } else {
+      if (currentPos > startPos) { // down
+        if (currentPos < SHOW_NAVBAR_POS) {
+          stateList.isShowNB = true;
+          stateList.isShowNBShadow = true;
+        } else if (currentPos >= SHOW_NAVBAR_POS) {
+          if (isMobile) {
+            stateList.isShowNBShadow = false;
+            stateList.isShowNB = false;
+          } else {
+            stateList.isShowNBShadow = true;
+            stateList.isShowNB = true;
+          }
+        }
+        stateList.isShowSubNB = false;
+
+      } else if (startPos > currentPos) { // up
         stateList.isShowNB = true;
         stateList.isShowNBShadow = true;
-      } else if (currentPos >= SHOW_NAVBAR_POS) {
-        if (isMobile) {
-          stateList.isShowNBShadow = false;
-          stateList.isShowNB = false;
-        } else {
-          stateList.isShowNBShadow = true;
-          stateList.isShowNB = true;
-        }
+        if (currentPos < SHOW_SUB_NAVBAR_POS) {
+          stateList.isShowSubNB = false;
+        } else stateList.isShowSubNB = true;
       }
-      stateList.isShowSubNB = false;
-
-    } else if (startPos > currentPos) { // up
-      stateList.isShowNB = true;
-      stateList.isShowNBShadow = true;
-      if (currentPos < SHOW_SUB_NAVBAR_POS) {
-        stateList.isShowSubNB = false;
-      } else stateList.isShowSubNB = true;
+      stateList.isTop = false;
     }
-    stateList.isTop = false;
-  }
 
-  // PC, mobile: subNBが選択された状態の時、常に表示. 
-  if (document.getElementById("mobile-top-menu") !== null) {
-    stateList.isShowNB = true;
-    stateList.isShowSubNB = true;
+    // PC, mobile: subNBが選択された状態の時、常に表示. 
+    if (document.getElementById("mobile-top-menu") !== null) {
+      stateList.isShowNB = true;
+      stateList.isShowSubNB = true;
+    }
   }
-  return {stateList: stateList, startPos: currentPos};
+  return { stateList: stateList, startPos: currentPos };
 }
 
 

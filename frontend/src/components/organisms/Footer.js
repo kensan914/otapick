@@ -9,6 +9,8 @@ const hiddenFooterURLConditions = [
   "/images",
   "/image",
   "/",
+  "/search/group/blog",
+  "/search/member/blog",
 ]
 
 class Footer extends React.Component {
