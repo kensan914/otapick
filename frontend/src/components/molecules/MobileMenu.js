@@ -180,7 +180,7 @@ export class MobileTopMenu_ extends MobileMenu {
       mobileTopMenuStyle = { position: "fixed", top: MOBILE_TOP_MENU_MT };
     } else if (this.props.type === "modeSelect" || this.props.type === "modeSelectVewHome") {
       mobileTopMenuStyle = { position: "fixed", top: MOBILE_TOP_MENU_MT + SUB_NAVBAR_HEIGHT };
-      searchSuggestionsBoxStyle = { maxHeight: "83vh" };
+      searchSuggestionsBoxStyle = { maxHeight: "73vh" };
     }
 
     return (
