@@ -4,7 +4,6 @@ import time
 
 import numpy as np
 from django.db.models import Q
-
 import otapick
 from api.serializers import ImageSerializer, BlogSerializer, MemberSerializer
 from image.models import Image
@@ -95,8 +94,13 @@ def sort_by_recommend_score(queryset, page, random_seed, paginate_by):
     q_group_num = math.floor((paginate_by * (page - 1)) / q_group_len) # どのグループに属しているか(0, 1, 2, ...)
     q_group_index =  (page - 1) % q_group_capacity # グループ内のインデックス(0, 1, 2, ...)
 
+    start = time.time()
     queryset = queryset.order_by('-recommend_score', '-score')
+    print('bbbb ', time.time() - start)
+
+    start = time.time()
     queryset_parts = queryset[q_group_len * q_group_num: q_group_len * (q_group_num + 1)]
+    print('dddd ', time.time() - start)
 
     np.random.seed(random_seed)
     id_list = list(queryset_parts.values_list('id', flat=True)) # クエリセットのidのリスト
