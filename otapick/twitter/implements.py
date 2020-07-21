@@ -80,13 +80,17 @@ class PopularityBot(TwitterBot):
         text = ''
 
         # headline
-        text += emoji.emojize(':crown:', use_aliases=True)
-        text += '現在人気の画像(#{} )'.format(Group.objects.get(group_id=group_id).name)
+        crown = emoji.emojize(':crown:', use_aliases=True)
+        group_emoji = None
         if group_id == 1:
-            text += emoji.emojize(':deciduous_tree:', use_aliases=True)
+            group_emoji = emoji.emojize(':deciduous_tree:', use_aliases=True)
         elif group_id == 2:
-            text += emoji.emojize(':sun_with_face:', use_aliases=True)
-        text += '\n\n'
+            group_emoji = emoji.emojize(':sun_with_face:', use_aliases=True)
+
+        text += '{}{}{}\n'.format(crown, group_emoji, crown)
+        text += '現在人気の画像(#{} )'.format(Group.objects.get(group_id=group_id).name)
+        text += '{}{}{}\n'.format(crown, group_emoji, crown)
+        text += '\n'
 
         # ranking
         for i, image in enumerate(images):
@@ -100,7 +104,7 @@ class PopularityBot(TwitterBot):
         text += '\n'
 
         # otapick link
-        text += self.generate_link('もっと見る', '{}/blog/{}'.format(OTAPICK_URL, group_id))
+        text += self.generate_link('もっと見る', '{}/images/{}?sort=popularity'.format(OTAPICK_URL, group_id))
         text += '\n'
 
         # attention
