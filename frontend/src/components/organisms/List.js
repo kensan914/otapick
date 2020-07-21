@@ -245,6 +245,7 @@ class HomeList_ extends ImageList_ {
     super(props);
     this.state = Object.assign(this.state, {
       additionalItems: [],
+      additionalItemsStart: 0,
     });
     this.additionalItemsIndex = 0;
     this.wavesVals = generateWavesVals();
@@ -312,6 +313,7 @@ class HomeList_ extends ImageList_ {
 
             this.setState({
               additionalItems: additionalItems,
+              additionalItemsStart: this.page,
             });
           }
         })
@@ -325,7 +327,10 @@ class HomeList_ extends ImageList_ {
     this.additionalItemsIndex = 0;
     return this.state.items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => {
       let additionalItem;
-      if (this.state.additionalItems.length > this.additionalItemsIndex && (i !== 0) && (i % 10 === 0)) {
+      if (this.state.additionalItems.length > this.additionalItemsIndex &&
+        (Math.floor(i / 20) >= this.state.additionalItemsStart) && // additionalItemsがloadされた以降に表示されるように
+        (i % 10 === 0) // item10コごとに表示
+      ) {
         const add = this.state.additionalItems[this.additionalItemsIndex];
         if (add === null) {
           additionalItem = null;
