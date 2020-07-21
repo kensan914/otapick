@@ -108,6 +108,7 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
+        # TODO のちに変更
         fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views', 'recommend_score']
 
     src = serializers.SerializerMethodField()
