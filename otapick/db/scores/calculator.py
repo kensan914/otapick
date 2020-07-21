@@ -124,6 +124,7 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
     update_record = []
     for record in divided_records[2]:
         update_record.append(recommend_score_evaluator.evaluate(record))
+    print('xxxx', len(update_record))
     Model.objects.bulk_update(update_record, fields=['recommend_score'])
     random_upper_limit = divided_records[2].aggregate(Max('recommend_score'))['recommend_score__max']
 

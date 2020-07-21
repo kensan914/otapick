@@ -125,7 +125,6 @@ def sort_images(images, order_format):
     :return: None(have to sort by recommend), images(others)
     """
     if order_format and order_format != 'recommend':
-        start = time.time()
         if order_format == 'newer_post':
             images = images.order_by('-publisher__post_date', 'publisher__order_for_simul', 'order')
             # return '-publisher__post_date', 'publisher__order_for_simul', 'order'
@@ -141,7 +140,6 @@ def sort_images(images, order_format):
         elif order_format == 'view':
             images = images.order_by('-num_of_views', '-recommend_score', '-score', '-publisher__post_date', 'publisher__order_for_simul')
             # return '-num_of_views', '-recommend_score', '-score', '-publisher__post_date', 'publisher__order_for_simul'
-        print('aaaaa ', time.time() - start)
     else:
         return
 
