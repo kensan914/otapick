@@ -121,21 +121,22 @@ def sort_images_by_related(blog, order, page, paginate_by):
     base_images = Image.objects.exclude(publisher=blog)
 
     # 当月
-    blogs = Blog.objects.filter(writer=blog.writer, post_date__year=blog.post_date.year, post_date__month=blog.post_date.month)
-    images = base_images.filter(publisher__in=blogs).order_by('-recommend_score', '-score')
+    images = base_images.filter(publisher__writer=blog.writer, publisher__post_date__year=blog.post_date.year,
+                                publisher__post_date__month=blog.post_date.month).order_by('-recommend_score', '-score')
+
     if images.exists():
         id_list += list(images.values_list('id', flat=True))
 
     # 前月 or 次月
-    blogs = Blog.objects.filter(Q(writer = blog.writer, post_date__year=last_post_year, post_date__month=last_post_month)
-                           | Q(writer = blog.writer, post_date__year=next_post_year, post_date__month=next_post_month))
-    images = base_images.filter(publisher__in=blogs).order_by('-recommend_score', '-score')
+    images = base_images.exclude(id__in=id_list).filter(Q(publisher__writer = blog.writer, publisher__post_date__year=last_post_year, publisher__post_date__month=last_post_month)
+                           | Q(publisher__writer = blog.writer, publisher__post_date__year=next_post_year, publisher__post_date__month=next_post_month)).order_by('-recommend_score', '-score')
+
     if images.exists():
         id_list += list(images.values_list('id', flat=True))
 
     # 該当メンバーその他
-    blogs = Blog.objects.filter(writer=blog.writer)
-    images = base_images.exclude(id__in=id_list).filter(publisher__in=blogs).order_by('-recommend_score', '-score')
+    images = base_images.exclude(id__in=id_list).filter(publisher__writer=blog.writer).order_by('-recommend_score', '-score')
+
     if images.exists():
         id_list += list(images.values_list('id', flat=True))
 
