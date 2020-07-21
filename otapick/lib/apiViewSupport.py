@@ -171,15 +171,24 @@ def get_additional_data(random_seed):
     for group in Group.objects.all():
         print('ccc ', time.time() - start)
         start = time.time()
+        dddstart = time.time()
 
         # images
         images = Image.objects.filter(publisher__writer__belonging_group=group)
-        most_dl_per_day_image = images.order_by('-d1_per_day').first()
-        most_view_per_day_image = images.order_by('-v1_per_day').first()
-        most_popular_image = images.order_by('-score').first()
-
-        print('ddd ', time.time() - start)
+        print('ddd1 ', time.time() - start)
         start = time.time()
+        most_dl_per_day_image = images.exclude(d1_per_day=0).order_by('-d1_per_day')[0]
+        print('ddd2 ', time.time() - start)
+        start = time.time()
+        most_view_per_day_image = images.exclude(v1_per_day=0).order_by('-v1_per_day')[0]
+        print('ddd3 ', time.time() - start)
+        start = time.time()
+        most_popular_image = images.exclude(score=0).order_by('-score')[0]
+
+        print('ddd4 ', time.time() - start)
+        start = time.time()
+        print('ddd ', time.time() - dddstart)
+
 
         images_data = generate_images_data([most_dl_per_day_image, most_view_per_day_image, most_popular_image])
         images_data[0].update({'type': 'image', 'message': '今日最もダウンロードされた画像({})'.format(group.name)})
@@ -192,8 +201,8 @@ def get_additional_data(random_seed):
 
         # blogs
         blogs = Blog.objects.filter(writer__belonging_group=group)
-        most_view_per_day_blog = blogs.order_by('-v1_per_day')[0]
-        most_popular_blog = blogs.order_by('-score')[0]
+        most_view_per_day_blog = blogs.exclude(v1_per_day=0).order_by('-v1_per_day')[0]
+        most_popular_blog = blogs.exclude(score=0).order_by('-score')[0]
         newest_blog = otapick.sort_blogs(blogs, 'newer_post')[0]
 
         print('fff ', time.time() - start)
