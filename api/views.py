@@ -1,5 +1,4 @@
 import os
-import time
 import urllib.parse
 import zipfile
 from django.http import FileResponse, HttpResponse
