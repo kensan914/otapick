@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 import otapick
+from main.models import Group
 
 
 class Command(BaseCommand):
@@ -16,7 +17,7 @@ class Command(BaseCommand):
         up_limit = 100
         unregister_num = 1
 
-        if options['group'] != 1 and options['group'] != 2 and options['group'] is not None:
+        if Group.objects.filter(group_id=options['group']).exists() and options['group'] is not None:
             print('groupID', options['group'], 'is not supported.')
             quit()
 
