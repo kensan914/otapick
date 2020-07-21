@@ -8,6 +8,8 @@ class TwitterBot(metaclass=ABCMeta):
         auth = tweepy.OAuthHandler(TWITTER_CK, TWITTER_CS)
         auth.set_access_token(TWITTER_AT, TWITTER_AS)
         self.api = tweepy.API(auth)
+        self.group_id = 0
+        self.group_emoji = None
 
     @abstractmethod
     def create_text(self, **kwargs):
@@ -56,3 +58,18 @@ class TwitterBot(metaclass=ABCMeta):
         text += link
         text += '\n'
         return text
+
+    def generate_medal_emoji(self, rank):
+        if rank == 1:
+            return emoji.emojize(':1st_place_medal:', use_aliases=True)
+        elif rank == 2:
+            return emoji.emojize(':2nd_place_medal:', use_aliases=True)
+        elif rank == 3:
+            return emoji.emojize(':3rd_place_medal:', use_aliases=True)
+
+    def set_group_id(self, group_id):
+        self.group_id = group_id
+        if group_id == 1:
+            self.group_emoji = emoji.emojize(':deciduous_tree:', use_aliases=True)
+        elif group_id == 2:
+            self.group_emoji = emoji.emojize(':sun_with_face:', use_aliases=True)

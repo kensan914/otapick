@@ -2,11 +2,13 @@ import os
 from config import settings
 from image.models import Image
 from main.models import Blog, Group
-from otapick import sort_blogs, sort_images
+from otapick import sort_images
 from otapick.lib.constants import OTAPICK_URL
 from otapick.lib.serializerSupport import generate_url, generate_official_url
 from otapick.twitter.abstracts import TwitterBot
 import emoji
+
+from otapick.twitter.generics import RankBot
 
 
 class UpdateBot(TwitterBot):
@@ -18,10 +20,7 @@ class UpdateBot(TwitterBot):
         text = ''
 
         # headline
-        if blog.writer.belonging_group.group_id == 1:
-            text += emoji.emojize(':deciduous_tree:', use_aliases=True)
-        elif blog.writer.belonging_group.group_id == 2:
-            text += emoji.emojize(':sun_with_face:', use_aliases=True)
+        text += self.group_emoji
         text += '坂道ブログ更新通知'
         text += emoji.emojize(':rainbow:', use_aliases=True)
         text += '\n\n'
@@ -63,6 +62,7 @@ class UpdateBot(TwitterBot):
         return media_urls
 
     def tweet(self, group_id, blog_ct):
+        self.set_group_id(group_id)
         if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct).exists():
             blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
             return super().tweet(blog = blog)
@@ -70,62 +70,62 @@ class UpdateBot(TwitterBot):
             return
 
 
-class PopularityBot(TwitterBot):
+class PopularityBot(RankBot):
     """ UpdateBot
     score更新時、人気上位3位をtweet。インタフェースは、tweet()メソッド。引数にgroup_id。
     """
-    def create_text(self, **kwargs):
-        images = kwargs['images']
-        group_id = kwargs['group_id']
-        text = ''
-
-        # headline
-        crown = emoji.emojize(':crown:', use_aliases=True)
-        group_emoji = None
-        if group_id == 1:
-            group_emoji = emoji.emojize(':deciduous_tree:', use_aliases=True)
-        elif group_id == 2:
-            group_emoji = emoji.emojize(':sun_with_face:', use_aliases=True)
-
-        text += '{}{}{}\n'.format(crown, group_emoji, crown)
-        text += '現在人気の画像(#{} )'.format(Group.objects.get(group_id=group_id).name)
-        text += '{}{}{}\n'.format(crown, group_emoji, crown)
-        text += '\n'
-
-        # ranking
-        for i, image in enumerate(images):
-            if i == 0:
-                text += emoji.emojize(':1st_place_medal:', use_aliases=True)
-            elif i == 1:
-                text += emoji.emojize(':2nd_place_medal:', use_aliases=True)
-            elif i == 2:
-                text += emoji.emojize(':3rd_place_medal:', use_aliases=True)
-            text += '「{}」#{}\n'.format(self.shorten_text(image.publisher.title, max_length=10), self.shorten_text(image.publisher.writer.full_kanji, max_length=10))
-        text += '\n'
-
-        # otapick link
-        text += self.generate_link('もっと見る', '{}/images/{}?sort=popularity'.format(OTAPICK_URL, group_id))
-        text += '\n'
-
-        # attention
-        if images.exists():
-            text += '※下記の画像は圧縮されているため、当サイトでの保存を推奨します。\n'
-
-        return text
-
-    def create_media_urls(self, **kwargs):
-        images = kwargs['images']
-        media_urls = []
-
-        for image in images:
-            try:
-                media_path = str(image.picture)
-                media_url = os.path.join(settings.MEDIA_ROOT, media_path)
-                media_urls.append(media_url)
-            except:
-                pass
-        return media_urls
-
     def tweet(self, group_id):
-        images = sort_images(Image.objects.filter(publisher__writer__belonging_group__group_id=group_id), 'popularity')[:3]
-        return super().tweet(images=images, group_id=group_id)
+        self.images = sort_images(Image.objects.filter(publisher__writer__belonging_group__group_id=group_id), 'popularity')[:3]
+        self.rank_type_emoji = emoji.emojize(':crown:', use_aliases=True)
+        self.set_group_id(group_id)
+        self.headline_title = '現在人気の画像'
+        self.pictures = self.images.values_list('picture', flat=True)
+        self.otapick_link = '{}/images/{}?sort=popularity'.format(OTAPICK_URL, group_id)
+
+        return super().tweet(images=self.images)
+
+
+class ViewBot(RankBot):
+    """ UpdateBot
+    閲覧数上位3位をtweet. インタフェースは、tweet()メソッド. 引数にgroup_id, blog_or_image, today.
+    """
+    def tweet(self, group_id, blog_or_image, today):
+        self.rank_type_emoji = emoji.emojize(':eyes:', use_aliases=True)
+        self.set_group_id(group_id)
+
+        if blog_or_image == 'image':
+            if today:
+                self.images = Image.objects.filter(publisher__writer__belonging_group__group_id=group_id).order_by('-v1_per_day', '-recommend_score', '-score')[:2]
+                self.headline_title = '今日最も閲覧された画像'
+            else:
+                self.images = Image.objects.filter(publisher__writer__belonging_group__group_id=group_id).order_by('-v2_per_day', '-recommend_score', '-score')[:2]
+                self.headline_title = '昨日最も閲覧された画像'
+            self.pictures = self.images.values_list('picture', flat=True)
+
+            return super().tweet(images=self.images)
+        elif blog_or_image == 'blog':
+            if today:
+                self.blogs = Blog.objects.filter(writer__belonging_group__group_id=group_id).order_by('-v1_per_day', '-recommend_score', '-score')[:2]
+                self.headline_title = '今日最も閲覧されたブログ'
+            else:
+                self.blogs = Blog.objects.filter(writer__belonging_group__group_id=group_id).order_by('-v2_per_day', '-recommend_score', '-score')[:2]
+                self.headline_title = '昨日最も閲覧されたブログ'
+            for blog in self.blogs:
+                if Image.objects.filter(publisher=blog).exists():
+                    self.pictures.append(Image.objects.get(publisher=blog, order=0).picture)
+            return super().tweet(blogs=self.blogs)
+        else:
+            return
+
+
+class DLBot(RankBot):
+    """ UpdateBot
+    DL数上位3位をtweet. インタフェースは、tweet()メソッド. 引数にgroup_id.
+    """
+    def tweet(self, group_id):
+        self.rank_type_emoji = emoji.emojize(':inbox_tray:', use_aliases=True)
+        self.set_group_id(group_id)
+        self.images = Image.objects.filter(publisher__writer__belonging_group__group_id=group_id).order_by('-d1_per_day', '-recommend_score', '-score')[:2]
+        self.headline_title = '今日最もダウンロードされた画像'
+        self.pictures = self.images.values_list('picture', flat=True)
+        return super().tweet(images=self.images)
