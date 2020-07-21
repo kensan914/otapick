@@ -1,4 +1,5 @@
 import os
+import time
 import urllib.parse
 import zipfile
 from django.http import FileResponse, HttpResponse
@@ -162,7 +163,10 @@ class BlogListAPIView(views.APIView):
             blogs = otapick.sort_blogs(blogs, order_format)
             blogs = otapick.narrowdown_blogs_keyword(blogs, narrowing_keyword)
             blogs = otapick.narrowdown_blogs_post(blogs, narrowing_post)
-            blogs = blogs[self.paginate_by * (page - 1): self.paginate_by * page]
+            # to create id_list will be faster
+            id_list = list(blogs[self.paginate_by * (page - 1): self.paginate_by * page].values_list('id', flat=True))
+            blogs = [blogs.get(id=pk) for pk in id_list]
+
         # recommend
         else:
             blog_ids = Image.objects.filter(order=0).values_list('publisher__id', flat=True)
@@ -244,27 +248,28 @@ class ImageListAPIView(views.APIView):
         random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
         order_format = self.request.GET.get('sort')
 
-        order = otapick.sort_images(None, order_format)
-
         # filter
         if group_id is not None:
             images = \
-                Image.objects.filter(publisher__writer__belonging_group__group_id=group_id).order_by(*order) if ct is None \
-                else Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct).order_by(*order)
+                Image.objects.filter(publisher__writer__belonging_group__group_id=group_id) if ct is None \
+                else Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct)
             if not images.exists():
                 return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
 
         # recommend
         else:
-            images = Image.objects.all().order_by(*order)
+            images = Image.objects.all()
 
         # sort and slice
-        # result = otapick.sort_images(images, order_format)
+        result = otapick.sort_images(images, order_format)
 
         # success sorted
-        if order != '':
-            # images = result
-            images = images[self.paginate_by * (page - 1): self.paginate_by * page]
+        if result is not None:
+            sorted_images = result
+            # to create id_list will be faster
+            sorted_images = sorted_images[self.paginate_by * (page - 1): self.paginate_by * page]
+            id_list = list(sorted_images.values_list('id', flat=True))
+            images = [images.get(id=pk) for pk in id_list]
 
         # hove to sort by recommend
         else:
