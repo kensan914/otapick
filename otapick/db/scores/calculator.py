@@ -124,7 +124,6 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
     update_record = []
     for record in divided_records[2]:
         update_record.append(recommend_score_evaluator.evaluate(record))
-    print('xxxx', len(update_record))
     Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=10000)
     random_upper_limit = divided_records[2].aggregate(Max('recommend_score'))['recommend_score__max']
 
@@ -135,6 +134,7 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         record.recommend_score += random.uniform(0, diff_recommend_score)
         update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=10000)
+    ### end of new blogs and images ###
 
     ### mid blogs and images and graduate member blogs and images ###
     # (リセット)
@@ -170,6 +170,7 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         record.recommend_score = random.uniform(4, random_upper_limit)
         update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=10000)
+    ### end of mid blogs and images and graduate member blogs and images ###
 
     ### old blogs and images ###
     # (リセット)
@@ -206,6 +207,7 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
         record.recommend_score = random.uniform(4, random_upper_limit)
         update_record.append(record)
     Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=10000)
+    ### end of old blogs and images ###
 
 
 def calc_score(blogs=None, images=None):
