@@ -180,7 +180,7 @@ export class MobileTopMenu_ extends MobileMenu {
       mobileTopMenuStyle = { position: "fixed", top: MOBILE_TOP_MENU_MT };
     } else if (this.props.type === "modeSelect" || this.props.type === "modeSelectVewHome") {
       mobileTopMenuStyle = { position: "fixed", top: MOBILE_TOP_MENU_MT + SUB_NAVBAR_HEIGHT };
-      searchSuggestionsBoxStyle = { maxHeight: "73vh" };
+      searchSuggestionsBoxStyle = {};
     }
 
     return (
@@ -189,7 +189,7 @@ export class MobileTopMenu_ extends MobileMenu {
         {this.state.isOpen &&
           <div style={mobileTopMenuStyle} id={this.boxID} onClick={(e) => e.stopPropagation()}
             className={"mobile mobile-top-menu mobile-menu " + (this.props.type === "navbarMenu" ? "right" : "left")}>
-            <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2" : "")}
+            <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2 smp" : "")}
               style={Object.assign({ overflowY: "auto", overflowX: "hidden" }, searchSuggestionsBoxStyle)} id={this.scrollBoxID}>
               <Button className="rounded-circle transparent-button-mobile float-right mt-1"
                 onClick={() => this.toggleWork()}>

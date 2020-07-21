@@ -1,5 +1,7 @@
 import math
 import random
+import time
+
 import numpy as np
 from django.db.models import Q
 
@@ -162,14 +164,13 @@ def generate_images_data(images):
 def get_additional_data(random_seed):
     data = []
     data_length = 30
-    additional_images_id_list = [] # sort_by_recommend_scoreでexcludeするimageのID
 
     for group in Group.objects.all():
         # images
         images = Image.objects.filter(publisher__writer__belonging_group=group)
-        most_dl_per_day_image = images.order_by('-d1_per_day')[0]
-        most_view_per_day_image = images.order_by('-v1_per_day')[0]
-        most_popular_image = images.order_by('-score')[0]
+        most_dl_per_day_image = images.exclude(d1_per_day=0).order_by('-d1_per_day')[0]
+        most_view_per_day_image = images.exclude(v1_per_day=0).order_by('-v1_per_day')[0]
+        most_popular_image = images.exclude(score=0).order_by('-score')[0]
 
         images_data = generate_images_data([most_dl_per_day_image, most_view_per_day_image, most_popular_image])
         images_data[0].update({'type': 'image', 'message': '今日最もダウンロードされた画像({})'.format(group.name)})
@@ -177,12 +178,10 @@ def get_additional_data(random_seed):
         images_data[2].update({'type': 'image', 'message': '現在最も人気のある画像({})'.format(group.name)})
         data += images_data
 
-        additional_images_id_list += [most_dl_per_day_image.id, most_view_per_day_image.id, most_popular_image.id]
-
         # blogs
         blogs = Blog.objects.filter(writer__belonging_group=group)
-        most_view_per_day_blog = blogs.order_by('-v1_per_day')[0]
-        most_popular_blog = blogs.order_by('-score')[0]
+        most_view_per_day_blog = blogs.exclude(v1_per_day=0).order_by('-v1_per_day')[0]
+        most_popular_blog = blogs.exclude(score=0).order_by('-score')[0]
         newest_blog = otapick.sort_blogs(blogs, 'newer_post')[0]
 
         blogs_data = BlogSerializer([most_view_per_day_blog, most_popular_blog, newest_blog], many=True).data
