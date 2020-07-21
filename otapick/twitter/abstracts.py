@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import tweepy
 from otapick.lib.constants import TWITTER_CK, TWITTER_CS, TWITTER_AT, TWITTER_AS
-
+import emoji
 
 class TwitterBot(metaclass=ABCMeta):
     def __init__(self):
@@ -48,3 +48,11 @@ class TwitterBot(metaclass=ABCMeta):
             txt = txt[:max_length]
             txt += '…'
         return txt
+
+    def generate_link(self, title, link):
+        text = ''
+        arrow_double_down = emoji.emojize(':arrow_double_down:', use_aliases=True)
+        text += '{}{}{}\n'.format(arrow_double_down, title, arrow_double_down)
+        text += link
+        text += '\n'
+        return text
