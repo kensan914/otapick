@@ -108,7 +108,7 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views', 'score']
+        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views', 'recommend_score']
 
     src = serializers.SerializerMethodField()
     upload_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')

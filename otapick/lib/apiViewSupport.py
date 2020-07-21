@@ -94,13 +94,8 @@ def sort_by_recommend_score(queryset, page, random_seed, paginate_by):
     q_group_num = math.floor((paginate_by * (page - 1)) / q_group_len) # どのグループに属しているか(0, 1, 2, ...)
     q_group_index =  (page - 1) % q_group_capacity # グループ内のインデックス(0, 1, 2, ...)
 
-    start = time.time()
     queryset = queryset.order_by('-recommend_score', '-score')
-    print('bbbb ', time.time() - start)
-
-    start = time.time()
     queryset_parts = queryset[q_group_len * q_group_num: q_group_len * (q_group_num + 1)]
-    print('dddd ', time.time() - start)
 
     np.random.seed(random_seed)
     id_list = list(queryset_parts.values_list('id', flat=True)) # クエリセットのidのリスト
@@ -132,8 +127,8 @@ def sort_images_by_related(blog, order, page, paginate_by):
         id_list += list(images.values_list('id', flat=True))
 
     # 前月 or 次月
-    images = base_images.exclude(id__in=id_list).filter(Q(publisher__writer = blog.writer, publisher__post_date__year=last_post_year, publisher__post_date__month=last_post_month)
-                           | Q(publisher__writer = blog.writer, publisher__post_date__year=next_post_year, publisher__post_date__month=next_post_month)).order_by('-recommend_score', '-score')
+    images = base_images.exclude(id__in=id_list).filter(Q(publisher__writer=blog.writer, publisher__post_date__year=last_post_year, publisher__post_date__month=last_post_month)
+                           | Q(publisher__writer=blog.writer, publisher__post_date__year=next_post_year, publisher__post_date__month=next_post_month)).order_by('-recommend_score', '-score')
 
     if images.exists():
         id_list += list(images.values_list('id', flat=True))

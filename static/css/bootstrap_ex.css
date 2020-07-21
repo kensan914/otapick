@@ -1304,12 +1304,20 @@ a.hinata {
     transition: opacity .1s ease;
     z-index: 1000;
     background-color: white;
-    max-height: 90vh;
+    max-height: 80vh;
     overflow-y: auto!important;
 }
 
 .search-suggestions-box.smp {
     max-height: 73vh;
+}
+
+#search-suggestions-box {
+    max-height: 90vh;
+}
+
+#search-suggestions-box.smp {
+    max-height: 80vh;
 }
 
 .search-suggestions-box.mobile {

@@ -2,7 +2,6 @@ import datetime
 import math
 import random
 import numpy as np
-import otapick
 from image.models import Image
 from main.models import Blog
 
