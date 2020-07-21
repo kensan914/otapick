@@ -1,5 +1,7 @@
 import math
 import random
+import time
+
 import numpy as np
 from django.db.models import Q
 
@@ -164,12 +166,20 @@ def get_additional_data(random_seed):
     data_length = 30
     additional_images_id_list = [] # sort_by_recommend_scoreでexcludeするimageのID
 
+    start = time.time()
+    startstart = time.time()
     for group in Group.objects.all():
+        print('ccc ', time.time() - start)
+        start = time.time()
+
         # images
         images = Image.objects.filter(publisher__writer__belonging_group=group)
-        most_dl_per_day_image = images.order_by('-d1_per_day')[0]
-        most_view_per_day_image = images.order_by('-v1_per_day')[0]
-        most_popular_image = images.order_by('-score')[0]
+        most_dl_per_day_image = images.order_by('-d1_per_day').first()
+        most_view_per_day_image = images.order_by('-v1_per_day').first()
+        most_popular_image = images.order_by('-score').first()
+
+        print('ddd ', time.time() - start)
+        start = time.time()
 
         images_data = generate_images_data([most_dl_per_day_image, most_view_per_day_image, most_popular_image])
         images_data[0].update({'type': 'image', 'message': '今日最もダウンロードされた画像({})'.format(group.name)})
@@ -177,13 +187,17 @@ def get_additional_data(random_seed):
         images_data[2].update({'type': 'image', 'message': '現在最も人気のある画像({})'.format(group.name)})
         data += images_data
 
-        additional_images_id_list += [most_dl_per_day_image.id, most_view_per_day_image.id, most_popular_image.id]
+        print('eee ', time.time() - start)
+        start = time.time()
 
         # blogs
         blogs = Blog.objects.filter(writer__belonging_group=group)
         most_view_per_day_blog = blogs.order_by('-v1_per_day')[0]
         most_popular_blog = blogs.order_by('-score')[0]
         newest_blog = otapick.sort_blogs(blogs, 'newer_post')[0]
+
+        print('fff ', time.time() - start)
+        start = time.time()
 
         blogs_data = BlogSerializer([most_view_per_day_blog, most_popular_blog, newest_blog], many=True).data
         blogs_data = [{'blog': blog_data} for blog_data in blogs_data ]
@@ -193,6 +207,9 @@ def get_additional_data(random_seed):
         blogs_data[2].update({'type': 'blog', 'message': '最新のブログ({})'.format(group.name)})
         data += blogs_data
 
+        print('ggg ', time.time() - start)
+        start = time.time()
+
         # member
         popular_member = most_popular_blog.writer
         member_data = MemberSerializer(popular_member).data
@@ -200,8 +217,14 @@ def get_additional_data(random_seed):
         member_data.update({'type': 'member', 'message': '注目のメンバー({})'.format(group.name)})
         data.append(member_data)
 
+        print('hhh ', time.time() - start)
+        start = time.time()
+
+    print('aaa ', time.time() - startstart)
+
     data += [None for i in range(data_length - len(data))]
     np.random.seed(random_seed)
     np.random.shuffle(data)
 
+    print('bbb ', (time.time() - startstart))
     return data
