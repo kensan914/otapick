@@ -5,7 +5,7 @@ from image.models import Image, Progress
 from .unregisterer import unregister
 
 
-def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1):
+def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tweet=False):
     """
     グループごとにブログの登録を行う。以下、処理の流れ。
     最新から次々チェックしていき、保存済みのブログに当たったら終了。また、一番最後まで行ったら終了。これまでを仮にプロセスと呼ぶ。
@@ -21,6 +21,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1):
         up_limit (int): 最大ページ(default: 100)
         all_check (bool): 保存済みのブログを見つけても処理を実行(default: False)
         unregister_num (int): 何ページ分、登録解除処理をするか(default: 1)
+        tweet (bool): 更新通知をtweetするか否か
     Returns:
         True(success), None(failed)
     """
@@ -36,7 +37,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1):
             return
         elif len(blogs_data) == 0:
             otapick.print_console("register unacquired　blog...")
-            exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, console=True)
+            exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, tweet, console=True)
             otapick.print_console("finished!!")
             break
         if len(correct_cts_list) < unregister_num:
@@ -52,7 +53,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1):
                 simultime_blogs.append(blog_info)
             # When the post_date isn't same time as previous one,
             else:
-                finished = exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, console=True)
+                finished = exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, tweet, console=True)
 
                 if finished:
                     unregister(correct_cts_list, group_id, unregister_num)
@@ -61,7 +62,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1):
                 simultime_post_date = blog_info['post_date']
         else:
             if is_last:
-                exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, console=True)
+                exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, tweet, console=True)
                 break
             time.sleep(sleep_time_pagetransition)
             otapick.print_console('go next page.')
@@ -70,7 +71,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1):
     return True
 
 
-def exe_registration(blog_info_list, post_date, group_id, all_check, console):
+def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, console):
     """
     ブログの登録処理
     Args:
@@ -78,6 +79,7 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, console):
         post_date (date): 共通のpost_date
         group_id (int): グループID
         all_check (bool): 保存済みのブログを見つけても処理を実行
+        tweet (bool): 更新通知をtweetするか否か
         console (bool): ログ出力するか否か
     Returns:
         True(登録処理終了), False(登録処理続行)
@@ -135,6 +137,12 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, console):
     for image_object in image_objects:
         image_object.save()
         otapick.compress_blog_image(image_object)
+
+    # tweet update info
+    if tweet:
+        updateBot = otapick.UpdateBot()
+        for blog_object in blog_objects:
+            updateBot.tweet(group_id=blog_object.writer.belonging_group.group_id, blog_ct=blog_object.blog_ct)
 
     # When there is at least one already saved blog in blog_list and all_check is False
     if download_count != len(blog_info_list) and not all_check:

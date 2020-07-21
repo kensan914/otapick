@@ -9,7 +9,7 @@ from .db.scores.calculator import *
 from .db.scores.controller import *
 
 # image
-from .image.implements import ImageCompressor, ImageTrimmer
+from otapick.image.implements import ImageCompressor, ImageTrimmer
 from .image.modules import *
 
 # lib
@@ -25,3 +25,6 @@ from .crawlers.implements import *
 # downloaders
 from .downloaders.implements import MemberImageDownloader, MemberImageDownloaderEx, BlogImageDownloader
 from .downloaders.modules import *
+
+# twitter
+from .twitter.implements import *
