@@ -244,23 +244,26 @@ class ImageListAPIView(views.APIView):
         random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
         order_format = self.request.GET.get('sort')
 
+        order = otapick.sort_images(None, order_format)
+
         # filter
         if group_id is not None:
             images = \
-                Image.objects.filter(publisher__writer__belonging_group__group_id=group_id) if ct is None \
-                else Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct)
+                Image.objects.filter(publisher__writer__belonging_group__group_id=group_id).order_by(*order) if ct is None \
+                else Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct).order_by(*order)
             if not images.exists():
                 return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
 
         # recommend
         else:
-            images = Image.objects.all()
+            images = Image.objects.all().order_by(*order)
 
         # sort and slice
-        result = otapick.sort_images(images, order_format)
+        # result = otapick.sort_images(images, order_format)
+
         # success sorted
-        if result is not None:
-            images = result
+        if order != '':
+            # images = result
             images = images[self.paginate_by * (page - 1): self.paginate_by * page]
 
         # hove to sort by recommend
