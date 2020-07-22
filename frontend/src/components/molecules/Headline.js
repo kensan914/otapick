@@ -190,9 +190,10 @@ class Headline extends React.Component {
     }
   }
 
-  getModeSelectButtonGroupVerHome = (fixed) => {
+  getModeSelectButtonGroupVerLeft = (fixed) => {
+    let contents;
     if (this.props.type === "home") {
-      const contetns = (<>
+      contents = (<>
         <Button className={"rounded-pill mode-select-button active " + (fixed ? "fixed" : "")}
           onClick={() => this.props.history.push("/")}><b>ホーム</b></Button>
         <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center" : "")}
@@ -216,14 +217,25 @@ class Headline extends React.Component {
 
         </Button>
       </>);
+    } else if (this.props.type === "terms") {
+      contents = (<>
+        <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "contact" ? "active" : "")}
+          onClick={() => this.props.history.push("/contact/")}><b>{this.props.titleHash["contact"]}</b></Button>
+        <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "termsOfService" ? "active" : "")}
+          onClick={() => this.props.history.push("/terms-of-service/")}><b>{this.props.titleHash["termsOfService"]}</b></Button>
+        <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "privacyPolicy" ? "active" : "")}
+          onClick={() => this.props.history.push("/privacy-policy/")}><b>{this.props.titleHash["privacyPolicy"]}</b></Button>
+      </>);
+    }
 
+    if (this.props.type === "home" || this.props.type === "terms") {
       if (isMobile || fixed) {
         return (
-          <>{contetns}</>);
+          <>{contents}</>);
       } else {
         return (
           <ButtonGroup size="lg" className="ml-3 my-0">
-            {contetns}
+            {contents}
           </ButtonGroup>);
       }
     }
@@ -241,7 +253,7 @@ class Headline extends React.Component {
 
   render() {
     const fixedTypeChangeButton = this.getTypeChangeButton(true);
-    const fixedModeSelectButtonGroupVerHome = this.getModeSelectButtonGroupVerHome(true);
+    const fixedModeSelectButtonGroupVerLeft = this.getModeSelectButtonGroupVerLeft(true);
     const fixedModeSelectButtonGroup = this.getModeSelectButtonGroup(true);
 
     return (
@@ -250,7 +262,7 @@ class Headline extends React.Component {
         <div className="fixed-headline border-bottom text-muted pl-0 pl-lg-3" style={{ top: NAVBAR_HEIGHT, height: SUB_NAVBAR_HEIGHT }} id="otapick-sub-navbar">
           <BackButton mini={true} className="mr-0 mr-lg-2" />
 
-          {(this.props.title && (fixedModeSelectButtonGroupVerHome || fixedModeSelectButtonGroup)) &&
+          {(this.props.title && (fixedModeSelectButtonGroupVerLeft || fixedModeSelectButtonGroup)) &&
             <>
               <h1>{this.props.title}</h1>
               {!isMobile && fixedTypeChangeButton}
@@ -258,7 +270,7 @@ class Headline extends React.Component {
             </>
           }
           {/* only title ver */}
-          {(this.props.title && (!fixedModeSelectButtonGroupVerHome && !fixedModeSelectButtonGroup)) &&
+          {(this.props.title && (!fixedModeSelectButtonGroupVerLeft && !fixedModeSelectButtonGroup)) &&
             <>
               <h1>{this.props.title}</h1>
               {!isMobile && fixedTypeChangeButton}
@@ -268,7 +280,7 @@ class Headline extends React.Component {
           <div className="fixed-headline-contents-wrapper" style={{ height: SUB_NAVBAR_HEIGHT }}>
             <div className="fixed-headline-contents-wrapper2" style={{ height: SUB_NAVBAR_HEIGHT }}>
               <div className={"text-muted fixed-headline-contents"}>
-                {fixedModeSelectButtonGroupVerHome}
+                {fixedModeSelectButtonGroupVerLeft}
                 {fixedModeSelectButtonGroup}
               </div>
             </div>
@@ -281,7 +293,7 @@ class Headline extends React.Component {
             <div className="row justify-content-between mr-0">
               <div className="d-flex align-items-center">
                 <BackButton />
-                {this.getModeSelectButtonGroupVerHome(false)}
+                {this.getModeSelectButtonGroupVerLeft(false)}
                 {this.props.title &&
                   <h3 className="ml-3 my-0">{this.props.title}</h3>
                 }

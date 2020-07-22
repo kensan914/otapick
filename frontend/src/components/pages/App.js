@@ -16,6 +16,8 @@ import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, setEnvConstant } from "../tools/env";
 import NavigationAdmin from "../atoms/NavigationAdmin";
 import NotFound404 from "./NotFound404";
 import BottomNavigationBar from "../organisms/BottomNavigationBar";
+import Redirect from "./Redirect";
+import TermsTemplate from "../templates/TermsTemplate";
 
 
 class App extends React.Component {
@@ -132,17 +134,15 @@ class App extends React.Component {
                   applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
 
+              <Route exact path="/contact/" render={() => <TermsTemplate mode="contact" />} />
+              <Route exact path="/terms-of-service/" render={() => <TermsTemplate mode="termsOfService" />} />
+              <Route exact path="/privacy-policy/" render={() => <TermsTemplate mode="privacyPolicy" />} />
+
               {/* past URL */}
-              <Route exact path="/search/group/blog/:groupID" render={() =>
-                <BlogListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
-              } />
-              <Route exact path="/search/member/blog/:groupID/:ct" render={() =>
-                <BlogListTemplate applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
-              } />
-              <Route exact path="/download/:groupID/:blogCt" render={() =>
-                <BlogViewTemplate accessedBlogs={this.state.accessedBlogs} setAccessedBlog={(blogID) => this.setAccessedBlog(blogID)} />
-              } />
-              <Route exact path="/search/member/" render={() => <MemberListTemplate />} />
+              <Route exact path="/search/group/blog/:groupID" render={() => <Redirect baseUrl="/blogs" />} />
+              <Route exact path="/search/member/blog/:groupID/:ct" render={() => <Redirect baseUrl="/blogs" />} />
+              <Route exact path="/download/:groupID/:blogCt" render={() => <Redirect baseUrl="/blog" />} />
+              <Route exact path="/search/member/" render={() => <Redirect baseUrl="/members" />} />
               {/* end of past URL */}
 
               <Route render={() =>
