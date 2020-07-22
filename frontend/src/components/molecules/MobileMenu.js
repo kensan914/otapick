@@ -145,11 +145,10 @@ export class MobileTopMenu_ extends MobileMenu {
 
           <MobileMenuHr />
           <MobileMenuTitle title="ヲタピックについて" />
-          {/* <MobileMenuLink router={true} href="/blogs/1" title="つかい方" />
-          <MobileMenuLink router={true} href="/blogs/1" title="サポート" />
-          <MobileMenuLink router={true} href="/blogs/1" title="お問い合わせ" /> */}
-          <MobileMenuLink router={false} href="https://twitter.com/otapick"
-            target="_blank" title="公式Twitter" icon={true} />
+          <MobileMenuLink router={true} href="/contact" title="お問い合わせ" />
+          <MobileMenuLink router={true} href="/terms-of-service" title="利用規約" />
+          <MobileMenuLink router={true} href="/privacy-policy" title="プライバシーポリシー" />
+          <MobileMenuLink router={false} href="https://twitter.com/otapick" target="_blank" title="公式Twitter" icon={true} />
         </>
     } else if (this.props.type === "modeSelect") {
       contents = [];
