@@ -152,12 +152,14 @@ def sort_images_by_related(blog, order, page, paginate_by):
 
 
 def generate_images_data(images):
-    images_data = ImageSerializer(images, many=True).data
-    blogs = [image.publisher for image in images]
-    blogs_data = BlogSerializer(blogs, many=True).data
     data = []
-    for image_data, blog_data in zip(images_data, blogs_data):
-        data.append({'image': image_data, 'blog': blog_data})
+    for image in images:
+        if image is not None:
+            image_data = ImageSerializer(image).data
+            blog_data = BlogSerializer(image.publisher).data
+            data.append({'image': image_data, 'blog': blog_data})
+        else:
+            data.append(None)
     return data
 
 
@@ -168,38 +170,64 @@ def get_additional_data(random_seed):
     for group in Group.objects.all():
         # images
         images = Image.objects.filter(publisher__writer__belonging_group=group)
-        most_dl_per_day_image = images.exclude(d1_per_day=0).order_by('-d1_per_day')[0]
-        most_view_per_day_image = images.exclude(v1_per_day=0).order_by('-v1_per_day')[0]
-        most_popular_image = images.exclude(score=0).order_by('-score')[0]
+        most_dl_per_day_images = images.exclude(d1_per_day=0).order_by('-d1_per_day')
+        most_view_per_day_images = images.exclude(v1_per_day=0).order_by('-v1_per_day')
+        most_popular_images = images.exclude(score=0).order_by('-score')
+
+        if most_dl_per_day_images.exists(): most_dl_per_day_image = most_dl_per_day_images[0]
+        else: most_dl_per_day_image = None
+        if most_view_per_day_images.exists(): most_view_per_day_image = most_view_per_day_images[0]
+        else: most_view_per_day_image = None
+        if most_popular_images.exists(): most_popular_image = most_popular_images[0]
+        else: most_popular_image = None
 
         images_data = generate_images_data([most_dl_per_day_image, most_view_per_day_image, most_popular_image])
-        images_data[0].update({'type': 'image', 'message': '今日最もダウンロードされた画像({})'.format(group.name)})
-        images_data[1].update({'type': 'image', 'message': '今日最も閲覧された画像({})'.format(group.name)})
-        images_data[2].update({'type': 'image', 'message': '現在最も人気のある画像({})'.format(group.name)})
+        for i, images_data_part in enumerate(images_data):
+            if images_data_part is not None:
+                if i == 0: message = '今日最もダウンロードされた画像({})'.format(group.name)
+                elif i == 1: message = '今日最も閲覧された画像({})'.format(group.name)
+                elif i == 2: message = '現在最も人気のある画像({})'.format(group.name)
+                else: message = ''
+                images_data_part.update({'type': 'image', 'message': message})
         data += images_data
 
         # blogs
         blogs = Blog.objects.filter(writer__belonging_group=group)
-        most_view_per_day_blog = blogs.exclude(v1_per_day=0).order_by('-v1_per_day')[0]
-        most_popular_blog = blogs.exclude(score=0).order_by('-score')[0]
+        most_view_per_day_blogs = blogs.exclude(v1_per_day=0).order_by('-v1_per_day')
+        most_popular_blogs = blogs.exclude(score=0).order_by('-score')
         newest_blog = otapick.sort_blogs(blogs, 'newer_post')[0]
 
-        blogs_data = BlogSerializer([most_view_per_day_blog, most_popular_blog, newest_blog], many=True).data
-        blogs_data = [{'blog': blog_data} for blog_data in blogs_data ]
+        if most_view_per_day_blogs.exists(): most_view_per_day_blog = most_view_per_day_blogs[0]
+        else: most_view_per_day_blog = None
+        if most_popular_blogs.exists(): most_popular_blog = most_popular_blogs[0]
+        else: most_popular_blog = None
 
-        blogs_data[0].update({'type': 'blog', 'message': '今日最も閲覧されたブログ({})'.format(group.name)})
-        blogs_data[1].update({'type': 'blog', 'message': '現在最も人気のあるブログ({})'.format(group.name)})
-        blogs_data[2].update({'type': 'blog', 'message': '最新のブログ({})'.format(group.name)})
+        blogs_data = []
+        for i, blog in enumerate([most_view_per_day_blog, most_popular_blog, newest_blog]):
+            if blog is not None:
+                blog_data = BlogSerializer(blog).data
+                if i == 0:  message = '今日最も閲覧されたブログ({})'.format(group.name)
+                elif i == 1: message = '現在最も人気のあるブログ({})'.format(group.name)
+                elif i == 2: message = '最新のブログ({})'.format(group.name)
+                else: message = ''
+                blogs_data.append({'blog': blog_data, 'type': 'blog', 'message': message})
         data += blogs_data
 
         # member
-        popular_member = most_popular_blog.writer
-        member_data = MemberSerializer(popular_member).data
-        member_data = {'member': member_data}
-        member_data.update({'type': 'member', 'message': '注目のメンバー({})'.format(group.name)})
-        data.append(member_data)
+        if most_popular_image is not None:
+            popular_member = most_popular_image.publisher.writer
+        elif most_popular_blog is not None:
+            popular_member = most_popular_blog.writer
+        else:
+            popular_member = None
 
-    data += [None for i in range(data_length - len(data))]
+        if popular_member is not None:
+            member_data = MemberSerializer(popular_member).data
+            member_data = {'member': member_data}
+            member_data.update({'type': 'member', 'message': '注目のメンバー({})'.format(group.name)})
+            data.append(member_data)
+
+    data += [None for _ in range(data_length - len(data))]
     np.random.seed(random_seed)
     np.random.shuffle(data)
 
