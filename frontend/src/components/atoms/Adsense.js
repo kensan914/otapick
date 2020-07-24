@@ -31,6 +31,7 @@ class DisplayAds extends React.Component {
   }
 }
 
+
 export class SquareAds extends DisplayAds {
   constructor(props) {
     super(props);
@@ -39,7 +40,7 @@ export class SquareAds extends DisplayAds {
 }
 
 
-export class LandscapeAds extends React.Component {
+export class LandscapeAds extends DisplayAds {
   constructor(props) {
     super(props);
     this.DATA_AD_SLOT = DATA_AD_SLOT_LANDSCAPE;
