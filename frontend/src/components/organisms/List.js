@@ -53,10 +53,7 @@ class List extends React.Component {
       <>
         {/* related image title */}
         {(this.props.related && this.state.isShowRelatedImageTitle && this.state.status === "success") &&
-          <>
-            <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>
-            <SquareAds />
-          </>
+          <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>
         }
 
         <InfiniteScroll

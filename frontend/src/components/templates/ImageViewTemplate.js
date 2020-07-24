@@ -8,6 +8,7 @@ import ToTopButton from "../atoms/ToTopButton";
 import BackButton from "../atoms/BackButton";
 import Headline from "../molecules/Headline";
 import { withRouter } from "react-router-dom";
+import { SquareAds, LandscapeAds } from "../atoms/Adsense";
 
 
 class ImageViewTemplate extends React.Component {
@@ -55,13 +56,17 @@ class ImageViewTemplate extends React.Component {
             <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
               accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} keepAliveNameView={this.state.keepAliveNameView} />
           </KeepAlive>
+
+          {/* Google Adsense */}
+          {isSmp ? <LandscapeAds /> : <SquareAds />}
+
           <KeepAlive name={this.state.keepAliveName}>
             <div className="container-fluid text-muted mt-3 list-container-fluid">
               <ImageList groupID={this.state.groupID} group={this.state.group} applyShowFooter={this.props.applyShowFooter} related={true}
                 url={URLJoin(BASE_URL, "api/relatedImages/", this.state.groupID, this.state.blogCt, this.state.order.toString())} keepAliveName={this.state.keepAliveName} />
             </div>
           </KeepAlive>
-          
+
           <ToTopButton />
         </>
       }</>
