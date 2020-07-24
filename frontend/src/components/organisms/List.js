@@ -233,8 +233,8 @@ class ImageList_ extends List {
     this.state.items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => {
       const gridItemClassName = "grid-item " +
         (this.props.related
-          ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " + (isMobile ? "mt-1 mb-3" : "my-3")
-          : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "mt-1 mb-3" : "my-3"));
+          ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 ")
+          : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 "));
       return (
         <>
           <div className={gridItemClassName}>
@@ -243,7 +243,7 @@ class ImageList_ extends List {
           </div >
 
           {(i % ADS_INTERVAL === ADS_INDEX) &&
-            <div className={gridItemClassName} >
+            <div className={gridItemClassName + (isMobile ? "mb-3" : "")} >
               <SquareAds />
             </div>
           }
@@ -363,7 +363,7 @@ class HomeList_ extends ImageList_ {
         this.additionalItemsIndex++;
       }
 
-      const gridItemClassName = "grid-item col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "mt-1 mb-3" : "my-3");
+      const gridItemClassName = "grid-item col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 ");
       return (<>
         <div className={gridItemClassName}>
           <ImageCard key={i} id={i} groupID={groupID} group={getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
@@ -377,7 +377,7 @@ class HomeList_ extends ImageList_ {
         }
         {/* Google Adsense */}
         {(i % ADS_INTERVAL === ADS_INDEX) &&
-          <div className={gridItemClassName} >
+          <div className={gridItemClassName + (isMobile ? "mb-3" : "")} >
             <SquareAds />
           </div>
         }
