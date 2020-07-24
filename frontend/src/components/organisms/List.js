@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
 import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp, updateMeta } from '../tools/support';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION, ADS_INTERVAL, ADS_INDEX } from '../tools/env';
+import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION, ADS_INTERVAL, ADS_INDEX, ADS_INTERVAL_MORE } from '../tools/env';
 import ImageCard from '../molecules/ImageCard';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from '../atoms/NotFound';
@@ -245,7 +245,7 @@ class ImageList_ extends List {
               src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
           </div >
 
-          {(i % ADS_INTERVAL === ADS_INDEX) &&
+          {(i % (this.props.related ? ADS_INTERVAL_MORE : ADS_INTERVAL) === ADS_INDEX) &&
             <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
               <SquareAds />
             </div>

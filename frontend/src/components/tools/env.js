@@ -49,4 +49,5 @@ export const DATA_AD_CLIENT = "ca-pub-3712313672767903";
 export const DATA_AD_SLOT_SQUARE = "3963767991";
 export const DATA_AD_SLOT_LANDSCAPE = "8177403224";
 export const ADS_INTERVAL = 50;
+export const ADS_INTERVAL_MORE = 100;
 export const ADS_INDEX = 8;

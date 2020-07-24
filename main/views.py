@@ -5,7 +5,7 @@ from django.views import View
 
 class BaseView(View):
     html_path = 'frontend/index.html'
-    context = {'static_update': '?4.0.8_4', 'debug': settings.env.bool('DEBUG')}
+    context = {'static_update': '?4.0.8_5', 'debug': settings.env.bool('DEBUG')}
 
 
 class IndexView(BaseView):
