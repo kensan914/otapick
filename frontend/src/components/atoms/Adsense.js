@@ -47,24 +47,3 @@ export class LandscapeAds extends DisplayAds {
     this.DATA_AD_SLOT = DATA_AD_SLOT_LANDSCAPE;
   }
 }
-
-
-// import React, { useEffect } from 'react';
-// import { DEBUG, DATA_AD_CLIENT, DATA_AD_SLOT_SQUARE } from '../tools/env';
-
-// export function SquareAds(props) {
-//     useEffect(() => {
-//         if (window.adsbygoogle && !DEBUG) {
-//             window.adsbygoogle.push({});
-//         }
-//     }, []);
-
-//     return (
-//         <ins className="adsbygoogle"
-//             style={{ "display": "block" }}
-//             data-ad-client={DATA_AD_CLIENT}
-//             data-ad-slot={DATA_AD_SLOT_SQUARE}
-//             data-ad-format="auto"
-//             data-full-width-responsive="true"></ins>
-//     );
-// }
