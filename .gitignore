@@ -146,3 +146,5 @@ cron/
 # End of https://www.gitignore.io/api/django
 
 registerer_ex.py
+
+static/text/
