@@ -58,7 +58,9 @@ class ImageViewTemplate extends React.Component {
           </KeepAlive>
 
           {/* Google Adsense */}
-          {isSmp ? <LandscapeAds /> : <SquareAds />}
+          <div class="container">
+            {isSmp ? <LandscapeAds /> : <SquareAds />}
+          </div>
 
           <KeepAlive name={this.state.keepAliveName}>
             <div className="container-fluid text-muted mt-3 list-container-fluid">
