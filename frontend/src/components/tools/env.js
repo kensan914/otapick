@@ -46,6 +46,7 @@ export const MEMBERS_DISCRIPTION = "欅坂46・日向坂46のメンバーから�
 // Global Adsense
 export const GA_TRACKING_ID = 'UA-134426000-2';
 export const DATA_AD_CLIENT = "ca-pub-3712313672767903";
-export const DATA_AD_SLOT = "3963767991";
+export const DATA_AD_SLOT_SQUARE = "3963767991";
+export const DATA_AD_SLOT_LANDSCAPE = "8177403224";
 export const ADS_INTERVAL = 50;
 export const ADS_INDEX = 8;

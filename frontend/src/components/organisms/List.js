@@ -10,7 +10,7 @@ import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION, ADS_INTERVAL, ADS_INDEX } from
 import ImageCard from '../molecules/ImageCard';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from '../atoms/NotFound';
-import SquareAds from '../atoms/SquareAds';
+import { SquareAds, LandscapeAds } from '../atoms/Adsense';
 
 
 class List extends React.Component {
@@ -51,8 +51,14 @@ class List extends React.Component {
 
     return (
       <>
+        {/* related image title */}
         {(this.props.related && this.state.isShowRelatedImageTitle && this.state.status === "success") &&
-          <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>}
+          <>
+            <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>
+            <SquareAds />
+          </>
+        }
+
         <InfiniteScroll
           hasMore={this.state.hasMore}
           loadMore={() => this.getItemList(this.page)}
@@ -243,7 +249,7 @@ class ImageList_ extends List {
           </div >
 
           {(i % ADS_INTERVAL === ADS_INDEX) &&
-            <div className={gridItemClassName + (isMobile ? "mb-3" : "")} >
+            <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
               <SquareAds />
             </div>
           }
@@ -377,7 +383,7 @@ class HomeList_ extends ImageList_ {
         }
         {/* Google Adsense */}
         {(i % ADS_INTERVAL === ADS_INDEX) &&
-          <div className={gridItemClassName + (isMobile ? "mb-3" : "")} >
+          <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
             <SquareAds />
           </div>
         }
