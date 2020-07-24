@@ -12,7 +12,6 @@ class DisplayAds extends React.Component {
     if (!DEBUG) {
       window.adsbygoogle = window.adsbygoogle || [];
       window.adsbygoogle.push({});
-      console.log("render adsense.")
     }
   }
 
