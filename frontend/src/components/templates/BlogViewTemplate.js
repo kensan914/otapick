@@ -296,6 +296,13 @@ class BlogViewTemplate extends ViewTemplate {
             : <BlogSearchListInfo group={this.state.group} title={this.state.title} numOfHit={0} />
           }
           {contents}
+
+          {/* Google Adsense */}
+          <div class="container mt-3">
+            {/* {isSmp ? <LandscapeAds height="100px" /> : <SquareAds />} */}
+            {/* <LandscapeAds height="100px" /> */}
+            <SquareAds />
+          </div>
         </div>
       }</>
     );
