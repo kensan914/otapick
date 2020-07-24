@@ -58,7 +58,7 @@ class ImageViewTemplate extends React.Component {
           </KeepAlive>
 
           {/* Google Adsense */}
-          <div class="container">
+          <div class="container mt-3">
             {/* {isSmp ? <LandscapeAds height="100px" /> : <SquareAds />} */}
             <LandscapeAds height="100px" />
           </div>
