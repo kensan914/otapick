@@ -245,7 +245,7 @@ class ImageList_ extends List {
               src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
           </div >
 
-          {(i % (this.props.related ? ADS_INTERVAL_MORE : ADS_INTERVAL) === ADS_INDEX) &&
+          {(!this.props.related && i % ADS_INTERVAL === ADS_INDEX) &&
             <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
               <SquareAds />
             </div>
