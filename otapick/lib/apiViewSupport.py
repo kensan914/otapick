@@ -1,7 +1,5 @@
 import math
 import random
-import time
-
 import numpy as np
 from django.db.models import Q
 import otapick

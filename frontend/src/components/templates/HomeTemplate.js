@@ -7,6 +7,7 @@ import { URLJoin, generateKeepAliveName, isMobile, generateKeepAliveNameInfo } f
 import { BASE_URL } from "../tools/env";
 import ImageListInfo from "../molecules/info/ImageListInfo";
 import { withRouter } from "react-router-dom";
+import SquareAds from "../atoms/SquareAds";
 
 
 class HomeTemplate extends React.Component {

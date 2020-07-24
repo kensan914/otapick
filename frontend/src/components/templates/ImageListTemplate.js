@@ -105,8 +105,10 @@ class ImageListTemplate extends React.Component {
           <Headline title="画像一覧" type="images" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
 
           <KeepAlive name={this.state.keepAliveNameInfo}>
-            <ImageListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat}
-              pushHistory={(qs) => this.pushHistory(qs)} keepAliveNameInfo={this.state.keepAliveNameInfo} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false}/>
+            <div id={this.state.keepAliveNameInfo}>
+              <ImageListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat}
+                pushHistory={(qs) => this.pushHistory(qs)} keepAliveNameInfo={this.state.keepAliveNameInfo} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false} />
+            </div>
           </KeepAlive>
 
           {(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") &&
@@ -114,8 +116,10 @@ class ImageListTemplate extends React.Component {
           }
 
           <KeepAlive name={this.state.keepAliveName}>
-            <ImageList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} applyShowFooter={this.props.applyShowFooter}
-              orderFormat={this.state.orderFormat} fluid={false} keepAliveName={this.state.keepAliveName} />
+            <div id={this.state.keepAliveName}>
+              <ImageList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} applyShowFooter={this.props.applyShowFooter}
+                orderFormat={this.state.orderFormat} fluid={false} keepAliveName={this.state.keepAliveName} />
+            </div>
           </KeepAlive>
 
           <ToTopButton />
