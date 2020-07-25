@@ -41,14 +41,19 @@ class List extends React.Component {
       }
 
       if (this.props.location !== prevProps.location) {
-        console.log("adsense is " + document.getElementsByClassName('adsbygoogle').length);
+        console.log("adsense is " + document.getElementsByClassName("adsbygoogle").length);
       }
     }
     else {
       if (this.props.location !== prevProps.location) {
-        console.log("not adsense is " + document.getElementsByClassName('adsbygoogle').length);
-        for (const elm of document.getElementsByClassName('adsbygoogle')) {
-          elm.remove();
+        console.log("not adsense is " + document.getElementsByClassName("adsbygoogle").length);
+        for (const elm of document.getElementsByClassName("adsbygoogle")) {
+          if (!elm.classList.contains(generateKeepAliveName(this.props.location.key))) {
+            console.log("remove!!!");
+            elm.remove();
+          } else {
+            console.log("aaaaaa", elm.classList, generateKeepAliveName(this.props.location.key))
+          }
         }
       }
     }
