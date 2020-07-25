@@ -40,7 +40,7 @@ class List extends React.Component {
       }
 
       if (this.props.location !== prevProps.location) {
-        console.log("adsense is " + document.getElementsByClassName('adsbygoogle'));
+        console.log("adsense is " + document.getElementsByClassName('adsbygoogle').length);
       }
     }
   }
