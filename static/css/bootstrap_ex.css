@@ -2346,3 +2346,8 @@ footer {
 .rmp-container {
     z-index: 999!important;
 }
+
+/* Google adsense */
+#ad_iframe {
+    left: 50%;
+}
