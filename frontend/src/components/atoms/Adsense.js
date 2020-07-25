@@ -26,7 +26,9 @@ class DisplayAds extends React.Component {
             data-ad-format="auto"
             data-full-width-responsive="true"></ins>
         }
-        {/* <div className="adsbygoogle" style={{backgroundColor: "green", height: 300}}></div> */}
+        {DEBUG &&
+          <div className="adsbygoogle" style={{ backgroundColor: "green", height: 300 }}></div>
+        }
       </>
     );
   }
