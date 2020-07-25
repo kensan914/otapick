@@ -38,6 +38,10 @@ class List extends React.Component {
       if (prevState.hasMore !== this.state.hasMore && !this.state.hasMore) {
         this.props.applyShowFooter(this.props.location);
       }
+
+      if (this.props.location !== prevProps.location) {
+        console.log("adsense is " + document.getElementsByClassName('adsbygoogle'));
+      }
     }
   }
 

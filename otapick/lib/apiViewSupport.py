@@ -149,18 +149,6 @@ def sort_images_by_related(blog, order, page, paginate_by):
     return selected_id_list
 
 
-def generate_images_data(images):
-    data = []
-    for image in images:
-        if image is not None:
-            image_data = ImageSerializer(image).data
-            blog_data = BlogSerializer(image.publisher).data
-            data.append({'image': image_data, 'blog': blog_data})
-        else:
-            data.append(None)
-    return data
-
-
 def generate_resource_data(resources, max_rank, rank_type, resource_type, prefix, modifier, suffix, group_name):
     """
     rank_type: 'dl" or 'view' or 'popularity'
