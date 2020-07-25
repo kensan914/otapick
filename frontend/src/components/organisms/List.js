@@ -43,6 +43,11 @@ class List extends React.Component {
         console.log("adsense is " + document.getElementsByClassName('adsbygoogle').length);
       }
     }
+    else {
+      if (this.props.location !== prevProps.location) {
+        console.log("not adsense is " + document.getElementsByClassName('adsbygoogle').length);
+      }
+    }
   }
 
   render() {
