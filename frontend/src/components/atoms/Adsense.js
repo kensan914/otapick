@@ -33,7 +33,7 @@ class SquareAds_ extends DisplayAds {
             style={Object.assign({ display: "block" }, (this.props.height ? { height: this.props.height } : {}))}
             data-ad-client={DATA_AD_CLIENT}
             data-ad-slot={this.DATA_AD_SLOT}
-            data-ad-format="rectangle"
+            data-ad-format="auto"
             data-full-width-responsive="true"
           ></ins>
         }
