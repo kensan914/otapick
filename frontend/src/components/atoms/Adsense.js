@@ -25,8 +25,11 @@ class DisplayAds extends React.Component {
             style={Object.assign({ display: "block" }, (this.props.height ? { height: this.props.height } : {}))}
             data-ad-client={DATA_AD_CLIENT}
             data-ad-slot={this.DATA_AD_SLOT}
-            data-ad-format="auto"
-            data-full-width-responsive="true"></ins>
+            // data-ad-format="auto"
+            data-ad-format="horizontal"
+            // data-full-width-responsive="true"
+            data-full-width-responsive="false"
+          ></ins>
         }
         {DEBUG &&
           <div className={"adsbygoogle " + this.key} style={{ backgroundColor: "green", height: 300 }}></div>
