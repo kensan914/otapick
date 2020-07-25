@@ -34,6 +34,7 @@ class List extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // KeepAliveにより、UnMountされずにDOM上に保存されているコンポーネントは、裏でcomponentDidUpdateが常に働いているため、
     // このようにそのページのlocation.keyと照合して適切に実行制限をかけてあげる必要がある。
+    console.log(this.props.keepAliveName, generateKeepAliveName(this.props.location.key));
     if (this.props.keepAliveName === generateKeepAliveName(this.props.location.key)) {
       if (prevState.hasMore !== this.state.hasMore && !this.state.hasMore) {
         this.props.applyShowFooter(this.props.location);
@@ -46,6 +47,9 @@ class List extends React.Component {
     else {
       if (this.props.location !== prevProps.location) {
         console.log("not adsense is " + document.getElementsByClassName('adsbygoogle').length);
+        for (const elm of document.getElementsByClassName('adsbygoogle')) {
+          elm.remove();
+        }
       }
     }
   }
