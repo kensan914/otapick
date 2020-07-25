@@ -18,15 +18,15 @@ class DisplayAds extends React.Component {
   render() {
     return (
       <>
-        {/* {!DEBUG &&
+        {!DEBUG &&
           <ins className="adsbygoogle"
             style={Object.assign({ display: "block" }, (this.props.height ? { height: this.props.height } : {}))}
             data-ad-client={DATA_AD_CLIENT}
             data-ad-slot={this.DATA_AD_SLOT}
             data-ad-format="auto"
             data-full-width-responsive="true"></ins>
-        } */}
-        <div className="adsbygoogle" style={{backgroundColor: "green", height: 300}}></div>
+        }
+        {/* <div className="adsbygoogle" style={{backgroundColor: "green", height: 300}}></div> */}
       </>
     );
   }
