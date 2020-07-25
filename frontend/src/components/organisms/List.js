@@ -49,7 +49,7 @@ class List extends React.Component {
         console.log("not adsense is " + document.getElementsByClassName("adsbygoogle").length);
         for (const elm of document.getElementsByClassName("adsbygoogle")) {
           if (!elm.classList.contains(generateKeepAliveName(this.props.location.key))) {
-            console.log("remove!!!");
+            console.log("remove!!!", generateKeepAliveName(this.props.location.key));
             elm.remove();
           } else {
             console.log("aaaaaa", elm.classList, generateKeepAliveName(this.props.location.key))
