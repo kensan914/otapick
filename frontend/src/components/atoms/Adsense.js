@@ -16,6 +16,14 @@ class DisplayAds extends React.Component {
       window.adsbygoogle.push({});
     }
   }
+}
+
+
+class SquareAds_ extends DisplayAds {
+  constructor(props) {
+    super(props);
+    this.DATA_AD_SLOT = DATA_AD_SLOT_SQUARE;
+  }
 
   render() {
     return (
@@ -25,25 +33,12 @@ class DisplayAds extends React.Component {
             style={Object.assign({ display: "block" }, (this.props.height ? { height: this.props.height } : {}))}
             data-ad-client={DATA_AD_CLIENT}
             data-ad-slot={this.DATA_AD_SLOT}
-            // data-ad-format="auto"
-            data-ad-format="horizontal"
-            // data-full-width-responsive="true"
-            data-full-width-responsive="false"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
           ></ins>
-        }
-        {DEBUG &&
-          <div className={"adsbygoogle " + this.key} style={{ backgroundColor: "green", height: 300 }}></div>
         }
       </>
     );
-  }
-}
-
-
-class SquareAds_ extends DisplayAds {
-  constructor(props) {
-    super(props);
-    this.DATA_AD_SLOT = DATA_AD_SLOT_SQUARE;
   }
 }
 
@@ -53,7 +48,24 @@ class LandscapeAds_ extends DisplayAds {
     super(props);
     this.DATA_AD_SLOT = DATA_AD_SLOT_LANDSCAPE;
   }
+
+  render() {
+    return (
+      <>
+        {!DEBUG &&
+          <ins className={"adsbygoogle " + this.key}
+            style={Object.assign({ display: "block" }, (this.props.height ? { height: this.props.height } : {}))}
+            data-ad-client={DATA_AD_CLIENT}
+            data-ad-slot={this.DATA_AD_SLOT}
+            data-ad-format="horizontal"
+            data-full-width-responsive="false"
+          ></ins>
+        }
+      </>
+    );
+  }
 }
+
 
 export const SquareAds = withRouter(SquareAds_);
 export const LandscapeAds = withRouter(LandscapeAds_);
