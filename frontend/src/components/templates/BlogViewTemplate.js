@@ -262,6 +262,18 @@ class BlogViewTemplate extends ViewTemplate {
       }
     }
 
+    const groupID = this.props.match.params.groupID;
+    const prevGroupID = prevProps.match.params.groupID;
+    const blogCt = this.props.match.params.blogCt;
+    const prevBlogCt = prevProps.match.params.blogCt;
+    // When the blog changed
+    if (prevGroupID !== groupID || prevBlogCt !== blogCt) {
+      this.initBlogState = { mode: "view", groupID: groupID, blogCt: blogCt, group: getGroup(groupID)};
+      this.setState(Object.assign(this.initState, this.initBlogState));
+      this.blogViewURL = URLJoin(BASE_URL, "api/blog/", groupID, blogCt);
+      this.getBlog();
+    }
+
     // accepted
     super.componentDidUpdate(prevProps, prevState);
   }

@@ -52,7 +52,7 @@ class ImageViewTemplate extends React.Component {
         <>
           {isMobile && <Headline title={`画像詳細`} />}
           {!isMobile && <BackButton fixed={true} className="in-image-view" />}
-          <KeepAlive name={this.state.keepAliveNameView}>
+          <KeepAlive name={"ImageView" + this.state.keepAliveNameView}>
             <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
               accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} keepAliveNameView={this.state.keepAliveNameView} />
           </KeepAlive>
@@ -62,13 +62,12 @@ class ImageViewTemplate extends React.Component {
             {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
           </div>
 
-          <KeepAlive name={this.state.keepAliveName}>
+          <KeepAlive name={"ImageList" + this.state.keepAliveName}>
             <div className="container-fluid text-muted mt-3 list-container-fluid">
               <ImageList groupID={this.state.groupID} group={this.state.group} applyShowFooter={this.props.applyShowFooter} related={true}
                 url={URLJoin(BASE_URL, "api/relatedImages/", this.state.groupID, this.state.blogCt, this.state.order.toString())} keepAliveName={this.state.keepAliveName} />
             </div>
           </KeepAlive>
-
           <ToTopButton />
         </>
       }</>
