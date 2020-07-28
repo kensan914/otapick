@@ -8,8 +8,6 @@ export const RedirectWithStatus = ({ props, baseUrl, status }) => {
   const ct = props.match.params.ct;
   const blogCt = props.match.params.blogCt;
   const url = URLJoin(baseUrl, groupID, ct, blogCt);
-  console.log("ddddddddddddfaaaaaaaaaa: ", url);
-  console.log("dasdfasdfasdaaaa: ", groupID, ct, blogCt);
-  console.log(props);
+  if (props.staticContext) props.staticContext.status = status;
   return <Redirect to={{ pathname: url, state: { status: status }}} />;
 }
