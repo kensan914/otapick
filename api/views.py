@@ -261,18 +261,15 @@ class ImageListAPIView(views.APIView):
             images = Image.objects.all()
 
         # sort and slice
-        # result = otapick.sort_images(images, order_format)
-        result = otapick.sort_images(images, order_format, self.paginate_by, page)
+        result = otapick.sort_images(images, order_format)
 
         # success sorted
         if result is not None:
-            # sorted_images = result
-            # # to create id_list will be faster
-            # sorted_images = sorted_images[self.paginate_by * (page - 1): self.paginate_by * page]
-            # id_list = list(sorted_images.values_list('id', flat=True))
-            # images = [images.get(id=pk) for pk in id_list]
-
-            images = result
+            sorted_images = result
+            # to create id_list will be faster
+            sorted_images = sorted_images[self.paginate_by * (page - 1): self.paginate_by * page]
+            id_list = list(sorted_images.values_list('id', flat=True))
+            images = [images.get(id=pk) for pk in id_list]
 
         # hove to sort by recommend
         else:
