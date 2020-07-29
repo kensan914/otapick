@@ -1,6 +1,6 @@
 import React from "react";
 import Headline from '../molecules/Headline';
-import { getGroup, checkMatchParams, updateMeta, gtagTo } from '../tools/support';
+import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from '../tools/support';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
 import BlogViewInfo from "../molecules/info/BlogViewInfo";
@@ -10,7 +10,7 @@ import { LOAD_IMG_URL, BASE_URL, DELAY_TIME } from "../tools/env";
 import { withRouter } from 'react-router-dom';
 import { NotFoundMessage } from "../atoms/NotFound";
 import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
-import { SquareAds } from "../atoms/Adsense";
+import { SquareAds, LandscapeAds } from "../atoms/Adsense";
 
 
 export class ViewTemplate extends React.Component {
