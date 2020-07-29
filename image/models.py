@@ -18,6 +18,13 @@ class Image(models.Model):
     class Meta:
         db_table = 'image'
         unique_together = ('publisher', 'order')
+        indexes = [
+            models.Index(fields=['-publisher', 'order'], name='newer_post'),
+            models.Index(fields=['-num_of_views', '-recommend_score'], name='dl'),
+            models.Index(fields=['-score', '-recommend_score'], name='popularity'),
+            models.Index(fields=['-num_of_views', '-recommend_score'], name='view'),
+        ]
+        ordering = ['-publisher__post_date', 'publisher__order_for_simul', 'order']
 
     order = models.IntegerField(verbose_name='順番')
     picture = models.ImageField(verbose_name='イメージ(original)', upload_to=get_upload_to)

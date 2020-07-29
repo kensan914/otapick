@@ -49,6 +49,7 @@ class Blog(models.Model):
     class Meta:
         db_table = 'blog'
         unique_together = ('blog_ct', 'writer')
+        ordering = ['post_date', 'order_for_simul']
 
     blog_ct = models.IntegerField(verbose_name='ブログID')
     title = models.CharField(verbose_name='タイトル', max_length=1000)
