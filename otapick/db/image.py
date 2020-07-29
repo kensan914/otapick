@@ -132,7 +132,7 @@ def sort_images(images, order_format):
             images = images.order_by('publisher__post_date', '-publisher__order_for_simul', '-order')
         elif order_format == 'dl':
             # images = images.order_by('-num_of_downloads', '-recommend_score', '-score', '-publisher__post_date', 'publisher__order_for_simul')
-            images = images.order_by('-num_of_views', '-recommend_score')
+            images = images.order_by('-num_of_downloads', '-recommend_score')
         elif order_format == 'popularity':
             # images = images.order_by('-score', '-recommend_score', '-publisher__post_date', 'publisher__order_for_simul')
             images = images.order_by('-score', '-recommend_score')

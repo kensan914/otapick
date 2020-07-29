@@ -20,7 +20,7 @@ class Image(models.Model):
         unique_together = ('publisher', 'order')
         indexes = [
             models.Index(fields=['-publisher', 'order'], name='newer_post'),
-            models.Index(fields=['-num_of_views', '-recommend_score'], name='dl'),
+            models.Index(fields=['-num_of_downloads', '-recommend_score'], name='dl'),
             models.Index(fields=['-score', '-recommend_score'], name='popularity'),
             models.Index(fields=['-num_of_views', '-recommend_score'], name='view'),
         ]
