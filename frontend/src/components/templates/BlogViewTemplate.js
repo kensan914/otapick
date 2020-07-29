@@ -268,7 +268,7 @@ class BlogViewTemplate extends ViewTemplate {
     const prevBlogCt = prevProps.match.params.blogCt;
     // When the blog changed
     if (prevGroupID !== groupID || prevBlogCt !== blogCt) {
-      this.initBlogState = { mode: "view", groupID: groupID, blogCt: blogCt, group: getGroup(groupID)};
+      this.initBlogState = { mode: "view", groupID: groupID, blogCt: blogCt, group: getGroup(groupID) };
       this.setState(Object.assign(this.initState, this.initBlogState));
       this.blogViewURL = URLJoin(BASE_URL, "api/blog/", groupID, blogCt);
       this.getBlog();
@@ -308,12 +308,13 @@ class BlogViewTemplate extends ViewTemplate {
               officialUrl={this.state.officialUrl} numOfViews={this.state.numOfViews} numOfDownloads={this.state.numOfDownloads} />
             : <BlogSearchListInfo group={this.state.group} title={this.state.title} numOfHit={0} />
           }
-          {contents}
 
           {/* Google Adsense */}
-          {/* <div class="container mt-3">
-            {isSmp ? <LandscapeAds height="100px" /> : <SquareAds />}
-          </div> */}
+          <div class="container mt-4" key={this.state.keepAliveName}>
+            {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
+          </div>
+
+          {contents}
         </div>
       }</>
     );
