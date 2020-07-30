@@ -11,6 +11,7 @@ import ImageCard from '../molecules/ImageCard';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from '../atoms/NotFound';
 import { SquareAds, LandscapeAds } from '../atoms/Adsense';
+import AdsenseCard from '../molecules/AdsenseCard';
 
 
 class List extends React.Component {
@@ -34,25 +35,16 @@ class List extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // KeepAliveにより、UnMountされずにDOM上に保存されているコンポーネントは、裏でcomponentDidUpdateが常に働いているため、
     // このようにそのページのlocation.keyと照合して適切に実行制限をかけてあげる必要がある。
-    console.log(this.props.keepAliveName, generateKeepAliveName(this.props.location.key));
     if (this.props.keepAliveName === generateKeepAliveName(this.props.location.key)) {
       if (prevState.hasMore !== this.state.hasMore && !this.state.hasMore) {
         this.props.applyShowFooter(this.props.location);
       }
-
-      if (this.props.location !== prevProps.location) {
-        console.log("adsense is " + document.getElementsByClassName("adsbygoogle").length);
-      }
     }
     else {
       if (this.props.location !== prevProps.location) {
-        console.log("not adsense is " + document.getElementsByClassName("adsbygoogle").length);
         for (const elm of document.getElementsByClassName("adsbygoogle")) {
           if (!elm.classList.contains(generateKeepAliveName(this.props.location.key))) {
-            console.log("remove!!!", generateKeepAliveName(this.props.location.key));
             elm.remove();
-          } else {
-            console.log("aaaaaa", elm.classList, generateKeepAliveName(this.props.location.key))
           }
         }
       }
@@ -342,6 +334,13 @@ class HomeList_ extends ImageList_ {
                   type: "member",
                   message: item.message,
                 });
+              } else if (item.type === "twitter") {
+                additionalItems.push({
+                  type: "twitter",
+                  message: item.message,
+                  src: item.src,
+                  url: item.url,
+                });
               }
             }
 
@@ -380,6 +379,9 @@ class HomeList_ extends ImageList_ {
           additionalItem =
             <MemberCard id={`additional_${this.additionalItemsIndex}`} ct={add.ct} image={add.image} url={add.url} officialUrl={add.officialUrl} lastKanji={add.lastKanji} firstKanji={add.firstKanji} lastKana={add.lastKana}
               firstKana={add.firstKana} belongingGroup={add.belongingGroup} wavesVals={this.wavesVals} message={add.message} />
+        } else if (add.type === "twitter") {
+          additionalItem = 
+            <AdsenseCard url={add.url} src={add.src} message={add.message} />;
         }
         this.additionalItemsIndex++;
       }

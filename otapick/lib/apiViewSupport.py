@@ -247,6 +247,10 @@ def get_additional_data(random_seed):
             member_data.update({'type': 'member', 'message': '注目のメンバー({})'.format(group.name)})
             data.append(member_data)
 
+    # twitter ads
+    for TWITTER_ADS_URL in otapick.TWITTER_ADS_URLS:
+        data.append({'type': 'twitter', 'message':'ヲタピックの公式Twitter. フォローはこちらから', 'src': TWITTER_ADS_URL, 'url': 'https://twitter.com/otapick'})
+
     data += [None for _ in range(data_length - len(data))]
     np.random.seed(random_seed)
     np.random.shuffle(data)
