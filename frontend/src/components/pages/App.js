@@ -17,7 +17,6 @@ import NavigationAdmin from "../atoms/NavigationAdmin";
 import NotFound404 from "./NotFound404";
 import BottomNavigationBar from "../organisms/BottomNavigationBar";
 import TermsTemplate from "../templates/TermsTemplate";
-import { RedirectWithStatus } from "./Redirect";
 
 
 class App extends React.Component {

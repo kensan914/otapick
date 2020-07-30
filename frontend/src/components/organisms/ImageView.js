@@ -8,7 +8,7 @@ import { ViewTooltip } from '../molecules/info/BlogViewInfo';
 import { Link } from 'react-router-dom';
 import WriterCard from '../atoms/WriterCard';
 import { MobileBottomMenu } from '../molecules/MobileMenu';
-import { BlogViewLoader } from "../molecules/Loader";
+import { BlogViewLoader, HorizontalLoader } from "../molecules/Loader";
 import { NotFoundMessage } from "../atoms/NotFound";
 import { ViewTemplate } from "../templates/BlogViewTemplate";
 import { withRouter } from 'react-router-dom';
@@ -167,9 +167,11 @@ class ImageView extends ViewTemplate {
 
   render() {
     let imageView;
+    let imageViewText;
+    let imageAlt;
 
     if (this.state.status === "") {
-      // imageView = <HorizontalLoader />;
+      imageViewText = <HorizontalLoader />;
     } else if (this.state.status === "accepted") {
       imageView = (<BlogViewLoader progress={this.state.progress} loadingImageUrl={LOAD_IMG_URL} />);
     } else if (this.state.status === "blog_not_found") {
@@ -178,7 +180,7 @@ class ImageView extends ViewTemplate {
       imageView = (<div className="py-0 py-sm-5"><NotFoundMessage type="imageFailed" margin={true} /></div>);
     } else if (this.state.status === "success") {
       const image = this.state.images[this.props.order];
-      const imageViewText = (
+      imageViewText = (
         <div className="ml-1 ml-sm-3 ml-lg-4 image-view-text">
           <div className="d-flex justify-content-between mt-1 mt-sm-3 mt-lg-2 mb-2 image-view-header">
             <div className="d-flex align-items-center p-0 col-7 col-md-8 col-lg-9">
@@ -246,42 +248,63 @@ class ImageView extends ViewTemplate {
         </div>
       );
 
-      if (isSmp) {
-        imageView = (
-          <>
-            <img className="image-of-image-view smp" src={image.src["250x"]} id="main-image"
-              alt={generateAlt(this.props.group, this.state.writer.name)} />
-            <div className="container mt-3 text-muted">
-              <div className="alert alert-success" role="alert" style={{ borderRadius: "1rem", fontSize: 14 }}>画像を長押しして保存をおこなってください</div>
-              <div className={"card otapick-card2 mx-auto image-view smp " + this.props.group}>
-                <div className="card-body">
-                  <div className="p-0">
-                    {imageViewText}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
-        );
+      imageAlt = generateAlt(this.props.group, this.state.writer.name);
+    }
+
+    let src;
+    if (this.props.prevSrc) {
+      src = this.props.prevSrc["250x"];
+    } else {
+      if (this.state.status === "success") {
+        const image = this.state.images[this.props.order];
+        src = image.src["250x"];
       } else {
-        imageView = (
-          <div className={"card otapick-card2 mx-auto image-view " + (isMobile ? "mb-3 mt-1 " : "my-4 ") + this.props.group}>
-            <div className="card-body">
-              <div className="row m-0">
-                <div className="col-12 col-lg-6 p-0">
-                  <img className="image-of-image-view" src={image.src["250x"]} id="main-image"
-                    srcSet={`${image.src["250x"]} 1x, ${image.src["500x"]} 2x`}
-                    onContextMenu={(e) => (!isMobile ? e.preventDefault() : "")} onMouseDown={(e) => (!isMobile ? e.preventDefault() : "")}
-                    alt={generateAlt(this.props.group, this.state.writer.name)} />
-                </div>
-                <div className="col-12 col-lg-6 p-0">
+        src = null
+      }
+    }
+    if (isSmp) {
+      imageView = (
+        <>
+          <img className="image-of-image-view smp" src={src} id="main-image" alt={imageAlt} />
+          <div className="container mt-3 text-muted">
+            <div className="alert alert-success" role="alert" style={{ borderRadius: "1rem", fontSize: 14 }}>画像を長押しして保存をおこなってください</div>
+            <div className={"card otapick-card2 mx-auto image-view smp " + this.props.group}>
+              <div className="card-body">
+                <div className="p-0">
                   {imageViewText}
                 </div>
               </div>
             </div>
           </div>
-        );
+        </>
+      );
+    } else {
+      let srcSet;
+      if (this.props.prevSrc) {
+        srcSet = `${this.props.prevSrc["250x"]} 1x, ${this.props.prevSrc["500x"]} 2x`;
+      } else {
+        if (this.state.status === "success") {
+          const image = this.state.images[this.props.order];
+          srcSet = `${image.src["250x"]} 1x, ${image.src["500x"]} 2x`;
+        } else {
+          srcSet = null;
+        }
       }
+      imageView = (
+        <div className={"card otapick-card2 mx-auto image-view " + (isMobile ? "mb-3 mt-1 " : "my-4 ") + this.props.group}>
+          <div className="card-body">
+            <div className="row m-0">
+              <div className="col-12 col-lg-6 p-0">
+                <img className="image-of-image-view" src={src} id="main-image" srcSet={srcSet} alt={imageAlt}
+                  onContextMenu={(e) => (!isMobile ? e.preventDefault() : "")} onMouseDown={(e) => (!isMobile ? e.preventDefault() : "")} />
+              </div>
+              <div className="col-12 col-lg-6 p-0">
+                {imageViewText}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
     }
 
     return (

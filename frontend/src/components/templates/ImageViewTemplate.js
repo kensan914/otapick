@@ -47,6 +47,7 @@ class ImageViewTemplate extends React.Component {
   }
 
   render() {
+    console.log(this.props.location)
     return (
       <>{this.isRender &&
         <>
@@ -54,7 +55,7 @@ class ImageViewTemplate extends React.Component {
           {!isMobile && <BackButton fixed={true} className="in-image-view" />}
           <KeepAlive name={"ImageView" + this.state.keepAliveNameView}>
             <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
-              accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} keepAliveNameView={this.state.keepAliveNameView} />
+              accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} keepAliveNameView={this.state.keepAliveNameView} prevSrc={typeof this.props.location.state !== "undefined" ? this.props.location.state.prevSrc : null} />
           </KeepAlive>
 
           {/* Google Adsense */}
