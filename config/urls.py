@@ -16,11 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 import main.views
+import main.redirect
 from config import settings
 from django.views.static import serve
 
 urlpatterns = [
     path('api/', include('api.urls')),
+    # past URL
+    re_path(r'^search/group/blog/(?P<group_id>\d+)(/$|.{0}$)', main.redirect.redirectBlogsGView, name="redirectBlogsGView"),
+    re_path(r'^search/member/blog/(?P<group_id>\d+)/(?P<ct>\w+)(/$|.{0}$)', main.redirect.redirectBlogsMView, name="redirectBlogsMView"),
+    re_path(r'^download/(?P<group_id>\d+)/(?P<blog_ct>\d+)/(?P<order>\d+)(/$|.{0}$)', main.redirect.redirectImageView, name="redirectImageView"),
+    re_path(r'^search/member(/$|.{0}$)', main.redirect.redirectMembersView, name="redirectMembersView"),
+
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
@@ -29,6 +36,5 @@ if settings.DEBUG:
     urlpatterns += [path('admin/', admin.site.urls)]
     urlpatterns += [path('admin', admin.site.urls)]
 
-# catch all other URL ('api'で始まらない文字列にマッチ)
-urlpatterns += [re_path(r'^(?!api).+$', main.views.indexView, name="indexView")]
-urlpatterns += [path('', main.views.indexView, name="indexView")]
+# catch all other URL
+urlpatterns += [re_path(r'\w*',  main.views.indexView, name="indexView")]

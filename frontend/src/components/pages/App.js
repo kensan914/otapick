@@ -143,14 +143,7 @@ class App extends React.Component {
               <Route exact path="/contact/" render={() => <TermsTemplate mode="contact" />} />
               <Route exact path="/terms-of-service/" render={() => <TermsTemplate mode="termsOfService" />} />
               <Route exact path="/privacy-policy/" render={() => <TermsTemplate mode="privacyPolicy" />} />
-
-              {/* past URL */}
-              <Route exact path="/search/group/blog/:groupID" render={(props) => <RedirectWithStatus status={301} baseUrl="/blogs" props={props} />} />
-              <Route exact path="/search/member/blog/:groupID/:ct" render={(props) => <RedirectWithStatus status={301} baseUrl="/blogs" props={props} />} />
-              <Route exact path="/download/:groupID/:blogCt" render={(props) => <RedirectWithStatus status={301} baseUrl="/blog" props={props} />} />
-              <Route exact path="/search/member/" render={(props) => <RedirectWithStatus status={301} baseUrl="/members" props={props} />} />
-              {/* end of past URL */}
-
+              
               <Route render={() =>
                 <NotFound404 footerRef={this.state.footerRef} applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />
