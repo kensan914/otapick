@@ -37,4 +37,5 @@ if settings.DEBUG:
     urlpatterns += [path('admin/', admin.site.urls)]
 
 # catch all other URL
-urlpatterns += [url(r'^.*/$', main.views.indexView, name='indexView')]
+urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
+urlpatterns += [path('', main.views.indexView, name='indexView')]
