@@ -1,8 +1,8 @@
 import { getIsSmp, isMobile } from "./support";
 
 // The only place to change
-export const DEBUG = false;
-// export const DEBUG = true;
+// export const DEBUG = false;
+export const DEBUG = true;
 
 export const BASE_URL = (DEBUG ? "http://192.168.99.100:8000/" : "https://otapick.com/");
 export const DELAY_TIME = (DEBUG ? 300 : 0);
