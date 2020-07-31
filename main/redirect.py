@@ -18,14 +18,14 @@ class RedirectView(View):
 class RedirectBlogsGView(RedirectView):
     def setLocation(self):
         group_id = self.kwargs.get('group_id')
-        self.location = '/blogs/{}'.format(group_id)
+        self.location = '/blogs/{}/'.format(group_id)
 
 
 class RedirectBlogsMView(RedirectView):
     def setLocation(self):
         group_id = self.kwargs.get('group_id')
         ct = self.kwargs.get('ct')
-        self.location = '/blogs/{}/{}'.format(group_id, ct)
+        self.location = '/blogs/{}/{}/'.format(group_id, ct)
 
 
 class RedirectImageView(RedirectView):
@@ -33,7 +33,7 @@ class RedirectImageView(RedirectView):
         group_id = self.kwargs.get('group_id')
         blog_ct = self.kwargs.get('blog_ct')
         order = self.kwargs.get('order')
-        self.location = '/image/{}/{}/{}'.format(group_id, blog_ct, order)
+        self.location = '/image/{}/{}/{}/'.format(group_id, blog_ct, order)
 
 
 class RedirectMembersView(RedirectView):
