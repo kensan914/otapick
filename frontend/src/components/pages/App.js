@@ -16,7 +16,6 @@ import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, setEnvConstant } from "../tools/env";
 import NavigationAdmin from "../atoms/NavigationAdmin";
 import NotFound404 from "./NotFound404";
 import BottomNavigationBar from "../organisms/BottomNavigationBar";
-import Redirect from "./Redirect";
 import TermsTemplate from "../templates/TermsTemplate";
 
 
@@ -79,19 +78,22 @@ class App extends React.Component {
     this.startPos = result.startPos;
   }
 
+  beforeunloadHandler = e => window.scrollTo(0, 0);
+
   componentDidMount() {
     window.addEventListener('scroll', this.scrollHandler, true);
+    window.addEventListener('beforeunload', this.beforeunloadHandler, true);
   }
   componentWillUnmount() {
     window.removeEventListener('scroll', this.scrollHandler);
+    window.removeEventListener('beforeunload', this.beforeunloadHandler);
   }
 
   render() {
     return (
       <BrowserRouter>
         <LocationAdmin>
-          <Provider>
-
+          <Provider include={/^(?!ImageView|ImageList).*$/} exclude={/^(ImageView|ImageList).*$/}>
             <NavigationBar />
             <NavigationAdmin isShowNBShadow={this.state.isShowNBShadow} isShowNB={this.state.isShowNB} isShowSubNB={this.state.isShowSubNB} isTop={this.state.isTop} scrollHandler={this.scrollHandler} />
             {isMobile && <BottomNavigationBar ref={this.setBottomNavbarRef} />}
@@ -129,22 +131,18 @@ class App extends React.Component {
                 <BlogViewTemplate accessedBlogs={this.state.accessedBlogs} setAccessedBlog={(blogID) => this.setAccessedBlog(blogID)} />
               } />
 
-              <Route exact path="/image/:groupID/:blogCt/:order" render={() =>
-                <ImageViewTemplate accessedImages={this.state.accessedImages} setAccessedImage={(imageID) => this.setAccessedImage(imageID)}
-                  applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
-              } />
+              <Route exact path="/image/:groupID/:blogCt/:order" render={() => {
+                return (<Provider include={/^(ImageView|ImageList).*$/} exclude={/^(?!ImageView|ImageList).*$/}>
+                  <ImageViewTemplate accessedImages={this.state.accessedImages} setAccessedImage={(imageID) => this.setAccessedImage(imageID)}
+                    applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
+                </Provider>
+                );
+              }} />
 
               <Route exact path="/contact/" render={() => <TermsTemplate mode="contact" />} />
               <Route exact path="/terms-of-service/" render={() => <TermsTemplate mode="termsOfService" />} />
               <Route exact path="/privacy-policy/" render={() => <TermsTemplate mode="privacyPolicy" />} />
-
-              {/* past URL */}
-              <Route exact path="/search/group/blog/:groupID" render={() => <Redirect baseUrl="/blogs" />} />
-              <Route exact path="/search/member/blog/:groupID/:ct" render={() => <Redirect baseUrl="/blogs" />} />
-              <Route exact path="/download/:groupID/:blogCt" render={() => <Redirect baseUrl="/blog" />} />
-              <Route exact path="/search/member/" render={() => <Redirect baseUrl="/members" />} />
-              {/* end of past URL */}
-
+              
               <Route render={() =>
                 <NotFound404 footerRef={this.state.footerRef} applyShowFooter={(l) => this.state.footerRef.applyShowFooter(l)} />
               } />

@@ -1,7 +1,5 @@
 import math
 import random
-import time
-
 import numpy as np
 from django.db.models import Q
 import otapick
@@ -163,9 +161,33 @@ def generate_images_data(images):
     return data
 
 
+def generate_resource_data(resources, max_rank, rank_type, resource_type, prefix, modifier, suffix, group_name):
+    """
+    rank_type: 'dl" or 'view' or 'popularity'
+    resource_type: 'image' or 'blog'
+    :return: {'resource': image or blog, 'resource_info': {'type': 'image or blog', 'message', '...'}}
+    """
+    resources_data = []
+    if len(resources) >= max_rank:
+        for rank in range(max_rank):
+            if rank == 0:
+                comparison = '最も'
+            else:
+                comparison = str(rank + 1) + '番目に'
+            message = prefix[rank_type] + comparison + modifier[rank_type] + suffix[resource_type] + '({})'.format(group_name)
+            resources_data.append({'resource': resources[rank], 'resource_info': {'type': resource_type, 'message': message}})
+    else:
+        return []
+    return resources_data
+
+
 def get_additional_data(random_seed):
     data = []
-    data_length = 30
+    data_length = 50
+    max_rank = 3
+    prefix = {'dl': '今日', 'view': '今日', 'popularity': '現在', 'newer': '現在'}
+    modifier = {'dl': 'ダウンロードされた', 'view': '閲覧された', 'popularity': '人気のある', 'newer': '新しい'}
+    suffix = {'image': '画像', 'blog': 'ブログ'}
 
     for group in Group.objects.all():
         # images
@@ -174,44 +196,42 @@ def get_additional_data(random_seed):
         most_view_per_day_images = images.exclude(v1_per_day=0).order_by('-v1_per_day')
         most_popular_images = images.exclude(score=0).order_by('-score')
 
-        if most_dl_per_day_images.exists(): most_dl_per_day_image = most_dl_per_day_images[0]
-        else: most_dl_per_day_image = None
-        if most_view_per_day_images.exists(): most_view_per_day_image = most_view_per_day_images[0]
-        else: most_view_per_day_image = None
-        if most_popular_images.exists(): most_popular_image = most_popular_images[0]
+        images_data = []
+        images_data.extend(generate_resource_data(most_dl_per_day_images, max_rank, 'dl', 'image', prefix, modifier, suffix, group.name))
+        images_data.extend(generate_resource_data(most_view_per_day_images, max_rank, 'view', 'image', prefix, modifier, suffix, group.name))
+        # 注目メンバー決定のため↓
+        images_data_p = generate_resource_data(most_popular_images, max_rank, 'popularity', 'image', prefix, modifier, suffix, group.name)
+        if images_data_p: most_popular_image = images_data_p[0]['resource']
         else: most_popular_image = None
+        images_data.extend(images_data_p)
 
-        images_data = generate_images_data([most_dl_per_day_image, most_view_per_day_image, most_popular_image])
         for i, images_data_part in enumerate(images_data):
             if images_data_part is not None:
-                if i == 0: message = '今日最もダウンロードされた画像({})'.format(group.name)
-                elif i == 1: message = '今日最も閲覧された画像({})'.format(group.name)
-                elif i == 2: message = '現在最も人気のある画像({})'.format(group.name)
-                else: message = ''
-                images_data_part.update({'type': 'image', 'message': message})
-        data += images_data
+                image_data = ImageSerializer(images_data_part['resource']).data
+                blog_data = BlogSerializer(images_data_part['resource'].publisher).data
+                images_data_part['resource_info'].update({'image': image_data, 'blog': blog_data})
+                data.append(images_data_part['resource_info'])
 
         # blogs
         blogs = Blog.objects.filter(writer__belonging_group=group)
         most_view_per_day_blogs = blogs.exclude(v1_per_day=0).order_by('-v1_per_day')
+        newest_blogs = otapick.sort_blogs(blogs, 'newer_post')
         most_popular_blogs = blogs.exclude(score=0).order_by('-score')
-        newest_blog = otapick.sort_blogs(blogs, 'newer_post')[0]
-
-        if most_view_per_day_blogs.exists(): most_view_per_day_blog = most_view_per_day_blogs[0]
-        else: most_view_per_day_blog = None
-        if most_popular_blogs.exists(): most_popular_blog = most_popular_blogs[0]
-        else: most_popular_blog = None
 
         blogs_data = []
-        for i, blog in enumerate([most_view_per_day_blog, most_popular_blog, newest_blog]):
-            if blog is not None:
-                blog_data = BlogSerializer(blog).data
-                if i == 0:  message = '今日最も閲覧されたブログ({})'.format(group.name)
-                elif i == 1: message = '現在最も人気のあるブログ({})'.format(group.name)
-                elif i == 2: message = '最新のブログ({})'.format(group.name)
-                else: message = ''
-                blogs_data.append({'blog': blog_data, 'type': 'blog', 'message': message})
-        data += blogs_data
+        blogs_data.extend(generate_resource_data(most_view_per_day_blogs, max_rank, 'view', 'blog', prefix, modifier, suffix, group.name))
+        blogs_data.extend(generate_resource_data(newest_blogs, max_rank, 'newer', 'blog', prefix, modifier, suffix, group.name))
+        # 注目メンバー決定のため↓
+        blogs_data_p = generate_resource_data(most_popular_blogs, max_rank, 'popularity', 'blog', prefix, modifier, suffix, group.name)
+        if blogs_data_p: most_popular_blog = blogs_data_p[0]['resource']
+        else: most_popular_blog = None
+        blogs_data.extend(blogs_data_p)
+
+        for i, blogs_data_part in enumerate(blogs_data):
+            if blogs_data_part is not None:
+                blog_data = BlogSerializer(blogs_data_part['resource']).data
+                blogs_data_part['resource_info'].update({'blog': blog_data})
+                data.append(blogs_data_part['resource_info'])
 
         # member
         if most_popular_image is not None:
@@ -226,6 +246,10 @@ def get_additional_data(random_seed):
             member_data = {'member': member_data}
             member_data.update({'type': 'member', 'message': '注目のメンバー({})'.format(group.name)})
             data.append(member_data)
+
+    # twitter ads
+    for TWITTER_ADS_URL in otapick.TWITTER_ADS_URLS:
+        data.append({'type': 'twitter', 'message':'ヲタピックの公式Twitter. フォローはこちらから', 'src': TWITTER_ADS_URL, 'url': 'https://twitter.com/otapick'})
 
     data += [None for _ in range(data_length - len(data))]
     np.random.seed(random_seed)

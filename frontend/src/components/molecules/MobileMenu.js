@@ -272,7 +272,9 @@ export class MobileBottomMenu_ extends MobileMenu {
           <MobileMenuTitle title={this.props.title} omit={true} />
           <MobileMenuHr top={true} />
           {(this.props.type === "blogCard" || this.props.type === "imageCard")
-            ? <MobileMenuLink router={true} href={this.props.url} title="詳細ページへ" />
+            ? (this.props.type === "blogCard")
+              ? <MobileMenuLink router={true} href={this.props.url} title="詳細ページへ" />
+              : <MobileMenuLink router={true} href={this.props.url} state={{ prevSrc: this.props.src }} title="詳細ページへ" />
             : <MobileMenuLink router={true} href={this.props.url} title="掲載ブログを確認" />
           }
           <MobileMenuLink router={false} href={this.props.officialUrl} target="_blank" icon={true} title="公式ブログで確認" />
@@ -339,7 +341,7 @@ const MobileMenuLink = (props) => {
   return (
     <div className="mobile-menu-a py-2">
       {props.router
-        ? <Link to={props.href}>
+        ? <Link to={{ pathname: props.href, state: props.state }}>
           <p className="mx-3 my-0"><b>
             {props.title}{props.icon && <>{"\u00A0"}<i className="fas fa-external-link-alt" /></>}
           </b></p>

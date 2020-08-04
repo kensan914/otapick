@@ -5,7 +5,7 @@ import DownloadModal from '../molecules/DownloadModal';
 import { DELAY_TIME } from '../tools/env';
 import Masonry from 'react-masonry-component';
 import ImageCard from '../molecules/ImageCard';
-import { addLongPressEventListeners, isMobile } from '../tools/support';
+import { addLongPressEventListeners, isMobile, isSmp } from '../tools/support';
 
 
 class BlogView extends React.Component {
@@ -96,16 +96,21 @@ class BlogView extends React.Component {
         imageObjcts[index].onload = setTimeout(() => {
           const targetImage = document.getElementById(`image_${image.order}`);
           if (targetImage !== null) {
-            targetImage.removeAttribute("srcset")
-            targetImage.setAttribute('src', imageObjcts[index].src);
+            if (isSmp) {
+              targetImage.setAttribute('src', imageObjcts[index].src);
+              targetImage.removeAttribute("srcset");
+            } else {
+              targetImage.setAttribute('srcset', `${imageObjcts[index].src} 1x, ${imageObjcts[index].src} 2x`);
+              targetImage.removeAttribute("src");
+            }
           }
-        }, DELAY_TIME)
+        }, DELAY_TIME);
         imageObjcts[index].src = image.src["originals"];
       } else if (this.props.mode === "download") {
         imageObjcts.push(new Image());
         imageObjcts[index].onload = setTimeout(() => {
           document.getElementById(`image_${image.order}`).style.backgroundImage = 'url(' + imageObjcts[index].src + ')';
-        }, DELAY_TIME)
+        }, DELAY_TIME);
         imageObjcts[index].src = image.src["originals"];
       }
     }

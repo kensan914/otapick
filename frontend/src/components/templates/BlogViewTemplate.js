@@ -1,6 +1,6 @@
 import React from "react";
 import Headline from '../molecules/Headline';
-import { getGroup, checkMatchParams, updateMeta, gtagTo } from '../tools/support';
+import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from '../tools/support';
 import axios from 'axios';
 import { URLJoin } from '../tools/support';
 import BlogViewInfo from "../molecules/info/BlogViewInfo";
@@ -10,6 +10,7 @@ import { LOAD_IMG_URL, BASE_URL, DELAY_TIME } from "../tools/env";
 import { withRouter } from 'react-router-dom';
 import { NotFoundMessage } from "../atoms/NotFound";
 import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
+import { SquareAds, LandscapeAds } from "../atoms/Adsense";
 
 
 export class ViewTemplate extends React.Component {
@@ -261,6 +262,18 @@ class BlogViewTemplate extends ViewTemplate {
       }
     }
 
+    const groupID = this.props.match.params.groupID;
+    const prevGroupID = prevProps.match.params.groupID;
+    const blogCt = this.props.match.params.blogCt;
+    const prevBlogCt = prevProps.match.params.blogCt;
+    // When the blog changed
+    if (prevGroupID !== groupID || prevBlogCt !== blogCt) {
+      this.initBlogState = { mode: "view", groupID: groupID, blogCt: blogCt, group: getGroup(groupID) };
+      this.setState(Object.assign(this.initState, this.initBlogState));
+      this.blogViewURL = URLJoin(BASE_URL, "api/blog/", groupID, blogCt);
+      this.getBlog();
+    }
+
     // accepted
     super.componentDidUpdate(prevProps, prevState);
   }
@@ -295,6 +308,12 @@ class BlogViewTemplate extends ViewTemplate {
               officialUrl={this.state.officialUrl} numOfViews={this.state.numOfViews} numOfDownloads={this.state.numOfDownloads} />
             : <BlogSearchListInfo group={this.state.group} title={this.state.title} numOfHit={0} />
           }
+
+          {/* Google Adsense */}
+          <div class="container mt-4" key={this.state.keepAliveName}>
+            {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
+          </div>
+
           {contents}
         </div>
       }</>

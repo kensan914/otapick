@@ -1,5 +1,5 @@
 import React from "react";
-import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile } from '../tools/support';
+import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile, isSmp } from '../tools/support';
 import { BASE_URL } from "../tools/env";
 import ImageView from "../organisms/ImageView";
 import { KeepAlive } from 'react-keep-alive';
@@ -8,6 +8,7 @@ import ToTopButton from "../atoms/ToTopButton";
 import BackButton from "../atoms/BackButton";
 import Headline from "../molecules/Headline";
 import { withRouter } from "react-router-dom";
+import { SquareAds, LandscapeAds } from "../atoms/Adsense";
 
 
 class ImageViewTemplate extends React.Component {
@@ -46,22 +47,28 @@ class ImageViewTemplate extends React.Component {
   }
 
   render() {
+    console.log(this.props.location)
     return (
       <>{this.isRender &&
         <>
           {isMobile && <Headline title={`画像詳細`} />}
           {!isMobile && <BackButton fixed={true} className="in-image-view" />}
-          <KeepAlive name={this.state.keepAliveNameView}>
+          <KeepAlive name={"ImageView" + this.state.keepAliveNameView}>
             <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
-              accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} keepAliveNameView={this.state.keepAliveNameView} />
+              accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} keepAliveNameView={this.state.keepAliveNameView} prevSrc={typeof this.props.location.state !== "undefined" ? this.props.location.state.prevSrc : null} />
           </KeepAlive>
-          <KeepAlive name={this.state.keepAliveName}>
+
+          {/* Google Adsense */}
+          <div class="container mt-4" key={this.state.keepAliveName}>
+            {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
+          </div>
+
+          <KeepAlive name={"ImageList" + this.state.keepAliveName}>
             <div className="container-fluid text-muted mt-3 list-container-fluid">
               <ImageList groupID={this.state.groupID} group={this.state.group} applyShowFooter={this.props.applyShowFooter} related={true}
                 url={URLJoin(BASE_URL, "api/relatedImages/", this.state.groupID, this.state.blogCt, this.state.order.toString())} keepAliveName={this.state.keepAliveName} />
             </div>
           </KeepAlive>
-          
           <ToTopButton />
         </>
       }</>

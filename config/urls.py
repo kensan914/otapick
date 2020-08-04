@@ -13,22 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include, re_path
 import main.views
+import main.redirect
 from config import settings
 from django.views.static import serve
 
 urlpatterns = [
     path('api/', include('api.urls')),
+    # past URL
+    path('search/group/blog/<int:group_id>/', main.redirect.redirectBlogsGView, name="redirectBlogsGView"),
+    path('search/member/blog/<int:group_id>/<str:ct>/', main.redirect.redirectBlogsMView, name="redirectBlogsMView"),
+    path('download/<int:group_id>/<int:blog_ct>/<int:order>/', main.redirect.redirectImageView, name="redirectImageView"),
+    path('search/member/', main.redirect.redirectMembersView, name="redirectMembersView"),
+
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
 #Debug=Falseでもadminへアクセスできてしまうため、対処
 if settings.DEBUG:
     urlpatterns += [path('admin/', admin.site.urls)]
-    urlpatterns += [path('admin', admin.site.urls)]
 
-# catch all other URL ('api'で始まらない文字列にマッチ)
-urlpatterns += [re_path(r'^(?!api).+$', main.views.indexView, name="indexView")]
-urlpatterns += [path('', main.views.indexView, name="indexView")]
+# catch all other URL
+urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
+urlpatterns += [path('', main.views.indexView, name='indexView')]

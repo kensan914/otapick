@@ -126,16 +126,17 @@ def sort_images(images, order_format):
     """
     if order_format and order_format != 'recommend':
         if order_format == 'newer_post':
-            images = images.order_by('-publisher__post_date', 'publisher__order_for_simul', 'order')
+            pass
         elif order_format == 'older_post':
             images = images.order_by('publisher__post_date', '-publisher__order_for_simul', '-order')
         elif order_format == 'dl':
-            images = images.order_by('-num_of_downloads', '-recommend_score', '-score', '-publisher__post_date', 'publisher__order_for_simul')
+            images = images.order_by('-num_of_downloads', '-recommend_score')
         elif order_format == 'popularity':
-            images = images.order_by('-score', '-recommend_score', '-score', '-publisher__post_date', 'publisher__order_for_simul')
+            images = images.order_by('-score', '-recommend_score')
         elif order_format == 'view':
-            images = images.order_by('-num_of_views', '-recommend_score', '-score', '-publisher__post_date', 'publisher__order_for_simul')
+            images = images.order_by('-num_of_views', '-recommend_score')
     else:
         return
 
+    # return images
     return images
