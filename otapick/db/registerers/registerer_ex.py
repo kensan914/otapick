@@ -53,6 +53,8 @@ def register_external(group_id, ct):
 
                 title_tag = soup2.select_one('.blog-view__blog__title')
                 title = title_tag.text.strip()
+                if title == '（無題）':
+                    title = ''
 
                 postdate_tag = soup2.select_one('time')
                 post_date = otapick.convert_datetime(postdate_tag.text, group_id=2)
