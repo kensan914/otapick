@@ -47,7 +47,6 @@ class ImageViewTemplate extends React.Component {
   }
 
   render() {
-    console.log(this.props.location)
     return (
       <>{this.isRender &&
         <>
