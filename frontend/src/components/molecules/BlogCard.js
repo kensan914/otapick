@@ -125,7 +125,7 @@ export class OrderlyBlogCard extends React.Component {
   render() {
     return (
       <div className="otapick_card_back blog-card col-6 col-md-4 col-lg-3 mb-3 px-2 px-sm-3">
-        <SuperBlogCard props={this.props} orderly={true} />
+        <SuperBlogCard {...this.props} orderly={true} />
       </div>
     );
   }

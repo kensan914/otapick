@@ -9,7 +9,7 @@ import otapick
 class Command(BaseCommand):
     help = 'Blogのパラメータ、v1_per_day、v2_per_day、v3_per_dayを一つずつずらす。' \
            'v1_per_day、Imageのパラメータ、d1_per_dayはリセット。' \
-           '1日ごと(毎日00:00)に実行。'
+           '1日ごと(毎日02:00)に実行。'
 
     def add_arguments(self, parser):
         parser.add_argument('-r', '--reverse', action='store_true',
