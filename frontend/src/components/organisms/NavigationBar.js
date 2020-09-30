@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import SearchDownshift from '../molecules/SearchDownshift'
-import { isMobile, isSmp } from '../tools/support';
+import { isMobile, isSmp, scrollTop } from '../tools/support';
 import { MobileTopMenu } from '../molecules/MobileMenu';
 
 
@@ -94,9 +94,9 @@ const NavigationBar = (props) => {
                 ヲタピック
               </DropdownToggle>
               <DropdownMenu right>
-                {/* <DropdownItem tag={Link} to="/blogs/1">つかい方</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/2">サポート</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/2">お問い合わせ</DropdownItem> */}
+                <DropdownItem tag={Link} to="/contact">お問い合わせ</DropdownItem>
+                <DropdownItem tag={Link} to="/terms-of-service">利用規約</DropdownItem>
+                <DropdownItem tag={Link} to="/privacy-policy">プライバシーポリシー</DropdownItem>
                 <DropdownItem href="https://twitter.com/otapick" target="_blank">
                   公式Twitter{"\u00A0"}<i className="fab fa-twitter" />
                 </DropdownItem>

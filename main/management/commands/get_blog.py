@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 import otapick
+from main.models import Group
 
 
 class Command(BaseCommand):
@@ -10,12 +11,13 @@ class Command(BaseCommand):
         parser.add_argument('-p', '--page', type=int, help='set up_limit. default:100')
         parser.add_argument('-a', '--all', action='store_true', help='execute all_check. default:False')
         parser.add_argument('-u', '--unregister', type=int, help='set unregister_num. default:1')
+        parser.add_argument('-t', '--tweet', action='store_true', help='tweet update info. default:False')
 
     def handle(self, *args, **options):
         up_limit = 100
         unregister_num = 1
 
-        if options['group'] != 1 and options['group'] != 2 and options['group'] is not None:
+        if not Group.objects.filter(group_id=options['group']).exists() and options['group'] is not None:
             print('groupID', options['group'], 'is not supported.')
             quit()
 
@@ -29,7 +31,7 @@ class Command(BaseCommand):
             unregister_num = options['unregister']
 
         if options['group']:
-            otapick.register_blogs(group_id=options['group'], up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
+            otapick.register_blogs(group_id=options['group'], up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])
         else:
-            otapick.register_blogs(group_id=1, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
-            otapick.register_blogs(group_id=2, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num)
+            otapick.register_blogs(group_id=1, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])
+            otapick.register_blogs(group_id=2, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])

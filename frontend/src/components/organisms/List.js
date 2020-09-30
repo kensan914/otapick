@@ -6,10 +6,12 @@ import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
 import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp, updateMeta } from '../tools/support';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION } from '../tools/env';
+import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION, ADS_INTERVAL, ADS_INDEX, ADS_INTERVAL_MORE } from '../tools/env';
 import ImageCard from '../molecules/ImageCard';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from '../atoms/NotFound';
+import { SquareAds, LandscapeAds } from '../atoms/Adsense';
+import AdsenseCard from '../molecules/AdsenseCard';
 
 
 class List extends React.Component {
@@ -38,6 +40,15 @@ class List extends React.Component {
         this.props.applyShowFooter(this.props.location);
       }
     }
+    else {
+      if (this.props.location !== prevProps.location) {
+        for (const elm of document.getElementsByClassName("adsbygoogle")) {
+          if (!elm.classList.contains(generateKeepAliveName(this.props.location.key))) {
+            elm.remove();
+          }
+        }
+      }
+    }
   }
 
   render() {
@@ -50,8 +61,11 @@ class List extends React.Component {
 
     return (
       <>
+        {/* related image title */}
         {(this.props.related && this.state.isShowRelatedImageTitle && this.state.status === "success") &&
-          <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>}
+          <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>
+        }
+
         <InfiniteScroll
           hasMore={this.state.hasMore}
           loadMore={() => this.getItemList(this.page)}
@@ -126,11 +140,6 @@ class BlogList_ extends List {
                 this.setState({ hasMore: false, status: "blog_not_found" })
               } else this.setState({ hasMore: false });
             }
-
-            // // おすすめのMeta情報を更新
-            // if (page == 1 && typeof this.props.groupID === "undefined" && typeof this.props.ct === "undefined") {
-            //   updateMeta({ title: "欅坂46・日向坂46のおすすめブログ一覧", discription: BLOGS_DISCRIPTION });
-            // }
           })
           .catch(err => {
             console.log(err);
@@ -147,10 +156,17 @@ class BlogList_ extends List {
 
   generateCards = () => {
     return (this.state.items.map(({ groupID, blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
-      <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3 blog-card">
-        <BlogCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
-          title={title} writer={writer} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} url={url} officialUrl={officialUrl} />
-      </div>
+      <>
+        <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3 blog-card">
+          <BlogCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
+            title={title} writer={writer} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} url={url} officialUrl={officialUrl} />
+        </div>
+        {(i % ADS_INTERVAL === ADS_INDEX) &&
+          <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3">
+            <SquareAds />
+          </div>
+        }
+      </>
     )));
   }
 }
@@ -227,16 +243,26 @@ class ImageList_ extends List {
   };
 
   generateCards = () =>
-    this.state.items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => (
-      <div className={"grid-item " +
+    this.state.items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => {
+      const gridItemClassName = "grid-item " +
         (this.props.related
-          ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " + (isMobile ? "my-1" : "my-3")
-          : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1" : "my-3"))
-      }>
-        <ImageCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
-          src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
-      </div >
-    ))
+          ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 ")
+          : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 "));
+      return (
+        <>
+          <div className={gridItemClassName}>
+            <ImageCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
+              src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
+          </div >
+
+          {(!this.props.related && i % ADS_INTERVAL === ADS_INDEX) &&
+            <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
+              <SquareAds />
+            </div>
+          }
+        </>
+      )
+    });
 }
 
 
@@ -245,6 +271,7 @@ class HomeList_ extends ImageList_ {
     super(props);
     this.state = Object.assign(this.state, {
       additionalItems: [],
+      additionalItemsStart: 0,
     });
     this.additionalItemsIndex = 0;
     this.wavesVals = generateWavesVals();
@@ -307,11 +334,19 @@ class HomeList_ extends ImageList_ {
                   type: "member",
                   message: item.message,
                 });
+              } else if (item.type === "twitter") {
+                additionalItems.push({
+                  type: "twitter",
+                  message: item.message,
+                  src: item.src,
+                  url: item.url,
+                });
               }
             }
 
             this.setState({
               additionalItems: additionalItems,
+              additionalItemsStart: this.page,
             });
           }
         })
@@ -325,7 +360,10 @@ class HomeList_ extends ImageList_ {
     this.additionalItemsIndex = 0;
     return this.state.items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => {
       let additionalItem;
-      if (this.state.additionalItems.length > this.additionalItemsIndex && (i !== 0) && (i % 10 === 0)) {
+      if (this.state.additionalItems.length > this.additionalItemsIndex &&
+        (Math.floor(i / 20) >= this.state.additionalItemsStart) && // additionalItemsがloadされた以降に表示されるように
+        (i % 10 === 0) // item10コごとに表示
+      ) {
         const add = this.state.additionalItems[this.additionalItemsIndex];
         if (add === null) {
           additionalItem = null;
@@ -341,17 +379,29 @@ class HomeList_ extends ImageList_ {
           additionalItem =
             <MemberCard id={`additional_${this.additionalItemsIndex}`} ct={add.ct} image={add.image} url={add.url} officialUrl={add.officialUrl} lastKanji={add.lastKanji} firstKanji={add.firstKanji} lastKana={add.lastKana}
               firstKana={add.firstKana} belongingGroup={add.belongingGroup} wavesVals={this.wavesVals} message={add.message} />
+        } else if (add.type === "twitter") {
+          additionalItem = 
+            <AdsenseCard url={add.url} src={add.src} message={add.message} />;
         }
         this.additionalItemsIndex++;
       }
+
+      const gridItemClassName = "grid-item col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 ");
       return (<>
-        <div className={"grid-item col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1" : "my-3")}>
+        <div className={gridItemClassName}>
           <ImageCard key={i} id={i} groupID={groupID} group={getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
             src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
         </div >
+        {/* additionalItem */}
         {additionalItem &&
-          <div className={"grid-item col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1" : "my-3")}>
+          <div className={gridItemClassName}>
             {additionalItem}
+          </div>
+        }
+        {/* Google Adsense */}
+        {(i % ADS_INTERVAL === ADS_INDEX) &&
+          <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
+            <SquareAds />
           </div>
         }
       </>);

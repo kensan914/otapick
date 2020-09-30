@@ -304,7 +304,7 @@ class SearchDownshift extends React.Component {
 
               <div {...getMenuProps()} style={downshiftBoxStyle} id="downshift-box" className={isMobile && "mobile"}>
                 {this.state.isOpenInit &&
-                  <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2" : "")}
+                  <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2 smp" : "")}
                     style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
                     {isMobile &&
                       <Button className="rounded-circle transparent-button-mobile float-right mt-1"

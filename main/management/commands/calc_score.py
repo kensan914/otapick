@@ -1,7 +1,7 @@
 import time
 from django.core.management.base import BaseCommand
 from image.models import Image
-from main.models import Blog
+from main.models import Blog, Group
 import otapick
 
 class Command(BaseCommand):
@@ -11,13 +11,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-r', '--recommend', action='store_true')
+        parser.add_argument('-t', '--tweet', action='store_true', help='tweet update info. default:False')
 
     def handle(self, *args, **options):
         if options['recommend']:
-            start = time.time()
             high_score_members, divided_blogs, divided_images  = otapick.init_calc_recommend_score()
-            print(high_score_members)
-            otapick.print_console('init_calc_recommend_score!!: {}s'.format(round(time.time() - start, 2)))
 
             start = time.time()
             otapick.calc_recommend_score(high_score_members, divided_blogs=divided_blogs)
@@ -33,3 +31,8 @@ class Command(BaseCommand):
             start = time.time()
             otapick.calc_score(images=Image.objects.all())
             otapick.print_console('finished calc_score images!!: {}s'.format(round(time.time() - start, 2)))
+
+            # tweet popularity top 3 images
+            if options['tweet']:
+                for group in Group.objects.all():
+                    otapick.PopularityBot().tweet(group_id=group.group_id)

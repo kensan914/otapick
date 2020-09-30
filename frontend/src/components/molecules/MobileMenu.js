@@ -145,11 +145,10 @@ export class MobileTopMenu_ extends MobileMenu {
 
           <MobileMenuHr />
           <MobileMenuTitle title="ヲタピックについて" />
-          {/* <MobileMenuLink router={true} href="/blogs/1" title="つかい方" />
-          <MobileMenuLink router={true} href="/blogs/1" title="サポート" />
-          <MobileMenuLink router={true} href="/blogs/1" title="お問い合わせ" /> */}
-          <MobileMenuLink router={false} href="https://twitter.com/otapick"
-            target="_blank" title="公式Twitter" icon={true} />
+          <MobileMenuLink router={true} href="/contact" title="お問い合わせ" />
+          <MobileMenuLink router={true} href="/terms-of-service" title="利用規約" />
+          <MobileMenuLink router={true} href="/privacy-policy" title="プライバシーポリシー" />
+          <MobileMenuLink router={false} href="https://twitter.com/otapick" target="_blank" title="公式Twitter" icon={true} />
         </>
     } else if (this.props.type === "modeSelect") {
       contents = [];
@@ -180,7 +179,7 @@ export class MobileTopMenu_ extends MobileMenu {
       mobileTopMenuStyle = { position: "fixed", top: MOBILE_TOP_MENU_MT };
     } else if (this.props.type === "modeSelect" || this.props.type === "modeSelectVewHome") {
       mobileTopMenuStyle = { position: "fixed", top: MOBILE_TOP_MENU_MT + SUB_NAVBAR_HEIGHT };
-      searchSuggestionsBoxStyle = { maxHeight: "83vh" };
+      searchSuggestionsBoxStyle = {};
     }
 
     return (
@@ -189,7 +188,7 @@ export class MobileTopMenu_ extends MobileMenu {
         {this.state.isOpen &&
           <div style={mobileTopMenuStyle} id={this.boxID} onClick={(e) => e.stopPropagation()}
             className={"mobile mobile-top-menu mobile-menu " + (this.props.type === "navbarMenu" ? "right" : "left")}>
-            <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2" : "")}
+            <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2 smp" : "")}
               style={Object.assign({ overflowY: "auto", overflowX: "hidden" }, searchSuggestionsBoxStyle)} id={this.scrollBoxID}>
               <Button className="rounded-circle transparent-button-mobile float-right mt-1"
                 onClick={() => this.toggleWork()}>
@@ -273,7 +272,9 @@ export class MobileBottomMenu_ extends MobileMenu {
           <MobileMenuTitle title={this.props.title} omit={true} />
           <MobileMenuHr top={true} />
           {(this.props.type === "blogCard" || this.props.type === "imageCard")
-            ? <MobileMenuLink router={true} href={this.props.url} title="詳細ページへ" />
+            ? (this.props.type === "blogCard")
+              ? <MobileMenuLink router={true} href={this.props.url} title="詳細ページへ" />
+              : <MobileMenuLink router={true} href={this.props.url} state={{ prevSrc: this.props.src }} title="詳細ページへ" />
             : <MobileMenuLink router={true} href={this.props.url} title="掲載ブログを確認" />
           }
           <MobileMenuLink router={false} href={this.props.officialUrl} target="_blank" icon={true} title="公式ブログで確認" />
@@ -340,7 +341,7 @@ const MobileMenuLink = (props) => {
   return (
     <div className="mobile-menu-a py-2">
       {props.router
-        ? <Link to={props.href}>
+        ? <Link to={{ pathname: props.href, state: props.state }}>
           <p className="mx-3 my-0"><b>
             {props.title}{props.icon && <>{"\u00A0"}<i className="fas fa-external-link-alt" /></>}
           </b></p>

@@ -162,7 +162,10 @@ class BlogListAPIView(views.APIView):
             blogs = otapick.sort_blogs(blogs, order_format)
             blogs = otapick.narrowdown_blogs_keyword(blogs, narrowing_keyword)
             blogs = otapick.narrowdown_blogs_post(blogs, narrowing_post)
-            blogs = blogs[self.paginate_by * (page - 1): self.paginate_by * page]
+            # to create id_list will be faster
+            id_list = list(blogs[self.paginate_by * (page - 1): self.paginate_by * page].values_list('id', flat=True))
+            blogs = [blogs.get(id=pk) for pk in id_list]
+
         # recommend
         else:
             blog_ids = Image.objects.filter(order=0).values_list('publisher__id', flat=True)
@@ -258,10 +261,14 @@ class ImageListAPIView(views.APIView):
 
         # sort and slice
         result = otapick.sort_images(images, order_format)
+
         # success sorted
         if result is not None:
-            images = result
-            images = images[self.paginate_by * (page - 1): self.paginate_by * page]
+            sorted_images = result
+            # to create id_list will be faster
+            sorted_images = sorted_images[self.paginate_by * (page - 1): self.paginate_by * page]
+            id_list = list(sorted_images.values_list('id', flat=True))
+            images = [images.get(id=pk) for pk in id_list]
 
         # hove to sort by recommend
         else:
@@ -293,7 +300,6 @@ class RelatedImageListAPIView(ImageListAPIView):
         if blogs.exists() and Image.objects.filter(publisher=blogs[0], order=order).exists():
             images_id_list = otapick.sort_images_by_related(blogs[0], order, page, self.paginate_by)
             images = [Image.objects.get(id=pk) for pk in images_id_list]
-            print(len(images_id_list))
             return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
         else:
             return Response({'status': 'image_not_found'}, status.HTTP_200_OK)

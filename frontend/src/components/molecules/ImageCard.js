@@ -54,7 +54,7 @@ class DetailButton extends React.Component {
           <i className="fas fa-bars"></i>
         </DropdownToggle>
         <DropdownMenu className="bold">
-          <DropdownItem tag={Link} to={this.props.url}>詳細ページへ</DropdownItem>
+          <DropdownItem tag={Link} to={{ pathname: this.props.url, state: { prevSrc: this.props.src } }}>詳細ページへ</DropdownItem>
           <DropdownItem divider />
           <DropdownItem tag={Link} to={this.props.writer.url["images"]}>{`「${this.props.writer.name}」の他の画像を探す`}</DropdownItem>
           <DropdownItem onClick={() => downloadImage(URLJoin("/api/", this.props.url))}>この画像をダウンロードする</DropdownItem>
@@ -97,43 +97,43 @@ class SuperImageCard extends React.Component {
         <div className="image-card" ref={(imageCardRef) => this.imageCardRef = imageCardRef}
           onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }}
           onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}>
-          <Link to={this.props.props.url}>
+          <Link to={{ pathname: this.props.url, state: { prevSrc: this.props.src } }}>
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
-              <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={this.props.props.src["250x"]}
-                srcSet={!isSmp ? `${this.props.props.src["250x"]} 1x, ${this.props.props.src["500x"]} 2x` : ""}
-                alt={generateAlt(this.props.props.group, this.props.props.writer.name)} id={this.props.props.imageID} />
+              <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={isSmp ? this.props.src["250x"] : ""}
+                srcSet={!isSmp ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x` : ""}
+                alt={generateAlt(this.props.group, this.props.writer.name)} id={this.props.imageID} />
             </div>
           </Link>
 
           {(this.state.isOpenMenu && !isMobile) &&
             <>
               {this.imageCardRef.clientHeight > 100 &&
-                <DownloadButton group={this.props.props.group} url={this.props.props.url} />
+                <DownloadButton group={this.props.group} url={this.props.url} />
               }
-              <ToBlogButton url={this.props.props.blogUrl} title={this.props.props.blogTitle} />
-              <DetailButton url={this.props.props.url} officialUrl={this.props.props.officialUrl} ref={this.detailButtonRef} hideMenu={() => this.hideMenu()}
-                writer={this.props.props.writer} />
+              <ToBlogButton url={this.props.blogUrl} title={this.props.blogTitle} />
+              <DetailButton url={this.props.url} officialUrl={this.props.officialUrl} ref={this.detailButtonRef} hideMenu={() => this.hideMenu()}
+                writer={this.props.writer} src={this.props.src} />
             </>
           }
         </div>
 
-        {(this.props.props.message || isMobile) &&
+        {(this.props.message || isMobile) &&
           <div className="image-card-footer" >
             <div className={"image-card-message " + (isMobile ? "mobile" : "")}>
-              {this.props.props.message &&
-                <Link to={this.props.props.url} onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }} onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}
+              {this.props.message &&
+                <Link to={{ pathname: this.props.url, state: { prevSrc: this.props.src } }} onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }} onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}
                   style={{ textDecoration: "none" }}>
                   <div className={"card-message mx-auto py-2 " + (!isMobile ? "pc" : "")}>
                     <i className="fas fa-crown" style={{ color: "gold" }}></i>
                     {"\u00A0"}
-                    <b>{this.props.props.message}</b>
+                    <b>{this.props.message}</b>
                   </div>
                 </Link>
               }
             </div>
             {isMobile &&
-              <MobileBottomMenu id={this.props.props.id} type="imageCard" title={`${this.props.props.blogTitle}（${this.props.props.writer.name}）`}
-                url={this.props.props.url} officialUrl={this.props.props.officialUrl} writer={this.props.props.writer} />
+              <MobileBottomMenu id={this.props.id} type="imageCard" title={`${this.props.blogTitle}（${this.props.writer.name}）`}
+                url={this.props.url} officialUrl={this.props.officialUrl} writer={this.props.writer} src={this.props.src} />
             }
           </div>
         }
@@ -146,7 +146,7 @@ class SuperImageCard extends React.Component {
 class ImageCard extends React.Component {
   render() {
     return (
-      <SuperImageCard props={this.props} orderly={false} />
+      <SuperImageCard {...this.props} orderly={false} />
     );
   };
 };

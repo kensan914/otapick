@@ -9,6 +9,8 @@ const hiddenFooterURLConditions = [
   "/images",
   "/image",
   "/",
+  "/search/group/blog",
+  "/search/member/blog",
 ]
 
 class Footer extends React.Component {
@@ -139,15 +141,15 @@ class Footer extends React.Component {
                   <ul className="footer-menu">
                     <span className="font-weight-bold">ヲタピックについて</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
-                    {/* <li>
-                      <a href="">つかい方</a>
+                    <li>
+                      <Link to="/contact">お問い合わせ</Link>
                     </li>
                     <li>
-                      <a href="">サポート</a>
+                      <Link to="/terms-of-service">利用規約</Link>
                     </li>
                     <li>
-                      <a href="">お問い合わせ</a>
-                    </li> */}
+                      <Link to="/privacy-policy">プライバシーポリシー</Link>
+                    </li>
                     <li>
                       <a target="_blank" href="https://twitter.com/otapick">公式Twitter<i
                         className="fas fa-external-link-alt"></i></a>

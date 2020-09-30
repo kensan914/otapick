@@ -2,7 +2,6 @@ import math
 import random
 import numpy as np
 from django.db.models import Q
-
 import otapick
 from api.serializers import ImageSerializer, BlogSerializer, MemberSerializer
 from image.models import Image
@@ -119,21 +118,22 @@ def sort_images_by_related(blog, order, page, paginate_by):
     base_images = Image.objects.exclude(publisher=blog)
 
     # 当月
-    blogs = Blog.objects.filter(writer=blog.writer, post_date__year=blog.post_date.year, post_date__month=blog.post_date.month)
-    images = base_images.filter(publisher__in=blogs).order_by('-recommend_score', '-score')
+    images = base_images.filter(publisher__writer=blog.writer, publisher__post_date__year=blog.post_date.year,
+                                publisher__post_date__month=blog.post_date.month).order_by('-recommend_score', '-score')
+
     if images.exists():
         id_list += list(images.values_list('id', flat=True))
 
     # 前月 or 次月
-    blogs = Blog.objects.filter(Q(writer = blog.writer, post_date__year=last_post_year, post_date__month=last_post_month)
-                           | Q(writer = blog.writer, post_date__year=next_post_year, post_date__month=next_post_month))
-    images = base_images.filter(publisher__in=blogs).order_by('-recommend_score', '-score')
+    images = base_images.exclude(id__in=id_list).filter(Q(publisher__writer=blog.writer, publisher__post_date__year=last_post_year, publisher__post_date__month=last_post_month)
+                           | Q(publisher__writer=blog.writer, publisher__post_date__year=next_post_year, publisher__post_date__month=next_post_month)).order_by('-recommend_score', '-score')
+
     if images.exists():
         id_list += list(images.values_list('id', flat=True))
 
     # 該当メンバーその他
-    blogs = Blog.objects.filter(writer=blog.writer)
-    images = base_images.exclude(id__in=id_list).filter(publisher__in=blogs).order_by('-recommend_score', '-score')
+    images = base_images.exclude(id__in=id_list).filter(publisher__writer=blog.writer).order_by('-recommend_score', '-score')
+
     if images.exists():
         id_list += list(images.values_list('id', flat=True))
 
@@ -150,57 +150,108 @@ def sort_images_by_related(blog, order, page, paginate_by):
 
 
 def generate_images_data(images):
-    images_data = ImageSerializer(images, many=True).data
-    blogs = [image.publisher for image in images]
-    blogs_data = BlogSerializer(blogs, many=True).data
     data = []
-    for image_data, blog_data in zip(images_data, blogs_data):
-        data.append({'image': image_data, 'blog': blog_data})
+    for image in images:
+        if image is not None:
+            image_data = ImageSerializer(image).data
+            blog_data = BlogSerializer(image.publisher).data
+            data.append({'image': image_data, 'blog': blog_data})
+        else:
+            data.append(None)
     return data
+
+
+def generate_resource_data(resources, max_rank, rank_type, resource_type, prefix, modifier, suffix, group_name):
+    """
+    rank_type: 'dl" or 'view' or 'popularity'
+    resource_type: 'image' or 'blog'
+    :return: {'resource': image or blog, 'resource_info': {'type': 'image or blog', 'message', '...'}}
+    """
+    resources_data = []
+    if len(resources) >= max_rank:
+        for rank in range(max_rank):
+            if rank == 0:
+                comparison = '最も'
+            else:
+                comparison = str(rank + 1) + '番目に'
+            message = prefix[rank_type] + comparison + modifier[rank_type] + suffix[resource_type] + '({})'.format(group_name)
+            resources_data.append({'resource': resources[rank], 'resource_info': {'type': resource_type, 'message': message}})
+    else:
+        return []
+    return resources_data
 
 
 def get_additional_data(random_seed):
     data = []
-    data_length = 30
-    additional_images_id_list = [] # sort_by_recommend_scoreでexcludeするimageのID
+    data_length = 50
+    max_rank = 3
+    prefix = {'dl': '今日', 'view': '今日', 'popularity': '現在', 'newer': '現在'}
+    modifier = {'dl': 'ダウンロードされた', 'view': '閲覧された', 'popularity': '人気のある', 'newer': '新しい'}
+    suffix = {'image': '画像', 'blog': 'ブログ'}
 
     for group in Group.objects.all():
         # images
         images = Image.objects.filter(publisher__writer__belonging_group=group)
-        most_dl_per_day_image = images.order_by('-d1_per_day')[0]
-        most_view_per_day_image = images.order_by('-v1_per_day')[0]
-        most_popular_image = images.order_by('-score')[0]
+        most_dl_per_day_images = images.exclude(d1_per_day=0).order_by('-d1_per_day')
+        most_view_per_day_images = images.exclude(v1_per_day=0).order_by('-v1_per_day')
+        most_popular_images = images.exclude(score=0).order_by('-score')
 
-        images_data = generate_images_data([most_dl_per_day_image, most_view_per_day_image, most_popular_image])
-        images_data[0].update({'type': 'image', 'message': '今日最もダウンロードされた画像({})'.format(group.name)})
-        images_data[1].update({'type': 'image', 'message': '今日最も閲覧された画像({})'.format(group.name)})
-        images_data[2].update({'type': 'image', 'message': '現在最も人気のある画像({})'.format(group.name)})
-        data += images_data
+        images_data = []
+        images_data.extend(generate_resource_data(most_dl_per_day_images, max_rank, 'dl', 'image', prefix, modifier, suffix, group.name))
+        images_data.extend(generate_resource_data(most_view_per_day_images, max_rank, 'view', 'image', prefix, modifier, suffix, group.name))
+        # 注目メンバー決定のため↓
+        images_data_p = generate_resource_data(most_popular_images, max_rank, 'popularity', 'image', prefix, modifier, suffix, group.name)
+        if images_data_p: most_popular_image = images_data_p[0]['resource']
+        else: most_popular_image = None
+        images_data.extend(images_data_p)
 
-        additional_images_id_list += [most_dl_per_day_image.id, most_view_per_day_image.id, most_popular_image.id]
+        for i, images_data_part in enumerate(images_data):
+            if images_data_part is not None:
+                image_data = ImageSerializer(images_data_part['resource']).data
+                blog_data = BlogSerializer(images_data_part['resource'].publisher).data
+                images_data_part['resource_info'].update({'image': image_data, 'blog': blog_data})
+                data.append(images_data_part['resource_info'])
 
         # blogs
         blogs = Blog.objects.filter(writer__belonging_group=group)
-        most_view_per_day_blog = blogs.order_by('-v1_per_day')[0]
-        most_popular_blog = blogs.order_by('-score')[0]
-        newest_blog = otapick.sort_blogs(blogs, 'newer_post')[0]
+        most_view_per_day_blogs = blogs.exclude(v1_per_day=0).order_by('-v1_per_day')
+        newest_blogs = otapick.sort_blogs(blogs, 'newer_post')
+        most_popular_blogs = blogs.exclude(score=0).order_by('-score')
 
-        blogs_data = BlogSerializer([most_view_per_day_blog, most_popular_blog, newest_blog], many=True).data
-        blogs_data = [{'blog': blog_data} for blog_data in blogs_data ]
+        blogs_data = []
+        blogs_data.extend(generate_resource_data(most_view_per_day_blogs, max_rank, 'view', 'blog', prefix, modifier, suffix, group.name))
+        blogs_data.extend(generate_resource_data(newest_blogs, max_rank, 'newer', 'blog', prefix, modifier, suffix, group.name))
+        # 注目メンバー決定のため↓
+        blogs_data_p = generate_resource_data(most_popular_blogs, max_rank, 'popularity', 'blog', prefix, modifier, suffix, group.name)
+        if blogs_data_p: most_popular_blog = blogs_data_p[0]['resource']
+        else: most_popular_blog = None
+        blogs_data.extend(blogs_data_p)
 
-        blogs_data[0].update({'type': 'blog', 'message': '今日最も閲覧されたブログ({})'.format(group.name)})
-        blogs_data[1].update({'type': 'blog', 'message': '現在最も人気のあるブログ({})'.format(group.name)})
-        blogs_data[2].update({'type': 'blog', 'message': '最新のブログ({})'.format(group.name)})
-        data += blogs_data
+        for i, blogs_data_part in enumerate(blogs_data):
+            if blogs_data_part is not None:
+                blog_data = BlogSerializer(blogs_data_part['resource']).data
+                blogs_data_part['resource_info'].update({'blog': blog_data})
+                data.append(blogs_data_part['resource_info'])
 
         # member
-        popular_member = most_popular_blog.writer
-        member_data = MemberSerializer(popular_member).data
-        member_data = {'member': member_data}
-        member_data.update({'type': 'member', 'message': '注目のメンバー({})'.format(group.name)})
-        data.append(member_data)
+        if most_popular_image is not None:
+            popular_member = most_popular_image.publisher.writer
+        elif most_popular_blog is not None:
+            popular_member = most_popular_blog.writer
+        else:
+            popular_member = None
 
-    data += [None for i in range(data_length - len(data))]
+        if popular_member is not None:
+            member_data = MemberSerializer(popular_member).data
+            member_data = {'member': member_data}
+            member_data.update({'type': 'member', 'message': '注目のメンバー({})'.format(group.name)})
+            data.append(member_data)
+
+    # twitter ads
+    for TWITTER_ADS_URL in otapick.TWITTER_ADS_URLS:
+        data.append({'type': 'twitter', 'message':'ヲタピックの公式Twitter. フォローはこちらから', 'src': TWITTER_ADS_URL, 'url': 'https://twitter.com/otapick'})
+
+    data += [None for _ in range(data_length - len(data))]
     np.random.seed(random_seed)
     np.random.shuffle(data)
 

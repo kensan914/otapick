@@ -4,8 +4,8 @@ import { getIsSmp, isMobile } from "./support";
 export const DEBUG = false;
 // export const DEBUG = true;
 
-export const BASE_URL = DEBUG ? "http://192.168.99.100:8000/" : "https://otapick.com/";
-export const DELAY_TIME = DEBUG ? 300 : 0;
+export const BASE_URL = (DEBUG ? "http://192.168.99.100:8000/" : "https://otapick.com/");
+export const DELAY_TIME = (DEBUG ? 300 : 0);
 
 export const OTAPICK_BRAND_IMG_URL = "/static/img/otapick.png";
 export const LOAD_IMG_URL = "/static/img/otapick_logo_back.png";
@@ -43,4 +43,11 @@ export const BLOGS_DISCRIPTION = "欅坂46・日向坂46の公式ブログ画像
 export const IMAGES_DISCRIPTION = "欅坂46・日向坂46の高画質画像が保存できます。";
 export const MEMBERS_DISCRIPTION = "欅坂46・日向坂46のメンバーから高画質画像を探して保存できます。";
 
+// Global Adsense
 export const GA_TRACKING_ID = 'UA-134426000-2';
+export const DATA_AD_CLIENT = "ca-pub-3712313672767903";
+export const DATA_AD_SLOT_SQUARE = "3963767991";
+export const DATA_AD_SLOT_LANDSCAPE = "8177403224";
+export const ADS_INTERVAL = 50;
+export const ADS_INTERVAL_MORE = 100;
+export const ADS_INDEX = 8;

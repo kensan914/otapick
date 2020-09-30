@@ -47,52 +47,55 @@ def register_external(group_id, ct):
             blog_url = base_url + anchor_tag['href']
             blog_ct = os.path.basename(anchor_tag['href'])
 
-            r2 = http.request('GET', blog_url)
-            soup2 = BeautifulSoup(r2.data, 'lxml')
+            if not Blog.objects.filter(writer=member, blog_ct=blog_ct).exists():
+                r2 = http.request('GET', blog_url)
+                soup2 = BeautifulSoup(r2.data, 'lxml')
 
-            title_tag = soup2.select_one('.blog-view__blog__title')
-            title = title_tag.text.strip()
+                title_tag = soup2.select_one('.blog-view__blog__title')
+                title = title_tag.text.strip()
+                if title == '（無題）':
+                    title = ''
 
-            postdate_tag = soup2.select_one('time')
-            post_date = otapick.convert_datetime(postdate_tag.text, group_id=2)
+                postdate_tag = soup2.select_one('time')
+                post_date = otapick.convert_datetime(postdate_tag.text, group_id=2)
 
-            content = soup2.select_one('section.blog-view__blog__content')
+                content = soup2.select_one('section.blog-view__blog__content')
 
-            blog = Blog.objects.create(
-                blog_ct=blog_ct,
-                title=title,
-                post_date=post_date,
-                writer=member,
-                text=str(content),
-            )
+                blog = Blog.objects.create(
+                    blog_ct=blog_ct,
+                    title=title,
+                    post_date=post_date,
+                    writer=member,
+                    text=str(content),
+                )
 
-            images = content.select('img')
+                images = content.select('img')
 
-            order=0
-            for i, image in enumerate(images):
-                image_url = base_url + image['src']
+                order=0
+                for i, image in enumerate(images):
+                    image_url = base_url + image['src']
 
-                media = otapick.BlogImageDownloader().download(image_url, group_id, blog.blog_ct, blog.writer.ct)
-                if media == 'not_image':  # exclude gif
-                    pass
-                elif media is not None:
-                    image = Image(
-                        order=order,
-                        picture=media,
-                        publisher=blog,
-                    )
-                    image.save()
-                    otapick.compress_blog_image(image)
-                    order += 1
-                else:
-                    import traceback
-                    traceback.print_exc()
+                    media = otapick.BlogImageDownloader().download(image_url, group_id, blog.blog_ct, blog.writer.ct)
+                    if media == 'not_image':  # exclude gif
+                        pass
+                    elif media is not None:
+                        image = Image(
+                            order=order,
+                            picture=media,
+                            publisher=blog,
+                        )
+                        image.save()
+                        otapick.compress_blog_image(image)
+                        order += 1
+                    else:
+                        import traceback
+                        traceback.print_exc()
 
-                time.sleep(sleep_time_1)
+                    time.sleep(sleep_time_1)
 
-            otapick.init_progress(blog)
-            print('finished blog register.「' + blog.title + '」')
-            time.sleep(sleep_time_3)
+                otapick.init_progress(blog)
+                print('finished blog register.「' + blog.title + '」')
+                time.sleep(sleep_time_3)
 
         print('go to next page...')
         time.sleep(sleep_time_3)
