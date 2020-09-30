@@ -27,5 +27,8 @@ def exe_unregistration(blog, group_id):
         otapick.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is not found in official blog. unregister this.')
         blog.delete()
     else:
-        otapick.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is found in official blog. leave this.')
+        otapick.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is found in official blog. leave this. and execute get_blogs -p 5 -a -t')
+        # ページ中間位置に未取得のブログがあった場合、延々ここが呼ばれてしまうため、対処↓
+        otapick.register_blogs(group_id=group_id, up_limit=5, all_check=True, tweet=True)
+
     time.sleep(sleep_time_unregister)
