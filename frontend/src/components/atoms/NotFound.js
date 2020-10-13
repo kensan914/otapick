@@ -31,9 +31,9 @@ export class NotFoundMembersContent extends React.Component {
         }
         <div className="mx-2 search-suggestions-discription">
           <p>入力された文字列に間違いがないか、以下を参考に今一度ご確認ください。</p>
-          <p><i class="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
-          <p><i class="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
-          <p><i class="fas fa-hand-point-right" />
+          <p><i className="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
+          <p><i className="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
+          <p><i className="fas fa-hand-point-right" />
             <Link to={'/members'}>メンバーリスト</Link>にお探しのメンバーがいるか確認してください。
           </p>
           <hr />
@@ -112,42 +112,42 @@ export class NotFoundMessage extends React.Component {
     if (this.props.type === "blog") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Blog</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Blog</span>
           <NotFoundBlogsContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "member") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Member</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Member</span>
           <NotFoundMembersContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "image") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Image</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Image</span>
           <NotFoundImagesContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "blogFailed") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Blog</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Blog</span>
           <NotFoundBlogsFaildContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "imageFailed") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Image</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Image</span>
           <NotFoundImagesFaildContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "404") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>404 Not Found</span>
+          <span className="display-3" style={{ color: "white" }}>404 Not Found</span>
           <NotFound404Content className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );

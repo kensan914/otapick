@@ -212,7 +212,7 @@ class ImageView extends ViewTemplate {
 
           <div className="image-view-body">
             <div className="d-flex mb-3">
-              <i class="fas fa-link mr-3" id="image-view-blog-icon"></i>
+              <i className="fas fa-link mr-3" id="image-view-blog-icon"></i>
               <ViewTooltip target={"image-view-blog-icon"} title="掲載ブログ" />
               <Link to={this.state.url} className="image-view-blog-title">
                 {this.state.title.length > 50 || isSmp
@@ -223,7 +223,7 @@ class ImageView extends ViewTemplate {
             </div>
 
             <div className="d-flex align-items-center">
-              <i class="fas fa-pencil-alt mr-3" id="image-view-writer-icon"></i>
+              <i className="fas fa-pencil-alt mr-3" id="image-view-writer-icon"></i>
               <ViewTooltip target={"image-view-writer-icon"} title="ブログを書いたメンバー" />
               <WriterCard writer={this.state.writer} />
             </div>

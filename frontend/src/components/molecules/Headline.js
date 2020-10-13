@@ -3,7 +3,7 @@ import BackButton from '../atoms/BackButton';
 import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
-import { URLJoin, isMobile, isSmp } from '../tools/support';
+import { URLJoin, isMobile } from '../tools/support';
 import { BASE_URL } from "../tools/env";
 import { Link } from 'react-router-dom';
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from '../tools/env';
@@ -18,24 +18,24 @@ export const ModeSelectButtonDropdown = (props) => {
   if (typeof props.members != "undefined") {
     for (const [index, membersDividedByGeneration] of props.members.entries()) {
       contents.push(
-        <>
-          <DropdownItem header><h6 className="m-0">{`${index + 1}期生`}</h6></DropdownItem>
+        <div key={"dropdown-menu-contents-m-" + index}>
+          <DropdownItem header><div className="m-0">{`${index + 1}期生`}</div></DropdownItem>
           <DropdownItem divider />
           {membersDividedByGeneration.map(({ url, full_kanji }, j) => (
-            <DropdownItem tag={Link} to={url[props.type]}>{full_kanji}</DropdownItem>
+            <DropdownItem key={j} tag={Link} to={url[props.type]}>{full_kanji}</DropdownItem>
           ))}
           {index != props.members.length - 1 && <DropdownItem divider />}
-        </>
+        </div>
       );
     }
   } else {
     contents.push(
-      <>
+      <div key={"dropdown-menu-contents-g"}>
         <DropdownItem header>グループ選択</DropdownItem>
         <DropdownItem divider />
         <DropdownItem tag={Link} to={`/${props.type}/1`}>欅坂46</DropdownItem>
         <DropdownItem tag={Link} to={`/${props.type}/2`}>日向坂46</DropdownItem>
-      </>
+      </div>
     )
   }
 

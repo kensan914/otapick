@@ -1,13 +1,18 @@
 module.exports = {
+  entry: "./src/index.js",
+  output: {
+    path: __dirname + "/../static/frontend",
+    filename: "main.js",
+  },
   module: {
     rules: [
       {
         test: /\.css$/,
         exclude: /node_modules/,
         use: [
-          'style-loader',
+          "style-loader",
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               url: false,
             },

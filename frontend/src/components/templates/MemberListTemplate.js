@@ -27,7 +27,7 @@ class MemberListByGeneration extends React.Component {
         <Collapse isOpen={this.props.isOpen}>
           <div className="row mb-5">
             {this.props.members.map(({ image, url, officialUrl, ct, lastKanji, firstKanji, lastKana, firstKana, belongingGroup }, i) => (
-              <div className="col-6 col-md-4 col-xl-3 my-2 px-1 px-sm-3">
+              <div key={i} className="col-6 col-md-4 col-xl-3 my-2 px-1 px-sm-3">
                 <MemberCard key={i} id={i} ct={ct} image={image} url={url} officialUrl={officialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
                   firstKana={firstKana} belongingGroup={belongingGroup} wavesVals={this.props.wavesVals} />
               </div>

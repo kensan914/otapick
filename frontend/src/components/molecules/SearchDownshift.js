@@ -299,10 +299,10 @@ class SearchDownshift extends React.Component {
             <div className={"my-0 justify-content-center col " + (isMobile ? "pr-2" : "")}>
               <form className="form-inline" autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
                 <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="Search" value={this.state.qvalue}
-                  aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxlength='100'></input>
+                  aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxLength='100'></input>
               </form>
 
-              <div {...getMenuProps()} style={downshiftBoxStyle} id="downshift-box" className={isMobile && "mobile"}>
+              <div {...getMenuProps()} style={downshiftBoxStyle} id="downshift-box" className={isMobile ? "mobile" : ""}>
                 {this.state.isOpenInit &&
                   <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2 smp" : "")}
                     style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
@@ -321,7 +321,7 @@ class SearchDownshift extends React.Component {
                         {this.state.initSuggestionsMembers.length > 0
                           ? this.state.initSuggestionsMembers
                             .map((item, index) => (
-                              <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
+                              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
                                 <div className="m-1 search-suggestions-items"
                                   {...getItemProps({
                                     key: item.id,
@@ -352,7 +352,7 @@ class SearchDownshift extends React.Component {
                         {this.state.initSuggestionsBlogs.length > 0
                           ? this.state.initSuggestionsBlogs
                             .map((item, index) => (
-                              <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
+                              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
                                 <div className="m-1 search-suggestions-items"
                                   {...getItemProps({
                                     key: item.id,
@@ -399,7 +399,7 @@ class SearchDownshift extends React.Component {
                         {
                           this.state.suggestionsItems
                             .map((item, index) => (
-                              <div className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
+                              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
                                 <div className="m-1 search-suggestions-items"
                                   {...getItemProps({
                                     key: item.id,

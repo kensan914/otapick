@@ -164,4 +164,4 @@ REST_FRAMEWORK = {
 }
 
 # django-maintenance-mode
-MAINTENANCE_MODE_STATE_FILE_PATH = 'maintenance_mode_state.txt'
+MAINTENANCE_MODE_STATE_FILE_PATH = 'config/maintenance_mode_state.txt'

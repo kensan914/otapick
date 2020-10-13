@@ -1,8 +1,8 @@
-import React from 'react';
-import { isSmp, lockScreen, unLockScreen, isMobile, documentScrollHandler } from '../tools/support';
-import { Button } from 'reactstrap';
-import { MOBILE_TOP_MENU_MT, SUB_NAVBAR_HEIGHT, NAVBAR_LS_ZINDEX, SUB_NAVBAR_LS_ZINDEX, NAVBAR_BOTTOM_LS_ZINDEX } from '../tools/env';
-import { withRouter, Link } from 'react-router-dom';
+import React from "react";
+import { isSmp, lockScreen, unLockScreen, isMobile, documentScrollHandler } from "../tools/support";
+import { Button } from "reactstrap";
+import { MOBILE_TOP_MENU_MT, SUB_NAVBAR_HEIGHT, NAVBAR_LS_ZINDEX, SUB_NAVBAR_LS_ZINDEX, NAVBAR_BOTTOM_LS_ZINDEX } from "../tools/env";
+import { withRouter, Link } from "react-router-dom";
 
 
 class MobileMenu extends React.Component {
@@ -39,10 +39,10 @@ class MobileMenu extends React.Component {
   endWork() {
     this.setState({ isOpen: false });
     if (isMobile) {
-      document.removeEventListener('mousewheel', documentScrollHandler, { passive: false });
-      document.removeEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+      document.removeEventListener("mousewheel", documentScrollHandler, { passive: false });
+      document.removeEventListener("touchmove", this.documentTouchmoveHandler, { passive: false });
     }
-    document.removeEventListener('mousedown', this.documentClickHandler);
+    document.removeEventListener("mousedown", this.documentClickHandler);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -51,11 +51,11 @@ class MobileMenu extends React.Component {
       if (isMobile) {
         const scrollMenuBox = document.getElementById(this.scrollBoxID);
         if (scrollMenuBox !== null) {
-          document.addEventListener('mousewheel', documentScrollHandler, { passive: false });
-          document.addEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+          document.addEventListener("mousewheel", documentScrollHandler, { passive: false });
+          document.addEventListener("touchmove", this.documentTouchmoveHandler, { passive: false });
           scrollMenuBox.scrollTop = 1;
           // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
-          scrollMenuBox.addEventListener('scroll', e => {
+          scrollMenuBox.addEventListener("scroll", e => {
             if (scrollMenuBox.scrollTop === 0) {
               scrollMenuBox.scrollTop = 1;
             }
@@ -65,7 +65,7 @@ class MobileMenu extends React.Component {
           });
         }
       }
-      document.addEventListener('mousedown', this.documentClickHandler);
+      document.addEventListener("mousedown", this.documentClickHandler);
       this.lockScreenCustom();
     }
 
@@ -86,7 +86,7 @@ class MobileMenu extends React.Component {
   }
 }
 
-export class MobileTopMenu_ extends MobileMenu {
+export class _MobileTopMenu extends MobileMenu {
   constructor(props) {
     super(props);
     this.lockScreenID = `mobiletopmenuLS_${this.props.id}`;
@@ -158,7 +158,7 @@ export class MobileTopMenu_ extends MobileMenu {
             <MobileMenuTitle title={`${index + 1}期生`} />
             <MobileMenuHr top={true} />
             {membersDividedByGeneration.map(({ url, full_kanji }, j) => (
-              <MobileMenuLink router={true} href={url[this.props.blogsORimages]} title={full_kanji} />
+              <MobileMenuLink key={j} router={true} href={url[this.props.blogsORimages]} title={full_kanji} />
             ))}
             {index != this.props.members.length - 1 && <MobileMenuHr />}
           </>
@@ -206,7 +206,7 @@ export class MobileTopMenu_ extends MobileMenu {
 }
 
 
-export class MobileBottomMenu_ extends MobileMenu {
+export class _MobileBottomMenu extends MobileMenu {
   constructor(props) {
     super(props);
     this.lockScreenID = `mobilebottommenuLS_${this.props.id}`;
@@ -255,7 +255,7 @@ export class MobileBottomMenu_ extends MobileMenu {
       triggerButton =
         <Button id={`mobilebottommenu-button-${this.props.id}`} color="light" className="p-0 writer-card-detail-button rounded-circle"
           onClick={(e) => { e.stopPropagation(); this.toggleWork(); }}>
-          <i class="fas fa-angle-down"></i>
+          <i className="fas fa-angle-down"></i>
         </Button>
     } else if (this.props.type === "imageViewCard") {
       triggerButton =
@@ -333,8 +333,8 @@ export class MobileBottomMenu_ extends MobileMenu {
 }
 
 
-export const MobileTopMenu = withRouter(MobileTopMenu_);
-export const MobileBottomMenu = withRouter(MobileBottomMenu_);
+export const MobileTopMenu = withRouter(_MobileTopMenu);
+export const MobileBottomMenu = withRouter(_MobileBottomMenu);
 
 
 const MobileMenuLink = (props) => {
