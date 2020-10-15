@@ -39,8 +39,8 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
     else:
         group_key = groups.first().key
     for page, is_last in otapick.lastone(range(up_limit)):
+        print(group_key)
         blogs_data = blog_crawler.crawl(group_key, page)
-        print(blogs_data)
         if blogs_data is None:
             return
         elif len(blogs_data) == 0:
