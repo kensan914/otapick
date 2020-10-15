@@ -4,7 +4,8 @@ from main.models import Group
 
 
 class Command(BaseCommand):
-    help = 'keep up latest blog information by scrayping.'
+    help = 'keep up latest blog information by scrayping.' \
+           '-g 0 => keyaki'
 
     def add_arguments(self, parser):
         parser.add_argument('-g', '--group', type=int, help='set groupID(1 or 2 or None). default:both')

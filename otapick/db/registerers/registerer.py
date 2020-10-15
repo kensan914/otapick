@@ -33,8 +33,11 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
     blog_crawler = otapick.BlogListCrawler()
     groups = Group.objects.filter(group_id=group_id)
     if not groups.exists():
-        return
-    group_key = groups.first().key
+        if group_id == 0:
+            group_key = 'keyaki'
+        else: return
+    else:
+        group_key = groups.first().key
     for page, is_last in otapick.lastone(range(up_limit)):
         blogs_data = blog_crawler.crawl(group_key, page)
         if blogs_data is None:
