@@ -1,5 +1,6 @@
-import React from 'react';
-import { isSmp, isMobile } from '../../tools/support';
+import React from "react";
+import { GROUPS } from "../../tools/env";
+import { isSmp, isMobile } from "../../tools/support";
 
 
 export class MemberListInfo extends React.Component {
@@ -8,9 +9,11 @@ export class MemberListInfo extends React.Component {
   }
 
   getTitle = (group) => {
-    if (group === "keyaki") return "欅坂46";
-    else if (group === "hinata") return "日向坂46";
-    else return "\u00A0";
+    let groupName = "\u00A0"
+    Object.values(GROUPS).forEach(groupObj => {
+      if (groupObj.key === group) groupName = groupObj.name;
+    })
+    return groupName;
   }
 
   render() {

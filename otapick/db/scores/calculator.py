@@ -13,7 +13,7 @@ def init_calc_recommend_score():
      calc_recommend_scoreの前準備として、上位メンバー(各グループ10人の計20人)のリストと、それぞれ3つに分けたimage, blogのリストを返す。
      :return:: high_score_members, divided_blogs, divided_images
     """
-    high_score_members = [] # [[欅high_score_members], [日向high_score_members]]
+    high_score_members = [] # [[櫻high_score_members], [日向high_score_members]]
     len_high_score_members = 10
 
 

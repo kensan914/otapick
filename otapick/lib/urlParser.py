@@ -1,5 +1,7 @@
 from urllib.parse import urlparse, parse_qs
 
+from main.models import Group
+
 '''
 検索したときのqパラメータを解析
 ユーザが使うのは、インタフェースとなるparse_q()のみ。
@@ -39,17 +41,14 @@ def parse_url(result):
     o = result['parsed_url']
     splitO = [i for i in o.path.split('/') if i != '']
     query_set = parse_qs(o.query)
-    if o.netloc == 'www.keyakizaka46.com':
-        result['group_id'] = 1
-        if len(splitO) > 3:
-            return classify_url(result, splitO, query_set)
-
-    elif o.netloc == 'www.hinatazaka46.com':
-        result['group_id'] = 2
-        if len(splitO) > 3:
-            return classify_url(result, splitO, query_set)
+    for group in Group.objects.all():
+        if o.netloc == group.domain:
+            result['group_id'] = group.group_id
+            if len(splitO) > 3:
+                return classify_url(result, splitO, query_set)
     result['class'] = 'unjust'
     return result
+
 
 def classify_url(result, splitO, query_set):
     result['page'] = 1

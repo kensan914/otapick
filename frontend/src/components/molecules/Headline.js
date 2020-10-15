@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import BackButton from '../atoms/BackButton';
-import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from 'reactstrap';
-import { withRouter } from 'react-router-dom';
-import axios from 'axios';
-import { URLJoin, isMobile, isSmp } from '../tools/support';
-import { BASE_URL } from "../tools/env";
-import { Link } from 'react-router-dom';
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from '../tools/env';
-import { MobileTopMenu } from './MobileMenu';
+import React, { useState } from "react";
+import BackButton from "../atoms/BackButton";
+import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from "reactstrap";
+import { withRouter } from "react-router-dom";
+import axios from "axios";
+import { URLJoin, isMobile } from "../tools/support";
+import { BASE_URL, GROUPS } from "../tools/env";
+import { Link } from "react-router-dom";
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../tools/env";
+import { MobileTopMenu } from "./MobileMenu";
 
 
 export const ModeSelectButtonDropdown = (props) => {
@@ -18,24 +18,25 @@ export const ModeSelectButtonDropdown = (props) => {
   if (typeof props.members != "undefined") {
     for (const [index, membersDividedByGeneration] of props.members.entries()) {
       contents.push(
-        <>
-          <DropdownItem header><h6 className="m-0">{`${index + 1}期生`}</h6></DropdownItem>
+        <div key={"dropdown-menu-contents-m-" + index}>
+          <DropdownItem header><div className="m-0">{`${index + 1}期生`}</div></DropdownItem>
           <DropdownItem divider />
           {membersDividedByGeneration.map(({ url, full_kanji }, j) => (
-            <DropdownItem tag={Link} to={url[props.type]}>{full_kanji}</DropdownItem>
+            <DropdownItem key={j} tag={Link} to={url[props.type]}>{full_kanji}</DropdownItem>
           ))}
           {index != props.members.length - 1 && <DropdownItem divider />}
-        </>
+        </div>
       );
     }
   } else {
     contents.push(
-      <>
+      <div key={"dropdown-menu-contents-g"}>
         <DropdownItem header>グループ選択</DropdownItem>
         <DropdownItem divider />
-        <DropdownItem tag={Link} to={`/${props.type}/1`}>欅坂46</DropdownItem>
-        <DropdownItem tag={Link} to={`/${props.type}/2`}>日向坂46</DropdownItem>
-      </>
+        {Object.values(GROUPS).map(groupObj => (
+          <DropdownItem key={groupObj.id} tag={Link} to={`/${props.type}/${groupObj.id}`}>{`${groupObj.name}`}</DropdownItem>
+        ))}
+      </div>
     )
   }
 
@@ -87,9 +88,10 @@ export class TypeChangeButton extends React.Component {
 class Headline extends React.Component {
   constructor(props) {
     super(props);
+    this.initMembers = {};
+    Object.values(GROUPS).forEach(group => this.initMembers[group.id] = []);
     this.state = {
-      keyakiMembers: [], // [[1期生], [2期生]]
-      hinataMembers: [], // [[1期生], [2期生], [3期生]]
+      membersCollection: this.initMembers, // {"1": [[1期生], [2期生]], "2": [[1期生], [2期生], [3期生]]}
     }
   };
 
@@ -99,27 +101,20 @@ class Headline extends React.Component {
       axios
         .get(url)
         .then(res => {
-          let keyakiMembers = [];
-          for (const members of res.data["keyaki"]) {
-            keyakiMembers.push(members.map((member, index) =>
-              ({
-                url: member.url,
-                full_kanji: member.full_kanji,
-              })
-            ))
-          }
-          let hinataMembers = [];
-          for (const members of res.data["hinata"]) {
-            hinataMembers.push(members.map((member, index) =>
-              ({
-                url: member.url,
-                full_kanji: member.full_kanji,
-              })
-            ))
-          }
+          const _membersCollection = this.initMembers;
+          Object.values(GROUPS).forEach(groupObj => {
+            _membersCollection[groupObj.id] = [];
+            for (const membersByGene of res.data[groupObj.key]) {
+              _membersCollection[groupObj.id].push(membersByGene.map(member =>
+                ({
+                  url: member.url,
+                  full_kanji: member.full_kanji,
+                })
+              ))
+            }
+          });
           this.setState({
-            keyakiMembers: keyakiMembers,
-            hinataMembers: hinataMembers,
+            membersCollection: _membersCollection,
           })
         })
         .catch(err => {
@@ -134,24 +129,17 @@ class Headline extends React.Component {
       const contents = (<>
         <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "recommend" ? "active" : "")}
           onClick={() => this.props.history.push(`/${this.props.type}/`)}><b>おすすめ</b></Button>
-        <Button className={"rounded-pill mode-select-button keyaki " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === "keyaki" ? "active" : "")}
-          onClick={() => this.props.history.push(`/${this.props.type}/1`)}>
-          <b>欅坂46</b>
-          {fixed
-            ? <MobileTopMenu id="modeSelectKeyaki" type="modeSelect" members={this.state.keyakiMembers} group="keyaki" blogsORimages={this.props.type} />
-            : <ModeSelectButtonDropdown group="keyaki" members={this.state.keyakiMembers} type={this.props.type} fixed={fixed} />
-          }
 
-        </Button>
-        <Button className={"rounded-pill mode-select-button hinata " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === "hinata" ? "active" : "")}
-          onClick={() => this.props.history.push(`/${this.props.type}/2`)}>
-          <b>日向坂46</b>
-          {fixed
-            ? <MobileTopMenu id="modeSelectHinata" type="modeSelect" members={this.state.hinataMembers} group="hinata" blogsORimages={this.props.type} />
-            : <ModeSelectButtonDropdown group="hinata" members={this.state.hinataMembers} type={this.props.type} fixed={fixed} />
-          }
-
-        </Button>
+        {Object.values(GROUPS).map(groupObj => (
+          <Button key={groupObj.id} className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
+            onClick={() => this.props.history.push(`/${this.props.type}/${groupObj.id}`)}>
+            <b>{groupObj.name}</b>
+            {fixed
+              ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
+              : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
+            }
+          </Button>
+        ))}
       </>);
 
       if (isMobile || fixed) {
@@ -176,10 +164,10 @@ class Headline extends React.Component {
     } else if (this.props.type === "members") {
       const contents = (
         <>
-          <Button className={"rounded-pill mode-select-button keyaki " + (fixed ? "fixed " : " ") + (this.props.group === "keyaki" ? "active" : "")}
-            onClick={() => this.props.changeGroup("keyaki")}><b>欅坂46</b></Button>
-          <Button className={"rounded-pill mode-select-button hinata " + (fixed ? "fixed " : " ") + (this.props.group === "hinata" ? "active" : "")}
-            onClick={() => this.props.changeGroup("hinata")}><b>日向坂46</b></Button>
+          {Object.values(GROUPS).map(groupObj => (
+            <Button key={groupObj.id} className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + (this.props.group === groupObj.key ? "active" : "")}
+              onClick={() => this.props.changeGroup(groupObj.key)}><b>{groupObj.name}</b></Button>
+          ))}
         </>
       );
       if (isMobile || fixed) {

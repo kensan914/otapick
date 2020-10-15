@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['group'] != 1 and options['group'] != 2 and options['group'] is not None:
-            print('groupID', options['group'], 'is not supported.')
+            otapick.print_console('groupID {} is not supported.'.format(options['group']))
             quit()
 
         member_image_crawler = otapick.MemberImageCrawler()
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         for member in members:
             if not member.image or (options['force'] and not member.graduate) or options['fforce']:
                 if not member.graduate:
-                    image_url = member_image_crawler.crawl(member.belonging_group.group_id, member.ct)
+                    image_url = member_image_crawler.crawl(member.belonging_group.key, member.ct)
                     media = member_image_downloader.download(image_url, member.belonging_group.group_id, member.ct)
                 else:
                     image_url = member_image_crawler_ex.crawl(member.full_kanji)
@@ -37,4 +37,4 @@ class Command(BaseCommand):
                 if media is not None:
                     member.image = media
                     member.save()
-                    print(member.full_kanji, "'s image is saved!!")
+                    otapick.print_console("{}'s image is saved!!".format(member.full_kanji))

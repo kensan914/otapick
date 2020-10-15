@@ -124,7 +124,7 @@ class SuperBlogCard extends React.Component {
 export class OrderlyBlogCard extends React.Component {
   render() {
     return (
-      <div className="otapick_card_back blog-card col-6 col-md-4 col-lg-3 mb-3 px-2 px-sm-3">
+      <div className="otapick-card-back blog-card col-6 col-md-4 col-lg-3 mb-3 px-2 px-sm-3">
         <SuperBlogCard {...this.props} orderly={true} />
       </div>
     );
@@ -136,7 +136,7 @@ class BlogCard extends React.Component {
   render() {
     return (
       <>
-        <div className="otapick_card_back">
+        <div className="otapick-card-back">
           {/* <SuperBlogCard props={this.props} orderly={false} /> */}
           <SuperBlogCard {...this.props} orderly={false} />
         </div>

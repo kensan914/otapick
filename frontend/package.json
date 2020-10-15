@@ -1,12 +1,13 @@
 {
-  "name": "frontend",
+  "name": "otapick",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --mode development src/index.js --output ../static/frontend/main.js",
-    "build": "webpack --mode production src/index.js --output ../static/frontend/main.js"
+    "start": "SET NODE_ENV=development&webpack -w --mode development", 
+    "dev": "SET NODE_ENV=development&webpack --mode development",
+    "build": "webpack --mode production"
   },
   "keywords": [],
   "author": "",

@@ -1,12 +1,12 @@
-import React from 'react';
-import NarrowButton from '../../atoms/NarrowButton';
-import SortButton from '../../atoms/SortButton';
-import NarrowCard from '../NarrowCard';
-import axios from 'axios';
-import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from '../../tools/support';
-import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION } from '../../tools/env';
-import { MobileBottomMenu } from '../MobileMenu';
+import React from "react";
+import NarrowButton from "../../atoms/NarrowButton";
+import SortButton from "../../atoms/SortButton";
+import NarrowCard from "../NarrowCard";
+import axios from "axios";
+import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from "../../tools/support";
+import { withRouter } from "react-router-dom";
+import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION, GROUPS } from "../../tools/env";
+import { MobileBottomMenu } from "../MobileMenu";
 
 
 class BlogListInfo extends React.Component {
@@ -60,20 +60,20 @@ class BlogListInfo extends React.Component {
 
   convertSortButtonTitle() {
     switch (this.props.orderFormat) {
-      case 'newer_post':
-        return '新着順';
-      case 'older_post':
-        return '古い順';
-      case 'popularity':
-        return '人気順';
-      case 'dl':
-        return 'DL順';
-      case 'sum_dl':
-        return '総DL順';
-      case 'view':
-        return '閲覧数順';
+      case "newer_post":
+        return "新着順";
+      case "older_post":
+        return "古い順";
+      case "popularity":
+        return "人気順";
+      case "dl":
+        return "DL順";
+      case "sum_dl":
+        return "総DL順";
+      case "view":
+        return "閲覧数順";
       default:
-        return '';
+        return "";
     }
   }
 
@@ -86,10 +86,6 @@ class BlogListInfo extends React.Component {
   }
 
   render() {
-    var badgeStyle;
-    if (this.props.group === "keyaki") badgeStyle = { backgroundColor: "rgba(50, 205, 50, 0.7)", height: 33 };
-    else if (this.props.group === "hinata") badgeStyle = { backgroundColor: "rgba(0, 191, 255, 0.75)", height: 33 };
-
     return (
       <>
         {!this.props.hide &&
@@ -100,12 +96,14 @@ class BlogListInfo extends React.Component {
                   <h2 className="my-auto d-flex align-items-center" id="blog-list-info-title">{!this.state.title ? "\u00A0" : this.state.title}</h2>
                   <div className="row ml-2">
                     {this.props.narrowingKeyword &&
-                      <span className="badge badge-success mr-2 badge-pill d-flex align-items-center"
-                        style={badgeStyle}>"{this.props.narrowingKeyword}"</span>
+                      <span className={"badge mr-2 badge-pill d-flex align-items-center " + this.props.group}>
+                        "{this.props.narrowingKeyword}"
+                        </span>
                     }
                     {this.props.narrowingPost &&
-                      <span className="badge badge-success mr-2 badge-pill d-flex align-items-center"
-                        style={badgeStyle}>{this.props.narrowingPost}</span>
+                      <span className={"badge mr-2 badge-pill d-flex align-items-center " + this.props.group}>
+                        {this.props.narrowingPost}
+                      </span>
                     }
                   </div>
                 </div>

@@ -1,14 +1,13 @@
-import React from 'react';
+import React from "react";
+import { GROUPS } from "../tools/env";
 
 
 class OtapickButton extends React.Component {
   render() {
-    let className = "hinata";
-    if (this.props.group === "keyaki") {
-      className = "gradient-btn keyaki";
-    } else if (this.props.group === "hinata") {
-      className = "gradient-btn hinata";
-    };
+    let className = "";
+    Object.values(GROUPS).forEach(groupObj => {
+      if (groupObj.key === this.props.group) className = `gradient-btn ${groupObj.key}`;
+    });
 
     let otapickButton;
     if (this.props.onClick) {

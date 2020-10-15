@@ -1,13 +1,21 @@
+var webpack = require("webpack");
+
+
 module.exports = {
+  entry: "./src/index.js",
+  output: {
+    path: __dirname + "/../static/frontend",
+    filename: "main.js",
+  },
   module: {
     rules: [
       {
         test: /\.css$/,
         exclude: /node_modules/,
         use: [
-          'style-loader',
+          "style-loader",
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               url: false,
             },
@@ -24,5 +32,11 @@ module.exports = {
     ]
   },
   // https://qiita.com/terrierscript/items/f840b5ccff0c0be7420a
-  performance: { hints: false }
+  performance: { hints: false },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+    })
+  ],
 };
