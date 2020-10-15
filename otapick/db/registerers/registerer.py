@@ -35,6 +35,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
     if not groups.exists():
         if group_id == 0:
             group_key = 'keyaki'
+            group_id = 1
         else: return
     else:
         group_key = groups.first().key
