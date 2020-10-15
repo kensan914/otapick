@@ -8,20 +8,11 @@ h1, h2, h3, h4, h5, h6 {
     word-break: break-all;
 }
 
-.keyaki header.masthead {
+header.masthead {
     position: relative;
-    background: url('../img/main_background.jpg') no-repeat center center;
     background-size: cover;
     padding-top: 8rem;
-    padding-bottom: 8rem
-}
-
-.hinata header.masthead {
-    position: relative;
-    background: url('../img/main_background2.jpg') no-repeat center center;
-    background-size: cover;
-    padding-top: 8rem;
-    padding-bottom: 8rem
+    padding-bottom: 8rem;
 }
 
 header.masthead .overlay {
@@ -99,19 +90,15 @@ header.masthead h1 {
 }
 
 .keyaki .call-to-action {
-    position: relative;
     background: url('../img/main_background.jpg') no-repeat center center;
-    background-size: cover;
-    padding-top: 7rem;
-    padding-bottom: 7rem
 }
 
 .hinata .call-to-action {
-    position: relative;
     background: url('../img/main_background2.jpg') no-repeat center center;
-    background-size: cover;
-    padding-top: 7rem;
-    padding-bottom: 7rem
+}
+
+.sakura .call-to-action {
+    background: url('../img/main_background2.jpg') no-repeat center center;
 }
 
 .call-to-action .overlay {
@@ -213,30 +200,6 @@ footer.footer {
     background-position: right center
 }
 
-.save_btn .keyaki:hover {
-    background-image: linear-gradient(#57d362, #b372d8) !important
-}
-
-.save_btn .hinata:hover {
-    background-image: linear-gradient(#73bfcc, #b372d8) !important
-}
-
-.rounded .keyaki, .search_btn .keyaki, .search_btn_min .keyaki {
-    background-image: linear-gradient(to right, #65f671 0, #d185fd 51%, #65f671 100%) !important
-}
-
-.rounded .hinata, .search_btn .hinata, .search_btn_min .hinata {
-    background-image: linear-gradient(to right, #8eeeff 0, #d185fd 50%, #8eeeff 100%) !important
-}
-
-.save_btn .keyaki {
-    background-image: linear-gradient(#65f671, #d185fd) !important
-}
-
-.save_btn .hinata {
-    background-image: linear-gradient(#8eeeff, #d185fd) !important
-}
-
 .outline .btn {
     border-radius: 40px;
     height: 40px;
@@ -270,16 +233,6 @@ footer.footer {
     background: transparent !important
 }
 
-.outline .keyaki {
-    background-image: linear-gradient(to right, #65f671 0, #d185fd 100%);
-    color: #008d0c
-}
-
-.outline .hinata {
-    background-image: linear-gradient(to right, #8eeeff 0, #d185fd 100%);
-    color: #006ba8
-}
-
 .otapick_card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
     transition: 0.3s;
@@ -292,12 +245,16 @@ footer.footer {
     top: 3px
 }
 
-.otapick_card_back>.keyaki {
+.otapick-card-back>.keyaki {
     background-image: linear-gradient(to right, #65f671 30%, #d185fd 100%)
 }
 
-.otapick_card_back>.hinata {
+.otapick-card-back>.hinata {
     background-image: linear-gradient(to right, #8eeeff 30%, #d185fd 100%)
+}
+
+.otapick-card-back>.sakura {
+    background-image: linear-gradient(to right, #FEEEED 30%, #F9C1CF 60%, #d185fd 100%)
 }
 
 .otapick_card_left {
@@ -310,22 +267,6 @@ footer.footer {
     border-radius: 0 4px 4px 0;
     position: relative;
     left: 3px
-}
-
-.otapick_card_back_left>.keyaki {
-    background-image: linear-gradient(to bottom, #65f671 30%, #d185fd 100%)
-}
-
-.otapick_card_back_left>.hinata {
-    background-image: linear-gradient(to bottom, #8eeeff 30%, #d185fd 100%)
-}
-
-.page_btn .keyaki {
-    background-image: linear-gradient(#65f671, #d185fd) !important
-}
-
-.page_btn .hinata {
-    background-image: linear-gradient(#8eeeff, #d185fd) !important
 }
 
 .progress .progress-bar {
@@ -478,6 +419,10 @@ footer.footer {
     box-shadow: 0 0 30px #00c8ff;
 }
 
+.sakura div.thumbnail.checked {
+    box-shadow: 0 0 30px #F172A3;
+}
+
 div.thumbnail.checked+.save_img_checkbox {
     display: block;
 }
@@ -498,7 +443,7 @@ div.thumbnail.checked+.save_img_checkbox {
     overflow: hidden;
 }
 
-.keyaki .thumbnail-wrapper::after {
+.thumbnail-wrapper::after {
     transition: 0.5s;
     content: "";
     position: absolute;
@@ -507,23 +452,19 @@ div.thumbnail.checked+.save_img_checkbox {
     display: block;
     width: 100%;
     height: 100%;
-    /* background: rgba(0, 0, 0, 0.4); */
-    background: linear-gradient(to right, #65f671 0, #d185fd 100%);
     opacity: 0;
 }
 
+.keyaki .thumbnail-wrapper::after {
+    background: linear-gradient(to right, #65f671 0, #d185fd 100%);
+}
+
 .hinata .thumbnail-wrapper::after {
-    transition: 0.5s;
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    /* background: rgba(0, 0, 0, 0.4); */
     background: linear-gradient(to right, #8eeeff 0, #d185fd 100%);
-    opacity: 0;
+}
+
+.sakura .thumbnail-wrapper::after {
+    background: linear-gradient(to right, #FEEEED 30%, #F9C1CF 60%, #d185fd 100%)
 }
 
 .thumbnail-wrapper img {
@@ -659,30 +600,6 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
-}
-
-/* keyaki&hinatatext */
-
-.keyaki-text {
-    color: rgb(152, 255, 152);
-}
-
-.keyaki-text:hover {
-    color: limegreen;
-    background-image: linear-gradient(to right, #91fd9a 30%, #d185fd 70%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hinata-text {
-    color: rgb(158, 231, 255);
-}
-
-.hinata-text:hover {
-    color: deepskyblue;
-    background-image: linear-gradient(to right, #8eeeff 30%, #d185fd 70%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 /* start funwari fade-in */
@@ -1022,6 +939,11 @@ a.hinata {
     color: deepskyblue;
 }
 
+a.sakura {
+    color: lightpink	;
+}
+
+
 /* gradient-button */
 
 .gradient-btn {
@@ -1082,6 +1004,16 @@ a.hinata {
     background: linear-gradient(45deg, #05c4ff 38%, #d185fd 50%, #8eeeff 62%);
 }
 
+.gradient-btn.sakura, .gradient-btn.sakura::before {
+    text-decoration: none !important;
+    color: white !important;
+    background-position: center;
+    background: -moz-linear-gradient(45deg, #FEEEED 38%, #d185fd 50%, #F9C1CF 62%);
+    background: -webkit-linear-gradient(45deg, #FEEEED 38%, #d185fd 50%, #F9C1CF 62%);
+    background: linear-gradient(45deg, #FEEEED 38%, #d185fd 50%, #F9C1CF 62%);
+}
+
+/* https://products.ls.graphics/mesh-gradients/ */
 .gradient-btn.keyaki {
     background-image: url('/static/img/button_keyaki.jpeg');
     background-size: cover;
@@ -1089,6 +1021,11 @@ a.hinata {
 
 .gradient-btn.hinata {
     background-image: url('/static/img/button_hinata.jpg');
+    background-size: cover;
+}
+
+.gradient-btn.sakura {
+    background-image: url('/static/img/button_sakura.jpg');
     background-size: cover;
 }
 
@@ -1194,11 +1131,11 @@ a.hinata {
     box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
 }
 
-.otapick-card2.keyaki, .otapick-card2.hinata, .otapick-card2.smp.keyaki, .otapick-card2.smp.hinata {
+.otapick-card2.keyaki, .otapick-card2.hinata, .otapick-card2.sakura, .otapick-card2.smp.keyaki, .otapick-card2.smp.hinata, .otapick-card2.smp.sakura {
     box-shadow: none;
 }
 
-.otapick-card2.keyaki::before, .otapick-card2.hinata::before {
+.otapick-card2.keyaki::before, .otapick-card2.hinata::before, .otapick-card2.sakura::before {
     content: "";
     height: 100%;
     width: 100%;
@@ -1210,7 +1147,7 @@ a.hinata {
     box-shadow: -1px -1px 10px 4px rgba(128, 128, 128, 0.2);
 }
 
-.otapick-card2.smp.keyaki::before, .otapick-card2.smp.hinata::before {
+.otapick-card2.smp.keyaki::before, .otapick-card2.smp.hinata::before, .otapick-card2.smp.sakura::before {
     border-radius: 2rem;
     box-shadow: none;
 }
@@ -1221,6 +1158,10 @@ a.hinata {
 
 .otapick-card2.hinata::before {
     background-image: linear-gradient(to right, #8eeeff 50%, #d185fd 100%);
+}
+
+.otapick-card2.sakura::before {
+    background-image: linear-gradient(to right, #FEEEED 30%, #F9C1CF 60%, #d185fd 100%);
 }
 
 .otapick-card2 h2 {
@@ -1564,6 +1505,10 @@ footer {
     background-color: #8eeeff;
 }
 
+.member-card.sakura .member-card-overlay {
+    background-color: #F9C1CF;
+}
+
 .member-card {
     box-shadow: 0 0 8px 2px rgba(128, 128, 128, 0.2);
     border-radius: 2rem;
@@ -1584,31 +1529,39 @@ footer {
 }
 
 .member-card.keyaki .member-card-header {
-    /* background: #00ff1570; */
     background: -moz-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #97ffa0c0 65%, #e8bcffe0 85%);
     background: -webkit-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #97ffa0c0 65%, #e8bcffe0 85%);
     background: linear-gradient(150deg, rgba(255, 255, 255, 0.45) 40%, #97ffa0c0 65%, #e8bcffe0 85%);
 }
 
 .member-card.hinata .member-card-header {
-    /* background: #00d9ff70; */
     background: -moz-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #8eeeffc0 65%, #e0abffe0 90%);
     background: -webkit-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #8eeeffc0 65%, #e0abffe0 90%);
     background: linear-gradient(150deg, rgba(255, 255, 255, 0.45) 40%, #8eeeffc0 65%, #e0abffe0 90%);
 }
 
+.member-card.sakura .member-card-header {
+    background: -moz-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #F9C1CFc0 65%, #e0abffe0 90%);
+    background: -webkit-linear-gradient(-60deg, rgba(255, 255, 255, 0.45) 40%, #F9C1CFc0 65%, #e0abffe0 90%);
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.45) 40%, #F9C1CFc0 65%, #e0abffe0 90%);
+}
+
 .member-card.keyaki .member-card-header.pc:hover {
-    /* background: #00c01070; */
     background: -moz-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #79cc80c0 65%, #b392c5e0 85%);
     background: -webkit-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #79cc80c0 65%, #b392c5e0 85%);
     background: linear-gradient(150deg, rgba(200, 200, 200, 0.45) 40%, #79cc80c0 65%, #b392c5e0 85%);
 }
 
 .member-card.hinata .member-card-header.pc:hover {
-    /* background: #009eb970; */
     background: -moz-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #6ab2bea0 65%, #b187c9e0 90%);
     background: -webkit-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #6ab2bea0 65%, #b187c9e0 90%);
     background: linear-gradient(150deg, rgba(200, 200, 200, 0.45) 40%, #6ab2bea0 65%, #b187c9e0 90%);
+}
+
+.member-card.sakura .member-card-header.pc:hover {
+    background: -moz-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #c498a3c0 65%, #b187c9e0 90%);
+    background: -webkit-linear-gradient(-60deg, rgba(200, 200, 200, 0.45) 40%, #c498a3c0 65%, #b187c9e0 90%);
+    background: linear-gradient(150deg, rgba(200, 200, 200, 0.45) 40%, #c498a3c0 65%, #b187c9e0 90%);
 }
 
 .member-card-header img {
@@ -1620,13 +1573,7 @@ footer {
     box-shadow: 0 .1rem .25rem rgba(0, 0, 0, .075);
 }
 
-.member-card.keyaki .member-card-header img {
-    /* border: 5px solid #65f671; */
-    border: 3px solid rgb(250, 250, 250);
-}
-
-.member-card.hinata .member-card-header img {
-    /* border: 5px solid #8eeeff; */
+.member-card.keyaki .member-card-header img, .member-card.hinata .member-card-header img, .member-card.sakura .member-card-header img {
     border: 3px solid rgb(250, 250, 250);
 }
 
@@ -1674,7 +1621,7 @@ footer {
 
 /* group-select-button */
 
-#keyaki-group-select-button, #hinata-group-select-button, .mode-select-button {
+.mode-select-button {
     border: 0;
     background-color: rgba(255, 255, 255, 0)!important;
     color: gray;
@@ -1685,7 +1632,7 @@ footer {
     align-items: center;
 }
 
-#keyaki-group-select-button.fixed, #hinata-group-select-button.fixed, .mode-select-button.fixed {
+.mode-select-button.fixed {
     height: 2.5rem;
     vertical-align: middle;
     padding-top: 0;
@@ -1704,7 +1651,7 @@ footer {
     transition-duration: 0s!important;
 }
 
-#keyaki-group-select-button:hover, #hinata-group-select-button:hover, .mode-select-button:hover {
+.mode-select-button:hover {
     background-color: whitesmoke!important;
     color: gray;
     z-index: auto!important;
@@ -1730,13 +1677,23 @@ footer {
     color: inherit;
 }
 
-#keyaki-group-select-button.active, .mode-select-button.keyaki.active, #keyaki-group-select-button.active:hover, .mode-select-button.keyaki.active:hover {
+.mode-select-button.sakura.active .mode-select-dropdown-button:hover {
+    background-color: #e9b4c0!important;
+    color: inherit;
+}
+
+.mode-select-button.keyaki.active, .mode-select-button.keyaki.active:hover {
     background-color: #4be057!important;
     color: white;
 }
 
-#hinata-group-select-button.active, .mode-select-button.hinata.active, #hinata-group-select-button.active:hover, .mode-select-button.hinata.active:hover {
+.mode-select-button.hinata.active, .mode-select-button.hinata.active:hover {
     background-color: #5de7ff!important;
+    color: white;
+}
+
+.mode-select-button.sakura.active, .mode-select-button.sakura.active:hover {
+    background-color: #F9C1CF!important;
     color: white;
 }
 
@@ -1900,6 +1857,9 @@ footer {
     background-color: rgba(255, 255, 255, 0.7);
 }
 
+/* イラストレーターで作成したSVGを別名で保存(SVG形式)
+SVGコード...を押下
+取得したコードをhttps://blog.s0014.com/posts/2017-01-19-il-to-svg/にコピペし、変換 */
 .image-card-download-button.keyaki, .image-view-download-button.keyaki {
     background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23EE82EE%3B%7D%20.st1%7Bfill%3A%23DA70D6%3B%7D%20.st2%7Bfill%3A%234BE057%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2227.65%22%20y%3D%2231.91%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6026%2036.0994)%22%20class%3D%22st0%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st1%22%20d%3D%22M34.54%2C33.24c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.24z%22%2F%3E%3Cpath%20class%3D%22st2%22%20d%3D%22M32.71%2C37.56c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.67l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.17%2C32.99%2C39.35%2C32.71%2C37.56z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.51%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.7201%20-5.8951)%22%20class%3D%22st2%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st2%22%20points%3D%2229.47%2C40.27%2032.46%2C43.25%2035.3%2C40.42%2032.31%2C37.45%20%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.76%22%20class%3D%22st0%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.87%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.3611%2080.1808)%22%20class%3D%22st1%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.25%22%20class%3D%22st2%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E');
 }
@@ -1908,6 +1868,9 @@ footer {
     background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23EE82EE%3B%7D%20.st1%7Bfill%3A%23DA70D6%3B%7D%20.st2%7Bfill%3A%235DE7FF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2227.65%22%20y%3D%2231.91%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6026%2036.0994)%22%20class%3D%22st0%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st1%22%20d%3D%22M34.54%2C33.24c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.24z%22%2F%3E%3Cpath%20class%3D%22st2%22%20d%3D%22M32.71%2C37.56c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.67l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.17%2C32.99%2C39.35%2C32.71%2C37.56z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.51%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.7201%20-5.8951)%22%20class%3D%22st2%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st2%22%20points%3D%2229.47%2C40.27%2032.46%2C43.25%2035.3%2C40.42%2032.31%2C37.45%20%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.76%22%20class%3D%22st0%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.87%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.3611%2080.1808)%22%20class%3D%22st1%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.25%22%20class%3D%22st2%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E');
 }
 
+.image-card-download-button.sakura, .image-view-download-button.sakura {
+    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23EE82EE%3B%7D%20.st1%7Bfill%3A%23DA70D6%3B%7D%20.st2%7Bfill%3A%23F9C1CF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2227.65%22%20y%3D%2231.91%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6026%2036.0994)%22%20class%3D%22st0%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st1%22%20d%3D%22M34.54%2C33.24c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.24z%22%2F%3E%3Cpath%20class%3D%22st2%22%20d%3D%22M32.71%2C37.56c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.67l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.17%2C32.99%2C39.35%2C32.71%2C37.56z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.51%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.7201%20-5.8951)%22%20class%3D%22st2%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st2%22%20points%3D%2229.47%2C40.27%2032.46%2C43.25%2035.3%2C40.42%2032.31%2C37.45%20%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.76%22%20class%3D%22st0%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.87%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.3611%2080.1808)%22%20class%3D%22st1%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.25%22%20class%3D%22st2%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E')}
+
 .image-card-download-button.keyaki:hover {
     background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%234BE057%3B%7D%20.st5%7Bfill%3A%23D7D7D7%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M58.66%2C46.79c-1.74%2C0.7-3.92%2C0.37-5.77%2C0.37c-3.87%2C0-7.76%2C0.02-11.61-0.37c-3.91-0.39-7.74-1.3-11.64-1.76%20c-2.82-0.33-6.58-0.74-9.62-0.13l-4.08%2C4.08l31.5%2C31.5L69.9%2C58.03L58.66%2C46.79z%22%2F%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M34.9%2C12.5l-1.74%2C1.74c0.07%2C0.38%2C0.08%2C0.8%2C0.03%2C1.27c-0.67%2C5.55-1.15%2C12.11-0.09%2C17.62%20c0.2%2C1.13-0.02%2C2.12-0.49%2C2.93l30.42%2C30.42l12.92-12.92L34.9%2C12.5z%22%2F%3E%3Crect%20x%3D%2241.59%22%20y%3D%2226.18%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-19.4125%2050.0333)%22%20class%3D%22st1%22%20width%3D%2218.19%22%20height%3D%2244.55%22%2F%3E%3Crect%20x%3D%2227.65%22%20y%3D%2232%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6689%2036.1269)%22%20class%3D%22st2%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st3%22%20d%3D%22M34.54%2C33.33c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.33z%22%2F%3E%3Cpath%20class%3D%22st4%22%20d%3D%22M32.71%2C37.65c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.76l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.26%2C32.99%2C39.44%2C32.71%2C37.65z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.61%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.8138%20-5.8013)%22%20class%3D%22st4%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st4%22%20points%3D%2229.47%2C40.36%2032.46%2C43.34%2035.3%2C40.52%2032.31%2C37.54%20%22%2F%3E%3Cpath%20class%3D%22st5%22%20d%3D%22M48.06%2C43.91c0.15%2C0.7%2C0.02%2C1.38-0.52%2C1.9c-1.42%2C1.38-2.45%2C2.41-4.92%2C2.24c-0.23-0.02-0.46-0.05-0.7-0.09%20c-0.38%2C0.43-0.97%2C0.67-1.82%2C0.57c-0.86-0.1-1.72-0.4-2.58-0.64c-0.1%2C0.01-0.2%2C0.01-0.3%2C0.01L62.6%2C73.43l7.39-7.47L48.06%2C43.91z%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.86%22%20class%3D%22st2%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.96%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.4548%2080.2745)%22%20class%3D%22st3%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.34%22%20class%3D%22st4%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E');
 }
@@ -1915,6 +1878,9 @@ footer {
 .image-card-download-button.hinata:hover {
     background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%235DE7FF%3B%7D%20.st5%7Bfill%3A%23D7D7D7%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M58.66%2C46.79c-1.74%2C0.7-3.92%2C0.37-5.77%2C0.37c-3.87%2C0-7.76%2C0.02-11.61-0.37c-3.91-0.39-7.74-1.3-11.64-1.76%20c-2.82-0.33-6.58-0.74-9.62-0.13l-4.08%2C4.08l31.5%2C31.5L69.9%2C58.03L58.66%2C46.79z%22%2F%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M34.9%2C12.5l-1.74%2C1.74c0.07%2C0.38%2C0.08%2C0.8%2C0.03%2C1.27c-0.67%2C5.55-1.15%2C12.11-0.09%2C17.62%20c0.2%2C1.13-0.02%2C2.12-0.49%2C2.93l30.42%2C30.42l12.92-12.92L34.9%2C12.5z%22%2F%3E%3Crect%20x%3D%2241.59%22%20y%3D%2226.18%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-19.4125%2050.0333)%22%20class%3D%22st1%22%20width%3D%2218.19%22%20height%3D%2244.55%22%2F%3E%3Crect%20x%3D%2227.65%22%20y%3D%2232%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6689%2036.1269)%22%20class%3D%22st2%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st3%22%20d%3D%22M34.54%2C33.33c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.33z%22%2F%3E%3Cpath%20class%3D%22st4%22%20d%3D%22M32.33%2C37.65c-0.07-0.47-0.08-0.94-0.04-1.39L22.03%2C25.76l-3.61%2C3.69l13.47%2C13.78l0.15-0.16%20C32.02%2C41.26%2C32.6%2C39.44%2C32.33%2C37.65z%22%2F%3E%3Crect%20x%3D%2217.92%22%20y%3D%2223.5%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.2533%20-5.6157)%22%20class%3D%22st4%22%20width%3D%2228.02%22%20height%3D%225.64%22%2F%3E%3Cpolygon%20class%3D%22st4%22%20points%3D%2229.1%2C40.25%2032.01%2C43.23%2034.77%2C40.41%2031.86%2C37.43%20%22%2F%3E%3Cpath%20class%3D%22st5%22%20d%3D%22M48.06%2C43.91c0.15%2C0.7%2C0.02%2C1.38-0.52%2C1.9c-1.42%2C1.38-2.45%2C2.41-4.92%2C2.24c-0.23-0.02-0.46-0.05-0.7-0.09%20c-0.38%2C0.43-0.97%2C0.67-1.82%2C0.57c-0.86-0.1-1.72-0.4-2.58-0.64c-0.1%2C0.01-0.2%2C0.01-0.3%2C0.01L62.6%2C73.43l7.39-7.47L48.06%2C43.91z%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.86%22%20class%3D%22st2%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.96%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.4548%2080.2745)%22%20class%3D%22st3%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.34%22%20class%3D%22st4%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E');
 }
+
+.image-card-download-button.sakura:hover {
+background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%23F9C1CF%3B%7D%20.st5%7Bfill%3A%23D7D7D7%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M58.66%2C46.79c-1.74%2C0.7-3.92%2C0.37-5.77%2C0.37c-3.87%2C0-7.76%2C0.02-11.61-0.37c-3.91-0.39-7.74-1.3-11.64-1.76%20c-2.82-0.33-6.58-0.74-9.62-0.13l-4.08%2C4.08l31.5%2C31.5L69.9%2C58.03L58.66%2C46.79z%22%2F%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M34.9%2C12.5l-1.74%2C1.74c0.07%2C0.38%2C0.08%2C0.8%2C0.03%2C1.27c-0.67%2C5.55-1.15%2C12.11-0.09%2C17.62%20c0.2%2C1.13-0.02%2C2.12-0.49%2C2.93l30.42%2C30.42l12.92-12.92L34.9%2C12.5z%22%2F%3E%3Crect%20x%3D%2241.59%22%20y%3D%2226.18%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-19.4125%2050.0333)%22%20class%3D%22st1%22%20width%3D%2218.19%22%20height%3D%2244.55%22%2F%3E%3Crect%20x%3D%2227.65%22%20y%3D%2232%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6689%2036.1269)%22%20class%3D%22st2%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st3%22%20d%3D%22M34.54%2C33.33c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.33z%22%2F%3E%3Cpath%20class%3D%22st4%22%20d%3D%22M32.71%2C37.65c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.76l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.26%2C32.99%2C39.44%2C32.71%2C37.65z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.61%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.8138%20-5.8013)%22%20class%3D%22st4%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st4%22%20points%3D%2229.47%2C40.36%2032.46%2C43.34%2035.3%2C40.52%2032.31%2C37.54%20%22%2F%3E%3Cpath%20class%3D%22st5%22%20d%3D%22M48.06%2C43.91c0.15%2C0.7%2C0.02%2C1.38-0.52%2C1.9c-1.42%2C1.38-2.45%2C2.41-4.92%2C2.24c-0.23-0.02-0.46-0.05-0.7-0.09%20c-0.38%2C0.43-0.97%2C0.67-1.82%2C0.57c-0.86-0.1-1.72-0.4-2.58-0.64c-0.1%2C0.01-0.2%2C0.01-0.3%2C0.01L62.6%2C73.43l7.39-7.47L48.06%2C43.91z%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.86%22%20class%3D%22st2%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.96%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.4548%2080.2745)%22%20class%3D%22st3%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.34%22%20class%3D%22st4%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E')}
 
 .image-card-download-button:hover {
     background-color: white;
@@ -2350,4 +2316,21 @@ footer {
 /* Google adsense */
 #ad_iframe {
     left: 50%;
+}
+
+.badge {
+    height: 33px;
+    color: white;
+}
+
+.badge.keyaki {
+    background-color: rgba(50, 205, 50, 0.7);
+}
+
+.badge.hinata {
+    background-color: rgba(0, 191, 255, 0.75);
+}
+
+.badge.sakura {
+    background-color: #ffa4bb;
 }

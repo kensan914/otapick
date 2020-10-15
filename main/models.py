@@ -6,9 +6,12 @@ class Group(models.Model):
         db_table = 'group'
         ordering = ['group_id']
 
-    name = models.CharField(verbose_name='グループ名', max_length=30, unique=True)
     group_id = models.IntegerField(verbose_name='グループID', unique=True)
-    netloc = models.CharField(verbose_name='ドメイン', max_length=100, unique=True)
+    name = models.CharField(verbose_name='グループ名', max_length=30)
+    domain = models.CharField(verbose_name='ドメイン', max_length=100)
+    key = models.CharField(verbose_name='キー', max_length=30, blank=True)
+    blog_url_format = models.CharField(verbose_name='公式ブログ詳細ページURIフォーマット(blog_ctを表す{}を一つ含む)', max_length=200, blank=True)
+    member_url_format = models.CharField(verbose_name='メンバー詳細ページURIフォーマット(member_ctを表す{}を一つ含む)', max_length=200, blank=True)
 
     def __str__(self):
         return self.name

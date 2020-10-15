@@ -1,26 +1,26 @@
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
 import { saveAs } from "file-saver";
-import { DELAY_TIME, LOAD_IMG_URL } from '../tools/env';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
-import { URLJoin, generateAlt, isSmp, isMobile, addLongPressEventListeners, generateKeepAliveNameInfo, updateMeta, gtagTo } from '../tools/support';
-import { ViewTooltip } from '../molecules/info/BlogViewInfo';
-import { Link } from 'react-router-dom';
-import WriterCard from '../atoms/WriterCard';
-import { MobileBottomMenu } from '../molecules/MobileMenu';
+import { DELAY_TIME, LOAD_IMG_URL } from "../tools/env";
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from "reactstrap";
+import { URLJoin, generateAlt, isSmp, isMobile, addLongPressEventListeners, generateKeepAliveNameInfo, updateMeta, gtagTo } from "../tools/support";
+import { ViewTooltip } from "../molecules/info/BlogViewInfo";
+import { Link } from "react-router-dom";
+import WriterCard from "../atoms/WriterCard";
+import { MobileBottomMenu } from "../molecules/MobileMenu";
 import { BlogViewLoader, HorizontalLoader } from "../molecules/Loader";
 import { NotFoundMessage } from "../atoms/NotFound";
 import { ViewTemplate } from "../templates/BlogViewTemplate";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 
 
 export const downloadImage = (url, incrementNumOfDownloads = null, order) => {
   axios
     .post(url, {}, {
       headers: {
-        'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+        "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
       },
-      responseType: 'blob'
+      responseType: "blob"
     })
     .then(res => {
       const blob = new Blob([res.data], {
@@ -75,11 +75,11 @@ class ImageView extends ViewTemplate {
   putView() {
     axios
       .put(this.imageViewURL, {
-        action: 'view',
+        action: "view",
         key: this.state.VIEW_KEY,
       }, {
         headers: {
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+          "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
         }
       })
       .then(res => {
@@ -92,11 +92,11 @@ class ImageView extends ViewTemplate {
   putDownload() {
     axios
       .put(this.imageViewURL, {
-        action: 'download',
+        action: "download",
         key: this.state.DOWNLOAD_KEY,
       }, {
         headers: {
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+          "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
         }
       })
       .then(res => {
@@ -139,7 +139,7 @@ class ImageView extends ViewTemplate {
       imageObjct.onload = setTimeout(() => {
         if (mainImage !== null) {
           mainImage.removeAttribute("srcset");
-          mainImage.setAttribute('src', imageObjct.src);
+          mainImage.setAttribute("src", imageObjct.src);
         }
       }, DELAY_TIME);
       const image = this.state.images[this.props.order];
@@ -234,7 +234,7 @@ class ImageView extends ViewTemplate {
             <a className={"btn btn-primary rounded-pill image-view-to-official-button py-0 " + (isSmp ? "px-2" : "")}
               id="image-view-to-official-button" role="button" target="_blank" href={this.state.officialUrl}>
               <h6 className="omit-title m-0 image-view-to-official-title">
-                <i className="fas fa-external-link-alt"></i>{this.props.group + "zaka.com"}
+                <i className="fas fa-external-link-alt"></i>{this.props.group + "zaka46.com"}
               </h6>
             </a>
             <ViewTooltip target={"image-view-to-official-button"} title="公式ブログで確認" />

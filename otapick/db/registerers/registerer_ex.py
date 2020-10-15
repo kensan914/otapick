@@ -1,7 +1,9 @@
 import os
 import time
+from datetime import datetime
 import urllib3
 from bs4 import BeautifulSoup
+from django.utils.timezone import make_aware
 from urllib3.exceptions import InsecureRequestWarning
 from image.models import Image
 from main.models import Member, Blog
@@ -57,6 +59,17 @@ def register_external(group_id, ct):
                     title = ''
 
                 postdate_tag = soup2.select_one('time')
+
+                def convert_datetime(datetime_text, group_id):
+                    new_datetime_text = ' '.join(datetime_text.split())
+                    if group_id == 1:
+                        dt = datetime.strptime(new_datetime_text, '%Y/%m/%d %H:%M')
+                    elif group_id == 2:
+                        dt = datetime.strptime(new_datetime_text, '%Y.%m.%d %H:%M')
+                    else:
+                        dt = None
+                    return make_aware(dt)
+
                 post_date = otapick.convert_datetime(postdate_tag.text, group_id=2)
 
                 content = soup2.select_one('section.blog-view__blog__content')
