@@ -60,7 +60,8 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
                 finished = exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, tweet, console=True)
 
                 if finished:
-                    unregister(correct_cts_list, group_id, unregister_num)
+                    # TODO 欅時代のブログがさくじょされてしまう。今のところコメントアウト
+                    # unregister(correct_cts_list, group_id, unregister_num)
                     break
                 simultime_blogs = [blog_info]
                 simultime_post_date = blog_info['post_date']
