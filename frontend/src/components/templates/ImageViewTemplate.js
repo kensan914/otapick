@@ -1,9 +1,9 @@
 import React from "react";
-import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile, isSmp } from '../tools/support';
+import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile, isSmp } from "../tools/support";
 import { BASE_URL } from "../tools/env";
 import ImageView from "../organisms/ImageView";
-import { KeepAlive } from 'react-keep-alive';
-import { ImageList } from '../organisms/List';
+import { KeepAlive } from "react-keep-alive";
+import { ImageList } from "../organisms/List";
 import ToTopButton from "../atoms/ToTopButton";
 import BackButton from "../atoms/BackButton";
 import Headline from "../molecules/Headline";

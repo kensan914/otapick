@@ -1,12 +1,12 @@
 import React from "react";
-import Headline from '../molecules/Headline';
-import MemberListInfo from '../molecules/info/MemberListInfo';
+import Headline from "../molecules/Headline";
+import MemberListInfo from "../molecules/info/MemberListInfo";
 import MemberCard from "../molecules/MemberCard";
-import { URLJoin, updateMeta, gtagTo } from '../tools/support';
-import axios from 'axios';
-import { getGroup, generateWavesVals } from '../tools/support';
-import { Collapse } from 'reactstrap';
-import { BASE_URL, DELAY_TIME, MEMBERS_DISCRIPTION } from "../tools/env";
+import { URLJoin, updateMeta, gtagTo } from "../tools/support";
+import axios from "axios";
+import { getGroup, generateWavesVals } from "../tools/support";
+import { Collapse } from "reactstrap";
+import { BASE_URL, DELAY_TIME, GROUPS, MEMBERS_DISCRIPTION } from "../tools/env";
 import { LoaderScreen } from "../molecules/Loader";
 import { withRouter } from "react-router-dom";
 
@@ -42,12 +42,15 @@ class MemberListByGeneration extends React.Component {
 class MemberListTemplate extends React.Component {
   constructor(props) {
     super(props);
+    this.initMembers = {};
+    Object.values(GROUPS).forEach(groupObj => this.initMembers[groupObj.id] = []);
+    this.initTogglerMemory = {};
+    Object.values(GROUPS).forEach(groupObj => this.initTogglerMemory[groupObj.key] = []);
     this.state = {
-      group: "keyaki",
-      keyakiMembers: [], // [[1期生], [2期生]]
-      hinataMembers: [], // [[1期生], [2期生], [3期生]]
+      group: Object.values(GROUPS)[0].key,
+      membersCollection: this.initMembers, // {"1": [[1期生], [2期生]], "2": [[1期生], [2期生], [3期生]]}
       wavesVals: [],
-      togglerMemory: { "keyaki": [], "hinata": [] },
+      togglerMemory: this.initTogglerMemory, // { "sakura": [], "hinata": [] },
     }
     this.getMembers();
     this.isRender = true;
@@ -55,8 +58,9 @@ class MemberListTemplate extends React.Component {
 
   changeGroup = (group) => {
     if (group !== this.state.group) {
-      if (group === "keyaki" || group === "hinata") this.setState({ group: group });
-      else this.setState({ group: "" });
+      Object.values(GROUPS).forEach(groupObj => {
+        if (groupObj.key === group) this.setState({ group: group });
+      });
     }
   }
 
@@ -68,50 +72,37 @@ class MemberListTemplate extends React.Component {
         .get(url)
         .then(res => {
           if (this.isRender) {
-            let keyakiMembers = [];
-            for (const members of res.data["keyaki"]) {
-              keyakiMembers.push(members.map((member, index) =>
-                ({
-                  image: member.image,
-                  url: member.url,
-                  officialUrl: member.official_url,
-                  ct: member.ct,
-                  lastKanji: member.last_kanji,
-                  firstKanji: member.first_kanji,
-                  lastKana: member.last_kana,
-                  firstKana: member.first_kana,
-                  belongingGroup: getGroup(member.belonging_group),
-                })
-              ))
-            }
-            let hinataMembers = [];
-            for (const members of res.data["hinata"]) {
-              hinataMembers.push(members.map((member, index) =>
-                ({
-                  image: member.image,
-                  url: member.url,
-                  officialUrl: member.official_url,
-                  ct: member.ct,
-                  lastKanji: member.last_kanji,
-                  firstKanji: member.first_kanji,
-                  lastKana: member.last_kana,
-                  firstKana: member.first_kana,
-                  belongingGroup: getGroup(member.belonging_group),
-                })
-              ))
-            }
-            let togglerMemoryKeyaki = new Array(keyakiMembers.length);
-            togglerMemoryKeyaki.fill(true);
-            let togglerMemoryHinata = new Array(hinataMembers.length);
-            togglerMemoryHinata.fill(true);
+            const _membersCollection = this.initMembers;
+            const _togglerMemory = this.initTogglerMemory;
+            Object.values(GROUPS).forEach(groupObj => {
+              _membersCollection[groupObj.id] = [];
+              for (const membersByGene of res.data[groupObj.key]) {
+                _membersCollection[groupObj.id].push(membersByGene.map(member =>
+                  ({
+                    image: member.image,
+                    url: member.url,
+                    officialUrl: member.official_url,
+                    ct: member.ct,
+                    lastKanji: member.last_kanji,
+                    firstKanji: member.first_kanji,
+                    lastKana: member.last_kana,
+                    firstKana: member.first_kana,
+                    belongingGroup: getGroup(member.belonging_group),
+                  })
+                ))
+              }
+
+              const _togglerMemory_by_group = new Array(_membersCollection[groupObj.id].length);
+              _togglerMemory_by_group.fill(true);
+              _togglerMemory[groupObj.key] = _togglerMemory_by_group
+            });
             this.setState({
-              keyakiMembers: keyakiMembers,
-              hinataMembers: hinataMembers,
+              membersCollection: _membersCollection,
               wavesVals: generateWavesVals(),
-              togglerMemory: { "keyaki": togglerMemoryKeyaki, "hinata": togglerMemoryHinata },
+              togglerMemory: _togglerMemory,
             });
 
-            updateMeta({ title: "欅坂46・日向坂46｜メンバーリスト", discription: MEMBERS_DISCRIPTION });
+            updateMeta({ title: `${GROUPS["1"].name}・${GROUPS["2"].name}｜メンバーリスト`, discription: MEMBERS_DISCRIPTION });
           }
         })
         .catch(err => {
@@ -136,19 +127,16 @@ class MemberListTemplate extends React.Component {
   render() {
     let membersComponent = [];
     let numOfHit = 0;
-    if (this.state.group === "keyaki") {
-      for (const [index, members] of this.state.keyakiMembers.entries()) {
-        membersComponent.push(<MemberListByGeneration key={`${this.state.group}-${index + 1}`} generation={index + 1} members={members} wavesVals={this.state.wavesVals}
-          group={this.state.group} isOpen={this.state.togglerMemory.keyaki[index]} index={index} setTogglerMemory={(group, index) => this.setTogglerMemory(group, index)} />);
-        numOfHit += members.length;
+
+    Object.values(GROUPS).forEach(groupObj => {
+      if (groupObj.key === this.state.group) {
+        for (const [index, members] of this.state.membersCollection[groupObj.id].entries()) {
+          membersComponent.push(<MemberListByGeneration key={`${this.state.group}-${index + 1}`} generation={index + 1} members={members} wavesVals={this.state.wavesVals}
+            group={this.state.group} isOpen={this.state.togglerMemory[groupObj.key][index]} index={index} setTogglerMemory={(group, index) => this.setTogglerMemory(group, index)} />);
+          numOfHit += members.length;
+        }
       }
-    } else if (this.state.group === "hinata") {
-      for (const [index, members] of this.state.hinataMembers.entries()) {
-        membersComponent.push(<MemberListByGeneration key={`${this.state.group}-${index + 1}`} generation={index + 1} members={members} wavesVals={this.state.wavesVals}
-          group={this.state.group} isOpen={this.state.togglerMemory.hinata[index]} index={index} setTogglerMemory={(group, index) => this.setTogglerMemory(group, index)} />);
-        numOfHit += members.length;
-      }
-    }
+    });
 
     return (
       <div className="container mt-3 text-muted">

@@ -33,5 +33,5 @@ class Command(BaseCommand):
         if options['group']:
             otapick.register_blogs(group_id=options['group'], up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])
         else:
-            otapick.register_blogs(group_id=1, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])
-            otapick.register_blogs(group_id=2, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])
+            for group in Group.objects.all():
+                otapick.register_blogs(group_id=group.group_id, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])

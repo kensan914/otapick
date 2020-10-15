@@ -1,3 +1,4 @@
+from time import sleep
 from otapick.crawlers.abstracts import Code, Crawler
 from otapick.crawlers.generics import ImageCrawler, ImagesCrawler, BlogCrawler
 from . import parsers
@@ -8,9 +9,9 @@ class MemberImageCrawler(ImageCrawler):
     公式サイトからメンバー画像のURLを取得する具象クラス。インタフェースとなるのは、crawl()メソッド。
 
     [crawl]
-    ex) image_url = otapick.MemberImageCrawler().crawl(member.belonging_group.group_id, member.ct)
+    ex) image_url = otapick.MemberImageCrawler().crawl(member.belonging_group.key, member.ct)
     Args:
-        group_id (int): メンバーのgroup_id
+        group_key (str): メンバーの所属groupのkey
         ct (str): メンバーのct
     Returns:
         str: 指定したメンバーの個人アー写のURL(success)
@@ -18,12 +19,14 @@ class MemberImageCrawler(ImageCrawler):
     """
     keyaki_url = ['https://www.keyakizaka46.com/s/k46o/artist/', Code.CT, '?ima=0000']
     hinata_url = ['https://www.hinatazaka46.com/s/official/artist/', Code.CT, '?ima=0000']
+    sakura_url = ['https://sakurazaka46.com/s/s46/artist/', Code.CT, '?ima=0000']
+    ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_member_image_tag(kwargs['group_id'], soup)
+        return parsers.get_member_image_tag(kwargs['group_key'], soup)
 
-    def crawl(self, group_id, ct):
-        return super().crawl(group_id=group_id, ct=ct)
+    def crawl(self, group_key, ct):
+        return super().crawl(group_key=group_key, ct=ct)
 
 
 class MemberImageCrawlerEx(ImageCrawler):
@@ -44,7 +47,7 @@ class MemberImageCrawlerEx(ImageCrawler):
         return parsers.get_member_image_tag_ex(soup)
 
     def crawl(self, member_name):
-        return super().crawl(member_name=member_name, base_url='https://48pedia.org/')
+        return super().crawl(member_name=member_name, image_base_url='https://48pedia.org/')
 
 
 class BlogImageCrawler(ImagesCrawler):
@@ -52,9 +55,9 @@ class BlogImageCrawler(ImagesCrawler):
     ブログに含まれる画像のURLを取得するための具象クラス。インタフェースとなるのは、crawl()メソッド。
 
     [crawl]
-    ex) image_urls = otapick.BlogImageCrawler().crawl(group_id, blog_ct)
+    ex) image_urls = otapick.BlogImageCrawler().crawl(group.key, blog_ct)
     Args:
-        group_id (int): ブログのgroup_id
+        group_key (str): ブログのgroupのkey
         blog_ct (int): ブログのct
     Returns:
         list: 指定したブログに含まれる画像のURLリスト(success)
@@ -62,12 +65,14 @@ class BlogImageCrawler(ImagesCrawler):
     """
     keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
     hinata_url = ['https://www.hinatazaka46.com/s/official/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
+    sakura_url = ['https://sakurazaka46.com/s/s46/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=blog']
+    ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_blog_image_tags(kwargs['group_id'], soup)
+        return parsers.get_blog_image_tags(kwargs['group_key'], soup)
 
-    def crawl(self, group_id, blog_ct):
-        return super().crawl(group_id=group_id, blog_ct=blog_ct)
+    def crawl(self, group_key, blog_ct):
+        return super().crawl(group_key=group_key, blog_ct=blog_ct)
 
 
 class BlogListCrawler(BlogCrawler):
@@ -75,9 +80,9 @@ class BlogListCrawler(BlogCrawler):
     各グループ公式ブログのブログ一覧からブログ情報を取得するための具象クラス。インタフェースとなるのは、crawl()メソッド。
 
     [crawl]
-    ex) blogs_data = otapick.BlogListCrawler().crawl(group_id, page)
+    ex) blogs_data = otapick.BlogListCrawler().crawl(group.key, page)
     Args:
-        group_id (int): グループID
+        group_key (str): グループkey
         page (int): ブログ一覧のページ(0から始まる)
     Returns:
         list: 指定したページに含まれるブログの情報リスト
@@ -92,14 +97,37 @@ class BlogListCrawler(BlogCrawler):
     """
     keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/member/list?ima=0000&page=', Code.PAGE]
     hinata_url = ['https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000&page=', Code.PAGE]
+    sakura_url = ['https://sakurazaka46.com/s/s46/diary/blog/list?ima=0000&page=', Code.PAGE]
+    ### Edit ###
 
-    def crawl(self, group_id, page):
-        blog_tags = super().crawl(group_id=group_id, page=page)
+    # ブログ一覧ページでblog_ctを取得できないため、モバイルのブログ一覧でブログ情報を取得する
+    access_as_mobile_group_keys = ['sakura',]
+    ### Edit ###
+
+    # ブログ一覧ページでは情報が不足しているため、ブログごとに詳細ページにとび情報を取得する
+    haveto_access_detail_group_keys = ['sakura',]
+    ### Edit ###
+
+    def get_tag(self, soup, **kwargs):
+        return parsers.get_blog_tags(kwargs['group_key'], soup)
+
+    def crawl(self, group_key, page):
+        if group_key in self.access_as_mobile_group_keys:
+            as_mobile = True
+        else:
+            as_mobile = False
+        blog_tags = super().crawl(group_key=group_key, page=page, as_mobile=as_mobile)
         if blog_tags is None:
             return
+
         blogs_data = []
+        blog_detail_crawler = BlogDetailCrawler()
         for blog_tag in blog_tags:
-            blog_info = self.parse_blog(group_id, blog_tag)
+            if group_key in self.haveto_access_detail_group_keys:
+                blog_info = self.parse_blog_by_detail(group_key, blog_tag, blog_detail_crawler)
+                sleep(0.5)
+            else:
+                blog_info = self.parse_blog(group_key, blog_tag, image_base_url=self.image_base_url)
             if blog_info is None: return
             else:
                 blogs_data.append(blog_info)
@@ -111,9 +139,9 @@ class BlogDetailCrawler(BlogCrawler):
     各グループ公式ブログのブログ詳細からブログ情報を取得するための具象クラス。インタフェースとなるのは、crawl()メソッド。
 
     [crawl]
-    ex) blog_info = otapick.BlogDetailCrawler().crawl(group_id, blog.blog_ct)
+    ex) blog_info = otapick.BlogDetailCrawler().crawl(group.key, blog.blog_ct)
     Args:
-        group_id (int): グループID
+        group_key (str): グループkey
         blog_ct (int): ブログCT
     Returns:
         dict: 指定したページに含まれるブログの情報(BlogListCrawlerと同一フォーマット)
@@ -121,14 +149,19 @@ class BlogDetailCrawler(BlogCrawler):
     """
     keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
     hinata_url = ['https://www.hinatazaka46.com/s/official/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
+    sakura_url = ['https://sakurazaka46.com/s/s46/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=blog']
+    ### Edit ###
 
-    def crawl(self, group_id, blog_ct):
-        blog_tags = super().crawl(group_id=group_id, blog_ct=blog_ct)
-        if blog_tags is None:
-            return
-        if len(blog_tags) == 0:
+    def get_tag(self, soup, **kwargs):
+        return parsers.get_blog_tag(kwargs['group_key'], soup)
+
+    def crawl(self, group_key, blog_ct):
+        blog_tag = super().crawl(group_key=group_key, blog_ct=blog_ct)
+
+        if not blog_tag:
             return 'blog not found'
-        blog_info = self.parse_blog(group_id, blog_tags[0], blog_ct=blog_ct)
+
+        blog_info = self.parse_blog(group_key, blog_tag, blog_ct=blog_ct, image_base_url=self.image_base_url)
         if blog_info is None:
             return
         else:
@@ -140,9 +173,9 @@ class TextCrawler(Crawler):
     各グループ公式ブログのブログ詳細から本文DOMを取得するための具象クラス。インタフェースとなるのは、crawl()メソッド。
 
     [crawl]
-    ex) text = otapick.TextCrawler().crawl(group_id, blog_ct)
+    ex) text = otapick.TextCrawler().crawl(group.key, blog_ct)
     Args:
-        group_id (int): グループID
+        group_key (int): グループkey
         blog_ct (int): ブログCT
     Returns:
         str: 本文DOM
@@ -150,11 +183,13 @@ class TextCrawler(Crawler):
     """
     keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
     hinata_url = ['https://www.hinatazaka46.com/s/official/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=member']
+    sakura_url = ['https://sakurazaka46.com/s/s46/diary/detail/', Code.BLOG_CT, '?ima=0000&cd=blog']
+    ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_article_tag(kwargs['group_id'], soup)
+        return parsers.get_article_tag(kwargs['group_key'], soup)
 
-    def crawl(self, group_id, blog_ct):
-        tag = super().crawl(group_id=group_id, blog_ct=blog_ct)
+    def crawl(self, group_key, blog_ct):
+        tag = super().crawl(group_key=group_key, blog_ct=blog_ct)
         if tag is None: return
         return str(tag)
