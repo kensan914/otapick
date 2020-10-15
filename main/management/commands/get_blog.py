@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 quit()
             unregister_num = options['unregister']
 
-        if options['group']:
+        if options['group'] or options['group'] == 0:
             otapick.register_blogs(group_id=options['group'], up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])
         else:
             for group in Group.objects.all():
