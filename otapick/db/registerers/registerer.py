@@ -1,6 +1,6 @@
 import time
 import otapick
-from main.models import Blog
+from main.models import Blog, Group
 from image.models import Image
 from .unregisterer import unregister
 
@@ -31,8 +31,12 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
     correct_cts_list = [] # [[234, 3422, ...], [214, 423, ...]]
 
     blog_crawler = otapick.BlogListCrawler()
+    groups = Group.objects.filter(group_id=group_id)
+    if not groups.exists():
+        return
+    group_key = groups.first().key
     for page, is_last in otapick.lastone(range(up_limit)):
-        blogs_data = blog_crawler.crawl(group_id, page)
+        blogs_data = blog_crawler.crawl(group_key, page)
         if blogs_data is None:
             return
         elif len(blogs_data) == 0:
@@ -56,8 +60,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
                 finished = exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, tweet, console=True)
 
                 if finished:
-                    # TODO 欅時代のブログがさくじょされてしまう。今のところコメントアウト
-                    # unregister(correct_cts_list, group_id, unregister_num)
+                    unregister(correct_cts_list, group_id, unregister_num)
                     break
                 simultime_blogs = [blog_info]
                 simultime_post_date = blog_info['post_date']
