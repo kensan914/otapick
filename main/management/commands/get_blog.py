@@ -19,8 +19,9 @@ class Command(BaseCommand):
         unregister_num = 1
 
         if not Group.objects.filter(group_id=options['group']).exists() and options['group'] is not None:
-            print('groupID', options['group'], 'is not supported.')
-            quit()
+            if options['group'] != 0:
+                print('groupID', options['group'], 'is not supported.')
+                quit()
 
         if options['page']:
             up_limit = options['page']
