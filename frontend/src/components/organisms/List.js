@@ -4,13 +4,13 @@ import { HorizontalLoader } from '../molecules/Loader';
 import Masonry from 'react-masonry-component';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
-import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp, updateMeta } from '../tools/support';
+import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp } from '../tools/support';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION, ADS_INTERVAL, ADS_INDEX, ADS_INTERVAL_MORE } from '../tools/env';
+import { BASE_URL, DELAY_TIME, ADS_INTERVAL, ADS_INDEX } from '../tools/env';
 import ImageCard from '../molecules/ImageCard';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from '../atoms/NotFound';
-import { SquareAds, LandscapeAds } from '../atoms/Adsense';
+import { SquareAds } from '../atoms/Adsense';
 import AdsenseCard from '../molecules/AdsenseCard';
 
 
@@ -70,7 +70,7 @@ class List extends React.Component {
           hasMore={this.state.hasMore}
           loadMore={() => this.getItemList(this.page)}
           initialLoad={false}
-          loader={<HorizontalLoader />}
+          loader={<HorizontalLoader key={0} />}
           className="mb-5"
         >
           {this.state.status === "success" &&
@@ -156,9 +156,9 @@ class BlogList_ extends List {
 
   generateCards = () => {
     return (this.state.items.map(({ groupID, blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
-      <>
+      <div key={i}>
         <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3 blog-card">
-          <BlogCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
+          <BlogCard id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
             title={title} writer={writer} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} url={url} officialUrl={officialUrl} />
         </div>
         {(i % ADS_INTERVAL === ADS_INDEX) &&
@@ -166,13 +166,13 @@ class BlogList_ extends List {
             <SquareAds />
           </div>
         }
-      </>
+      </div>
     )));
   }
 }
 
 
-class ImageList_ extends List {
+class _ImageList extends List {
   constructor(props) {
     super(props);
     this.randomSeed = generateRandomSeed();
@@ -249,24 +249,24 @@ class ImageList_ extends List {
           ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 ")
           : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 "));
       return (
-        <>
+        <div key={i}>
           <div className={gridItemClassName}>
-            <ImageCard key={i} id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
+            <ImageCard id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
               src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
-          </div >
+          </div>
 
           {(!this.props.related && i % ADS_INTERVAL === ADS_INDEX) &&
             <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
               <SquareAds />
             </div>
           }
-        </>
+        </div>
       )
     });
 }
 
 
-class HomeList_ extends ImageList_ {
+class _HomeList extends _ImageList {
   constructor(props) {
     super(props);
     this.state = Object.assign(this.state, {
@@ -380,36 +380,38 @@ class HomeList_ extends ImageList_ {
             <MemberCard id={`additional_${this.additionalItemsIndex}`} ct={add.ct} image={add.image} url={add.url} officialUrl={add.officialUrl} lastKanji={add.lastKanji} firstKanji={add.firstKanji} lastKana={add.lastKana}
               firstKana={add.firstKana} belongingGroup={add.belongingGroup} wavesVals={this.wavesVals} message={add.message} />
         } else if (add.type === "twitter") {
-          additionalItem = 
+          additionalItem =
             <AdsenseCard url={add.url} src={add.src} message={add.message} />;
         }
         this.additionalItemsIndex++;
       }
 
       const gridItemClassName = "grid-item col-6 col-md-4 col-lg-3 px-1 px-sm-2 " + (isMobile ? "my-1 " : "my-3 ");
-      return (<>
-        <div className={gridItemClassName}>
-          <ImageCard key={i} id={i} groupID={groupID} group={getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
-            src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
-        </div >
-        {/* additionalItem */}
-        {additionalItem &&
+      return (
+        <div key={i}>
           <div className={gridItemClassName}>
-            {additionalItem}
-          </div>
-        }
-        {/* Google Adsense */}
-        {(i % ADS_INTERVAL === ADS_INDEX) &&
-          <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
-            <SquareAds />
-          </div>
-        }
-      </>);
+            <ImageCard id={i} groupID={groupID} group={getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
+              src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
+          </div >
+          {/* additionalItem */}
+          {additionalItem &&
+            <div className={gridItemClassName}>
+              {additionalItem}
+            </div>
+          }
+          {/* Google Adsense */}
+          {(i % ADS_INTERVAL === ADS_INDEX) &&
+            <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
+              <SquareAds />
+            </div>
+          }
+        </div>
+      );
     })
   }
 }
 
 
 export const BlogList = withRouter(BlogList_);
-export const ImageList = withRouter(ImageList_);
-export const HomeList = withRouter(HomeList_);
+export const ImageList = withRouter(_ImageList);
+export const HomeList = withRouter(_HomeList);

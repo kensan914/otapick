@@ -1,14 +1,18 @@
 import time
-from main.models import Blog
+from main.models import Blog, Group
 import otapick
 
 
 def unregister(correct_cts_list, group_id, unregister_num):
     blog_crawler = otapick.BlogListCrawler()
+    groups = Group.objects.filter(group_id=group_id)
+    if not groups.exists():
+        return
+    group_key = groups.first().key
     for page in range(unregister_num):
         # unregister_numを2以上で設定していた時、1ページ目で登録処理が終了した場合など
         if len(correct_cts_list) <= page and len(correct_cts_list) < unregister_num:
-            blogs_data = blog_crawler.crawl(group_id, page)
+            blogs_data = blog_crawler.crawl(group_key, page)
             correct_cts_list.append([blog_info['blog_ct'] for blog_info in blogs_data])
         for blog in Blog.objects.filter(writer__belonging_group__group_id=group_id).order_by('-post_date', 'order_for_simul')[20*page:20*(page+1)]:
             if not blog.blog_ct in correct_cts_list[page]:

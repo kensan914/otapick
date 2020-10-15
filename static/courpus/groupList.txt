@@ -1,2 +1,2 @@
-欅坂46 1 keyakizaka46.com
-日向坂46 2 hinatazaka46.com
+櫻坂46 1 sakurazaka46.com sakura https://sakurazaka46.com/s/s46/diary/detail/{}?ima=0000&cd=blog https://sakurazaka46.com/s/s46/artist/{}?ima=0000
+日向坂46 2 www.hinatazaka46.com hinata https://www.hinatazaka46.com/s/official/diary/detail/{}?ima=0000&cd=member https://www.hinatazaka46.com/s/official/artist/{}?ima=0000

@@ -143,8 +143,8 @@ class BlogSearchListTemplate extends React.Component {
       ))
     } else if (this.state.members.length > 0) {
       itemsComponent = this.state.members.map(({ image, url, officialUrl, ct, lastKanji, firstKanji, lastKana, firstKana, belongingGroup }, i) => (
-        <div className="col-6 col-md-4 col-xl-3 my-2 px-1 px-sm-3">
-          <MemberCard key={i} ct={ct} image={image} url={url} officialUrl={officialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
+        <div key={i} className="col-6 col-md-4 col-xl-3 my-2 px-1 px-sm-3">
+          <MemberCard ct={ct} image={image} url={url} officialUrl={officialUrl} lastKanji={lastKanji} firstKanji={firstKanji} lastKana={lastKana}
             firstKana={firstKana} belongingGroup={belongingGroup} wavesVals={this.state.wavesVals} />
         </div>
       ))

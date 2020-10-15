@@ -25,7 +25,7 @@ class DetailButton extends React.Component {
     return (
       <ButtonDropdown direction="right" isOpen={this.state.dropdownOpen} toggle={this.toggle} onClick={(e) => e.stopPropagation()}>
         <DropdownToggle color="light" className="p-0 writer-card-detail-button rounded-circle">
-          <i class="fas fa-angle-down"></i>
+          <i className="fas fa-angle-down"></i>
         </DropdownToggle>
         <DropdownMenu className="bold">
           <DropdownItem tag={Link} to={this.props.writer.url["images"]}>画像一覧へ</DropdownItem>

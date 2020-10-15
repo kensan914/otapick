@@ -26,7 +26,7 @@ class DownloadModal extends React.Component {
           <p>ダウンロードダイアログにしたがって、画像を保存してください。</p>
         </ModalBody>
         <ModalFooter>
-          <div class="mx-auto" style={{width: 180}}>
+          <div className="mx-auto" style={{width: 180}}>
             <OtapickButton group={this.props.group} onClick={() =>history.back()} width={180} title={"戻る"} />
           </div>
         </ModalFooter>

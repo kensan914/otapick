@@ -1,6 +1,6 @@
 import otapick
 from image.models import Image
-from main.models import Member
+from main.models import Member, Group
 
 
 def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
@@ -22,17 +22,14 @@ def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
 
 def generate_official_url(blog=None, member=None):
     if blog is not None:
-        if blog.writer.belonging_group.group_id == 1:
-            return 'https://www.keyakizaka46.com/s/k46o/diary/detail/{}?ima=0000&cd=member'.format(blog.blog_ct)
-        elif blog.writer.belonging_group.group_id == 2:
-            return 'https://www.hinatazaka46.com/s/official/diary/detail/{}?ima=0000&cd=member'.format(blog.blog_ct)
-        else: return
+        for group in Group.objects.all():
+            if blog.writer.belonging_group.group_id == group.group_id:
+                return group.blog_url_format.format(blog.blog_ct)
     elif member is not None:
-        if member.belonging_group.group_id == 1:
-            return 'https://www.keyakizaka46.com/s/k46o/artist/{}?ima=0000'.format(member.ct)
-        elif member.belonging_group.group_id == 2:
-            return 'https://www.hinatazaka46.com/s/official/artist/{}?ima=0000'.format(member.ct)
-        else: return
+        for group in Group.objects.all():
+            if member.belonging_group.group_id == group.group_id:
+                return group.member_url_format.format(member.ct)
+    return
 
 
 def generate_memberimage_url(member):
@@ -53,7 +50,7 @@ def generate_thumbnail_url(blog):
             if bool(thumbnail.picture_250x) and bool(thumbnail.picture_500x):
                 return dict(zip(keys, [thumbnail.picture.url, thumbnail.picture_250x.url, thumbnail.picture_500x.url]))
 
-    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(3)]))
+    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(len(keys))]))
 
 
 def generate_thumbnail_url_SS(blog):
@@ -81,4 +78,4 @@ def generate_image_src(image):
                 otapick.compress_blog_image(image)
                 if bool(image.picture_250x) and bool(image.picture_500x):
                     return dict(zip(keys, [image.picture.url, image.picture_250x.url, image.picture_500x.url]))
-    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(3)]))
+    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(len(keys))]))

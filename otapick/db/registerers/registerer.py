@@ -1,7 +1,7 @@
 import time
 import otapick
-from main.models import Blog
-from image.models import Image, Progress
+from main.models import Blog, Group
+from image.models import Image
 from .unregisterer import unregister
 
 
@@ -31,8 +31,12 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
     correct_cts_list = [] # [[234, 3422, ...], [214, 423, ...]]
 
     blog_crawler = otapick.BlogListCrawler()
+    groups = Group.objects.filter(group_id=group_id)
+    if not groups.exists():
+        return
+    group_key = groups.first().key
     for page, is_last in otapick.lastone(range(up_limit)):
-        blogs_data = blog_crawler.crawl(group_id, page)
+        blogs_data = blog_crawler.crawl(group_key, page)
         if blogs_data is None:
             return
         elif len(blogs_data) == 0:

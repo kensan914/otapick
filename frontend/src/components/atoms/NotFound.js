@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { BACKGROUNG_IMG_URL } from '../tools/env';
+import React from "react";
+import { Link } from "react-router-dom";
+import { BACKGROUNG_IMG_URL, GROUPS } from "../tools/env";
 
 
 export class NotFoundBlogsContent extends React.Component {
@@ -12,10 +12,11 @@ export class NotFoundBlogsContent extends React.Component {
         }
         <div className="mx-2 search-suggestions-discription">
           <p>入力されたURLのページにブログ情報が含まれているか、今一度ご確認ください。</p>
-          <p>現在、<a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">欅坂46公式ブログ</a>と<a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">日向坂46公式ブログ</a>以外のサイトはサポートされておりません。ご了承ください。</p>
+          <p>現在、<a target="_blank" href={GROUPS["1"].blogUrl}>{`${GROUPS["1"].name}公式ブログ`}</a>と
+          <a target="_blank" href={GROUPS["2"].blogUrl}>{`${GROUPS["2"].name}公式ブログ`}</a>以外のサイトはサポートされておりません。ご了承ください。</p>
           <hr />
-          <p>入力例1）https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000</p>
-          <p>入力例2）https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000</p>
+          <p>{`入力例1）${GROUPS["1"].blogUrlExample}`}</p>
+          <p>{`入力例2）${GROUPS["2"].blogUrlExample}`}</p>
         </div>
       </div>
     );
@@ -31,10 +32,10 @@ export class NotFoundMembersContent extends React.Component {
         }
         <div className="mx-2 search-suggestions-discription">
           <p>入力された文字列に間違いがないか、以下を参考に今一度ご確認ください。</p>
-          <p><i class="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
-          <p><i class="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
-          <p><i class="fas fa-hand-point-right" />
-            <Link to={'/members'}>メンバーリスト</Link>にお探しのメンバーがいるか確認してください。
+          <p><i className="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
+          <p><i className="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
+          <p><i className="fas fa-hand-point-right" />
+            <Link to={"/members"}>メンバーリスト</Link>にお探しのメンバーがいるか確認してください。
           </p>
           <hr />
           <p>入力例1）平手友梨奈</p>
@@ -112,42 +113,42 @@ export class NotFoundMessage extends React.Component {
     if (this.props.type === "blog") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Blog</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Blog</span>
           <NotFoundBlogsContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "member") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Member</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Member</span>
           <NotFoundMembersContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "image") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Image</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Image</span>
           <NotFoundImagesContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "blogFailed") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Blog</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Blog</span>
           <NotFoundBlogsFaildContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "imageFailed") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>Not Found Image</span>
+          <span className="display-3" style={{ color: "white" }}>Not Found Image</span>
           <NotFoundImagesFaildContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "404") {
       content = (
         <>
-          <span class="display-3" style={{ color: "white" }}>404 Not Found</span>
+          <span className="display-3" style={{ color: "white" }}>404 Not Found</span>
           <NotFound404Content className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );

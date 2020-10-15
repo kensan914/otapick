@@ -28,7 +28,7 @@ class BlogListInfo(ListInfo):
     def get_result(self):
         if self.group_id is None:
             self.title = "おすすめ"
-            self.meta_title = "欅坂46・日向坂46のおすすめ"
+            self.meta_title = "櫻坂46・日向坂46のおすすめ"
             narrowing_blogs = Blog.objects.all()
         elif self.ct is None:
             if Group.objects.filter(group_id=self.group_id).exists():
@@ -56,11 +56,11 @@ class ImageListInfo(ListInfo):
     def get_result(self):
         if self.group_id == 0:
             self.title = "ホーム"
-            self.meta_title = "欅坂46・日向坂46のブログ画像を保存するなら"
+            self.meta_title = "櫻坂46・日向坂46のブログ画像を保存するなら"
             images = Image.objects.all()
         elif self.group_id is None:
             self.title = "おすすめ"
-            self.meta_title = "欅坂46・日向坂46のおすすめ"
+            self.meta_title = "櫻坂46・日向坂46のおすすめ"
             images = Image.objects.all()
         elif self.ct is None:
             if Group.objects.filter(group_id=self.group_id).exists():

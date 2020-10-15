@@ -146,7 +146,7 @@ class BlogView extends React.Component {
           }
           <Masonry options={options} className="mt-3 image-list-in-blog-view">
             {this.props.images.map(({ src, url, order }, i) => (
-              <div className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2">
+              <div key={i} className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2">
                 <ImageCard key={i} id={i} groupID={this.props.groupID} group={this.props.group} blogCt={this.props.blogCt} blogTitle={this.props.blogTitle}
                   src={src} url={url} blogUrl={this.props.blogUrl} officialUrl={this.props.officialUrl} writer={this.props.writer} imageID={`image_${order}`} />
               </div >
@@ -162,7 +162,7 @@ class BlogView extends React.Component {
               <div className="custom-control custom-checkbox">
                 <input name="allCheck" type="checkbox" className="custom-control-input" id="allCheck"
                   checked={this.state.allCheck} onChange={(e) => this.handleAllCheckChange(e)} />
-                <label className="custom-control-label" for="allCheck">すべて選択</label>
+                <label className="custom-control-label" htmlFor="allCheck">すべて選択</label>
               </div>
             </div>
 
@@ -171,7 +171,7 @@ class BlogView extends React.Component {
 
                 {
                   this.props.images.map((image, index) => (
-                    <div className="col-6 col-md-4 col-xl-3 mb-5">
+                    <div key={index} className="col-6 col-md-4 col-xl-3 mb-5">
                       <div style={{ cursor: "pointer" }} onClick={() => this.changeCheck(image.order)}>
                         <div className={this.props.group}>
                           <div className={"thumbnail img-thumbnail mx-auto " + (this.state.check[image.order] ? "checked" : "")} id={`image_${image.order}`}

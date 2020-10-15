@@ -7,11 +7,11 @@ from rest_framework.response import Response
 import otapick.db.scores.controller
 from api.serializers import *
 from image.models import Progress
-from main.models import Member, Blog
+from main.models import Member, Blog, Group
 import otapick
 
 
-# {'keyaki': [[1期生], [2期生]], 'hinata': [[1期生], [2期生], [3期生]]} ☚今後、メンバーが増えてもこのクラスをいじる必要はない
+# {'sakura': [[1期生], [2期生]], 'hinata': [[1期生], [2期生], [3期生]]} ☚今後、メンバーが増えてもこのクラスをいじる必要はない
 class MemberListAPIView(views.APIView):
     def generate_member_list(self, members): # generate member list separated by its generation.
         member_dict = {}  # key is its generation.
@@ -23,21 +23,16 @@ class MemberListAPIView(views.APIView):
         return member_list
 
     def get(self, request, *args, **kwargs):
-        keyaki_members = Member.objects.filter(belonging_group__group_id=1).exclude(generation=0)
-        keyaki_member_list = self.generate_member_list(keyaki_members)
-        for i, target in enumerate(keyaki_member_list):
-            keyaki_member_list[i] = MemberSerializer(target, many=True).data
+        data = {}
+        for group in Group.objects.all():
+            members_by_group = Member.objects.filter(belonging_group=group).exclude(generation=0)
+            member_list_by_group = self.generate_member_list(members_by_group)
+            for i, target in enumerate(member_list_by_group):
+                member_list_by_group[i] = MemberSerializer(target, many=True).data
+            data[group.key] = member_list_by_group
 
-        hinata_members = Member.objects.filter(belonging_group__group_id=2).exclude(generation=0)
-        hinata_member_list = self.generate_member_list(hinata_members)
-        for i, target in enumerate(hinata_member_list):
-            hinata_member_list[i] = MemberSerializer(target, many=True).data
-
-        data = {
-            'keyaki': keyaki_member_list,
-            'hinata': hinata_member_list,
-        }
         return Response(data, status.HTTP_200_OK)
+
 
 memberListAPIView = MemberListAPIView.as_view()
 
@@ -355,11 +350,20 @@ class SearchAPIView(views.APIView):
                         blogs = blogs[self.paginate_by * ( result['page'] - 1 ): self.paginate_by * result['page']]
                         blogs_data = self.serialize_blogs(blogs)
 
-                        if result['class'] == 'searchByLatest': title = '欅坂46 最新ブログ' if result['group_id'] == 1 else '日向坂46 最新ブログ'
+                        all_groups = Group.objects.all()
+                        if result['class'] == 'searchByLatest':
+                            title = ''
+                            for group in all_groups:
+                                if result['group_id'] == group.group_id:
+                                    title = '{} 最新ブログ'.format(group.name)
                         elif result['class'] == 'searchByMembers':
                             try: title = Member.objects.get(belonging_group__group_id=result['group_id'], ct=result['ct']).full_kanji
                             except : title = ''
-                        elif result['class'] == 'searchByBlogs': title = '欅坂46' if result['group_id'] == 1 else '日向坂46'
+                        elif result['class'] == 'searchByBlogs':
+                            title = ''
+                            for group in all_groups:
+                                if result['group_id'] == group.group_id:
+                                    title = group.name
                         else: title = ''
                         data = {
                             'status': 'success',

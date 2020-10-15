@@ -21,7 +21,7 @@ class MonthBox extends React.Component {
   render() {
     return (
       <input className="form-control form-control-sm" value={this.state.value} id="month_picker"
-        name="post" onClick={this._handleClick} autocomplete="off" />
+        name="post" onClick={this._handleClick} autoComplete="off" onChange={(val) => { }} />
     );
   }
   _handleClick(e) {
@@ -85,14 +85,14 @@ class NarrowCard extends React.Component {
               <h5 className="mb-3"><b>絞り込み</b></h5>
 
               <div className="form-group row mx-0 mx-sm-2">
-                <label for="keyword_form" className="col-md-2 col-form-label col-form-label-sm">キーワード</label>
+                <label htmlFor="keyword_form" className="col-md-2 col-form-label col-form-label-sm">キーワード</label>
                 <div className="col-md-10">
-                  <input type="text" value={this.state.kwvalue} onChange={(e) => this.handleChangeKw(e)} maxlength='20'
-                    className="form-control form-control-sm" id="keyword_form" placeholder="例)握手会" name="keyword" autocomplete="off" />
+                  <input type="text" value={this.state.kwvalue} onChange={(e) => this.handleChangeKw(e)} maxLength='20'
+                    className="form-control form-control-sm" id="keyword_form" placeholder="例)握手会" name="keyword" autoComplete="off" />
                 </div>
               </div>
               <div className="form-group row mx-0 mx-sm-2">
-                <label for="month_picker" className="col-md-2 col-form-label col-form-label-sm">投稿月</label>
+                <label htmlFor="month_picker" className="col-md-2 col-form-label col-form-label-sm">投稿月</label>
                 <div className="col-md-10">
                   <Picker
                     ref="pickAMonth"
