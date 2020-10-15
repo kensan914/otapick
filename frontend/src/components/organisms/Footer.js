@@ -1,6 +1,7 @@
-import React from 'react';
-import { withRouterInnerRef } from '../tools/withRouterInnerRef';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { withRouterInnerRef } from "../tools/withRouterInnerRef";
+import { Link } from "react-router-dom";
+import { GROUPS } from "../tools/env";
 
 
 // HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
@@ -92,18 +93,16 @@ class Footer extends React.Component {
                   <ul className="footer-menu">
                     <span className="font-weight-bold">画像を探す</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
-                    <li>
-                      <Link to="/images/1">欅坂46 画像一覧</Link>
-                    </li>
-                    <li>
-                      <Link to="/images/2">日向坂46 画像一覧</Link>
-                    </li>
-                    <li>
-                      <Link to="/blogs/1">欅坂46 ブログ一覧</Link>
-                    </li>
-                    <li>
-                      <Link to="/blogs/2">日向坂46 ブログ一覧</Link>
-                    </li>
+                    {Object.values(GROUPS).map(groupObj => (
+                      <li key={groupObj.id}>
+                        <Link to={`/images/${groupObj.id}`}>{`${groupObj.name} 画像一覧`}</Link>
+                      </li>
+                    ))}
+                    {Object.values(GROUPS).map(groupObj => (
+                      <li key={groupObj.id}>
+                        <Link to={`/blogs/${groupObj.id}`}>{`${groupObj.name} ブログ一覧`}</Link>
+                      </li>
+                    ))}
                     <li>
                       <Link to="/members">メンバーリスト</Link>
                     </li>
@@ -114,26 +113,16 @@ class Footer extends React.Component {
                   <ul className="footer-menu">
                     <span className="font-weight-bold">公式リンク</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
-                    <li>
-                      <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000">
-                        欅坂46 公式ブログ<i className="fas fa-external-link-alt"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a target="_blank" href="https://www.keyakizaka46.com/s/k46o/?ima=0000">
-                        欅坂46 公式サイト <i className="fas fa-external-link-alt"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a target="_blank" href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000">
-                        日向坂46 公式ブログ <i className="fas fa-external-link-alt"></i>
-                      </a>
-                    </li>
-                    <li>
-                      <a target="_blank" href="https://www.hinatazaka46.com/s/official/?ima=0000">
-                        日向坂46 公式サイト <i className="fas fa-external-link-alt"></i>
-                      </a>
-                    </li>
+                    {Object.values(GROUPS).map(groupObj => (
+                      <div key={groupObj.id}>
+                        <li>
+                          <a target="_blank" href={groupObj.blogUrl}>{`${groupObj.name} 公式ブログ `}<i className="fas fa-external-link-alt"></i></a>
+                        </li>
+                        <li>
+                          <a target="_blank" href={groupObj.topUrl}>{`${groupObj.name} 公式サイト `}<i className="fas fa-external-link-alt"></i></a>
+                        </li>
+                      </div>
+                    ))}
                   </ul>
                 </div>
 

@@ -1,11 +1,11 @@
 import React from "react";
-import NavigationBar from '../organisms/NavigationBar';
-import BlogListTemplate from '../templates/BlogListTemplate';
-import BlogSearchListTemplate from '../templates/BlogSearchListTemplate';
+import NavigationBar from "../organisms/NavigationBar";
+import BlogListTemplate from "../templates/BlogListTemplate";
+import BlogSearchListTemplate from "../templates/BlogSearchListTemplate";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Provider } from 'react-keep-alive';
-import { setUserAgent, setBodyPadding, watchCurrentPosition, getIsMobile, isMobile } from '../tools/support';
-import Footer from '../organisms/Footer';
+import { Provider } from "react-keep-alive";
+import { setUserAgent, setBodyPadding, watchCurrentPosition, getIsMobile, isMobile } from "../tools/support";
+import Footer from "../organisms/Footer";
 import LocationAdmin from "../atoms/LocationAdmin";
 import MemberListTemplate from "../templates/MemberListTemplate";
 import BlogViewTemplate from "../templates/BlogViewTemplate";
@@ -81,12 +81,12 @@ class App extends React.Component {
   beforeunloadHandler = e => window.scrollTo(0, 0);
 
   componentDidMount() {
-    window.addEventListener('scroll', this.scrollHandler, true);
-    window.addEventListener('beforeunload', this.beforeunloadHandler, true);
+    window.addEventListener("scroll", this.scrollHandler, true);
+    window.addEventListener("beforeunload", this.beforeunloadHandler, true);
   }
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.scrollHandler);
-    window.removeEventListener('beforeunload', this.beforeunloadHandler);
+    window.removeEventListener("scroll", this.scrollHandler);
+    window.removeEventListener("beforeunload", this.beforeunloadHandler);
   }
 
   render() {

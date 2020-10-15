@@ -1,3 +1,8 @@
+"""crawlersパッケージ
+グループが追加、または改名など変更があった際の修正Tips
+1. 変更するファイルはabstracts.py, implements.py, parsers.pyの3つ
+2. グループ情報に依存していて変更・追記すべき箇所は「### Edit ###」で表すので、そのワードで検索する
+"""
 from urllib.parse import urljoin
 from abc import abstractmethod, ABCMeta
 from enum import Enum
@@ -10,16 +15,31 @@ from urllib3.exceptions import InsecureRequestWarning
 class Crawler(metaclass=ABCMeta):
     keyaki_url = []
     hinata_url = []
-    other_url = []
+    sakura_url = []
+    ### Edit ###
 
+    other_url = []
+    image_base_url = ''
+
+
+    def set_image_base_url(self, **kwargs):
+        if kwargs['group_key'] == 'keyaki':
+            self.image_base_url = 'https://cdn.keyakizaka46.com/'
+        elif kwargs['group_key'] == 'hinata':
+            self.image_base_url = 'https://cdn.hinatazaka46.com/images/'
+        elif kwargs['group_key'] == 'sakura':
+            self.image_base_url = 'https://sakurazaka46.com/'
+        ### Edit ###
 
     def get_url(self, **kwargs):
-        url_structure = []
         if not self.other_url:
-            if kwargs['group_id'] == 1:
+            if kwargs['group_key'] == 'keyaki':
                 url_structure = self.keyaki_url
-            elif kwargs['group_id'] == 2:
+            elif kwargs['group_key'] == 'hinata':
                 url_structure = self.hinata_url
+            elif kwargs['group_key'] == 'sakura':
+                url_structure = self.sakura_url
+            ### Edit ###
             else: return
         else:
             url_structure = self.other_url
@@ -40,8 +60,13 @@ class Crawler(metaclass=ABCMeta):
             http = urllib3.PoolManager(
                 cert_reqs='CERT_REQUIRED',
                 ca_certs=certifi.where())
-            return http.request('GET', url)
-        except: return
+            if 'as_mobile' in kwargs and kwargs['as_mobile']:
+                headers = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) > > AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",}
+            else:
+                headers = {}
+            return http.request('GET', url, headers=headers)
+        except:
+            return
 
     def parse(self, response):
         return BeautifulSoup(response.data, 'lxml')
@@ -52,6 +77,7 @@ class Crawler(metaclass=ABCMeta):
 
     @abstractmethod
     def crawl(self, **kwargs):
+        self.set_image_base_url(**kwargs)
         response = self.get(**kwargs)
         if response is None: return
         soup = self.parse(response)
@@ -60,7 +86,6 @@ class Crawler(metaclass=ABCMeta):
 
 
 class Code(Enum):
-    GROUP_ID = 'group_id'
     CT = 'ct'
     MEMBER_NAME = 'member_name'
     BLOG_CT = 'blog_ct'

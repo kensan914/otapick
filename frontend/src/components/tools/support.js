@@ -1,16 +1,16 @@
-import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DISCRIPTION, SITE_NAME, HOME_TITLE, GA_TRACKING_ID, DEBUG } from './env';
+import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DISCRIPTION, SITE_NAME, HOME_TITLE, GA_TRACKING_ID, DEBUG, GROUPS } from "./env";
 
-// ex)URLJoin('http://www.google.com', 'a', undefined, '/b/cd', undifined, '?foo=123', '?bar=foo'); => 'http://www.google.com/a/b/cd/?foo=123&bar=foo' 
+// ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undifined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo" 
 export const URLJoin = (...args) => {
   args = args.filter(n => n !== undefined);
   for (let i = args.length - 1; i >= 0; i--) {
-    if (args[i].toString().startsWith('?')) continue;
-    if (!args[i].toString().endsWith('/')) {
-      args[i] += '/';
+    if (args[i].toString().startsWith("?")) continue;
+    if (!args[i].toString().endsWith("/")) {
+      args[i] += "/";
       break;
     }
   }
-  return args.join('/').replace(/[\/]+/g, '/').replace(/^(.+):\//, '$1://').replace(/^file:/, 'file:/').replace(/\/(\?|&|#[^!])/g, '$1').replace(/\?/g, '&').replace('&', '?')
+  return args.join("/").replace(/[\/]+/g, "/").replace(/^(.+):\//, "$1://").replace(/^file:/, "file:/").replace(/\/(\?|&|#[^!])/g, "$1").replace(/\?/g, "&").replace("&", "?")
 }
 
 export const scrollTop = () => {
@@ -22,8 +22,9 @@ export const scrollTop = () => {
 
 export const getGroup = (groupID) => {
   let group = "";
-  if (groupID == 1) group = "keyaki";
-  if (groupID == 2) group = "hinata";
+  Object.values(GROUPS).forEach(groupObj => {
+    if (groupObj.id == groupID) group = groupObj.key;
+  });
   return group;
 }
 
@@ -45,38 +46,38 @@ export const shortenNum = (num) => {
   else if (1000 <= num && num < 10000) {
     let num_min = num / 1000;
     num_min = Math.floor(num_min * 10) / 10
-    return num_min + '千';
+    return num_min + "千";
   } else if (10000 <= num && num < 100000) {
     let num_min = num / 10000;
     num_min = Math.floor(num_min * 10) / 10
-    return num_min + '万';
+    return num_min + "万";
   } else if (100000 <= num && num < 1000000) {
     let num_min = num / 10000;
     num_min = Math.floor(num_min)
-    return num_min + '万';
+    return num_min + "万";
   } else if (1000000 <= num && num < 10000000) {
     let num_min = num / 1000000;
     num_min = Math.floor(num_min * 10) / 10
-    return num_min + 'M';
+    return num_min + "M";
   } else if (10000000 <= num && num < 100000000) {
     let num_min = num / 1000000;
     num_min = Math.floor(num_min)
-    return num_min + 'M';
+    return num_min + "M";
   } else if (100000000 <= num && num < 1000000000) {
     let num_min = num / 100000000;
     num_min = Math.floor(num_min * 10) / 10
-    return num_min + '億'
+    return num_min + "億"
   } else if (1000000000 <= num && num < 10000000000) {
     let num_min = num / 100000000;
     num_min = Math.floor(num_min)
-    return num_min + '億'
+    return num_min + "億"
   } else if (10000000000 <= num) {
     return "-";
   }
 }
 
 
-const UAParser = require('ua-parser-js')
+const UAParser = require("ua-parser-js")
 export let isMobile = true; // スマホ・タブレット: true, PC: false
 export let isSmp = true; // スマホ: true, タブレット・PC: false
 
@@ -137,11 +138,9 @@ export const generateKeepAliveNameInfo = (key) => {
 
 export const generateAlt = (group, writerName, type) => {
   let groupName;
-  if (group === "keyaki") {
-    groupName = "欅坂46";
-  } else if (group === "hinata") {
-    groupName = "日向坂46";
-  }
+  Object.values(GROUPS).forEach(groupObj => {
+    if (groupObj.key === group) groupName = groupObj.name;
+  });
   if (type === "thumbnail") {
     return `${writerName}(${groupName})のブログのサムネイル画像`;
   } else if (type === "member") {
@@ -287,7 +286,7 @@ export const updateMeta = (metaData) => {
     const metaName = headMeta.getAttribute("name");
     if (metaName !== null) {
       if (metaName.indexOf("description") !== -1) {
-        headMeta.setAttribute('content', metaData.discription + DISCRIPTION);
+        headMeta.setAttribute("content", metaData.discription + DISCRIPTION);
       }
     }
   }
@@ -297,8 +296,8 @@ export const updateMeta = (metaData) => {
 // Global site tag (gtag.js) - Google Analytics
 export const gtagTo = (pathname) => {
   if (!DEBUG) {
-    gtag('config', GA_TRACKING_ID, {
-      'page_path': pathname
+    gtag("config", GA_TRACKING_ID, {
+      "page_path": pathname
     });
   }
 }

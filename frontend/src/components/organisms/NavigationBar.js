@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import SearchDownshift from '../molecules/SearchDownshift'
-import { isMobile, isSmp } from '../tools/support';
-import { MobileTopMenu } from '../molecules/MobileMenu';
+import React, { useState } from "react";
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { Link } from "react-router-dom";
+import SearchDownshift from "../molecules/SearchDownshift"
+import { isMobile, isSmp } from "../tools/support";
+import { MobileTopMenu } from "../molecules/MobileMenu";
+import { GROUPS } from "../tools/env";
 
 
 const NavigationBar = (props) => {
@@ -56,8 +57,9 @@ const NavigationBar = (props) => {
                 画像一覧
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag={Link} to="/images/1">欅坂46</DropdownItem>
-                <DropdownItem tag={Link} to="/images/2">日向坂46</DropdownItem>
+                {Object.values(GROUPS).map(groupObj => (
+                  <DropdownItem key={groupObj.id} tag={Link} to={`/images/${groupObj.id}`}>{groupObj.name}</DropdownItem>
+                ))}
                 <DropdownItem tag={Link} to="/images">おすすめ画像</DropdownItem>
                 <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
               </DropdownMenu>
@@ -68,8 +70,9 @@ const NavigationBar = (props) => {
                 ブログ一覧
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem tag={Link} to="/blogs/1">欅坂46</DropdownItem>
-                <DropdownItem tag={Link} to="/blogs/2">日向坂46</DropdownItem>
+                {Object.values(GROUPS).map(groupObj => (
+                  <DropdownItem key={groupObj.id} tag={Link} to={`/blogs/${groupObj.id}`}>{groupObj.name}</DropdownItem>
+                ))}
                 <DropdownItem tag={Link} to="/blogs">おすすめブログ</DropdownItem>
                 <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
               </DropdownMenu>
@@ -80,12 +83,11 @@ const NavigationBar = (props) => {
                 公式
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem href="https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000" target="_blank">
-                  欅坂46公式ブログ{"\u00A0"}<i className="fas fa-external-link-alt" />
-                </DropdownItem>
-                <DropdownItem href="https://www.hinatazaka46.com/s/official/diary/member?ima=0000" target="_blank">
-                  日向坂46公式ブログ{"\u00A0"}<i className="fas fa-external-link-alt" />
-                </DropdownItem>
+                {Object.values(GROUPS).map(groupObj => (
+                  <DropdownItem key={groupObj.id} href={groupObj.blogUrl} target="_blank">
+                    {groupObj.name}公式ブログ{"\u00A0"}<i className="fas fa-external-link-alt" />
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             </Dropdown>
 

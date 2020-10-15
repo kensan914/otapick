@@ -1,13 +1,13 @@
 import React from "react";
-import Headline from '../molecules/Headline';
-import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from '../tools/support';
-import axios from 'axios';
-import { URLJoin } from '../tools/support';
+import Headline from "../molecules/Headline";
+import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from "../tools/support";
+import axios from "axios";
+import { URLJoin } from "../tools/support";
 import BlogViewInfo from "../molecules/info/BlogViewInfo";
 import BlogView from "../organisms/BlogView";
 import { BlogViewLoader, LoaderScreen } from "../molecules/Loader";
 import { LOAD_IMG_URL, BASE_URL, DELAY_TIME } from "../tools/env";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 import { NotFoundMessage } from "../atoms/NotFound";
 import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
 import { SquareAds, LandscapeAds } from "../atoms/Adsense";
@@ -176,11 +176,11 @@ class BlogViewTemplate extends ViewTemplate {
   putView() {
     axios
       .put(this.blogViewURL, {
-        action: 'view',
+        action: "view",
         key: this.state.VIEW_KEY,
       }, {
         headers: {
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+          "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
         }
       })
       .then(res => {
@@ -193,11 +193,11 @@ class BlogViewTemplate extends ViewTemplate {
   putView() {
     axios
       .put(this.blogViewURL, {
-        action: 'view',
+        action: "view",
         key: this.state.VIEW_KEY,
       }, {
         headers: {
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+          "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
         }
       })
       .then(res => {
@@ -210,11 +210,11 @@ class BlogViewTemplate extends ViewTemplate {
   putDownload(order) {
     axios
       .put(URLJoin(BASE_URL, "api/image/", this.state.groupID, this.state.blogCt, order.toString()), {
-        action: 'download',
+        action: "download",
         key: this.state.DOWNLOAD_KEY,
       }, {
         headers: {
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+          "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
         }
       })
       .then(res => {

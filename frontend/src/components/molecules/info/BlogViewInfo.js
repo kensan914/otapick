@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Tooltip } from 'reactstrap';
-import { withRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { isSmp, isMobile } from '../../tools/support';
+import React, { useState } from "react";
+import { Tooltip } from "reactstrap";
+import { withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { isSmp, isMobile } from "../../tools/support";
+import { GROUPS } from "../../tools/env";
 
 
 export const ViewTooltip = (props) => {
@@ -24,8 +25,9 @@ class BlogViewInfo extends React.Component {
 
   render() {
     let officialLinkTitle;
-    if (this.props.group === "keyaki") officialLinkTitle = "keyakizaka.com";
-    else if (this.props.group === "hinata") officialLinkTitle = "hinatazaka.com";
+    Object.values(GROUPS).forEach(groupObj => {
+      if (groupObj.key === this.props.group) officialLinkTitle = groupObj.domain;
+    });
 
     return (
       <div className={"card otapick-card2 " + (isSmp ? "smp mb-3 " : (isMobile ? "mb-3 mt-1 " : "my-4 ")) + this.props.group}>
