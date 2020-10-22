@@ -1,10 +1,10 @@
 import React from 'react';
 import Downshift from 'downshift';
 import axios from 'axios';
-import { URLJoin, isMobile, isSmp, lockScreen, unLockScreen, documentScrollHandler } from '../tools/support';
+import { URLJoin, isMobile, isSmp, lockScreen, unLockScreen, documentScrollHandler } from '../modules/support';
 import { NotFoundBlogsContent, NotFoundMembersContent } from '../atoms/NotFound';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, MOBILE_TOP_MENU_MT, NAVBAR_LS_ZINDEX } from '../tools/env';
+import { BASE_URL, DELAY_TIME, MOBILE_TOP_MENU_MT, NAVBAR_LS_ZINDEX } from '../modules/env';
 import { Button } from 'reactstrap';
 import { HorizontalLoader } from './Loader';
 

@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { setInitLocationKey } from '../tools/support';
+import { setInitLocationKey } from '../modules/support';
 
 
 class LocationAdmin extends Component {

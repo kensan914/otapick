@@ -2,10 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import { saveAs } from "file-saver";
 import DownloadModal from '../molecules/DownloadModal';
-import { DELAY_TIME } from '../tools/env';
+import { DELAY_TIME } from '../modules/env';
 import Masonry from 'react-masonry-component';
 import ImageCard from '../molecules/ImageCard';
-import { addLongPressEventListeners, isMobile, isSmp } from '../tools/support';
+import { addLongPressEventListeners, isMobile, isSmp } from '../modules/support';
 
 
 class BlogView extends React.Component {

@@ -1,7 +1,7 @@
 import React from "react";
-import { withRouterInnerRef } from "../tools/withRouterInnerRef";
+import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import { Link } from "react-router-dom";
-import { GROUPS } from "../tools/env";
+import { GROUPS } from "../modules/env";
 
 
 // HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"

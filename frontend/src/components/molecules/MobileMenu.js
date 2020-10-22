@@ -1,7 +1,7 @@
 import React from "react";
-import { isSmp, lockScreen, unLockScreen, isMobile, documentScrollHandler } from "../tools/support";
+import { isSmp, lockScreen, unLockScreen, isMobile, documentScrollHandler } from "../modules/support";
 import { Button } from "reactstrap";
-import { MOBILE_TOP_MENU_MT, SUB_NAVBAR_HEIGHT, NAVBAR_LS_ZINDEX, SUB_NAVBAR_LS_ZINDEX, NAVBAR_BOTTOM_LS_ZINDEX, GROUPS } from "../tools/env";
+import { MOBILE_TOP_MENU_MT, SUB_NAVBAR_HEIGHT, NAVBAR_LS_ZINDEX, SUB_NAVBAR_LS_ZINDEX, NAVBAR_BOTTOM_LS_ZINDEX, GROUPS } from "../modules/env";
 import { withRouter, Link } from "react-router-dom";
 
 

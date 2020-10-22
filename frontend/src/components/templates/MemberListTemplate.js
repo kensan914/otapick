@@ -2,11 +2,11 @@ import React from "react";
 import Headline from "../molecules/Headline";
 import MemberListInfo from "../molecules/info/MemberListInfo";
 import MemberCard from "../molecules/MemberCard";
-import { URLJoin, updateMeta, gtagTo } from "../tools/support";
+import { URLJoin, updateMeta, gtagTo } from "../modules/support";
 import axios from "axios";
-import { getGroup, generateWavesVals } from "../tools/support";
+import { getGroup, generateWavesVals } from "../modules/support";
 import { Collapse } from "reactstrap";
-import { BASE_URL, DELAY_TIME, GROUPS, MEMBERS_DISCRIPTION } from "../tools/env";
+import { BASE_URL, DELAY_TIME, GROUPS, MEMBERS_DISCRIPTION } from "../modules/env";
 import { LoaderScreen } from "../molecules/Loader";
 import { withRouter } from "react-router-dom";
 

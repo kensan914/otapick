@@ -3,10 +3,10 @@ import BackButton from "../atoms/BackButton";
 import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import { URLJoin, isMobile } from "../tools/support";
-import { BASE_URL, GROUPS } from "../tools/env";
+import { URLJoin, isMobile } from "../modules/support";
+import { BASE_URL, GROUPS } from "../modules/env";
 import { Link } from "react-router-dom";
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../tools/env";
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
 import { MobileTopMenu } from "./MobileMenu";
 
 

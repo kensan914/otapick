@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { shortenNum, generateAlt, isMobile, isSmp } from '../tools/support';
+import { shortenNum, generateAlt, isMobile, isSmp } from '../modules/support';
 import { MobileBottomMenu } from './MobileMenu';
 
 

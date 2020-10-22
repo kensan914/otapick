@@ -1,5 +1,5 @@
 import React from 'react';
-import { isMobile } from '../tools/support';
+import { isMobile } from '../modules/support';
 
 
 class AdsenseCard extends React.Component {

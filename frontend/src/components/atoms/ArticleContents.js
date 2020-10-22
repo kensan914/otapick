@@ -1,5 +1,5 @@
 import React from 'react';
-import { isSmp } from '../tools/support';
+import { isSmp } from '../modules/support';
 
 
 export class ContactContent extends React.Component {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { generateAlt, isMobile, isSmp } from '../tools/support';
-import { URLJoin } from '../tools/support';
+import { generateAlt, isMobile, isSmp } from '../modules/support';
+import { URLJoin } from '../modules/support';
 import { downloadImage } from '../organisms/ImageView';
 import { MobileBottomMenu } from './MobileMenu';
 
