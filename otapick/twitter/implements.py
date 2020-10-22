@@ -1,13 +1,12 @@
 import os
 from config import settings
 from image.models import Image
-from main.models import Blog, Group
+from main.models import Blog
 from otapick import sort_images
 from otapick.lib.constants import OTAPICK_URL
-from otapick.lib.serializerSupport import generate_url, generate_official_url
+from otapick.extensions.serializers_ex import generate_url, generate_official_url
 from otapick.twitter.abstracts import TwitterBot
 import emoji
-
 from otapick.twitter.generics import RankBot
 
 
@@ -63,19 +62,20 @@ class UpdateBot(TwitterBot):
 
     def tweet(self, group_id, blog_ct):
         self.set_group_id(group_id)
-        if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct).exists():
-            blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+        blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
+        if blogs.exists():
+            blog = blogs.first()
             return super().tweet(blog = blog)
         else:
             return
 
 
 class PopularityBot(RankBot):
-    """ UpdateBot
+    """ PopularityBot
     score更新時、人気上位3位をtweet。インタフェースは、tweet()メソッド。引数にgroup_id。
     """
     def tweet(self, group_id):
-        self.images = sort_images(Image.objects.filter(publisher__writer__belonging_group__group_id=group_id), 'popularity')[:3]
+        self.images = sort_images(Image.objects.filter(publisher__publishing_group__group_id=group_id), 'popularity')[:3]
         self.rank_type_emoji = emoji.emojize(':crown:', use_aliases=True)
         self.set_group_id(group_id)
         self.headline_title = '現在人気の画像'
@@ -86,7 +86,7 @@ class PopularityBot(RankBot):
 
 
 class ViewBot(RankBot):
-    """ UpdateBot
+    """ ViewBot
     閲覧数上位3位をtweet. インタフェースは、tweet()メソッド. 引数にgroup_id, blog_or_image, today.
     """
     def tweet(self, group_id, blog_or_image, today):
@@ -119,7 +119,7 @@ class ViewBot(RankBot):
 
 
 class DLBot(RankBot):
-    """ UpdateBot
+    """ DLBot
     DL数上位3位をtweet. インタフェースは、tweet()メソッド. 引数にgroup_id.
     """
     def tweet(self, group_id):

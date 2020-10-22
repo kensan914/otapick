@@ -106,7 +106,6 @@ def register_external(group_id, ct):
 
                     time.sleep(sleep_time_1)
 
-                otapick.init_progress(blog)
                 print('finished blog register.「' + blog.title + '」')
                 time.sleep(sleep_time_3)
 

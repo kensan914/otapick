@@ -4,8 +4,7 @@ from main.models import Group
 
 
 class Command(BaseCommand):
-    help = 'keep up latest blog information by scrayping.' \
-           '-g 0 => keyaki'
+    help = 'keep up latest blog information by scrayping.'
 
     def add_arguments(self, parser):
         parser.add_argument('-g', '--group', type=int, help='set groupID(1 or 2 or None). default:both')
@@ -19,9 +18,8 @@ class Command(BaseCommand):
         unregister_num = 1
 
         if not Group.objects.filter(group_id=options['group']).exists() and options['group'] is not None:
-            if options['group'] != 0:
-                print('groupID', options['group'], 'is not supported.')
-                quit()
+            print('groupID', options['group'], 'is not supported.')
+            quit()
 
         if options['page']:
             up_limit = options['page']
@@ -32,8 +30,8 @@ class Command(BaseCommand):
                 quit()
             unregister_num = options['unregister']
 
-        if options['group'] or options['group'] == 0:
+        if options['group']:
             otapick.register_blogs(group_id=options['group'], up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])
         else:
-            for group in Group.objects.all():
+            for group in Group.objects.filter(is_active=True):
                 otapick.register_blogs(group_id=group.group_id, up_limit=up_limit, all_check=options['all'], unregister_num=unregister_num, tweet=options['tweet'])

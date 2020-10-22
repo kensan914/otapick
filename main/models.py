@@ -10,6 +10,8 @@ class Group(models.Model):
     name = models.CharField(verbose_name='グループ名', max_length=30)
     domain = models.CharField(verbose_name='ドメイン', max_length=100)
     key = models.CharField(verbose_name='キー', max_length=30, blank=True)
+    is_active = models.BooleanField(verbose_name='活動状況', default=True)
+    blog_list_paginate_by = models.IntegerField(verbose_name='公式ブログリストの1ページ当たりのブログ件数', default=20)
     blog_url_format = models.CharField(verbose_name='公式ブログ詳細ページURIフォーマット(blog_ctを表す{}を一つ含む)', max_length=200, blank=True)
     member_url_format = models.CharField(verbose_name='メンバー詳細ページURIフォーマット(member_ctを表す{}を一つ含む)', max_length=200, blank=True)
 
@@ -20,6 +22,7 @@ class Group(models.Model):
 def get_upload_to(instance, filename):
     media_dir_1 = str(instance.belonging_group.group_id) + '_' + str(instance.ct)
     return 'member_images/{0}/{1}'.format(media_dir_1, filename)
+
 
 class Member(models.Model):
     class Meta:
@@ -60,6 +63,7 @@ class Blog(models.Model):
     post_date = models.DateTimeField(verbose_name='投稿日')
     order_for_simul = models.IntegerField(verbose_name='順番(同時投稿用)', default=0)
     writer = models.ForeignKey(Member, verbose_name='メンバー', on_delete=models.PROTECT)
+    publishing_group = models.ForeignKey(Group, verbose_name='掲載グループ', on_delete=models.PROTECT, null=True)
     num_of_downloads = models.IntegerField(verbose_name='総ダウンロード数', default=0)
     num_of_most_downloads = models.IntegerField(verbose_name='最大ダウンロード数', default=0)
     num_of_views = models.IntegerField(verbose_name='閲覧数', default=0)

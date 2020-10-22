@@ -1,6 +1,5 @@
-from image.models import Progress
 from main.models import Group, Member
-from otapick.lib.support import print_console
+from otapick.lib.utils import print_console
 
 
 def init_group():
@@ -8,12 +7,13 @@ def init_group():
     lines = fin.readlines()
     fin.close()
 
-    keyList = ['name', 'group_id', 'domain', 'key', 'blog_url_format', 'member_url_format']
+    keyList = ['name', 'group_id', 'domain', 'key', 'is_active', 'blog_list_paginate_by', 'blog_url_format', 'member_url_format']
     for line in lines:
-        group = {}
+        # group = {}
         line = line.replace('\n', '')
-        for key, val in zip(keyList, list(line.split(' '))):
-            group[key] = val
+        # for key, val in zip(keyList, list(line.split(' '))):
+        #     group[key] = val
+        group = create_dict(line, keyList)
 
         groups = Group.objects.filter(group_id=group['group_id'])
         if not groups.exists():
@@ -22,8 +22,10 @@ def init_group():
                 group_id=int(group['group_id']),
                 domain=group['domain'],
                 key=group['key'],
-                blog_url_format=group['blog_uri'],
-                member_url_format=group['member_uri'],
+                is_active=group['is_active'],
+                blog_list_paginate_by=group['blog_list_paginate_by'],
+                blog_url_format=group['blog_url_format'],
+                member_url_format=group['member_url_format'],
             )
             print_console('{} is registered!'.format(group['name']))
         else:
@@ -38,19 +40,6 @@ def init_group():
                     print_console('{}の{}を{}に変更しました。'.format(target_group.name, key, val))
                     target_group.__dict__[key] = val
                 target_group.save()
-
-
-def create_dict(line, keyList):
-    member = {}
-    for key, val in zip(keyList, list(line.split(' '))):
-        if val.lower() == 'true':
-            val = True
-        elif val.lower() == 'false':
-            val = False
-        elif key == 'group_id' or key == 'generation':
-            val = int(val)
-        member[key] = val
-    return member
 
 
 def init_member():
@@ -97,9 +86,15 @@ def init_member():
                     print_console('{}の{}を{}に変更しました。'.format(target_member.full_kanji, key, val))
                 target_member.save()
 
-def init_progress(blog):
-    if not Progress.objects.filter(target=blog).exists():
-        progress = Progress(target=blog)
-        progress.num = 100
-        progress.ready = True
-        progress.save()
+
+def create_dict(line, keyList):
+    obj = {}
+    for key, val in zip(keyList, list(line.split(' '))):
+        if val.lower() == 'true':
+            val = True
+        elif val.lower() == 'false':
+            val = False
+        elif key == 'group_id' or key == 'generation' or key == 'blog_list_paginate_by':
+            val = int(val)
+        obj[key] = val
+    return obj

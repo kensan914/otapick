@@ -1,3 +1,5 @@
+import re
+
 from django.db.models import Q
 from main.models import Member, Blog
 
@@ -8,17 +10,17 @@ search_blogs() search_members()
 
 def search_blogs(q_info):
     if q_info['class'] == 'detail':
-        blogs = Blog.objects.filter(writer__belonging_group__group_id=q_info['group_id'], blog_ct=q_info['blog_ct'])
+        blogs = Blog.objects.filter(publishing_group__group_id=q_info['group_id'], blog_ct=q_info['blog_ct'])
     elif q_info['class'] == 'searchByLatest':
-        blogs = Blog.objects.filter(writer__belonging_group__group_id=q_info['group_id'], writer__graduate=False).order_by('-post_date', 'order_for_simul')
+        blogs = Blog.objects.filter(publishing_group__group_id=q_info['group_id'], writer__graduate=False).order_by('-post_date', 'order_for_simul')
     elif q_info['class'] == 'searchByBlogs':
-        blogs = Blog.objects.filter(writer__belonging_group__group_id=q_info['group_id'], writer__graduate=False)
+        blogs = Blog.objects.filter(publishing_group__group_id=q_info['group_id'], writer__graduate=False)
         if q_info['dy'] and q_info['dy']['year'] and q_info['dy']['month']:
             blogs = search_blogs_by_dy(blogs, q_info['dy'])
         else:
             blogs = blogs.order_by('-post_date', 'order_for_simul')
     elif q_info['class'] == 'searchByMembers':
-        blogs = Blog.objects.filter(writer__belonging_group__group_id=q_info['group_id'], writer__ct=q_info['ct'])
+        blogs = Blog.objects.filter(publishing_group__group_id=q_info['group_id'], writer__ct=q_info['ct'])
         if q_info['dy'] and q_info['dy']['year'] and q_info['dy']['month']:
             blogs = search_blogs_by_dy(blogs, q_info['dy'])
         else:
@@ -40,6 +42,14 @@ def search_blogs_by_dy(origin_blogs, dy):
 def search_members(q_info):
     # 全角⇒半角
     cleaned_text = q_info['text'].translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
+    # 最後だけアルファベットの場合、最後を除外(日本語で入力途中の場合 ex. かげやm)
+    if len(cleaned_text) > 1:
+        last_char = cleaned_text[-1]
+        char_other_than_last = cleaned_text[:-1]
+        p_eng = re.compile('[a-z]+')
+        if not p_eng.fullmatch(char_other_than_last) and p_eng.fullmatch(last_char):
+            cleaned_text = char_other_than_last
+
     members =  Member.objects.filter(
         Q(full_kana__iregex=r'^%s' % cleaned_text) | Q(first_kana__iregex=r'^%s' % cleaned_text) |
         Q(full_kanji__iregex=r'^%s' % cleaned_text) | Q(first_kanji__iregex=r'^%s' % cleaned_text) |

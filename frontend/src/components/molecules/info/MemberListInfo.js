@@ -1,6 +1,6 @@
 import React from "react";
-import { GROUPS } from "../../tools/env";
-import { isSmp, isMobile } from "../../tools/support";
+import { GROUPS } from "../../modules/env";
+import { isSmp, isMobile } from "../../modules/utils";
 
 
 export class MemberListInfo extends React.Component {

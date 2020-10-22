@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import { Link } from "react-router-dom";
 import SearchDownshift from "../molecules/SearchDownshift"
-import { isMobile, isSmp } from "../tools/support";
+import { isMobile, isSmp } from "../modules/utils";
 import { MobileTopMenu } from "../molecules/MobileMenu";
-import { GROUPS } from "../tools/env";
+import { GROUPS } from "../modules/env";
 
 
 const NavigationBar = (props) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BOTTOM_NAVBAR_HEIGHT } from '../tools/env';
+import { BOTTOM_NAVBAR_HEIGHT } from '../modules/env';
 import { Button } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 

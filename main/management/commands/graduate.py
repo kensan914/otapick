@@ -4,7 +4,7 @@ from main.models import Member, Blog
 
 
 class Command(BaseCommand):
-    help = 'graduate. 卒業するメンバーの画像、テキストをまとめて保存。' \
+    help = 'graduate. 卒業するメンバーのテキストをまとめて保存。' \
            'group, ct オプションでメンバーを指定。' \
            '任意オプションexternalで、外部から収集を指定。'
 
@@ -32,8 +32,6 @@ class Command(BaseCommand):
         else:
             print('member not found.')
             return
-
-        otapick.download_images_by(member=member)
 
         # 本文DOMを所得
         for blog in Blog.objects.filter(writer=member):

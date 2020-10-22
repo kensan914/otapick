@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BACKGROUNG_IMG_URL, GROUPS } from "../tools/env";
+import { BACKGROUNG_IMG_URL, GROUPS } from "../modules/env";
 
 
 export class NotFoundBlogsContent extends React.Component {

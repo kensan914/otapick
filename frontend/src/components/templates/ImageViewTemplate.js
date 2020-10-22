@@ -1,6 +1,6 @@
 import React from "react";
-import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile, isSmp } from "../tools/support";
-import { BASE_URL } from "../tools/env";
+import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile, isSmp } from "../modules/utils";
+import { BASE_URL } from "../modules/env";
 import ImageView from "../organisms/ImageView";
 import { KeepAlive } from "react-keep-alive";
 import { ImageList } from "../organisms/List";

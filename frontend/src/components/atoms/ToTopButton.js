@@ -1,6 +1,6 @@
 import React from 'react';
-import { TOTOP_BUTTON_DIAMETER, TOTOP_BUTTON_M, BOTTOM_NAVBAR_HEIGHT } from '../tools/env';
-import { isMobile } from '../tools/support';
+import { TOTOP_BUTTON_DIAMETER, TOTOP_BUTTON_M, BOTTOM_NAVBAR_HEIGHT } from '../modules/env';
+import { isMobile } from '../modules/utils';
 
 
 class ToTopButton extends React.Component {

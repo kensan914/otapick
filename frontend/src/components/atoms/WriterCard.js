@@ -2,7 +2,7 @@ import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-import { isMobile } from '../tools/support';
+import { isMobile } from '../modules/utils';
 import { MobileBottomMenu } from '../molecules/MobileMenu';
 
 
