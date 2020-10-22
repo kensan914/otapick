@@ -8,6 +8,10 @@ def get_upload_to(instance, filename):
     return 'blog_images/{0}/{1}/{2}' .format(media_dir_1, media_dir_2, filename)
 
 
+def get_thumbnail_upload_to(instance, filename):
+    pass
+
+
 class Image(models.Model):
     class Meta:
         db_table = 'image'
