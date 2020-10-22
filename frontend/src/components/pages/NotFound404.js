@@ -1,6 +1,6 @@
 import React from 'react';
 import { NotFoundMessage } from '../atoms/NotFound';
-import { setBodyPadding, isMobile, updateMeta, gtagTo } from '../modules/support';
+import { setBodyPadding, isMobile, updateMeta, gtagTo } from '../modules/utils';
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from '../modules/env';
 import { withRouter } from 'react-router-dom';
 

@@ -4,7 +4,7 @@ import BlogListTemplate from "../templates/BlogListTemplate";
 import BlogSearchListTemplate from "../templates/BlogSearchListTemplate";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Provider } from "react-keep-alive";
-import { setUserAgent, setBodyPadding, watchCurrentPosition, getIsMobile, isMobile } from "../modules/support";
+import { setUserAgent, setBodyPadding, watchCurrentPosition, getIsMobile, isMobile } from "../modules/utils";
 import Footer from "../organisms/Footer";
 import LocationAdmin from "../atoms/LocationAdmin";
 import MemberListTemplate from "../templates/MemberListTemplate";

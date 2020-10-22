@@ -23,7 +23,7 @@ class Command(BaseCommand):
             if Member.objects.filter(belonging_group__group_id=temporary_member_info[0], ct=temporary_member_info[1]):
                 temporary_member = Member.objects.get(belonging_group__group_id=temporary_member_info[0], ct=temporary_member_info[1])
                 for blog in Blog.objects.filter(writer=temporary_member):
-                    blog_info = blog_detail_crawler.crawl(group_id=temporary_member.belonging_group.group_id, blog_ct=blog.blog_ct)
+                    blog_info = blog_detail_crawler.crawl(group_key=temporary_member.belonging_group.key, blog_ct=blog.blog_ct)
                     if blog_info is not None:
                         blog.writer = blog_info['member']
                         blog.save()

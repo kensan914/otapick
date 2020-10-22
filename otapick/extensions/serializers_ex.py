@@ -5,7 +5,7 @@ from main.models import Member, Group
 
 def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
     if blog is not None:
-        return '/blog/{}/{}'.format(blog.writer.belonging_group.group_id, blog.blog_ct)
+        return '/blog/{}/{}'.format(blog.publishing_group.group_id, blog.blog_ct)
     elif member is not None:
         ct = ''
         if member.independence: ct = member.ct
@@ -23,7 +23,7 @@ def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
 def generate_official_url(blog=None, member=None):
     if blog is not None:
         for group in Group.objects.all():
-            if blog.writer.belonging_group.group_id == group.group_id:
+            if blog.publishing_group.group_id == group.group_id:
                 return group.blog_url_format.format(blog.blog_ct)
     elif member is not None:
         for group in Group.objects.all():

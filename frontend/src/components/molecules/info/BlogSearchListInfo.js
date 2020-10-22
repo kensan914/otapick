@@ -1,5 +1,5 @@
 import React from 'react';
-import { isSmp, isMobile } from '../../modules/support';
+import { isSmp, isMobile } from '../../modules/utils';
 
 
 

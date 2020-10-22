@@ -1,8 +1,8 @@
 import React from "react";
 import Headline from "../molecules/Headline";
-import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from "../modules/support";
+import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from "../modules/utils";
 import axios from "axios";
-import { URLJoin } from "../modules/support";
+import { URLJoin } from "../modules/utils";
 import BlogViewInfo from "../molecules/info/BlogViewInfo";
 import BlogView from "../organisms/BlogView";
 import { BlogViewLoader, LoaderScreen } from "../molecules/Loader";

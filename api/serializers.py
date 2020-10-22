@@ -45,7 +45,7 @@ class BlogSerializer(serializers.ModelSerializer):
         model = Blog
         fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', ]
 
-    group_id = serializers.IntegerField(source='writer.belonging_group.group_id')
+    group_id = serializers.IntegerField(source='publishing_group.group_id')
     post_date = serializers.DateTimeField(format='%y/%m/%d')
     writer = MemberSerializerMin(read_only=True)
     thumbnail = serializers.SerializerMethodField()
@@ -65,13 +65,26 @@ class BlogSerializer(serializers.ModelSerializer):
 class BlogSerializerVerDetail(BlogSerializer):
     class Meta:
         model = Blog
-        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'official_url', 'url']
+        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'official_url', 'url', 'images', 'VIEW_KEY', 'DOWNLOAD_KEY']
 
     post_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
     url = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
+    VIEW_KEY = serializers.SerializerMethodField()
+    DOWNLOAD_KEY  = serializers.SerializerMethodField()
 
     def get_url(self, obj):
         return otapick.generate_url(blog=obj)
+
+    def get_images(self, obj):
+        images = Image.objects.filter(publisher=obj).order_by('order')
+        return ImageSerializer(images, many=True).data
+
+    def get_VIEW_KEY(self, obj):
+        return otapick.VIEW_KEY
+
+    def get_DOWNLOAD_KEY(self, obj):
+        return otapick.DOWNLOAD_KEY
 
 
 class MemberSerializerVerSS(serializers.ModelSerializer):
@@ -118,4 +131,4 @@ class ImageSerializer(serializers.ModelSerializer):
         return otapick.generate_image_src(obj)
 
     def get_url(self, obj):
-        return '/image/{}/{}/{}'.format(obj.publisher.writer.belonging_group.group_id, obj.publisher.blog_ct, obj.order)
+        return '/image/{}/{}/{}'.format(obj.publisher.publishing_group.group_id, obj.publisher.blog_ct, obj.order)

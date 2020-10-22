@@ -1,7 +1,7 @@
 import React from 'react';
 import SortButton from '../../atoms/SortButton';
 import axios from 'axios';
-import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from '../../modules/support';
+import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from '../../modules/utils';
 import { withRouter } from 'react-router-dom';
 import { BASE_URL, DELAY_TIME, IMAGES_DISCRIPTION, HOME_TITLE } from '../../modules/env';
 import { MobileBottomMenu } from '../MobileMenu';

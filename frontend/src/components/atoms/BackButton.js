@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { initLocationKey, isMobile } from '../modules/support';
+import { initLocationKey, isMobile } from '../modules/utils';
 import { Button } from 'reactstrap';
 
 

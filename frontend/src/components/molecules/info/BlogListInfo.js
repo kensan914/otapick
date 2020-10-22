@@ -3,9 +3,9 @@ import NarrowButton from "../../atoms/NarrowButton";
 import SortButton from "../../atoms/SortButton";
 import NarrowCard from "../NarrowCard";
 import axios from "axios";
-import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from "../../modules/support";
+import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from "../../modules/utils";
 import { withRouter } from "react-router-dom";
-import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION, GROUPS } from "../../modules/env";
+import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION } from "../../modules/env";
 import { MobileBottomMenu } from "../MobileMenu";
 
 

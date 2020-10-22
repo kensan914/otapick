@@ -2,9 +2,9 @@ import React from "react";
 import Headline from "../molecules/Headline";
 import MemberListInfo from "../molecules/info/MemberListInfo";
 import MemberCard from "../molecules/MemberCard";
-import { URLJoin, updateMeta, gtagTo } from "../modules/support";
+import { URLJoin, updateMeta, gtagTo } from "../modules/utils";
 import axios from "axios";
-import { getGroup, generateWavesVals } from "../modules/support";
+import { getGroup, generateWavesVals } from "../modules/utils";
 import { Collapse } from "reactstrap";
 import { BASE_URL, DELAY_TIME, GROUPS, MEMBERS_DISCRIPTION } from "../modules/env";
 import { LoaderScreen } from "../molecules/Loader";
@@ -75,26 +75,28 @@ class MemberListTemplate extends React.Component {
             const _membersCollection = this.initMembers;
             const _togglerMemory = this.initTogglerMemory;
             Object.values(GROUPS).forEach(groupObj => {
-              _membersCollection[groupObj.id] = [];
-              for (const membersByGene of res.data[groupObj.key]) {
-                _membersCollection[groupObj.id].push(membersByGene.map(member =>
-                  ({
-                    image: member.image,
-                    url: member.url,
-                    officialUrl: member.official_url,
-                    ct: member.ct,
-                    lastKanji: member.last_kanji,
-                    firstKanji: member.first_kanji,
-                    lastKana: member.last_kana,
-                    firstKana: member.first_kana,
-                    belongingGroup: getGroup(member.belonging_group),
-                  })
-                ))
-              }
+              if (groupObj.isActive) {
+                _membersCollection[groupObj.id] = [];
+                for (const membersByGene of res.data[groupObj.key]) {
+                  _membersCollection[groupObj.id].push(membersByGene.map(member =>
+                    ({
+                      image: member.image,
+                      url: member.url,
+                      officialUrl: member.official_url,
+                      ct: member.ct,
+                      lastKanji: member.last_kanji,
+                      firstKanji: member.first_kanji,
+                      lastKana: member.last_kana,
+                      firstKana: member.first_kana,
+                      belongingGroup: getGroup(member.belonging_group),
+                    })
+                  ))
+                }
 
-              const _togglerMemory_by_group = new Array(_membersCollection[groupObj.id].length);
-              _togglerMemory_by_group.fill(true);
-              _togglerMemory[groupObj.key] = _togglerMemory_by_group
+                const _togglerMemory_by_group = new Array(_membersCollection[groupObj.id].length);
+                _togglerMemory_by_group.fill(true);
+                _togglerMemory[groupObj.key] = _togglerMemory_by_group
+              }
             });
             this.setState({
               membersCollection: _membersCollection,

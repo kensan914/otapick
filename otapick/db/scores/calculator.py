@@ -1,7 +1,5 @@
 import random
-
 from django.db.models import Max
-
 import otapick
 from image.models import Image
 from main.models import Blog, Group, Member
@@ -17,12 +15,11 @@ def init_calc_recommend_score():
     len_high_score_members = 10
 
 
-    for group_id in list(Group.objects.all().values_list('group_id', flat=True)):
+    for group_id in list(Group.objects.filter(is_active=True).values_list('group_id', flat=True)):
         high_score_member_points = {} # key: メンバーid, val: point
         high_score_members_list = [] # Memberオブジェクトのみ
-        high_score_blogs = Blog.objects.exclude(score=0).filter(writer__belonging_group__group_id=group_id).order_by('-score')
-        high_score_images = Image.objects.exclude(score=0).filter(
-                publisher__writer__belonging_group__group_id=group_id).order_by('-score')
+        high_score_blogs = Blog.objects.filter(writer__belonging_group__group_id=group_id).exclude(score=0).order_by('-score')
+        high_score_images = Image.objects.filter(publisher__writer__belonging_group__group_id=group_id).exclude(score=0).order_by('-score')
 
         tiescore_mode = False # memberが10人集まった終了時、まだタイスコアが続くようであれば、処理を続行。
         blog_tie = {'score': 0, 'index': 0}

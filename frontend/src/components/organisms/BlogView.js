@@ -5,7 +5,7 @@ import DownloadModal from '../molecules/DownloadModal';
 import { DELAY_TIME } from '../modules/env';
 import Masonry from 'react-masonry-component';
 import ImageCard from '../molecules/ImageCard';
-import { addLongPressEventListeners, isMobile, isSmp } from '../modules/support';
+import { addLongPressEventListeners, isMobile, isSmp } from '../modules/utils';
 
 
 class BlogView extends React.Component {

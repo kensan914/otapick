@@ -27,20 +27,22 @@ class BlogListInfo(ListInfo):
 
     def get_result(self):
         if self.group_id is None:
-            self.title = "おすすめ"
-            self.meta_title = "櫻坂46・日向坂46のおすすめ"
+            self.title = 'おすすめ'
+            self.meta_title = '櫻坂46・日向坂46・欅坂46のおすすめ'
             narrowing_blogs = Blog.objects.all()
         elif self.ct is None:
-            if Group.objects.filter(group_id=self.group_id).exists():
-                group_name = Group.objects.get(group_id=self.group_id).name
-                self.title = group_name
-                self.meta_title = group_name
+            groups = Group.objects.filter(group_id=self.group_id)
+            if groups.exists():
+                group = groups.first()
+                self.title = group.name
+                self.meta_title = group.name
             else:
                 return {'status': 'not_found_group'}
-            narrowing_blogs = Blog.objects.filter(writer__belonging_group__group_id=self.group_id)
+            narrowing_blogs = Blog.objects.filter(publishing_group__group_id=self.group_id)
         else:
-            if Member.objects.filter(belonging_group__group_id=self.group_id, ct=self.ct).exists():
-                member = Member.objects.get(belonging_group__group_id=self.group_id, ct=self.ct)
+            members = Member.objects.filter(belonging_group__group_id=self.group_id, ct=self.ct)
+            if members.exists():
+                member = members.first()
                 self.title = member.full_kanji
                 self.meta_title = '{}({})'.format(member.full_kanji, member.belonging_group.name)
             else:
@@ -55,24 +57,26 @@ class BlogListInfo(ListInfo):
 class ImageListInfo(ListInfo):
     def get_result(self):
         if self.group_id == 0:
-            self.title = "ホーム"
-            self.meta_title = "櫻坂46・日向坂46のブログ画像を保存するなら"
+            self.title = 'ホーム'
+            self.meta_title = '櫻坂46・日向坂46・欅坂46を保存するなら'
             images = Image.objects.all()
         elif self.group_id is None:
-            self.title = "おすすめ"
-            self.meta_title = "櫻坂46・日向坂46のおすすめ"
+            self.title = 'おすすめ'
+            self.meta_title = '櫻坂46・日向坂46・欅坂46のおすすめ'
             images = Image.objects.all()
         elif self.ct is None:
-            if Group.objects.filter(group_id=self.group_id).exists():
-                group_name = Group.objects.get(group_id=self.group_id).name
-                self.title = group_name
-                self.meta_title = group_name
+            groups = Group.objects.filter(group_id=self.group_id)
+            if groups.exists():
+                group = groups.first()
+                self.title = group.name
+                self.meta_title = group.name
             else:
                 return {'status': 'not_found_group'}
-            images = Image.objects.filter(publisher__writer__belonging_group__group_id=self.group_id)
+            images = Image.objects.filter(publisher__publishing_group__group_id=self.group_id)
         else:
-            if Member.objects.filter(belonging_group__group_id=self.group_id, ct=self.ct).exists():
-                member = Member.objects.get(belonging_group__group_id=self.group_id, ct=self.ct)
+            members = Member.objects.filter(belonging_group__group_id=self.group_id, ct=self.ct)
+            if members.exists():
+                member = members.first()
                 self.title = member.full_kanji
                 self.meta_title = '{}({})'.format(member.full_kanji, member.belonging_group.name)
             else:
@@ -163,7 +167,7 @@ def generate_images_data(images):
 
 def generate_resource_data(resources, max_rank, rank_type, resource_type, prefix, modifier, suffix, group_name):
     """
-    rank_type: 'dl" or 'view' or 'popularity'
+    rank_type: 'dl' or 'view' or 'popularity'
     resource_type: 'image' or 'blog'
     :return: {'resource': image or blog, 'resource_info': {'type': 'image or blog', 'message', '...'}}
     """
@@ -189,7 +193,7 @@ def get_additional_data(random_seed):
     modifier = {'dl': 'ダウンロードされた', 'view': '閲覧された', 'popularity': '人気のある', 'newer': '新しい'}
     suffix = {'image': '画像', 'blog': 'ブログ'}
 
-    for group in Group.objects.all():
+    for group in Group.objects.filter(is_active=True):
         # images
         images = Image.objects.filter(publisher__writer__belonging_group=group)
         most_dl_per_day_images = images.exclude(d1_per_day=0).order_by('-d1_per_day')

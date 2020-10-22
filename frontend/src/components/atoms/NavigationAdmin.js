@@ -1,5 +1,5 @@
 import React from 'react';
-import { isMobile } from '../modules/support';
+import { isMobile } from '../modules/utils';
 import { SUB_NAVBAR_HEIGHT, NAVBAR_HEIGHT, BOTTOM_NAVBAR_HEIGHT, TOTOP_BUTTON_M } from '../modules/env';
 import { withRouter } from 'react-router-dom';
 

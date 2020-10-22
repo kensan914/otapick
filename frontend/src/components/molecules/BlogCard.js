@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { shortenNum, generateAlt, isMobile, isSmp } from '../modules/support';
+import { shortenNum, generateAlt, isMobile, isSmp } from '../modules/utils';
 import { MobileBottomMenu } from './MobileMenu';
 
 
@@ -137,7 +137,6 @@ class BlogCard extends React.Component {
     return (
       <>
         <div className="otapick-card-back">
-          {/* <SuperBlogCard props={this.props} orderly={false} /> */}
           <SuperBlogCard {...this.props} orderly={false} />
         </div>
         {this.props.message &&

@@ -29,7 +29,7 @@ class Command(BaseCommand):
         for member in members:
             if not member.image or (options['force'] and not member.graduate) or options['fforce']:
                 if not member.graduate:
-                    image_url = member_image_crawler.crawl(member.belonging_group.key, member.ct)
+                    image_url = member_image_crawler.crawl(group_key=member.belonging_group.key, ct=member.ct)
                     media = member_image_downloader.download(image_url, member.belonging_group.group_id, member.ct)
                 else:
                     image_url = member_image_crawler_ex.crawl(member.full_kanji)

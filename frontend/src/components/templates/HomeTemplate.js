@@ -3,7 +3,7 @@ import { HomeList } from '../organisms/List';
 import Headline from '../molecules/Headline';
 import { KeepAlive } from 'react-keep-alive';
 import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, generateKeepAliveName, isMobile, generateKeepAliveNameInfo } from '../modules/support';
+import { URLJoin, generateKeepAliveName, isMobile, generateKeepAliveNameInfo } from '../modules/utils';
 import { BASE_URL } from "../modules/env";
 import ImageListInfo from "../molecules/info/ImageListInfo";
 import { withRouter } from "react-router-dom";

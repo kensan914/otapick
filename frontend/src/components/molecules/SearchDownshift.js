@@ -1,12 +1,12 @@
-import React from 'react';
-import Downshift from 'downshift';
-import axios from 'axios';
-import { URLJoin, isMobile, isSmp, lockScreen, unLockScreen, documentScrollHandler } from '../modules/support';
-import { NotFoundBlogsContent, NotFoundMembersContent } from '../atoms/NotFound';
-import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, MOBILE_TOP_MENU_MT, NAVBAR_LS_ZINDEX } from '../modules/env';
-import { Button } from 'reactstrap';
-import { HorizontalLoader } from './Loader';
+import React from "react";
+import Downshift from "downshift";
+import axios from "axios";
+import { URLJoin, isMobile, isSmp, lockScreen, unLockScreen, documentScrollHandler } from "../modules/utils";
+import { NotFoundBlogsContent, NotFoundMembersContent } from "../atoms/NotFound";
+import { withRouter } from "react-router-dom";
+import { BASE_URL, DELAY_TIME, MOBILE_TOP_MENU_MT, NAVBAR_LS_ZINDEX } from "../modules/env";
+import { Button } from "reactstrap";
+import { HorizontalLoader } from "./Loader";
 
 
 class SearchDownshift extends React.Component {
@@ -38,14 +38,14 @@ class SearchDownshift extends React.Component {
       axios
         .get(url)
         .then(res => {
-          const initSuggestionsBlogs = res.data['blogs'].map((blog, index) =>
+          const initSuggestionsBlogs = res.data["blogs"].map((blog, index) =>
             ({
               title: blog.title,
               backgroundImage: blog.background_image,
               url: blog.url,
             })
           );
-          const initSuggestionsMembers = res.data['members'].map((member, index) =>
+          const initSuggestionsMembers = res.data["members"].map((member, index) =>
             ({
               title: member.title,
               backgroundImage: member.background_image,
@@ -162,7 +162,7 @@ class SearchDownshift extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.qvalue) {
-      this.props.history.push('/search/?q=' + encodeURIComponent(this.state.qvalue));
+      this.props.history.push("/search/?q=" + encodeURIComponent(this.state.qvalue));
     }
   }
 
@@ -191,11 +191,11 @@ class SearchDownshift extends React.Component {
     if (isMobile) {
       const searchSuggestionhBox = document.getElementById("search-suggestions-box");
       if (searchSuggestionhBox !== null) {
-        document.addEventListener('mousewheel', documentScrollHandler, { passive: false });
-        document.addEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+        document.addEventListener("mousewheel", documentScrollHandler, { passive: false });
+        document.addEventListener("touchmove", this.documentTouchmoveHandler, { passive: false });
         searchSuggestionhBox.scrollTop = 1;
         // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
-        searchSuggestionhBox.addEventListener('scroll', e => {
+        searchSuggestionhBox.addEventListener("scroll", e => {
           if (searchSuggestionhBox.scrollTop === 0) {
             searchSuggestionhBox.scrollTop = 1;
           }
@@ -205,15 +205,15 @@ class SearchDownshift extends React.Component {
         });
       }
     }
-    document.addEventListener('mousedown', this.documentClickHandler);
+    document.addEventListener("mousedown", this.documentClickHandler);
   }
 
   removeEventListeners() {
     if (isMobile) {
-      document.removeEventListener('mousewheel', documentScrollHandler, { passive: false });
-      document.removeEventListener('touchmove', this.documentTouchmoveHandler, { passive: false });
+      document.removeEventListener("mousewheel", documentScrollHandler, { passive: false });
+      document.removeEventListener("touchmove", this.documentTouchmoveHandler, { passive: false });
     }
-    document.removeEventListener('mousedown', this.documentClickHandler);
+    document.removeEventListener("mousedown", this.documentClickHandler);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -298,8 +298,8 @@ class SearchDownshift extends React.Component {
         }) => (
             <div className={"my-0 justify-content-center col " + (isMobile ? "pr-2" : "")}>
               <form className="form-inline" autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
-                <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="Search" value={this.state.qvalue}
-                  aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxLength='100'></input>
+                <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="検索する" value={this.state.qvalue}
+                  aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxLength="100"></input>
               </form>
 
               <div {...getMenuProps()} style={downshiftBoxStyle} id="downshift-box" className={isMobile ? "mobile" : ""}>
@@ -328,8 +328,8 @@ class SearchDownshift extends React.Component {
                                     index,
                                     item,
                                     style: {
-                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
-                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
+                                      fontWeight: selectedItem === item ? "bold" : "normal",
+                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
                                       position: "relative",
                                       height: 100,
                                       backgroundSize: "cover",
@@ -359,8 +359,8 @@ class SearchDownshift extends React.Component {
                                     index: index + 6,
                                     item,
                                     style: {
-                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
-                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
+                                      fontWeight: selectedItem === item ? "bold" : "normal",
+                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
                                       position: "relative",
                                       height: 100,
                                       backgroundSize: "cover",
@@ -406,8 +406,8 @@ class SearchDownshift extends React.Component {
                                     index,
                                     item,
                                     style: {
-                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
-                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : '',
+                                      fontWeight: selectedItem === item ? "bold" : "normal",
+                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
                                       position: "relative",
                                       height: 100,
                                       backgroundSize: "cover",

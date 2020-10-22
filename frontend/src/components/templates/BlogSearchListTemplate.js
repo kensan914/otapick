@@ -1,10 +1,10 @@
 import React from "react";
 import BlogSearchListInfo from '../molecules/info/BlogSearchListInfo';
 import Headline from '../molecules/Headline';
-import { getGroup, generateWavesVals, updateMeta, gtagTo } from '../modules/support';
+import { getGroup, generateWavesVals, updateMeta, gtagTo } from '../modules/utils';
 import { OrderlyBlogCard } from '../molecules/BlogCard';
 import axios from 'axios';
-import { URLJoin } from '../modules/support';
+import { URLJoin } from '../modules/utils';
 import queryString from 'query-string';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from "../atoms/NotFound";

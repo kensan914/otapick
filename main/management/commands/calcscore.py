@@ -16,6 +16,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options['recommend']:
             high_score_members, divided_blogs, divided_images  = otapick.init_calc_recommend_score()
+            print(high_score_members)
 
             start = time.time()
             otapick.calc_recommend_score(high_score_members, divided_blogs=divided_blogs)
@@ -34,5 +35,5 @@ class Command(BaseCommand):
 
             # tweet popularity top 3 images
             if options['tweet']:
-                for group in Group.objects.all():
+                for group in Group.objects.filter(is_active=True):
                     otapick.PopularityBot().tweet(group_id=group.group_id)

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tooltip } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { isSmp, isMobile } from "../../modules/support";
+import { isSmp, isMobile } from "../../modules/utils";
 import { GROUPS } from "../../modules/env";
 
 

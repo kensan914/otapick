@@ -56,7 +56,7 @@ def compress_blog_images_by(*, member=None, group=None, console=True):
     if member is not None:
         blogs = Blog.objects.filter(writer=member)
     elif group is not None:
-        blogs = Blog.objects.filter(writer__belonging_group=group)
+        blogs = Blog.objects.filter(publishing_group=group)
     else: return
 
     for blog in blogs:
