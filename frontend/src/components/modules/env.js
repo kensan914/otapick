@@ -1,4 +1,4 @@
-import { getIsSmp, isMobile } from "./support";
+import { getIsSmp, isMobile } from "./utils";
 
 
 export const DEBUG = NODE_ENV === "development";
@@ -53,16 +53,18 @@ export const GROUPS = {
         blogUrlExample: "https://sakurazaka46.com/s/s46/diary/blog?ima=0000",
         topUrl: "https://sakurazaka46.com/s/s46/?ima=0000",
         domain: "sakurazaka46.com",
+        isActive: true,
     },
-    // "1": {
-    //     id: "1",
-    //     name: "欅坂46",
-    //     key: "keyaki",
-    //     blogUrl: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
-    //     blogUrlExample: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
-    //     topUrl: "https://www.keyakizaka46.com/s/k46o/?ima=0000",
-    //     domain: "keyakizaka46.com",
-    // },
+    "3": {
+        id: "3",
+        name: "欅坂46",
+        key: "keyaki",
+        blogUrl: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
+        blogUrlExample: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
+        topUrl: "https://www.keyakizaka46.com/s/k46o/?ima=0000",
+        domain: "keyakizaka46.com",
+        isActive: false,
+    },
     "2": {
         id: "2",
         name: "日向坂46",
@@ -71,12 +73,13 @@ export const GROUPS = {
         blogUrlExample: "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000",
         topUrl: "https://www.hinatazaka46.com/s/official/?ima=0000",
         domain: "hinatazaka46.com",
+        isActive: true,
     },
 };
 
 export const SITE_NAME = "ヲタピック";
-export const HOME_TITLE = `${GROUPS["1"].name}・${GROUPS["2"].name}のブログ画像を保存するなら`;
-export const DISCRIPTION = `『${SITE_NAME}』は、${GROUPS["1"].name}・${GROUPS["2"].name}の画像や写真を効率よく閲覧・保存ができるサービスです。公式ブログやメンバーリストから推しメンの高画質な画像や写真を探して保存しましょう(PC・スマホ対応)。かっこいい画像も、かわいい画像も、保存しよう、いくらでも。#${GROUPS["1"].name} #${GROUPS["2"].name}`;
-export const BLOGS_DISCRIPTION = `${GROUPS["1"].name}・${GROUPS["2"].name}の公式ブログ画像が保存できます。`;
-export const IMAGES_DISCRIPTION = `${GROUPS["1"].name}・${GROUPS["2"].name}の高画質画像が保存できます。`;
-export const MEMBERS_DISCRIPTION = `${GROUPS["1"].name}・${GROUPS["2"].name}のメンバーから高画質画像を探して保存できます。`;
+export const HOME_TITLE = `${GROUPS["1"].name}・${GROUPS["2"].name}・${GROUPS["3"].name}のブログ画像を保存するなら`;
+export const DISCRIPTION = `『${SITE_NAME}』は、${GROUPS["1"].name}・${GROUPS["2"].name}・${GROUPS["3"].name}の画像や写真を効率よく閲覧・保存ができるサービスです。公式ブログやメンバーリストから推しメンの高画質な画像や写真を探して保存しましょう(PC・スマホ対応)。かっこいい画像も、かわいい画像も、保存しよう、いくらでも。#${GROUPS["1"].name} #${GROUPS["2"].name}`;
+export const BLOGS_DISCRIPTION = `${GROUPS["1"].name}・${GROUPS["2"].name}・${GROUPS["3"].name}の公式ブログ画像が保存できます。`;
+export const IMAGES_DISCRIPTION = `${GROUPS["1"].name}・${GROUPS["2"].name}・${GROUPS["3"].name}の高画質画像が保存できます。`;
+export const MEMBERS_DISCRIPTION = `${GROUPS["1"].name}・${GROUPS["2"].name}・${GROUPS["3"].name}のメンバーから高画質画像を探して保存できます。`;

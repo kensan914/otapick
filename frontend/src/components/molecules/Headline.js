@@ -3,10 +3,10 @@ import BackButton from "../atoms/BackButton";
 import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import { URLJoin, isMobile } from "../tools/support";
-import { BASE_URL, GROUPS } from "../tools/env";
+import { URLJoin, isMobile } from "../modules/utils";
+import { BASE_URL, GROUPS } from "../modules/env";
 import { Link } from "react-router-dom";
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../tools/env";
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
 import { MobileTopMenu } from "./MobileMenu";
 
 
@@ -103,14 +103,16 @@ class Headline extends React.Component {
         .then(res => {
           const _membersCollection = this.initMembers;
           Object.values(GROUPS).forEach(groupObj => {
-            _membersCollection[groupObj.id] = [];
-            for (const membersByGene of res.data[groupObj.key]) {
-              _membersCollection[groupObj.id].push(membersByGene.map(member =>
-                ({
-                  url: member.url,
-                  full_kanji: member.full_kanji,
-                })
-              ))
+            if (groupObj.isActive) {
+              _membersCollection[groupObj.id] = [];
+              for (const membersByGene of res.data[groupObj.key]) {
+                _membersCollection[groupObj.id].push(membersByGene.map(member =>
+                  ({
+                    url: member.url,
+                    full_kanji: member.full_kanji,
+                  })
+                ))
+              }
             }
           });
           this.setState({
@@ -134,10 +136,10 @@ class Headline extends React.Component {
           <Button key={groupObj.id} className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
             onClick={() => this.props.history.push(`/${this.props.type}/${groupObj.id}`)}>
             <b>{groupObj.name}</b>
-            {fixed
+            {groupObj.isActive && (fixed
               ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
               : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
-            }
+            )}
           </Button>
         ))}
       </>);
@@ -164,10 +166,13 @@ class Headline extends React.Component {
     } else if (this.props.type === "members") {
       const contents = (
         <>
-          {Object.values(GROUPS).map(groupObj => (
-            <Button key={groupObj.id} className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + (this.props.group === groupObj.key ? "active" : "")}
-              onClick={() => this.props.changeGroup(groupObj.key)}><b>{groupObj.name}</b></Button>
-          ))}
+          {Object.values(GROUPS).map(groupObj => {
+            if (groupObj.isActive)
+              return (
+                <Button key={groupObj.id} className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + (this.props.group === groupObj.key ? "active" : "")}
+                  onClick={() => this.props.changeGroup(groupObj.key)}><b>{groupObj.name}</b></Button>
+              );
+          })}
         </>
       );
       if (isMobile || fixed) {

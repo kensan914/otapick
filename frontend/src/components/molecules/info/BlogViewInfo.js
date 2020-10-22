@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Tooltip } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { isSmp, isMobile } from "../../tools/support";
-import { GROUPS } from "../../tools/env";
+import { isSmp, isMobile } from "../../modules/utils";
+import { GROUPS } from "../../modules/env";
 
 
 export const ViewTooltip = (props) => {

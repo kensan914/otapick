@@ -8,12 +8,6 @@ def get_upload_to(instance, filename):
     return 'blog_images/{0}/{1}/{2}' .format(media_dir_1, media_dir_2, filename)
 
 
-def get_thumbnail_upload_to(instance, filename):
-    media_dir_1 = str(instance.publisher.writer.belonging_group.group_id) + '_' + str(instance.publisher.writer.ct)
-    media_dir_2 = str(instance.publisher.blog_ct)
-    return 'blog_thumbnail/{0}/{1}/{2}'.format(media_dir_1, media_dir_2, filename)
-
-
 class Image(models.Model):
     class Meta:
         db_table = 'image'
@@ -44,26 +38,3 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.publisher.title) + '/' + str(self.order)
-
-
-class Progress(models.Model):
-    class Meta:
-        db_table = 'progress'
-
-    num = models.IntegerField(verbose_name='進捗', default=0, null=True)
-    ready = models.BooleanField(default=False)
-    target = models.OneToOneField(Blog, verbose_name='対象ブログ', on_delete=models.CASCADE, null=True, unique=True)
-
-    def __str__(self):
-        return self.target.title
-
-
-class Thumbnail(models.Model):
-    class Meta:
-        db_table = 'thumbnail'
-
-    picture = models.ImageField(verbose_name='イメージ', upload_to=get_thumbnail_upload_to)
-    publisher = models.OneToOneField(Blog, verbose_name='掲載ブログ', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.publisher.title

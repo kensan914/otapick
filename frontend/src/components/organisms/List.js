@@ -4,9 +4,9 @@ import { HorizontalLoader } from '../molecules/Loader';
 import Masonry from 'react-masonry-component';
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
-import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp } from '../tools/support';
+import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp } from '../modules/utils';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, ADS_INTERVAL, ADS_INDEX } from '../tools/env';
+import { BASE_URL, DELAY_TIME, ADS_INTERVAL, ADS_INDEX } from '../modules/env';
 import ImageCard from '../molecules/ImageCard';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from '../atoms/NotFound';
@@ -92,7 +92,7 @@ class List extends React.Component {
 };
 
 
-class BlogList_ extends List {
+class _BlogList extends List {
   constructor(props) {
     super(props);
     this.randomSeed = generateRandomSeed();
@@ -137,11 +137,14 @@ class BlogList_ extends List {
               }
             } else {
               if (page == 1) {
-                this.setState({ hasMore: false, status: "blog_not_found" })
+                this.setState({ hasMore: false, status: "blog_not_found" });
               } else this.setState({ hasMore: false });
             }
           })
           .catch(err => {
+            if (err.response.status === 404) {
+              this.setState({ hasMore: false, status: "blog_not_found" });
+            }
             console.log(err);
           })
           .finally(
@@ -158,7 +161,7 @@ class BlogList_ extends List {
     return (this.state.items.map(({ groupID, blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
       <div key={i}>
         <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3 blog-card">
-          <BlogCard id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
+          <BlogCard id={i} groupID={groupID} group={getGroup(groupID)} blogCt={blogCt} thumbnail={thumbnail}
             title={title} writer={writer} postDate={postDate} numOfViews={numOfViews} numOfDownloads={numOfDownloads} url={url} officialUrl={officialUrl} />
         </div>
         {(i % ADS_INTERVAL === ADS_INDEX) &&
@@ -230,6 +233,9 @@ class _ImageList extends List {
             this.setState({ isShowRelatedImageTitle: true });
           })
           .catch(err => {
+            if (err.response.status === 404) {
+              this.setState({ hasMore: false, status: "image_not_found" });
+            }
             console.log(err);
           })
           .finally(
@@ -251,7 +257,7 @@ class _ImageList extends List {
       return (
         <div key={i}>
           <div className={gridItemClassName}>
-            <ImageCard id={i} groupID={this.props.groupID || groupID} group={this.props.group || getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
+            <ImageCard id={i} groupID={groupID} group={getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
               src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
           </div>
 
@@ -412,6 +418,6 @@ class _HomeList extends _ImageList {
 }
 
 
-export const BlogList = withRouter(BlogList_);
+export const BlogList = withRouter(_BlogList);
 export const ImageList = withRouter(_ImageList);
 export const HomeList = withRouter(_HomeList);

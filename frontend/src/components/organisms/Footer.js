@@ -1,7 +1,7 @@
 import React from "react";
-import { withRouterInnerRef } from "../tools/withRouterInnerRef";
+import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import { Link } from "react-router-dom";
-import { GROUPS } from "../tools/env";
+import { GROUPS } from "../modules/env";
 
 
 // HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
@@ -94,14 +94,14 @@ class Footer extends React.Component {
                     <span className="font-weight-bold">画像を探す</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
                     {Object.values(GROUPS).map(groupObj => (
-                      <li key={groupObj.id}>
-                        <Link to={`/images/${groupObj.id}`}>{`${groupObj.name} 画像一覧`}</Link>
-                      </li>
-                    ))}
-                    {Object.values(GROUPS).map(groupObj => (
-                      <li key={groupObj.id}>
-                        <Link to={`/blogs/${groupObj.id}`}>{`${groupObj.name} ブログ一覧`}</Link>
-                      </li>
+                      <div key={groupObj.id}>
+                        <li>
+                          <Link to={`/images/${groupObj.id}`}>{`${groupObj.name} 画像一覧`}</Link>
+                        </li>
+                        <li>
+                          <Link to={`/blogs/${groupObj.id}`}>{`${groupObj.name} ブログ一覧`}</Link>
+                        </li>
+                      </div>
                     ))}
                     <li>
                       <Link to="/members">メンバーリスト</Link>

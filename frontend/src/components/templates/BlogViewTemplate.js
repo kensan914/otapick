@@ -1,12 +1,12 @@
 import React from "react";
 import Headline from "../molecules/Headline";
-import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from "../tools/support";
+import { getGroup, checkMatchParams, updateMeta, gtagTo, isSmp } from "../modules/utils";
 import axios from "axios";
-import { URLJoin } from "../tools/support";
+import { URLJoin } from "../modules/utils";
 import BlogViewInfo from "../molecules/info/BlogViewInfo";
 import BlogView from "../organisms/BlogView";
 import { BlogViewLoader, LoaderScreen } from "../molecules/Loader";
-import { LOAD_IMG_URL, BASE_URL, DELAY_TIME } from "../tools/env";
+import { LOAD_IMG_URL, BASE_URL, DELAY_TIME } from "../modules/env";
 import { withRouter } from "react-router-dom";
 import { NotFoundMessage } from "../atoms/NotFound";
 import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";

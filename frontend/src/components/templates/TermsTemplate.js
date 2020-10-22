@@ -1,9 +1,9 @@
 import React from "react";
 import Headline from '../molecules/Headline';
 import { withRouter } from "react-router-dom";
-import { BACKGROUNG_IMG_URL } from "../tools/env";
+import { BACKGROUNG_IMG_URL } from "../modules/env";
 import { ContactContent, TermsOfServiceContent, PrivacyPolicyContent } from "../atoms/ArticleContents";
-import { updateMeta, gtagTo } from "../tools/support";
+import { updateMeta, gtagTo } from "../modules/utils";
 
 
 class MemberListTemplate extends React.Component {

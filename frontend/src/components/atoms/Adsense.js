@@ -1,5 +1,5 @@
 import React from 'react';
-import { DATA_AD_CLIENT, DEBUG, DATA_AD_SLOT_SQUARE, DATA_AD_SLOT_LANDSCAPE } from '../tools/env';
+import { DATA_AD_CLIENT, DEBUG, DATA_AD_SLOT_SQUARE, DATA_AD_SLOT_LANDSCAPE } from '../modules/env';
 import { withRouter } from 'react-router-dom';
 
 

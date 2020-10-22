@@ -1,15 +1,15 @@
 import React from "react";
 import BlogSearchListInfo from '../molecules/info/BlogSearchListInfo';
 import Headline from '../molecules/Headline';
-import { getGroup, generateWavesVals, updateMeta, gtagTo } from '../tools/support';
+import { getGroup, generateWavesVals, updateMeta, gtagTo } from '../modules/utils';
 import { OrderlyBlogCard } from '../molecules/BlogCard';
 import axios from 'axios';
-import { URLJoin } from '../tools/support';
+import { URLJoin } from '../modules/utils';
 import queryString from 'query-string';
 import MemberCard from "../molecules/MemberCard";
 import { NotFoundMessage } from "../atoms/NotFound";
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME } from "../tools/env";
+import { BASE_URL, DELAY_TIME } from "../modules/env";
 import { LoaderScreen } from "../molecules/Loader";
 
 
