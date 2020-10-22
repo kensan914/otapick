@@ -9,7 +9,7 @@ def get_upload_to(instance, filename):
 
 
 def get_thumbnail_upload_to(instance, filename):
-    return
+    pass
 
 
 class Image(models.Model):
