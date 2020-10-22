@@ -12,8 +12,9 @@ export class NotFoundBlogsContent extends React.Component {
         }
         <div className="mx-2 search-suggestions-discription">
           <p>入力されたURLのページにブログ情報が含まれているか、今一度ご確認ください。</p>
-          <p>現在、<a target="_blank" href={GROUPS["1"].blogUrl}>{`${GROUPS["1"].name}公式ブログ`}</a>と
-          <a target="_blank" href={GROUPS["2"].blogUrl}>{`${GROUPS["2"].name}公式ブログ`}</a>以外のサイトはサポートされておりません。ご了承ください。</p>
+          <p>現在、<a target="_blank" href={GROUPS["1"].blogUrl}>{`${GROUPS["1"].name}公式ブログ`}</a>・
+          <a target="_blank" href={GROUPS["2"].blogUrl}>{`${GROUPS["2"].name}公式ブログ`}</a>・
+          <a target="_blank" href={GROUPS["3"].blogUrl}>{`${GROUPS["3"].name}公式ブログ`}</a>以外のサイトはサポートされておりません。ご了承ください。</p>
           <hr />
           <p>{`入力例1）${GROUPS["1"].blogUrlExample}`}</p>
           <p>{`入力例2）${GROUPS["2"].blogUrlExample}`}</p>
