@@ -6,7 +6,6 @@ from rest_framework import status, views
 from rest_framework.response import Response
 import otapick.db.scores.controller
 from api.serializers import *
-from image.models import Progress
 from main.models import Member, Blog, Group
 import otapick
 
@@ -24,7 +23,7 @@ class MemberListAPIView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         data = {}
-        for group in Group.objects.all():
+        for group in Group.objects.filter(is_active=True):
             members_by_group = Member.objects.filter(belonging_group=group).exclude(generation=0)
             member_list_by_group = self.generate_member_list(members_by_group)
             for i, target in enumerate(member_list_by_group):
@@ -38,40 +37,16 @@ memberListAPIView = MemberListAPIView.as_view()
 
 
 class BlogDetailAPIView(views.APIView):
-    def accept_image_download(self, group_id, blog_ct, blog):
-        # for graduate member
-        if blog.writer.graduate:
-            blog_data = BlogSerializerVerDetail(blog).data
-            blog_data.update({'status': 'get_image_failed', 'message': 'get image failed'})
-            return Response(blog_data, status.HTTP_200_OK)
-
-        data, status_code = otapick.accept_image_download(group_id, blog_ct)
-        blog_data = BlogSerializerVerDetail(blog).data
-        data.update(blog_data)
-        return Response(data, status_code)
-
     def get(self, request, *args, **kwargs):
         group_id = self.kwargs.get('group_id')
         blog_ct = self.kwargs.get('blog_ct')
-        if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct).exists():
-            blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
-            if Progress.objects.filter(target=blog).exists():
-                progress = Progress.objects.get(target=blog)
-                if progress.num == 100 and progress.ready:
-                    blog_data = BlogSerializerVerDetail(blog).data
-                    images = Image.objects.filter(publisher=blog).order_by('order')
-                    blog_data['images'] = ImageSerializer(images, many=True).data
-                    blog_data['status'] = 'success'
-                    blog_data['VIEW_KEY'] = otapick.VIEW_KEY
-                    blog_data['DOWNLOAD_KEY'] = otapick.DOWNLOAD_KEY
-                    return Response(blog_data, status.HTTP_200_OK)
-                else: return self.accept_image_download(group_id, blog_ct, blog)
-            else: return self.accept_image_download(group_id, blog_ct, blog)
+        blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
+        if blogs.exists():
+            blog = blogs.first()
+            blog_data = BlogSerializerVerDetail(blog).data
+            blog_data['status'] = 'success'
+            return Response(blog_data, status.HTTP_200_OK)
         else:
-            # blogが見つからないたびにget_blogコマンドを実行していた。使わない方向で。
-            # data, status_code = otapick.accept_blog_download(group_id, blog_ct)
-            # if data['status'] != 'blog_not_found':
-            #     return self.accept_image_download(group_id, blog_ct, Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct))
             return Response({'status': 'blog_not_found', 'message': 'blog not found'}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
@@ -81,8 +56,9 @@ class BlogDetailAPIView(views.APIView):
         # inform of blog view
         if 'action' in request.data and request.data['action'] == 'view':
             if 'key' in request.data and request.data['key'] == otapick.VIEW_KEY:
-                if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
-                    blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+                blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
+                if blogs.exists():
+                    blog = blogs.first()
                     otapick.increment_num_of_views(blog=blog, num=1)
                     return Response({'status': 'success'}, status.HTTP_200_OK)
                 else: return Response({'status': 'blog_not_found'}, status.HTTP_200_OK)
@@ -91,10 +67,12 @@ class BlogDetailAPIView(views.APIView):
         # inform of image download for mobile
         elif 'action' in request.data and request.data['action'] == 'download' and 'image_order' in request.data:
             if 'key' in request.data and request.data['key'] == otapick.DOWNLOAD_KEY:
-                if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
-                    blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
-                    if Image.objects.filter(publisher=blog, order=request.data['image_order']).exists():
-                        image = Image.objects.filter(publisher=blog, order=request.data['image_order'])
+                blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
+                if blogs.exists():
+                    blog = blogs.first()
+                    images = Image.objects.filter(publisher=blog, order=request.data['image_order'])
+                    if images.exists():
+                        image = images.first()
                         otapick.increment_num_of_downloads(image, blog, num=1)
                         otapick.edit_num_of_most_downloads(blog)
                         return Response({'status': 'success'}, status.HTTP_200_OK)
@@ -112,8 +90,9 @@ class BlogDetailAPIView(views.APIView):
             if len(order_list) <= 0:
                 return Response({'status': 'data_error'}, status.HTTP_200_OK)
 
-            if Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct):
-                blog = Blog.objects.get(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
+            blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
+            if blogs.exists():
+                blog = blogs.first()
                 if Image.objects.filter(publisher=blog, order__in=order_list).exists():
                     images = Image.objects.filter(publisher=blog, order__in=order_list)
 
@@ -151,9 +130,14 @@ class BlogListAPIView(views.APIView):
         random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
 
         if group_id is not None:
-            blogs = \
-                Blog.objects.filter(writer__belonging_group__group_id=group_id) if ct is None \
-                else Blog.objects.filter(writer__belonging_group__group_id=group_id, writer__ct=ct)
+            if ct is None:
+                blogs = Blog.objects.filter(publishing_group__group_id=group_id)
+            else:
+                if Group.objects.filter(is_active=True, group_id=group_id).exists():
+                    blogs = Blog.objects.filter(writer__belonging_group__group_id=group_id, writer__ct=ct)
+                else:  # ex) blogs/3/01/　☚メンバー絞込みでis_active=Falseのグループを指定することはできない
+                    return Response({'status': 'failed'}, status.HTTP_404_NOT_FOUND)
+
             blogs = otapick.sort_blogs(blogs, order_format)
             blogs = otapick.narrowdown_blogs_keyword(blogs, narrowing_keyword)
             blogs = otapick.narrowdown_blogs_post(blogs, narrowing_post)
@@ -196,8 +180,9 @@ class ImageDetailAPIView(views.APIView):
         # inform of blog view
         if 'action' in request.data and request.data['action'] == 'view':
             if 'key' in request.data and request.data['key'] == otapick.VIEW_KEY:
-                if Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order).exists():
-                    image = Image.objects.get(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+                images = Image.objects.filter(publisher__publishing_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+                if images.exists():
+                    image = images.first()
                     otapick.increment_num_of_views(image=image, num=1)
                     return Response({'status': 'success'}, status.HTTP_200_OK)
                 else: return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
@@ -206,8 +191,9 @@ class ImageDetailAPIView(views.APIView):
         # inform of image download for mobile
         elif 'action' in request.data and request.data['action'] == 'download':
             if 'key' in request.data and request.data['key'] == otapick.DOWNLOAD_KEY:
-                if Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order).exists():
-                    image = Image.objects.get(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+                images = Image.objects.filter(publisher__publishing_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+                if images.exists():
+                    image = images.first()
                     otapick.increment_num_of_downloads(image, image.publisher, num=1)
                     otapick.edit_num_of_most_downloads(image.publisher)
                     return Response({'status': 'success'}, status.HTTP_200_OK)
@@ -221,8 +207,9 @@ class ImageDetailAPIView(views.APIView):
         order = self.kwargs.get('order')
 
         try:
-            if Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order).exists():
-                image = Image.objects.get(publisher__writer__belonging_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+            images = Image.objects.filter(publisher__publishing_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+            if images.exists():
+                image = images.first()
                 # rewrite num_of_downloads
                 otapick.increment_num_of_downloads(image, image.publisher, num=1)
                 otapick.edit_num_of_most_downloads(image.publisher)
@@ -244,9 +231,13 @@ class ImageListAPIView(views.APIView):
 
         # filter
         if group_id is not None:
-            images = \
-                Image.objects.filter(publisher__writer__belonging_group__group_id=group_id) if ct is None \
-                else Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct)
+            if ct is None:
+                images = Image.objects.filter(publisher__publishing_group__group_id=group_id)
+            else:
+                if Group.objects.filter(is_active=True, group_id=group_id).exists():
+                    images = Image.objects.filter(publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct)
+                else:  # ex) images/3/01/　☚メンバー絞込みでis_active=Falseのグループを指定することはできない
+                    return Response({'status': 'failed'}, status.HTTP_404_NOT_FOUND)
             if not images.exists():
                 return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
 
@@ -291,9 +282,9 @@ class RelatedImageListAPIView(ImageListAPIView):
         order = self.kwargs.get('order')
         page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
 
-        blogs = Blog.objects.filter(writer__belonging_group__group_id=group_id, blog_ct=blog_ct)
-        if blogs.exists() and Image.objects.filter(publisher=blogs[0], order=order).exists():
-            images_id_list = otapick.sort_images_by_related(blogs[0], order, page, self.paginate_by)
+        blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
+        if blogs.exists() and Image.objects.filter(publisher=blogs.first(), order=order).exists():
+            images_id_list = otapick.sort_images_by_related(blogs.first(), order, page, self.paginate_by)
             images = [Image.objects.get(id=pk) for pk in images_id_list]
             return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
         else:
@@ -325,7 +316,6 @@ homeAdditionalAPIView = HomeAdditionalAPIView.as_view()
 
 
 class SearchAPIView(views.APIView):
-    paginate_by = 20
     q = ''
 
     def serialize_blogs(self, blogs):
@@ -342,12 +332,13 @@ class SearchAPIView(views.APIView):
                 if result['class'] != 'unjust':
                     blogs = otapick.search_blogs(result)
                     if blogs is not None:
+                        paginate_by = result['blog_list_paginate_by']
                         if result['class'] == 'searchByLatest':
-                            if result['group_id'] == 1:
-                                self.paginate_by = 10
+                            if result['group_id'] == 1 or result['group_id'] == 3:
+                                paginate_by = 10
                             elif result['group_id'] == 2:
-                                self.paginate_by = 12
-                        blogs = blogs[self.paginate_by * ( result['page'] - 1 ): self.paginate_by * result['page']]
+                                paginate_by = 12
+                        blogs = blogs[paginate_by * ( result['page'] - 1 ): paginate_by * result['page']]
                         blogs_data = self.serialize_blogs(blogs)
 
                         all_groups = Group.objects.all()
@@ -432,7 +423,7 @@ class SearchSuggestionsInitAPIView(views.APIView):
         group_id = self.request.GET.get('group')
         group_id = int(group_id) if group_id == '1' or group_id == '2' else None
 
-        blogs = Blog.objects.all() if group_id is None else Blog.objects.filter(writer__belonging_group__group_id=group_id)
+        blogs = Blog.objects.all() if group_id is None else Blog.objects.filter(publishing_group__group_id=group_id)
         blogs = otapick.sort_blogs(blogs, 'popularity')[:self.num_of_get]
         blogs_data = BlogSerializerVerSS(blogs, many=True).data
         if group_id == 1:

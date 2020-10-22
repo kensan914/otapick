@@ -32,9 +32,8 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
 
     blog_crawler = otapick.BlogListCrawler()
     groups = Group.objects.filter(group_id=group_id)
-    if not groups.exists():
-        return
-    group_key = groups.first().key
+    group = groups.first()
+    group_key = group.key
     for page, is_last in otapick.lastone(range(up_limit)):
         blogs_data = blog_crawler.crawl(group_key, page)
         if blogs_data is None:
@@ -60,7 +59,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
                 finished = exe_registration(simultime_blogs, simultime_post_date, group_id, all_check, tweet, console=True)
 
                 if finished:
-                    unregister(correct_cts_list, group_id, unregister_num)
+                    unregister(correct_cts_list, group, unregister_num)
                     break
                 simultime_blogs = [blog_info]
                 simultime_post_date = blog_info['post_date']
@@ -94,17 +93,18 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
 
     for i, blog_info in enumerate(blog_info_list):
         # new blog
-        if not Blog.objects.filter(blog_ct=blog_info['blog_ct'], writer__belonging_group__group_id=group_id).exists():
+        if not Blog.objects.filter(blog_ct=blog_info['blog_ct'], publishing_group__group_id=group_id).exists():
             blog = Blog(blog_ct=blog_info['blog_ct'],
                         title=blog_info['title'],
                         post_date=post_date,
                         order_for_simul=i,
-                        writer=blog_info['member'],)
+                        writer=blog_info['member'],
+                        publishing_group=Group.objects.filter(group_id=group_id).first(),)
             blog_objects.append(blog)
             download_count += 1
         # already saved
         else:
-            blog = Blog.objects.get(blog_ct=blog_info['blog_ct'], writer__belonging_group__group_id=group_id)
+            blog = Blog.objects.get(blog_ct=blog_info['blog_ct'], publishing_group__group_id=group_id)
 
         if len(blog_info['image_urls']) > 0:
             order = 0
@@ -130,10 +130,9 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
                 saved_simultime_blog.order_for_simul += download_count
                 saved_simultime_blog.save()
 
-    # save new blog and save progress
+    # save new blog
     for blog_object in blog_objects:
         blog_object.save()
-        otapick.init_progress(blog_object)
         if console:
             otapick.print_console('register 「' + blog_object.title + '」 written by ' + blog_object.writer.full_kanji)
 
@@ -146,7 +145,7 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
     if tweet:
         updateBot = otapick.UpdateBot()
         for blog_object in blog_objects:
-            updateBot.tweet(group_id=blog_object.writer.belonging_group.group_id, blog_ct=blog_object.blog_ct)
+            updateBot.tweet(group_id=blog_object.publishing_group.group_id, blog_ct=blog_object.blog_ct)
 
     # When there is at least one already saved blog in blog_list and all_check is False
     if download_count != len(blog_info_list) and not all_check:
@@ -163,9 +162,9 @@ def register_text(blog):
     Args:
         blog (Blog Model object): ブログモデルオブジェクト。
     """
-    group_id = blog.writer.belonging_group.group_id
+    group_key = blog.publishing_group.key
     blog_ct = blog.blog_ct
 
-    text = otapick.TextCrawler().crawl(group_id, blog_ct)
+    text = otapick.TextCrawler().crawl(group_key=group_key, blog_ct=blog_ct)
     blog.text = text
     blog.save()

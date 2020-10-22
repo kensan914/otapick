@@ -3,7 +3,9 @@ from main.models import Blog, Group
 import otapick
 
 
-def unregister(correct_cts_list, group_id, unregister_num):
+def unregister(correct_cts_list, group, unregister_num):
+    group_id =group.group_id
+    paginate_by = group.blog_list_paginate_by
     blog_crawler = otapick.BlogListCrawler()
     groups = Group.objects.filter(group_id=group_id)
     if not groups.exists():
@@ -14,20 +16,20 @@ def unregister(correct_cts_list, group_id, unregister_num):
         if len(correct_cts_list) <= page and len(correct_cts_list) < unregister_num:
             blogs_data = blog_crawler.crawl(group_key, page)
             correct_cts_list.append([blog_info['blog_ct'] for blog_info in blogs_data])
-        for blog in Blog.objects.filter(writer__belonging_group__group_id=group_id).order_by('-post_date', 'order_for_simul')[20*page:20*(page+1)]:
+        for blog in Blog.objects.filter(publishing_group__group_id=group_id).order_by('-post_date', 'order_for_simul')[paginate_by*page:paginate_by*(page+1)]:
             if not blog.blog_ct in correct_cts_list[page]:
                 otapick.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is not found in official blog on page ' + str(page) + '.')
                 otapick.print_console('Investigate in detail...')
-                exe_unregistration(blog, group_id)
+                exe_unregistration(blog, group_id, group_key)
 
 
-def exe_unregistration(blog, group_id):
+def exe_unregistration(blog, group_id, group_key):
     sleep_time_unregister = 1
-    blog_info = otapick.BlogDetailCrawler().crawl(group_id, blog.blog_ct)
+    blog_info = otapick.BlogDetailCrawler().crawl(group_key=group_key, blog_ct=blog.blog_ct)
 
     if blog_info is None:
         return
-    elif blog_info == 'blog not found':
+    elif blog_info == 404:
         otapick.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is not found in official blog. unregister this.')
         blog.delete()
     else:

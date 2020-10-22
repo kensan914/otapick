@@ -27,4 +27,6 @@ class BlogImageDownloader(Downloader):
         self.media_dir_path_list = ['blog_images', str(kwargs['group_id']) + '_' + kwargs['ct'], str(kwargs['blog_ct'])]
 
     def download(self, url, group_id, blog_ct, ct):
+        if group_id == 3:
+            group_id = 1
         return super().download(url=url, group_id=group_id, blog_ct=blog_ct, ct=ct)

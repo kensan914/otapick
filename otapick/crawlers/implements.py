@@ -159,7 +159,7 @@ class BlogDetailCrawler(BlogCrawler):
         blog_tag = super().crawl(group_key=group_key, blog_ct=blog_ct)
 
         if not blog_tag:
-            return 'blog not found'
+            return 404
 
         blog_info = self.parse_blog(group_key, blog_tag, blog_ct=blog_ct, image_base_url=self.image_base_url)
         if blog_info is None:

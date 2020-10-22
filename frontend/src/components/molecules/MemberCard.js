@@ -1,7 +1,7 @@
 import React from 'react';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link, withRouter } from 'react-router-dom';
-import { generateAlt, isMobile } from '../tools/support';
+import { generateAlt, isMobile } from '../modules/utils';
 import { MobileBottomMenu } from './MobileMenu';
 
 

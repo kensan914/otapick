@@ -1,4 +1,5 @@
 from datetime import datetime
+from main.models import Blog
 
 
 def sort_blogs(blogs, order_format):

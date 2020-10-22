@@ -1,5 +1,4 @@
 from urllib.parse import urlparse, parse_qs
-
 from main.models import Group
 
 '''
@@ -19,6 +18,7 @@ result = {
     (ct):
     (page):
     (dy): year, month, day をkeyとして持つdictionary
+    (blog_list_paginate_by):
     
     (only if type == 'member')
     class: 'appropriate' or 'unjust' (該当するmemberが存在するとかいうことではなく、不正か否か。)
@@ -44,6 +44,7 @@ def parse_url(result):
     for group in Group.objects.all():
         if o.netloc == group.domain:
             result['group_id'] = group.group_id
+            result['blog_list_paginate_by'] = group.blog_list_paginate_by
             if len(splitO) > 3:
                 return classify_url(result, splitO, query_set)
     result['class'] = 'unjust'
@@ -57,10 +58,10 @@ def classify_url(result, splitO, query_set):
         result['class'] = 'detail'
         result['blog_ct'] = splitO[4]
         return result
-    elif len(splitO) == 4 and splitO[3] == 'member':
+    elif len(splitO) == 4 and (splitO[3] == 'member' or (result['group_id'] == 1 and splitO[3] == 'blog')):
         result['class'] = 'searchByLatest'
         return result
-    elif len(splitO) == 5 and splitO[3] == 'member' and splitO[4] == 'list':
+    elif len(splitO) == 5 and splitO[4] == 'list' and (splitO[3] == 'member' or (result['group_id'] == 1 and splitO[3] == 'blog')):
         if 'page' in query_set:
             result['page'] = int(query_set['page'][0]) + 1
         if 'ct' in query_set:
