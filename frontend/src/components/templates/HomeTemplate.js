@@ -37,7 +37,7 @@ class HomeTemplate extends React.Component {
 
         {!isMobile && <div className="py-2"></div>}
         <KeepAlive name={this.state.keepAliveName}>
-          <HomeList url={URLJoin(BASE_URL, "api/home/")} applyShowFooter={this.props.applyShowFooter} keepAliveName={this.state.keepAliveName} />
+          <HomeList url={URLJoin(BASE_URL, "home/")} keepAliveName={this.state.keepAliveName} />
         </KeepAlive>
 
         <ToTopButton />

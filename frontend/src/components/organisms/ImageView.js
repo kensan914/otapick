@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { DELAY_TIME, LOAD_IMG_URL } from "../modules/env";
+import { BASE_URL, DELAY_TIME, LOAD_IMG_URL } from "../modules/env";
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from "reactstrap";
 import { URLJoin, generateAlt, isSmp, isMobile, addLongPressEventListeners, generateKeepAliveNameInfo, updateMeta } from "../modules/utils";
 import { ViewTooltip } from "../molecules/info/BlogViewInfo";
@@ -10,15 +10,16 @@ import WriterCard from "../atoms/WriterCard";
 import { MobileBottomMenu } from "../molecules/MobileMenu";
 import { BlogViewLoader, HorizontalLoader } from "../molecules/Loader";
 import { NotFoundMessage } from "../atoms/NotFound";
-import { ViewTemplate } from "../templates/BlogViewTemplate";
+import ViewTemplate from "../templates/ViewTemplate";
 import { withRouter } from "react-router-dom";
+import { withCookies } from "react-cookie";
 
 
-export const downloadImage = (url, incrementNumOfDownloads = null, order) => {
+export const downloadImage = (url, cookies, incrementNumOfDownloads = null, order) => {
   axios
     .post(url, {}, {
       headers: {
-        "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
+        "X-CSRFToken": cookies.get("csrftoken"),
       },
       responseType: "blob"
     })
@@ -57,7 +58,7 @@ class DetailButton extends React.Component {
           <i className="fas fa-bars"></i>
         </DropdownToggle>
         <DropdownMenu className="bold">
-          <DropdownItem onClick={() => downloadImage(URLJoin("/api/", this.props.url), this.props.incrementNumOfDownloads, this.props.order)}>この画像をダウンロードする</DropdownItem>
+          <DropdownItem onClick={() => downloadImage(URLJoin(BASE_URL, this.props.url), this.props.cookies, this.props.incrementNumOfDownloads, this.props.order)}>この画像をダウンロードする</DropdownItem>
           <DropdownItem href={this.props.officialUrl} target="_blank">公式ブログで確認</DropdownItem>
         </DropdownMenu>
       </ButtonDropdown>
@@ -79,7 +80,7 @@ class ImageView extends ViewTemplate {
         key: this.state.VIEW_KEY,
       }, {
         headers: {
-          "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
+          "X-CSRFToken": this.props.cookies.get("csrftoken"),
         }
       })
       .then(res => {
@@ -96,7 +97,7 @@ class ImageView extends ViewTemplate {
         key: this.state.DOWNLOAD_KEY,
       }, {
         headers: {
-          "X-CSRFToken": document.querySelector(`input[name="csrfmiddlewaretoken"]`).getAttribute("value")
+          "X-CSRFToken": this.props.cookies.get("csrftoken"),
         }
       })
       .then(res => {
@@ -124,9 +125,10 @@ class ImageView extends ViewTemplate {
     // image が view されたとき
     if (prevState.status !== this.state.status && this.state.status === "success") {
       if (this.state.VIEW_KEY) {
-        if (!this.props.accessedImages.includes(`${this.props.groupID}_${this.props.blogCt}_${this.props.order}_${this.props.location.key}`)) {
+        const imageID = `${this.props.groupID}_${this.props.blogCt}_${this.props.order}_${this.props.location.key}`;
+        if (!this.props.domState.accessedImages.includes(imageID)) {
           this.putView();
-          this.props.setAccessedImage(`${this.props.groupID}_${this.props.blogCt}_${this.props.order}_${this.props.location.key}`);
+          this.props.domDispatch({ type: "ACCESSE_TO_IMAGE", imageID: imageID });
         }
       }
 
@@ -200,7 +202,7 @@ class ImageView extends ViewTemplate {
             {!isMobile &&
               <div className="col-5 col-md-4 col-lg-3 text-right">
                 <Button className={"rounded-circle p-0 image-view-download-button " + this.props.group}
-                  onClick={() => downloadImage(URLJoin("/api/", image.url), this.incrementNumOfDownloads, this.props.order)} id="image-view-download-button" />
+                  onClick={() => downloadImage(URLJoin(BASE_URL, image.url), this.props.cookies, this.incrementNumOfDownloads, this.props.order)} id="image-view-download-button" />
                 <ViewTooltip target={"image-view-download-button"} title="この画像をダウンロード" />
               </div>
             }
@@ -240,7 +242,7 @@ class ImageView extends ViewTemplate {
             {isMobile
               ? <MobileBottomMenu id="image-view-card-menu" type="imageViewCard" title={`${this.state.title}（${this.state.writer.name}）`}
                 url={this.state.url} officialUrl={this.state.officialUrl} writer={this.state.writer} />
-              : <DetailButton officialUrl={this.state.officialUrl} url={image.url} incrementNumOfDownloads={this.incrementNumOfDownloads} order={this.props.order} />
+              : <DetailButton officialUrl={this.state.officialUrl} url={image.url} incrementNumOfDownloads={this.incrementNumOfDownloads} order={this.props.order} cookies={this.props.cookies} />
             }
           </div>
         </div>
@@ -315,4 +317,4 @@ class ImageView extends ViewTemplate {
 }
 
 
-export default withRouter(ImageView);
+export default withRouter(withCookies(ImageView));

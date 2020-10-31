@@ -6,7 +6,7 @@ import { ContactContent, TermsOfServiceContent, PrivacyPolicyContent } from "../
 import { updateMeta, gtagTo } from "../modules/utils";
 
 
-class MemberListTemplate extends React.Component {
+class TermsTemplate extends React.Component {
   constructor(props) {
     super(props);
     this.titleHash = { contact: "お問い合わせ", termsOfService: "利用規約", privacyPolicy: "プライバシーポリシー" };
@@ -55,4 +55,4 @@ class MemberListTemplate extends React.Component {
   };
 };
 
-export default withRouter(MemberListTemplate);
+export default withRouter(TermsTemplate);

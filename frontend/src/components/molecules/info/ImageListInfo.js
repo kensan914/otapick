@@ -21,7 +21,7 @@ class ImageListInfo extends React.Component {
 
   getBlogListInfo(groupID, ct) {
     const queryParams = this.props.location.search;
-    const url = URLJoin(BASE_URL, "api/images/info/", groupID, ct, queryParams);
+    const url = URLJoin(BASE_URL, "images/info/", groupID, ct, queryParams);
 
     setTimeout(() => {
       axios

@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import SearchDownshift from "../molecules/SearchDownshift"
 import { isMobile, isSmp } from "../modules/utils";
 import { MobileTopMenu } from "../molecules/MobileMenu";
 import { GROUPS } from "../modules/env";
+import { useProfileDispatch, useProfileState } from "../contexts/ProfileContext";
+import MediaQuery from "react-responsive";
+import { useAuthDispatch, useAuthState } from "../contexts/AuthContext";
 
 
 const NavigationBar = (props) => {
+  const profileState = useProfileState();
+  const profileDispatch = useProfileDispatch();
+  const authState = useAuthState();
+  const authDispatch = useAuthDispatch();
+
   // mobile
   if (isMobile) {
     return (
@@ -15,97 +23,151 @@ const NavigationBar = (props) => {
         id="otapick-navbar" style={{ transitionTimingFunction: "ease-out" }}>
         <NavbarBrand tag={Link} to="/" className="mx-0 navbar-brand-responsive" />
         <SearchDownshift />
-        <MobileTopMenu type="navbarMenu" />
+        <MobileTopMenu profileState={profileState} authState={authState} authDispatch={authDispatch} profileDispatch={profileDispatch} type="navbarMenu" />
       </Navbar>
     );
   }
   // PC
   else {
-    const [isOpen, setIsOpen] = useState(false);
-    const toggle = () => setIsOpen(!isOpen);
-
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownToggle = () => setDropdownOpen(prevState => !prevState);
-    const [dropdownOpen2, setDropdownOpen2] = useState(false);
-    const dropdownToggle2 = () => setDropdownOpen2(prevState => !prevState);
     const [dropdownOpen3, setDropdownOpen3] = useState(false);
     const dropdownToggle3 = () => setDropdownOpen3(prevState => !prevState);
     const [dropdownOpen4, setDropdownOpen4] = useState(false);
     const dropdownToggle4 = () => setDropdownOpen4(prevState => !prevState);
 
     const resetNavBar = () => {
-      document.getElementById("otapick-navbar-collapse").classList.remove("show");
       setDropdownOpen(false);
-      setDropdownOpen2(false);
       setDropdownOpen3(false);
       setDropdownOpen4(false);
     }
 
+    const getMainDropdown = (quickStartItems) => {
+      return (
+        <ButtonDropdown direction="down" isOpen={dropdownOpen3} toggle={dropdownToggle3}>
+          <DropdownToggle className="rounded-pill navbar-dropdown-button">
+            {authState.status === "Authenticated" ?
+              <div className="navbar-profile-icon-wrapper rounded-pill">
+                <img src={profileState.profile.image} className="navbar-profile-icon" />
+                <i className="fas fa-caret-down navbar-profile-icon-arrow" ></i>
+              </div> :
+              <div className="navbar-hamburger-wrapper">
+                <i className="fas fa-bars navbar-hamburger" />
+              </div>
+            }
+          </DropdownToggle>
+          <DropdownMenu className={"navbar-dropdown-menu bold"}>
+            {authState.status === "Authenticated" &&
+              <>
+                <DropdownItem header className="omit-title">{profileState.profile.name}</DropdownItem>
+                <DropdownItem tag={Link} to={`/users/${profileState.profile.username}/`}>マイページ</DropdownItem>
+                <DropdownItem divider />
+              </>
+            }
+
+            {quickStartItems}
+
+            <DropdownItem header>公式リンク</DropdownItem>
+            {Object.values(GROUPS).map(groupObj => (
+              <DropdownItem key={groupObj.id} href={groupObj.blogUrl} target="_blank">
+                {groupObj.name}公式ブログ{" "}<i className="fas fa-external-link-alt" />
+              </DropdownItem>
+            ))}
+            <DropdownItem divider />
+
+            <DropdownItem header>ヲタピックについて</DropdownItem>
+            <DropdownItem tag={Link} to="/contact/">お問い合わせ</DropdownItem>
+            <DropdownItem tag={Link} to="/terms-of-service/">利用規約</DropdownItem>
+            <DropdownItem tag={Link} to="/privacy-policy/">プライバシーポリシー</DropdownItem>
+            <DropdownItem href="https://twitter.com/otapick/" target="_blank">
+              公式Twitter{" "}<i className="fab fa-twitter" />
+            </DropdownItem>
+
+            {authState.status === "Authenticated" &&
+              <>
+                <DropdownItem divider />
+                <DropdownItem onClick={() => authDispatch({ type: "COMPLETE_LOGOUT", profileDispatch: profileDispatch })}>ログアウト{" "}<i className="fas fa-sign-out-alt" /></DropdownItem>
+              </>
+            }
+          </DropdownMenu>
+        </ButtonDropdown>
+      );
+    }
+
     return (
-      <Navbar color="light" light expand="lg" className="static-top fixed-top border-bottom"
+      <Navbar color="light" light className="static-top fixed-top border-bottom"
         id="otapick-navbar" style={{ transitionTimingFunction: "ease-out" }}>
         <NavbarBrand tag={Link} to="/" className="mr-1 navbar-brand-responsive" />
-        <SearchDownshift resetNavBar={() => resetNavBar()} navbarToggle={() => setIsOpen(false)} />
+        <SearchDownshift resetNavBar={() => resetNavBar()} navbarToggle={() => { }} />
 
-        <NavbarToggler onClick={toggle} />
+        {/* shorter width */}
+        <MediaQuery query="(max-width: 991px)">
+          {authState.status !== "Authenticated" &&
+            <Button href="/accounts/login/" className="login-button"><i className="fab fa-twitter" />{" "}ログイン</Button>
+          }
+          {getMainDropdown(
+            <>
+              <DropdownItem header>クイックスタート</DropdownItem>
+              <DropdownItem tag={Link} to="/images/">画像一覧</DropdownItem>
+              <DropdownItem tag={Link} to="/blogs/">ブログ一覧</DropdownItem>
+              <DropdownItem tag={Link} to="/members/">メンバーリスト</DropdownItem>
+              <DropdownItem divider />
+            </>
+          )}
+        </MediaQuery>
 
-        <Collapse isOpen={isOpen} navbar id="otapick-navbar-collapse" style={{ flexGrow: 0 }}>
-          <Nav className="mx-4 mx-lg-0" navbar>
-
-            <Dropdown nav inNavbar id="nav-dropdown-blogs" className="mr-3" isOpen={dropdownOpen4} toggle={dropdownToggle4}>
-              <DropdownToggle nav caret>
-                画像一覧
+        {/* longer width */}
+        <MediaQuery query="(min-width: 992px)" navbar>
+          <Nav className="mx-4 mx-lg-0" >
+            <ButtonDropdown id="nav-dropdown-images" isOpen={dropdownOpen4} toggle={dropdownToggle4}>
+              <DropdownToggle className="rounded-pill navbar-dropdown-button">
+                <div className="navbar-dropdownToggle-wrapper rounded-pill">
+                  <div className="navbar-dropdownToggle-title">
+                    画像一覧<i className="fas fa-caret-down navbar-profile-icon-arrow" />
+                  </div>
+                </div>
               </DropdownToggle>
-              <DropdownMenu right>
+              <DropdownMenu right className="bold">
+                <DropdownItem tag={Link} to="/images/">おすすめ画像</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem header>グループから探す</DropdownItem>
                 {Object.values(GROUPS).map(groupObj => (
-                  <DropdownItem key={groupObj.id} tag={Link} to={`/images/${groupObj.id}`}>{groupObj.name}</DropdownItem>
+                  <DropdownItem key={groupObj.id} tag={Link} to={`/images/${groupObj.id}/`}>{groupObj.name}</DropdownItem>
                 ))}
-                <DropdownItem tag={Link} to="/images">おすすめ画像</DropdownItem>
-                <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem header>メンバーから探す</DropdownItem>
+                <DropdownItem tag={Link} to="/members/">メンバーリスト</DropdownItem>
               </DropdownMenu>
-            </Dropdown>
+            </ButtonDropdown>
 
-            <Dropdown nav inNavbar id="nav-dropdown-blogs" className="mr-3" isOpen={dropdownOpen} toggle={dropdownToggle}>
-              <DropdownToggle nav caret>
-                ブログ一覧
+            <ButtonDropdown id="nav-dropdown-blogs" isOpen={dropdownOpen} toggle={dropdownToggle}>
+              <DropdownToggle className="rounded-pill navbar-dropdown-button">
+                <div className="navbar-dropdownToggle-wrapper rounded-pill">
+                  <div className="navbar-dropdownToggle-title">
+                    ブログ一覧<i className="fas fa-caret-down navbar-profile-icon-arrow" />
+                  </div>
+                </div>
               </DropdownToggle>
-              <DropdownMenu right>
+              <DropdownMenu right className="bold">
+                <DropdownItem tag={Link} to="/blogs/">おすすめブログ</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem header>グループから探す</DropdownItem>
                 {Object.values(GROUPS).map(groupObj => (
-                  <DropdownItem key={groupObj.id} tag={Link} to={`/blogs/${groupObj.id}`}>{groupObj.name}</DropdownItem>
+                  <DropdownItem key={groupObj.id} tag={Link} to={`/blogs/${groupObj.id}/`}>{groupObj.name}</DropdownItem>
                 ))}
-                <DropdownItem tag={Link} to="/blogs">おすすめブログ</DropdownItem>
-                <DropdownItem tag={Link} to="/members">メンバーリスト</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem header>メンバーから探す</DropdownItem>
+                <DropdownItem tag={Link} to="/members/">メンバーリスト</DropdownItem>
               </DropdownMenu>
-            </Dropdown>
+            </ButtonDropdown>
 
-            <Dropdown nav inNavbar id="nav-dropdown-official" className="mr-3" isOpen={dropdownOpen2} toggle={dropdownToggle2}>
-              <DropdownToggle nav caret>
-                公式
-              </DropdownToggle>
-              <DropdownMenu right>
-                {Object.values(GROUPS).map(groupObj => (
-                  <DropdownItem key={groupObj.id} href={groupObj.blogUrl} target="_blank">
-                    {groupObj.name}公式ブログ{"\u00A0"}<i className="fas fa-external-link-alt" />
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
+            {authState.status !== "Authenticated" &&
+              <Button href="/accounts/login/" className="login-button"><i className="fab fa-twitter" />{" "}ログイン</Button>
+            }
 
-            <Dropdown nav inNavbar id="nav-dropdown-otapick" className="mr-0" isOpen={dropdownOpen3} toggle={dropdownToggle3}>
-              <DropdownToggle nav caret>
-                ヲタピック
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem tag={Link} to="/contact">お問い合わせ</DropdownItem>
-                <DropdownItem tag={Link} to="/terms-of-service">利用規約</DropdownItem>
-                <DropdownItem tag={Link} to="/privacy-policy">プライバシーポリシー</DropdownItem>
-                <DropdownItem href="https://twitter.com/otapick" target="_blank">
-                  公式Twitter{"\u00A0"}<i className="fab fa-twitter" />
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            {getMainDropdown()}
           </Nav>
-        </Collapse>
+        </MediaQuery>
       </Navbar>
     );
   }

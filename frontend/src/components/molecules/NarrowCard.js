@@ -1,7 +1,7 @@
-import React from 'react';
-import { UncontrolledCollapse, Button } from 'reactstrap';
-import OtapickButton from '../atoms/OtapickButton';
-import Picker from 'react-month-picker'
+import React from "react";
+import { UncontrolledCollapse, Button } from "reactstrap";
+import OtapickButton from "../atoms/OtapickButton";
+import Picker from "react-month-picker"
 import "../../static/css/month-picker.css";
 
 
@@ -9,13 +9,13 @@ class MonthBox extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
-      value: this.props.value || '-/-',
+      value: this.props.value || "-/-",
     }
     this._handleClick = this._handleClick.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
-      value: nextProps.value || '-/-',
+      value: nextProps.value || "-/-",
     })
   }
   render() {
@@ -52,7 +52,7 @@ class NarrowCard extends React.Component {
     this.refs.pickAMonth.show()
   }
   handleAMonthChange(changedYear, changedMonth) {
-    if (this.state.mvalue['year'] == changedYear && this.state.mvalue['month'] == changedMonth) {
+    if (this.state.mvalue["year"] == changedYear && this.state.mvalue["month"] == changedMonth) {
       this.setState({ mvalue: {} });
     } else this.setState({ mvalue: { year: changedYear, month: changedMonth } });
   }
@@ -61,19 +61,19 @@ class NarrowCard extends React.Component {
   }
   applyNarrowing() {
     let queryParams = {};
-    if (this.state.kwvalue) queryParams['keyword'] = this.state.kwvalue;
-    if (Object.keys(this.state.mvalue).length !== 0) queryParams['post'] = `${this.state.mvalue.year}-${this.state.mvalue.month}`;
+    if (this.state.kwvalue) queryParams["keyword"] = this.state.kwvalue;
+    if (Object.keys(this.state.mvalue).length !== 0) queryParams["post"] = `${this.state.mvalue.year}-${this.state.mvalue.month}`;
     this.props.pushHistory(queryParams);
   }
 
   render() {
     const pickerLang = {
-      months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+      months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
     }
     const mvalue = this.state.mvalue
     const makeText = m => {
       if (m && m.year && m.month) return (`${m.year}-${pickerLang.months[m.month - 1]}`)
-      else return ''
+      else return ""
     }
 
 
@@ -87,7 +87,7 @@ class NarrowCard extends React.Component {
               <div className="form-group row mx-0 mx-sm-2">
                 <label htmlFor="keyword_form" className="col-md-2 col-form-label col-form-label-sm">キーワード</label>
                 <div className="col-md-10">
-                  <input type="text" value={this.state.kwvalue} onChange={(e) => this.handleChangeKw(e)} maxLength='20'
+                  <input type="text" value={this.state.kwvalue} onChange={(e) => this.handleChangeKw(e)} maxLength="20"
                     className="form-control form-control-sm" id="keyword_form" placeholder="例)握手会" name="keyword" autoComplete="off" />
                 </div>
               </div>

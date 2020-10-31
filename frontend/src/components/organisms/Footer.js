@@ -12,7 +12,7 @@ const hiddenFooterURLConditions = [
   "/",
   "/search/group/blog",
   "/search/member/blog",
-]
+];
 
 class Footer extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class Footer extends React.Component {
     this.exclusiveKeys = [];
   }
 
-  // 外部からフッターを表示する。引数にそのページのlocation
+  // 外部からフッターを動的表示する。引数にそのページのlocation
   applyShowFooter(location) {
     this.exclusiveKeys.push(location.key);
     if (location === this.props.location) {
@@ -94,14 +94,14 @@ class Footer extends React.Component {
                     <span className="font-weight-bold">画像を探す</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
                     {Object.values(GROUPS).map(groupObj => (
-                      <div key={groupObj.id}>
+                      <React.Fragment key={groupObj.id}>
                         <li>
                           <Link to={`/images/${groupObj.id}`}>{`${groupObj.name} 画像一覧`}</Link>
                         </li>
                         <li>
                           <Link to={`/blogs/${groupObj.id}`}>{`${groupObj.name} ブログ一覧`}</Link>
                         </li>
-                      </div>
+                      </React.Fragment>
                     ))}
                     <li>
                       <Link to="/members">メンバーリスト</Link>
@@ -114,14 +114,14 @@ class Footer extends React.Component {
                     <span className="font-weight-bold">公式リンク</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
                     {Object.values(GROUPS).map(groupObj => (
-                      <div key={groupObj.id}>
+                      <React.Fragment key={groupObj.id}>
                         <li>
                           <a target="_blank" href={groupObj.blogUrl}>{`${groupObj.name} 公式ブログ `}<i className="fas fa-external-link-alt"></i></a>
                         </li>
                         <li>
                           <a target="_blank" href={groupObj.topUrl}>{`${groupObj.name} 公式サイト `}<i className="fas fa-external-link-alt"></i></a>
                         </li>
-                      </div>
+                      </React.Fragment>
                     ))}
                   </ul>
                 </div>

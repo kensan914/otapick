@@ -117,7 +117,7 @@ class ImageListTemplate extends React.Component {
 
           <KeepAlive name={this.state.keepAliveName}>
             <div id={this.state.keepAliveName}>
-              <ImageList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} applyShowFooter={this.props.applyShowFooter}
+              <ImageList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group}
                 orderFormat={this.state.orderFormat} fluid={false} keepAliveName={this.state.keepAliveName} />
             </div>
           </KeepAlive>

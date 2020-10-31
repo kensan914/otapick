@@ -46,7 +46,7 @@ export const ModeSelectButtonDropdown = (props) => {
       <DropdownToggle className={"rounded-circle mode-select-dropdown-button " + (props.fixed ? "fixed p-0 " : " ") + props.group} >
         <i className="fas fa-angle-down"></i>
       </DropdownToggle>
-      <DropdownMenu className={"mode-select-dropdown-menu" + (typeof props.members != "undefined" && "-members")}>
+      <DropdownMenu className={"bold mode-select-dropdown-menu" + (typeof props.members != "undefined" ? "-members" : "")}>
         {contents}
       </DropdownMenu>
     </ButtonDropdown>
@@ -97,7 +97,7 @@ class Headline extends React.Component {
 
   componentDidMount() {
     if (this.props.type === "blogs" || this.props.type === "images") {
-      const url = URLJoin(BASE_URL, "api/members/");
+      const url = URLJoin(BASE_URL, "members/");
       axios
         .get(url)
         .then(res => {

@@ -23,7 +23,7 @@ class BlogListInfo extends React.Component {
 
   getBlogListInfo(groupID, ct) {
     const queryParams = this.props.location.search;
-    const url = URLJoin(BASE_URL, "api/blogs/info/", groupID, ct, queryParams);
+    const url = URLJoin(BASE_URL, "blogs/info/", groupID, ct, queryParams);
 
     setTimeout(() => {
       axios

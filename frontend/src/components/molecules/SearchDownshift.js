@@ -33,7 +33,7 @@ class SearchDownshift extends React.Component {
   }
 
   setInitSearchSuggestions() {
-    const url = URLJoin(BASE_URL, "api/searchSuggestions/init/");
+    const url = URLJoin(BASE_URL, "searchSuggestions/init/");
     setTimeout(() => {
       axios
         .get(url)
@@ -65,7 +65,7 @@ class SearchDownshift extends React.Component {
   }
 
   setSearchSuggestions() {
-    const url = URLJoin(BASE_URL, "api/searchSuggestions/");
+    const url = URLJoin(BASE_URL, "searchSuggestions/");
     setTimeout(() => {
       axios
         .get(url, { params: { q: this.state.qvalue } })

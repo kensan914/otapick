@@ -65,7 +65,7 @@ class MemberListTemplate extends React.Component {
   }
 
   getMembers = () => {
-    const url = URLJoin(BASE_URL, "api/members/");
+    const url = URLJoin(BASE_URL, "members/");
 
     setTimeout(() => {
       axios

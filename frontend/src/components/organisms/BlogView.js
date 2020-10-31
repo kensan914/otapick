@@ -1,11 +1,12 @@
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
 import { saveAs } from "file-saver";
-import DownloadModal from '../molecules/DownloadModal';
-import { DELAY_TIME } from '../modules/env';
-import Masonry from 'react-masonry-component';
-import ImageCard from '../molecules/ImageCard';
-import { addLongPressEventListeners, isMobile, isSmp } from '../modules/utils';
+import DownloadModal from "../molecules/DownloadModal";
+import { DELAY_TIME } from "../modules/env";
+import Masonry from "react-masonry-component";
+import ImageCard from "../molecules/ImageCard";
+import { addLongPressEventListeners, isMobile, isSmp } from "../modules/utils";
+import { withCookies } from "react-cookie";
 
 
 class BlogView extends React.Component {
@@ -29,9 +30,9 @@ class BlogView extends React.Component {
       axios
         .post(this.props.blogViewURL, orderList, {
           headers: {
-            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').getAttribute('value')
+            "X-CSRFToken": this.props.cookies.get("csrftoken"),
           },
-          responseType: 'blob'
+          responseType: "blob"
         })
         .then(res => {
           this.modalRef.current.toggleModal();
@@ -97,10 +98,10 @@ class BlogView extends React.Component {
           const targetImage = document.getElementById(`image_${image.order}`);
           if (targetImage !== null) {
             if (isSmp) {
-              targetImage.setAttribute('src', imageObjcts[index].src);
+              targetImage.setAttribute("src", imageObjcts[index].src);
               targetImage.removeAttribute("srcset");
             } else {
-              targetImage.setAttribute('srcset', `${imageObjcts[index].src} 1x, ${imageObjcts[index].src} 2x`);
+              targetImage.setAttribute("srcset", `${imageObjcts[index].src} 1x, ${imageObjcts[index].src} 2x`);
               targetImage.removeAttribute("src");
             }
           }
@@ -109,7 +110,7 @@ class BlogView extends React.Component {
       } else if (this.props.mode === "download") {
         imageObjcts.push(new Image());
         imageObjcts[index].onload = setTimeout(() => {
-          document.getElementById(`image_${image.order}`).style.backgroundImage = 'url(' + imageObjcts[index].src + ')';
+          document.getElementById(`image_${image.order}`).style.backgroundImage = "url(" + imageObjcts[index].src + ")";
         }, DELAY_TIME);
         imageObjcts[index].src = image.src["originals"];
       }
@@ -134,7 +135,7 @@ class BlogView extends React.Component {
   render() {
     if (this.props.mode === "view") {
       const options = {
-        itemSelector: '.grid-item',
+        itemSelector: ".grid-item",
         transitionDuration: 0,
         stagger: 0,
       };
@@ -207,4 +208,4 @@ class BlogView extends React.Component {
 };
 
 
-export default BlogView;
+export default withCookies(BlogView);

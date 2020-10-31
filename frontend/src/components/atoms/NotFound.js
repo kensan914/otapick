@@ -36,7 +36,7 @@ export class NotFoundMembersContent extends React.Component {
           <p><i className="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
           <p><i className="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
           <p><i className="fas fa-hand-point-right" />
-            <Link to={"/members"}>メンバーリスト</Link>にお探しのメンバーがいるか確認してください。
+            <Link to={"/members/"}>メンバーリスト</Link>にお探しのメンバーがいるか確認してください。
           </p>
           <hr />
           <p>入力例1）平手友梨奈</p>

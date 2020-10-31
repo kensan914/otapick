@@ -1,8 +1,8 @@
-import React from 'react';
-import { NotFoundMessage } from '../atoms/NotFound';
-import { setBodyPadding, isMobile, updateMeta, gtagTo } from '../modules/utils';
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from '../modules/env';
-import { withRouter } from 'react-router-dom';
+import React from "react";
+import { NotFoundMessage } from "../atoms/NotFound";
+import { setBodyPadding, isMobile, updateMeta, gtagTo } from "../modules/utils";
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
+import { withRouter } from "react-router-dom";
 
 
 class NotFound404 extends React.Component {
@@ -12,7 +12,7 @@ class NotFound404 extends React.Component {
 
   componentDidMount() {
     if (this.props.footerRef !== null) {
-      this.props.applyShowFooter(this.props.location);
+      this.props.domDispatch({ type: "APPLY_SHOW_FOOTER", location: this.props.location });
     }
     if (isMobile) {
       setBodyPadding(NAVBAR_HEIGHT);
@@ -23,7 +23,7 @@ class NotFound404 extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.footerRef !== prevProps.footerRef && this.props.footerRef !== null) {
-      this.props.applyShowFooter(this.props.location);
+      this.props.domDispatch({ type: "APPLY_SHOW_FOOTER", location: this.props.location });
     }
   }
 

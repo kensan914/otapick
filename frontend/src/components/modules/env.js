@@ -2,7 +2,7 @@ import { getIsSmp, isMobile } from "./utils";
 
 
 export const DEBUG = NODE_ENV === "development";
-export const BASE_URL = DEBUG ? "http://127.0.0.1:8000/" : "https://otapick.com/";
+export const BASE_URL = DEBUG ? "http://127.0.0.1:8000/api/" : "https://otapick.com/api/";
 export const DELAY_TIME = DEBUG ? 0 : 0;
 
 export const OTAPICK_BRAND_IMG_URL = "/static/img/otapick.png";

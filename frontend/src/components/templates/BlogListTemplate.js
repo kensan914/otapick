@@ -1,11 +1,11 @@
 import React from "react";
-import BlogListInfo from '../molecules/info/BlogListInfo';
-import { BlogList } from '../organisms/List';
-import Headline from '../molecules/Headline';
-import queryString from 'query-string';
-import { KeepAlive } from 'react-keep-alive';
+import BlogListInfo from "../molecules/info/BlogListInfo";
+import { BlogList } from "../organisms/List";
+import Headline from "../molecules/Headline";
+import queryString from "query-string";
+import { KeepAlive } from "react-keep-alive";
 import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo, checkMatchParams, isMobile } from '../modules/utils';
+import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo, checkMatchParams, isMobile } from "../modules/utils";
 import { withRouter } from "react-router-dom";
 
 
@@ -87,9 +87,9 @@ class BlogListTemplate extends React.Component {
         keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
       });
       return;
-    } else if (!qs.sort && this.state.orderFormat !== 'newer_post') {
+    } else if (!qs.sort && this.state.orderFormat !== "newer_post") {
       this.setState({
-        orderFormat: 'newer_post',
+        orderFormat: "newer_post",
         keepAliveName: generateKeepAliveName(this.props.location.key),
         keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
       });
@@ -140,7 +140,7 @@ class BlogListTemplate extends React.Component {
           }
           <KeepAlive name={this.state.keepAliveName}>
             <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-              narrowingPost={this.state.narrowingPost} applyShowFooter={this.props.applyShowFooter} keepAliveName={this.state.keepAliveName} />
+              narrowingPost={this.state.narrowingPost} keepAliveName={this.state.keepAliveName} />
           </KeepAlive>
 
           <ToTopButton />

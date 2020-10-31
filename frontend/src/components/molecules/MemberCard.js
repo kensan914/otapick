@@ -12,7 +12,7 @@ const DetailButton = (props) => {
         <DropdownToggle color="light" className="p-0 card-detail-button rounded-circle">
           <i className="fas fa-bars" style={{ color: "gray" }}></i>
         </DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu className="bold">
           <DropdownItem tag={Link} to={props.url["images"]}>画像一覧へ</DropdownItem>
           <DropdownItem tag={Link} to={props.url["blogs"]}>ブログ一覧へ</DropdownItem>
           <DropdownItem href={props.officialUrl} target="_blank">公式サイトで確認</DropdownItem>

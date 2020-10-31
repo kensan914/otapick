@@ -1,24 +1,37 @@
-import { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { setInitLocationKey } from '../modules/utils';
+import { useEffect } from "react";
+import { withRouter } from "react-router-dom";
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
+import { isMobile, setBodyPadding, setInitLocationKey } from "../modules/utils";
 
 
-class LocationAdmin extends Component {
-  componentDidMount() {
-    setInitLocationKey(this.props.location.key);
+// mobileのサブNavbarを表示しないページのurl
+const unnecessarySubNavbarUrls = [
+  "/users",
+];
+
+const LocationAdmin = (props) => {
+  const { location, children } = props;
+
+  useEffect(() => {
+    setInitLocationKey(location.key);
     window.scrollTo(0, 0);
-  }
+  }, []);
 
-  componentDidUpdate(prevProps) {
-    if (this.props.location !== prevProps.location) {
-      window.scrollTo(0, 0);
-      document.activeElement.blur();
-    }
-  }
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.activeElement.blur();
 
-  render() {
-    return this.props.children;
-  }
+    unnecessarySubNavbarUrls.some((unnecessarySubNavbarUrl, index, array) => {
+      if (!isMobile || location.pathname.startsWith(unnecessarySubNavbarUrl)) {
+        setBodyPadding(NAVBAR_HEIGHT);
+        return true;
+      } else {
+        if (index === array.length - 1) setBodyPadding(NAVBAR_HEIGHT + SUB_NAVBAR_HEIGHT);
+      }
+    });
+  }, [location]);
+
+  return children;
 }
 
 export default withRouter(LocationAdmin);

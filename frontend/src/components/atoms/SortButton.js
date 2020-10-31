@@ -1,5 +1,5 @@
-import React from 'react';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import React from "react";
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 
 
 class SortButton extends React.Component {
@@ -10,7 +10,7 @@ class SortButton extends React.Component {
           <i className="fas fa-sort"></i>{this.props.title}
         </DropdownToggle>
 
-        <DropdownMenu>
+        <DropdownMenu className="bold">
           {this.props.type == "images" &&
             <DropdownItem onClick={() => this.props.pushHistory({ "sort": "recommend" })}>おすすめ順</DropdownItem>
           }

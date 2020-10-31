@@ -1,17 +1,18 @@
-import React from 'react';
-import BlogCard from '../molecules/BlogCard';
-import { HorizontalLoader } from '../molecules/Loader';
-import Masonry from 'react-masonry-component';
-import InfiniteScroll from 'react-infinite-scroller';
-import axios from 'axios';
-import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp } from '../modules/utils';
-import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, ADS_INTERVAL, ADS_INDEX } from '../modules/env';
-import ImageCard from '../molecules/ImageCard';
+import React from "react";
+import BlogCard from "../molecules/BlogCard";
+import { HorizontalLoader } from "../molecules/Loader";
+import Masonry from "react-masonry-component";
+import InfiniteScroll from "react-infinite-scroller";
+import axios from "axios";
+import { URLJoin, getGroup, generateRandomSeed, generateWavesVals, isMobile, generateKeepAliveName, isSmp } from "../modules/utils";
+import { withRouter } from "react-router-dom";
+import { BASE_URL, DELAY_TIME, ADS_INTERVAL, ADS_INDEX } from "../modules/env";
+import ImageCard from "../molecules/ImageCard";
 import MemberCard from "../molecules/MemberCard";
-import { NotFoundMessage } from '../atoms/NotFound';
-import { SquareAds } from '../atoms/Adsense';
-import AdsenseCard from '../molecules/AdsenseCard';
+import { NotFoundMessage } from "../atoms/NotFound";
+import { SquareAds } from "../atoms/Adsense";
+import AdsenseCard from "../molecules/AdsenseCard";
+import { DomDispatchContext } from "../contexts/DomContext";
 
 
 class List extends React.Component {
@@ -37,7 +38,7 @@ class List extends React.Component {
     // このようにそのページのlocation.keyと照合して適切に実行制限をかけてあげる必要がある。
     if (this.props.keepAliveName === generateKeepAliveName(this.props.location.key)) {
       if (prevState.hasMore !== this.state.hasMore && !this.state.hasMore) {
-        this.props.applyShowFooter(this.props.location);
+        this.props.domDispatch({ type: "APPLY_SHOW_FOOTER", location: this.props.location });
       }
     }
     else {
@@ -53,7 +54,7 @@ class List extends React.Component {
 
   render() {
     const options = {
-      itemSelector: '.grid-item',
+      itemSelector: ".grid-item",
       // transitionDuration: "0.1s",
       transitionDuration: 0,
       stagger: 0
@@ -101,7 +102,7 @@ class _BlogList extends List {
   getItemList(page) {
     if (this.state.hasMore && !this.loading) {
       this.loading = true;
-      const url = URLJoin(BASE_URL, "api/blogs/", this.props.groupID, this.props.ct);
+      const url = URLJoin(BASE_URL, "blogs/", this.props.groupID, this.props.ct);
 
       setTimeout(() => {
         axios
@@ -189,7 +190,7 @@ class _ImageList extends List {
 
       let url;
       if (typeof this.props.url == "undefined") {
-        url = URLJoin(BASE_URL, "api/images/", this.props.groupID, this.props.ct);
+        url = URLJoin(BASE_URL, "images/", this.props.groupID, this.props.ct);
       } else {
         url = this.props.url;
       }
@@ -291,7 +292,7 @@ class _HomeList extends _ImageList {
   getHomeAdditional() {
     setTimeout(() => {
       axios
-        .get(URLJoin(BASE_URL, "api/home/additional/"), { params: { random_seed: this.randomSeed } })
+        .get(URLJoin(BASE_URL, "home/additional/"), { params: { random_seed: this.randomSeed } })
         .then(res => {
           if (res.data.length > 0) {
             let additionalItems = [];
@@ -418,6 +419,6 @@ class _HomeList extends _ImageList {
 }
 
 
-export const BlogList = withRouter(_BlogList);
-export const ImageList = withRouter(_ImageList);
-export const HomeList = withRouter(_HomeList);
+export const BlogList = withRouter(props => <DomDispatchContext.Consumer>{domDispatch => <_BlogList {...props} domDispatch={domDispatch} />}</DomDispatchContext.Consumer>);
+export const ImageList = withRouter(props => <DomDispatchContext.Consumer>{domDispatch => <_ImageList {...props} domDispatch={domDispatch} />}</DomDispatchContext.Consumer>);
+export const HomeList = withRouter(props => <DomDispatchContext.Consumer>{domDispatch => <_HomeList {...props} domDispatch={domDispatch} />}</DomDispatchContext.Consumer>);

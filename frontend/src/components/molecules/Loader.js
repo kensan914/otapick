@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 
 export class HorizontalLoader extends React.Component {
   render() {
     return (
-      <div className="loader-ellips infinite-scroll-request my-5">
+      <div className="loader-ellips infinite-scroll-request my-5" style={this.props.style}>
         <span className="loader-ellips__dot"></span>
         <span className="loader-ellips__dot"></span>
         <span className="loader-ellips__dot"></span>

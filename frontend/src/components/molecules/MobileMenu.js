@@ -113,10 +113,17 @@ export class _MobileTopMenu extends MobileMenu {
     let triggerButton;
     if (this.props.type === "navbarMenu") {
       triggerButton =
-        <Button className="rounded-circle transparent-button-mobile" id={`mobiletopmenu-button-${this.props.id}`}
-          onClick={() => this.toggleWork()}>
-          <i className="fas fa-bars" />
-        </Button>
+        <>
+          {this.props.authState.status === "Authenticated" ?
+            <Button className="navbar-profile-icon-mobile-button">
+              <img src={this.props.profileState.profile.image} className="navbar-profile-icon-mobile" onClick={() => this.toggleWork()} />
+            </Button> :
+            <Button className="rounded-circle transparent-button-mobile" id={`mobiletopmenu-button-${this.props.id}`}
+              onClick={() => this.toggleWork()}>
+              <i className="fas fa-bars" />
+            </Button>
+          }
+        </>
     } else if (this.props.type === "modeSelect" || this.props.type === "modeSelectVewHome") {
       triggerButton =
         <div className={"mode-select-dropdown-button-super fixed btn-group"}>
@@ -131,6 +138,21 @@ export class _MobileTopMenu extends MobileMenu {
     if (this.props.type === "navbarMenu") {
       contents =
         <>
+          {this.props.authState.status === "Authenticated" ?
+            <>
+              <MobileMenuTitle omit title={this.props.profileState.profile.name} />
+              <MobileMenuLink router={true} href={`/users/${this.props.profileState.profile.username}/`} title="マイページ" />
+            </> :
+            <>
+              <MobileMenuTitle title="Twitterアカウントで簡単ログイン" />
+              <Button href="/accounts/login" className="login-button mt-1 mb-2">
+                <div style={{ color: "white" }}>
+                  <i className="fab fa-twitter" />{" "}ログイン
+              </div>
+              </Button>
+            </>
+          }
+          <MobileMenuHr />
           <MobileMenuTitle title="クイックアクセス" />
           <MobileMenuLink router={true} href="/images" title="画像一覧" />
           <MobileMenuLink router={true} href="/blogs" title="ブログ一覧" />
@@ -148,6 +170,14 @@ export class _MobileTopMenu extends MobileMenu {
           <MobileMenuLink router={true} href="/terms-of-service" title="利用規約" />
           <MobileMenuLink router={true} href="/privacy-policy" title="プライバシーポリシー" />
           <MobileMenuLink router={false} href="https://twitter.com/otapick" target="_blank" title="公式Twitter" icon={true} />
+
+          {this.props.authState.status === "Authenticated" &&
+            <>
+              <MobileMenuHr />
+              <div className="my-2" />
+              <MobileMenuLink onClick={() => { this.endWork(); this.props.authDispatch({ type: "COMPLETE_LOGOUT", profileDispatch: this.props.profileDispatch }) }} title="ログアウト" iconClass="fas fa-sign-out-alt" />
+            </>
+          }
         </>
     } else if (this.props.type === "modeSelect") {
       contents = [];
@@ -194,7 +224,7 @@ export class _MobileTopMenu extends MobileMenu {
                 onClick={() => this.toggleWork()}>
                 <i className="fas fa-times" />
               </Button>
-              <div className={"text-left " + (isSmp ? "mb-2" : "mb-4")}>
+              <div className={"text-left " + (isSmp ? "mb-2" : "mb-2")}>
                 {contents}
               </div>
             </div>
@@ -211,7 +241,7 @@ export class _MobileBottomMenu extends MobileMenu {
     super(props);
     this.lockScreenID = `mobilebottommenuLS_${this.props.id}`;
     this.boxID = `mobilebottommenu_${this.props.id}`;
-    this.scrollBoxID = `scroll-mobilebottommenu_${this.props.id}`
+    this.scrollBoxID = `scroll-mobilebottommenu_${this.props.id}`;
   }
 
   documentClickHandler = e => {
@@ -338,25 +368,38 @@ export const MobileBottomMenu = withRouter(_MobileBottomMenu);
 
 
 const MobileMenuLink = (props) => {
+  const { router, href, state, title, icon, iconClass, target, onClick } = props;
+
+  const geneATag = (children) => (
+    href ?
+      <a href={href} target={target} onClick={(e) => (onClick && onClick(e))}>
+        {children}
+      </a > :
+      <a target={target} onClick={(e) => (onClick && onClick(e))}>
+        {children}
+      </a>
+  );
+
   return (
     <div className="mobile-menu-a py-2">
-      {props.router
-        ? <Link to={{ pathname: props.href, state: props.state }}>
+      {router
+        ? <Link to={{ pathname: href, state: state }}>
           <p className="mx-3 my-0"><b>
-            {props.title}{props.icon && <>{"\u00A0"}<i className="fas fa-external-link-alt" /></>}
+            {title}{(icon || iconClass) && <>{"\u00A0"}<i className={iconClass ? iconClass : "fas fa-external-link-alt"} /></>}
           </b></p>
         </Link>
-        : <a href={props.href} target={props.target} onClick={(e) => (props.onClick && props.onClick(e))}>
+        : geneATag(
           <p className="mx-3 my-0"><b>
-            {props.title}{props.icon && <>{"\u00A0"}<i className="fas fa-external-link-alt" /></>}
+            {title}{(icon || iconClass) && <>{"\u00A0"}<i className={iconClass ? iconClass : "fas fa-external-link-alt"} /></>}
           </b></p>
-        </a>
+        )
       }
-    </div>
+    </div >
   );
 }
 
 const MobileMenuTitle = (props) => {
+  // omit指定で3点リーダーで省略可能
   return (
     <h5 className={"mobile-menu-title mb-1 mt-3 " + (props.omit ? "omit-title" : "")}>
       {props.title}

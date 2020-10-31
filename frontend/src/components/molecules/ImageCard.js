@@ -1,17 +1,19 @@
-import React from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { generateAlt, isMobile, isSmp } from '../modules/utils';
-import { URLJoin } from '../modules/utils';
-import { downloadImage } from '../organisms/ImageView';
-import { MobileBottomMenu } from './MobileMenu';
+import React from "react";
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from "reactstrap";
+import { Link } from "react-router-dom";
+import { generateAlt, isMobile, isSmp } from "../modules/utils";
+import { URLJoin } from "../modules/utils";
+import { downloadImage } from "../organisms/ImageView";
+import { MobileBottomMenu } from "./MobileMenu";
+import { withCookies } from "react-cookie";
+import { BASE_URL } from "../modules/env";
 
 
 class DownloadButton extends React.Component {
   render() {
     return (
       <Button className={"rounded-circle p-0 image-card-download-button " + this.props.group} title="この画像をダウンロードする"
-        onClick={() => downloadImage(URLJoin("/api/", this.props.url))} />
+        onClick={() => downloadImage(URLJoin(BASE_URL, this.props.url), this.props.cookies)} />
     );
   }
 }
@@ -57,7 +59,7 @@ class DetailButton extends React.Component {
           <DropdownItem tag={Link} to={{ pathname: this.props.url, state: { prevSrc: this.props.src } }}>詳細ページへ</DropdownItem>
           <DropdownItem divider />
           <DropdownItem tag={Link} to={this.props.writer.url["images"]}>{`「${this.props.writer.name}」の他の画像を探す`}</DropdownItem>
-          <DropdownItem onClick={() => downloadImage(URLJoin("/api/", this.props.url))}>この画像をダウンロードする</DropdownItem>
+          <DropdownItem onClick={() => downloadImage(URLJoin(BASE_URL, this.props.url), this.props.cookies)}>この画像をダウンロードする</DropdownItem>
           <DropdownItem href={this.props.officialUrl} target="_blank">公式ブログで確認</DropdownItem>
         </DropdownMenu>
       </ButtonDropdown>
@@ -108,11 +110,11 @@ class SuperImageCard extends React.Component {
           {(this.state.isOpenMenu && !isMobile) &&
             <>
               {this.imageCardRef.clientHeight > 100 &&
-                <DownloadButton group={this.props.group} url={this.props.url} />
+                <DownloadButton group={this.props.group} url={this.props.url} cookies={this.props.cookies} />
               }
               <ToBlogButton url={this.props.blogUrl} title={this.props.blogTitle} />
               <DetailButton url={this.props.url} officialUrl={this.props.officialUrl} ref={this.detailButtonRef} hideMenu={() => this.hideMenu()}
-                writer={this.props.writer} src={this.props.src} />
+                writer={this.props.writer} src={this.props.src} cookies={this.props.cookies} />
             </>
           }
         </div>
@@ -124,9 +126,7 @@ class SuperImageCard extends React.Component {
                 <Link to={{ pathname: this.props.url, state: { prevSrc: this.props.src } }} onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }} onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}
                   style={{ textDecoration: "none" }}>
                   <div className={"card-message mx-auto py-2 " + (!isMobile ? "pc" : "")}>
-                    <i className="fas fa-crown" style={{ color: "gold" }}></i>
-                    {"\u00A0"}
-                    <b>{this.props.message}</b>
+                    <i className="fas fa-crown" style={{ color: "gold" }}></i>{" "}<b>{this.props.message}</b>
                   </div>
                 </Link>
               }
@@ -151,4 +151,4 @@ class ImageCard extends React.Component {
   };
 };
 
-export default ImageCard;
+export default withCookies(ImageCard);

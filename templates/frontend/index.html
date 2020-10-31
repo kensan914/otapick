@@ -12,7 +12,7 @@
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link href="{% static 'css/bootstrap_ex.css' %}{{ static_update }}" rel="stylesheet">
+{#  <link href="{% static 'css/bootstrap_ex.css' %}{{ static_update }}" rel="stylesheet">#}
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
     integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
   <!-- favicon -->
@@ -34,7 +34,6 @@
 
 <body>
   <div id="root"></div>
-  {% csrf_token %}
   <script src="{% static "frontend/main.js" %}{{ static_update }}"></script>
 </body>
 

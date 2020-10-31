@@ -32,7 +32,7 @@ class BlogSearchListTemplate extends React.Component {
   };
 
   search() {
-    const url = URLJoin(BASE_URL, "api/search/");
+    const url = URLJoin(BASE_URL, "search/");
 
     setTimeout(() => {
       axios

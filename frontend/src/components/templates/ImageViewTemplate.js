@@ -9,6 +9,7 @@ import BackButton from "../atoms/BackButton";
 import Headline from "../molecules/Headline";
 import { withRouter } from "react-router-dom";
 import { SquareAds, LandscapeAds } from "../atoms/Adsense";
+import { DomStateContext, DomDispatchContext } from "../contexts/DomContext";
 
 
 class ImageViewTemplate extends React.Component {
@@ -22,8 +23,8 @@ class ImageViewTemplate extends React.Component {
       order: Number(props.match.params.order),
       keepAliveName: generateKeepAliveName(props.location.key),
       keepAliveNameView: generateKeepAliveNameInfo(props.location.key),
-      imageViewURL: URLJoin(BASE_URL, "api/image/", props.match.params.groupID, props.match.params.blogCt, props.match.params.order),
-      blogViewURL: URLJoin(BASE_URL, "api/blog/", props.match.params.groupID, props.match.params.blogCt),
+      imageViewURL: URLJoin(BASE_URL, "image/", props.match.params.groupID, props.match.params.blogCt, props.match.params.order),
+      blogViewURL: URLJoin(BASE_URL, "blog/", props.match.params.groupID, props.match.params.blogCt),
     };
   }
 
@@ -40,7 +41,7 @@ class ImageViewTemplate extends React.Component {
       this.setState({
         group: getGroup(groupID), groupID: groupID, blogCt: blogCt, order: Number(order),
         keepAliveName: generateKeepAliveName(this.props.location.key), keepAliveNameView: generateKeepAliveNameInfo(this.props.location.key),
-        imageViewURL: URLJoin(BASE_URL, "api/image/", groupID, blogCt, order), blogViewURL: URLJoin(BASE_URL, "api/blog/", groupID, blogCt),
+        imageViewURL: URLJoin(BASE_URL, "image/", groupID, blogCt, order), blogViewURL: URLJoin(BASE_URL, "blog/", groupID, blogCt),
       });
       return;
     }
@@ -52,10 +53,19 @@ class ImageViewTemplate extends React.Component {
         <>
           {isMobile && <Headline title={`画像詳細`} />}
           {!isMobile && <BackButton fixed={true} className="in-image-view" />}
-          <KeepAlive name={"ImageView" + this.state.keepAliveNameView}>
-            <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
-              accessedImages={this.props.accessedImages} setAccessedImage={this.props.setAccessedImage} keepAliveNameView={this.state.keepAliveNameView} prevSrc={typeof this.props.location.state !== "undefined" ? this.props.location.state.prevSrc : null} />
-          </KeepAlive>
+
+          <DomStateContext.Consumer>
+            {domState => (
+              <DomDispatchContext.Consumer>
+                {domDispatch => (
+                  <KeepAlive name={"ImageView" + this.state.keepAliveNameView}>
+                    <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
+                      keepAliveNameView={this.state.keepAliveNameView} prevSrc={typeof this.props.location.state !== "undefined" ? this.props.location.state.prevSrc : null} domState={domState} domDispatch={domDispatch} />
+                  </KeepAlive>
+                )}
+              </DomDispatchContext.Consumer>
+            )}
+          </DomStateContext.Consumer>
 
           {/* Google Adsense */}
           <div className="container mt-4" key={this.state.keepAliveName}>
@@ -64,8 +74,8 @@ class ImageViewTemplate extends React.Component {
 
           <KeepAlive name={"ImageList" + this.state.keepAliveName}>
             <div className="container-fluid text-muted mt-3 list-container-fluid">
-              <ImageList groupID={this.state.groupID} group={this.state.group} applyShowFooter={this.props.applyShowFooter} related={true}
-                url={URLJoin(BASE_URL, "api/relatedImages/", this.state.groupID, this.state.blogCt, this.state.order.toString())} keepAliveName={this.state.keepAliveName} />
+              <ImageList groupID={this.state.groupID} group={this.state.group} related={true}
+                url={URLJoin(BASE_URL, "relatedImages/", this.state.groupID, this.state.blogCt, this.state.order.toString())} keepAliveName={this.state.keepAliveName} />
             </div>
           </KeepAlive>
           <ToTopButton />

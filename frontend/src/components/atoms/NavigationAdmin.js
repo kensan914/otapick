@@ -202,7 +202,7 @@ class NavigationAdmin extends React.Component {
     }
 
     if (this.props.location !== prevProps.location) {
-      this.props.scrollHandler();
+      this.props.domDispatch({ type: "HANDLE_SCROLL" });
     }
   }
 
