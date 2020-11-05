@@ -13,6 +13,7 @@ import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
 import { SquareAds, LandscapeAds } from "../atoms/Adsense";
 import ViewTemplate from "./ViewTemplate";
 import { withCookies } from "react-cookie";
+import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
 
 
 class BlogViewTemplate extends ViewTemplate {
@@ -158,4 +159,16 @@ class BlogViewTemplate extends ViewTemplate {
   }
 }
 
-export default withRouter(withCookies(BlogViewTemplate));
+
+
+
+export default withRouter(withCookies((props) => (
+  <DomStateContext.Consumer>
+    {domState =>
+      <DomDispatchContext.Consumer>
+        {domDispatch => (
+          <BlogViewTemplate {...props} domState={domState} domDispatch={domDispatch} />
+        )}
+      </DomDispatchContext.Consumer>}
+  </DomStateContext.Consumer>
+)));

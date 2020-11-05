@@ -3,7 +3,7 @@ import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKee
 import { BASE_URL } from "../modules/env";
 import ImageView from "../organisms/ImageView";
 import { KeepAlive } from "react-keep-alive";
-import { ImageList } from "../organisms/List";
+import  ImageList  from "../organisms/List/ImageList";
 import ToTopButton from "../atoms/ToTopButton";
 import BackButton from "../atoms/BackButton";
 import Headline from "../molecules/Headline";
@@ -74,8 +74,9 @@ class ImageViewTemplate extends React.Component {
 
           <KeepAlive name={"ImageList" + this.state.keepAliveName}>
             <div className="container-fluid text-muted mt-3 list-container-fluid">
-              <ImageList groupID={this.state.groupID} group={this.state.group} related={true}
-                url={URLJoin(BASE_URL, "relatedImages/", this.state.groupID, this.state.blogCt, this.state.order.toString())} keepAliveName={this.state.keepAliveName} />
+              <ImageList groupID={this.state.groupID} group={this.state.group} blogCt={this.state.blogCt} order={this.state.order} type="RELATED_IMAGES" keepAliveName={this.state.keepAliveName} topComponent={
+                <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>
+              } />
             </div>
           </KeepAlive>
           <ToTopButton />

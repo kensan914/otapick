@@ -2,10 +2,13 @@ var webpack = require("webpack");
 
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./src/index.jsx",
   output: {
     path: __dirname + "/../static/frontend",
     filename: "main.js",
+  },
+  resolve: {
+    extensions: [".js", ".jsx"],
   },
   module: {
     rules: [
@@ -18,13 +21,13 @@ module.exports = {
             loader: "css-loader",
             options: {
               url: false,
-              modules : true,
+              // modules : true,
             },
           },
         ],
       },
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader"
@@ -32,6 +35,7 @@ module.exports = {
       },
     ]
   },
+
   // https://qiita.com/terrierscript/items/f840b5ccff0c0be7420a
   performance: { hints: false },
 

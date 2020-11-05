@@ -1,13 +1,8 @@
 import { useEffect } from "react";
 import { withRouter } from "react-router-dom";
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, unnecessarySubNavbarUrls } from "../modules/env";
 import { isMobile, setBodyPadding, setInitLocationKey } from "../modules/utils";
 
-
-// mobileのサブNavbarを表示しないページのurl
-const unnecessarySubNavbarUrls = [
-  "/users",
-];
 
 const LocationAdmin = (props) => {
   const { location, children } = props;

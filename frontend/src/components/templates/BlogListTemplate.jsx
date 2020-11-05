@@ -1,6 +1,6 @@
 import React from "react";
 import BlogListInfo from "../molecules/info/BlogListInfo";
-import { BlogList } from "../organisms/List";
+import BlogList from "../organisms/List/BlogList";
 import Headline from "../molecules/Headline";
 import queryString from "query-string";
 import { KeepAlive } from "react-keep-alive";

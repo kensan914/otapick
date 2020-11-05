@@ -5,7 +5,7 @@ import { BASE_URL } from "../modules/env";
 import { generateKeepAliveName, isMobile, URLJoin } from "../modules/utils";
 import { HorizontalLoader } from "../molecules/Loader";
 import ProfileButtonGroup from "../molecules/ProfileButtonGroup";
-import { HomeList, ImageList } from "../organisms/List";
+import ImageList from "../organisms/List/ImageList";
 import ProfileView from "../organisms/ProfileView";
 
 
@@ -14,9 +14,8 @@ const UserTemplate = (props) => {
   const [keepAliveName, setKeepAliveName] = useState(generateKeepAliveName(props.location.key));
 
   useEffect(() => {
-    console.log(props.location.key);
     setKeepAliveName(generateKeepAliveName(props.location.key));
-  }, [props]);
+  }, [props.location]);
 
   return (
     <>

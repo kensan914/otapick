@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageList } from '../organisms/List';
+import ImageList from '../organisms/List/ImageList';
 import Headline from '../molecules/Headline';
 import queryString from 'query-string';
 import { KeepAlive } from 'react-keep-alive';
@@ -117,8 +117,7 @@ class ImageListTemplate extends React.Component {
 
           <KeepAlive name={this.state.keepAliveName}>
             <div id={this.state.keepAliveName}>
-              <ImageList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group}
-                orderFormat={this.state.orderFormat} fluid={false} keepAliveName={this.state.keepAliveName} />
+              <ImageList groupID={this.state.groupID} ct={this.state.ct} orderFormat={this.state.orderFormat} keepAliveName={this.state.keepAliveName} />
             </div>
           </KeepAlive>
 

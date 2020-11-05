@@ -1,18 +1,8 @@
 import React from "react";
 import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import { Link } from "react-router-dom";
-import { GROUPS } from "../modules/env";
+import { GROUPS, hiddenFooterURLConditions } from "../modules/env";
 
-
-// HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
-const hiddenFooterURLConditions = [
-  "/blogs",
-  "/images",
-  "/image",
-  "/",
-  "/search/group/blog",
-  "/search/member/blog",
-];
 
 class Footer extends React.Component {
   constructor(props) {

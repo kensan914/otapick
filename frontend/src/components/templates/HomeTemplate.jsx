@@ -1,5 +1,5 @@
 import React from "react";
-import { HomeList } from '../organisms/List';
+import HomeList from '../organisms/List/HomeList';
 import Headline from '../molecules/Headline';
 import { KeepAlive } from 'react-keep-alive';
 import ToTopButton from "../atoms/ToTopButton";
@@ -37,7 +37,7 @@ class HomeTemplate extends React.Component {
 
         {!isMobile && <div className="py-2"></div>}
         <KeepAlive name={this.state.keepAliveName}>
-          <HomeList url={URLJoin(BASE_URL, "home/")} keepAliveName={this.state.keepAliveName} />
+          <HomeList keepAliveName={this.state.keepAliveName} />
         </KeepAlive>
 
         <ToTopButton />

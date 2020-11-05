@@ -69,7 +69,7 @@ export const useAxios = (url, method, action) => {
   // set didRequestCallback
   if (actionKeys.indexOf("didRequestCallback") !== -1) {
     axiosInstance.interceptors.request.use(request => {
-      action.didRequestCallback();
+      action.didRequestCallback(request);
       return request;
     });
   }
@@ -101,11 +101,15 @@ export const useAxios = (url, method, action) => {
         setResData(res.data);
       })
       .catch(err => {
-        console.error(err.response);
+        if (err.response) {
+          console.error(err.response);
+        } else {
+          console.error(err);
+        }
         if (actionKeys.indexOf("errorCallback") !== -1) action.errorCallback(err);
       })
       .finally(() => {
-        if (actionKeys.indexOf("finallyCallback") !== -1) action.finallyCallback(err);
+        if (actionKeys.indexOf("finallyCallback") !== -1) action.finallyCallback();
         setIsLoading(false);
       });
   }

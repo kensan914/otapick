@@ -9,6 +9,20 @@ export const OTAPICK_BRAND_IMG_URL = "/static/img/otapick.png";
 export const LOAD_IMG_URL = "/static/img/otapick_logo_back.png";
 export const BACKGROUNG_IMG_URL = "/static/img/background.png";
 
+// mobileのサブNavbarを表示しないページのurl
+export const unnecessarySubNavbarUrls = [
+  "/users",
+];
+// footerを表示しないページのurl. HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
+export const hiddenFooterURLConditions = [
+  "/blogs",
+  "/images",
+  "/image",
+  "/",
+  "/search/group/blog",
+  "/search/member/blog",
+];
+
 export let MOBILE_TOP_MENU_MT;
 export let NAVBAR_HEIGHT;
 export let SUB_NAVBAR_HEIGHT;
@@ -17,12 +31,12 @@ export let TOTOP_BUTTON_DIAMETER;
 export const BOTTOM_NAVBAR_HEIGHT = 52;
 
 export const setEnvConstant = () => {
-    const isSmp = getIsSmp();
-    MOBILE_TOP_MENU_MT = isSmp ? 48.5 : 52;
-    NAVBAR_HEIGHT = isSmp ? 61 : 67;
-    SUB_NAVBAR_HEIGHT = isSmp ? 55 : 60;
-    TOTOP_BUTTON_M = isSmp ? 16 : (isMobile ? 32 : 48);
-    TOTOP_BUTTON_DIAMETER = isSmp ? 48 : 64;
+  const isSmp = getIsSmp();
+  MOBILE_TOP_MENU_MT = isSmp ? 48.5 : 52;
+  NAVBAR_HEIGHT = isSmp ? 61 : 67;
+  SUB_NAVBAR_HEIGHT = isSmp ? 55 : 60;
+  TOTOP_BUTTON_M = isSmp ? 16 : (isMobile ? 32 : 48);
+  TOTOP_BUTTON_DIAMETER = isSmp ? 48 : 64;
 }
 
 export const NAVBAR_LS_ZINDEX = 998;
@@ -45,36 +59,36 @@ export const ADS_INDEX = 8;
 
 // groups 改名時は、ここを変更するだけでよい
 export const GROUPS = {
-    "1": {
-        id: "1",
-        name: "櫻坂46",
-        key: "sakura",
-        blogUrl: "https://sakurazaka46.com/s/s46/diary/blog?ima=0000",
-        blogUrlExample: "https://sakurazaka46.com/s/s46/diary/blog?ima=0000",
-        topUrl: "https://sakurazaka46.com/s/s46/?ima=0000",
-        domain: "sakurazaka46.com",
-        isActive: true,
-    },
-    "3": {
-        id: "3",
-        name: "欅坂46",
-        key: "keyaki",
-        blogUrl: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
-        blogUrlExample: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
-        topUrl: "https://www.keyakizaka46.com/s/k46o/?ima=0000",
-        domain: "keyakizaka46.com",
-        isActive: false,
-    },
-    "2": {
-        id: "2",
-        name: "日向坂46",
-        key: "hinata",
-        blogUrl: "https://www.hinatazaka46.com/s/official/diary/member?ima=0000",
-        blogUrlExample: "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000",
-        topUrl: "https://www.hinatazaka46.com/s/official/?ima=0000",
-        domain: "hinatazaka46.com",
-        isActive: true,
-    },
+  "1": {
+    id: "1",
+    name: "櫻坂46",
+    key: "sakura",
+    blogUrl: "https://sakurazaka46.com/s/s46/diary/blog?ima=0000",
+    blogUrlExample: "https://sakurazaka46.com/s/s46/diary/blog?ima=0000",
+    topUrl: "https://sakurazaka46.com/s/s46/?ima=0000",
+    domain: "sakurazaka46.com",
+    isActive: true,
+  },
+  "3": {
+    id: "3",
+    name: "欅坂46",
+    key: "keyaki",
+    blogUrl: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
+    blogUrlExample: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
+    topUrl: "https://www.keyakizaka46.com/s/k46o/?ima=0000",
+    domain: "keyakizaka46.com",
+    isActive: false,
+  },
+  "2": {
+    id: "2",
+    name: "日向坂46",
+    key: "hinata",
+    blogUrl: "https://www.hinatazaka46.com/s/official/diary/member?ima=0000",
+    blogUrlExample: "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000",
+    topUrl: "https://www.hinatazaka46.com/s/official/?ima=0000",
+    domain: "hinatazaka46.com",
+    isActive: true,
+  },
 };
 
 export const SITE_NAME = "ヲタピック";
