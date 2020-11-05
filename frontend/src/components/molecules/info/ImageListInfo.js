@@ -1,10 +1,11 @@
 import React from 'react';
 import SortButton from '../../atoms/SortButton';
 import axios from 'axios';
-import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from '../../modules/utils';
+import { URLJoin, isSmp, isMobile, updateMeta, gtagTo } from '../../modules/utils';
 import { withRouter } from 'react-router-dom';
 import { BASE_URL, DELAY_TIME, IMAGES_DISCRIPTION, HOME_TITLE } from '../../modules/env';
 import { MobileBottomMenu } from '../MobileMenu';
+import { getImageUrlComposition } from '../../templates/ImageListTemplate';
 
 
 class ImageListInfo extends React.Component {
@@ -13,13 +14,13 @@ class ImageListInfo extends React.Component {
     this.state = {
       title: "",
       numOfHit: 0,
-      sortButtonTitle: this.convertSortButtonTitle(),
+      sortButtonTitle: this.convertSortButtonTitle(this.props.orderFormat),
       metaTitle: "",
     }
-    this.getBlogListInfo(this.props.groupID, this.props.ct);
+    this.getImageListInfo(this.props.groupID, this.props.ct);
   }
 
-  getBlogListInfo(groupID, ct) {
+  getImageListInfo(groupID, ct) {
     const queryParams = this.props.location.search;
     const url = URLJoin(BASE_URL, "images/info/", groupID, ct, queryParams);
 
@@ -34,10 +35,8 @@ class ImageListInfo extends React.Component {
               status: "not_found",
               metaTitle: this.props.home ? HOME_TITLE : "Not Found Image",
             });
-            if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key)) {
-              if (!this.props.home) updateMeta({ title: "Not Found Image", discription: IMAGES_DISCRIPTION });
-              else updateMeta({ title: HOME_TITLE, discription: "" });
-            }
+            if (!this.props.home) updateMeta({ title: "Not Found Image", discription: IMAGES_DISCRIPTION });
+            else updateMeta({ title: HOME_TITLE, discription: "" });
           } else {
             this.setState({
               title: res.data.title,
@@ -45,10 +44,8 @@ class ImageListInfo extends React.Component {
               status: "success",
               metaTitle: this.props.home ? HOME_TITLE : res.data.meta_title,
             });
-            if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key)) {
-              if (!this.props.home) updateMeta({ title: `${res.data.meta_title}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
-              else updateMeta({ title: HOME_TITLE, discription: "" });
-            }
+            if (!this.props.home) updateMeta({ title: `${res.data.meta_title}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
+            else updateMeta({ title: HOME_TITLE, discription: "" });
           }
         })
         .catch(err => {
@@ -60,8 +57,8 @@ class ImageListInfo extends React.Component {
     }, DELAY_TIME);
   }
 
-  convertSortButtonTitle() {
-    switch (this.props.orderFormat) {
+  convertSortButtonTitle(orderFormat) {
+    switch (orderFormat) {
       case "recommend":
         return "おすすめ順";
       case 'newer_post':
@@ -80,11 +77,12 @@ class ImageListInfo extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key)) {
-      if (this.props.location !== prevProps.location) {
-        if (!this.props.home) updateMeta({ title: `${this.state.metaTitle}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
-        else updateMeta({ title: this.state.metaTitle, discription: "" });
-      }
+    if (this.props.location !== prevProps.location) {
+      const { groupID, ct, orderFormat } = getImageUrlComposition(this.props);
+      this.setState({ sortButtonTitle: this.convertSortButtonTitle(orderFormat) })
+      this.getImageListInfo(groupID, ct);
+      if (!this.props.home) updateMeta({ title: `${this.state.metaTitle}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
+      else updateMeta({ title: this.state.metaTitle, discription: "" });
     }
   }
 

@@ -1,10 +1,8 @@
 import React from "react";
 import HomeList from '../organisms/List/HomeList';
 import Headline from '../molecules/Headline';
-import { KeepAlive } from 'react-keep-alive';
 import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, generateKeepAliveName, isMobile, generateKeepAliveNameInfo } from '../modules/utils';
-import { BASE_URL } from "../modules/env";
+import { isMobile } from '../modules/utils';
 import ImageListInfo from "../molecules/info/ImageListInfo";
 import { withRouter } from "react-router-dom";
 
@@ -12,33 +10,17 @@ import { withRouter } from "react-router-dom";
 class HomeTemplate extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      keepAliveName: generateKeepAliveName(props.location.key),
-      keepAliveNameInfo: generateKeepAliveNameInfo(props.location.key),
-    }
   };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.location !== prevProps.location) {
-      this.setState({
-        keepAliveName: generateKeepAliveName(this.props.location.key),
-      });
-    }
-  }
 
   render() {
     return (
       <div className={"container text-muted mt-3"}>
         <Headline type="home" />
 
-        <KeepAlive name={this.state.keepAliveNameInfo}>
-          <ImageListInfo groupID={0} keepAliveNameInfo={this.state.keepAliveNameInfo} hide={true} home={true} />
-        </KeepAlive>
+        <ImageListInfo groupID={0} hide={true} home={true} />
 
         {!isMobile && <div className="py-2"></div>}
-        <KeepAlive name={this.state.keepAliveName}>
-          <HomeList keepAliveName={this.state.keepAliveName} />
-        </KeepAlive>
+        <HomeList />
 
         <ToTopButton />
       </div>

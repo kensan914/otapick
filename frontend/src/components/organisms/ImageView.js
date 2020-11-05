@@ -3,7 +3,7 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { BASE_URL, DELAY_TIME, LOAD_IMG_URL } from "../modules/env";
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from "reactstrap";
-import { URLJoin, generateAlt, isSmp, isMobile, addLongPressEventListeners, generateKeepAliveNameInfo, updateMeta } from "../modules/utils";
+import { URLJoin, generateAlt, isSmp, isMobile, addLongPressEventListeners, updateMeta } from "../modules/utils";
 import { ViewTooltip } from "../molecules/info/BlogViewInfo";
 import { Link } from "react-router-dom";
 import WriterCard from "../atoms/WriterCard";
@@ -13,6 +13,7 @@ import { NotFoundMessage } from "../atoms/NotFound";
 import ViewTemplate from "../templates/ViewTemplate";
 import { withRouter } from "react-router-dom";
 import { withCookies } from "react-cookie";
+import LazyLoad from "react-lazyload";
 
 
 export const downloadImage = (url, cookies, incrementNumOfDownloads = null, order) => {
@@ -108,16 +109,14 @@ class ImageView extends ViewTemplate {
   }
 
   updateMetaVerView(status, blogTitle, blogWriter) {
-    if (this.props.keepAliveNameView === generateKeepAliveNameInfo(this.props.location.key)) {
-      if (status === "success") {
-        updateMeta({ title: `${blogTitle}(${blogWriter})｜画像詳細`, discription: `${blogWriter}のブログ「${blogTitle}」の画像です。` });
-      } else if (status === "get_image_failed") {
-        updateMeta({ title: "Not Found Image", discription: "" });
-      } else if (status === "blog_not_found") {
-        updateMeta({ title: "Not Found Blog", discription: "" });
-      } else if (status === "accepted") {
-        updateMeta({ title: "画像取得中", discription: "" });
-      }
+    if (status === "success") {
+      updateMeta({ title: `${blogTitle}(${blogWriter})｜画像詳細`, discription: `${blogWriter}のブログ「${blogTitle}」の画像です。` });
+    } else if (status === "get_image_failed") {
+      updateMeta({ title: "Not Found Image", discription: "" });
+    } else if (status === "blog_not_found") {
+      updateMeta({ title: "Not Found Blog", discription: "" });
+    } else if (status === "accepted") {
+      updateMeta({ title: "画像取得中", discription: "" });
     }
   }
 
@@ -155,10 +154,8 @@ class ImageView extends ViewTemplate {
     }
 
     // update meta
-    if (this.props.keepAliveNameView === generateKeepAliveNameInfo(this.props.location.key)) {
-      if (this.props.location !== prevProps.location) {
-        this.updateMetaVerView(this.state.status, this.state.title, this.state.writer.name);
-      }
+    if (this.props.location !== prevProps.location) {
+      this.updateMetaVerView(this.state.status, this.state.title, this.state.writer.name);
     }
 
     // accepted
@@ -308,10 +305,12 @@ class ImageView extends ViewTemplate {
     }
 
     return (
-      <>{isSmp
-        ? <div>{imageView}</div>
-        : <div className="container mt-3 text-muted">{imageView}</div>
-      }</>
+      <>
+        {isSmp
+          ? <div>{imageView}</div>
+          : <div className="container mt-3 text-muted">{imageView}</div>
+        }
+      </>
     );
   }
 }

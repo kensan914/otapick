@@ -120,22 +120,6 @@ export const getIsMobile = () => {
   }
 }
 
-export const generateKeepAliveName = (key) => {
-  if (typeof key == "undefined") {
-    return "keepAliveInit";
-  } else {
-    return key;
-  }
-}
-
-export const generateKeepAliveNameInfo = (key) => {
-  if (typeof key == "undefined") {
-    return "keepAliveInitInfo";
-  } else {
-    return key + "info";
-  }
-}
-
 export const generateAlt = (group, writerName, type) => {
   let groupName;
   Object.values(GROUPS).forEach(groupObj => {

@@ -36,7 +36,8 @@ const Screens = (props) => {
   );
 
   return (
-    <Provider max={4}>
+    // <Provider max={4}>
+    <>
       <NavigationBar />
       <NavigationAdmin isShowNBShadow={domState.isShowNBShadow} isShowNB={domState.isShowNB} isShowSubNB={domState.isShowSubNB} isTop={domState.isTop} domDispatch={domDispatch} />
       { isMobile && <BottomNavigationBar />}
@@ -65,9 +66,9 @@ const Screens = (props) => {
         <Route exact path="/blog/:groupID/:blogCt/" render={() => renderDefault(<BlogViewTemplate />)} />
 
         <Route exact path="/image/:groupID/:blogCt/:order/" render={() => (
-          <Provider include={/^(ImageView|ImageList).*$/} exclude={/^(?!ImageView|ImageList).*$/}>
-            <ImageViewTemplate />
-          </Provider>
+          // <Provider include={/^(ImageView|ImageList).*$/} exclude={/^(?!ImageView|ImageList).*$/}>
+          <ImageViewTemplate />
+          // </Provider>
         )} />
 
         {/* TODO(TODOで検索): PCだと一応機能する。が、mobileだとエラー吐く */}
@@ -87,7 +88,8 @@ const Screens = (props) => {
       </Switch>
 
       <Footer ref={footerRef} />
-    </Provider>
+      {/* </Provider> */}
+    </>
   );
 }
 

@@ -61,7 +61,7 @@ export const useProfileDispatch = () => {
   return context;
 };
 
-export const ProfileProvider = ({ children }) => {
+const ProfileProvider = ({ children }) => {
   const _profile = getJson("profile");
   const [profileState, profileDispatch] = useReducer(ProfileReducer, {
     profile: _profile ? _profile : { ...initProfile },
@@ -87,3 +87,6 @@ export const ProfileProvider = ({ children }) => {
     </ProfileStateContext.Provider>
   );
 };
+
+
+export default ProfileProvider;

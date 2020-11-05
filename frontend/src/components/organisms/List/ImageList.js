@@ -1,19 +1,22 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import { URLJoin, getGroup, isMobile } from "../../modules/utils";
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
 import ImageCard from "../../molecules/ImageCard";
 import { SquareAds } from "../../atoms/Adsense";
 import { useAxios } from "../../modules/axios";
-import List, { useList } from "./List";
+import List, { useListDidMountRequest, useListState } from "./List";
+import { useHistoryDispatch } from "../../contexts/HistoryContext";
+import { getImageUrlComposition } from "../../templates/ImageListTemplate";
 
 
 const ImageList = (props) => {
-  const { keepAliveName, topComponent } = props;
+  const { topComponent } = props;
 
   return (
     <ImageListModel {...props} render={(hasMore, status, page, urlExcludePage, isLoading, request, items, isShowTopComponent, isFluid, isExcludeAds) => {
       return (
-        <List keepAliveName={keepAliveName} hasMore={hasMore} status={status} page={page} urlExcludePage={urlExcludePage} isLoading={isLoading} request={request}
+        <List hasMore={hasMore} status={status} page={page} urlExcludePage={urlExcludePage} isLoading={isLoading} request={request}
           topComponent={(isShowTopComponent && status === "success") && topComponent}>
           {items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => {
             const gridItemClassName = "grid-item " +
@@ -46,25 +49,12 @@ export default ImageList;
 
 
 /**
- * ↓↓↓ require params ↓↓↓
- * @param {string} groupID
- * @param {string} keepAliveName
- * 
- * ↓↓↓ require params ↓↓↓
- * @param {string} ct 通常のimage list
- * @param {string} blogCt related image list
- * @param {string} order related image list
- * @param {string} orderFormat
+ * ↓↓↓ unrequire params ↓↓↓
  * @param {string} type ["RELATED_IMAGES"] 通常のimage listの場合、不必要。それ以外でimage list を使う際に指定する。
  * @param {component} topComponent listの上部に表示させる
- * 
- * 親コンポーネントからstate(page等々)を取得したい場合、useImperativeHandleにてゲッターを設定し、ref.current.[ゲッター]で取得する。
  */
-export const ImageListModel = forwardRef((props, ref) => {
-  const { groupID, ct, blogCt, order, orderFormat, type, render } = props;
-
-  const [randomSeed, items, setItems, hasMore, setHasMore, status, setStatus, page, incrPage] = useList();
-  const [isShowTopComponent, setIsShowTopComponent] = useState(false);
+export const ImageListModel = withRouter((props) => {
+  const { type, render } = props;
 
   //---------- typeごとに異なる処理はここに記述 ----------//
   let urlExcludeQparams;
@@ -72,7 +62,11 @@ export const ImageListModel = forwardRef((props, ref) => {
   let isExcludeAds = false;  // list内にAdsを表示していない
   switch (type) {
     case "RELATED_IMAGES":
-      urlExcludeQparams = URLJoin(BASE_URL, "relatedImages/", groupID, blogCt, order.toString());
+      urlExcludeQparams = URLJoin(BASE_URL, "relatedImages/",
+        props.match.params.groupID,
+        props.match.params.blogCt,
+        props.match.params.order,
+      );
       isFluid = true;
       isExcludeAds = true;
       break;
@@ -82,12 +76,29 @@ export const ImageListModel = forwardRef((props, ref) => {
       break;
 
     default:
-      urlExcludeQparams = URLJoin(BASE_URL, "images/", groupID, ct);
+      urlExcludeQparams = URLJoin(BASE_URL, "images/",
+        props.match.params.groupID,
+        props.match.params.ct,
+      );
       break;
   }
   //----------------------------------------------------//
 
-  const urlExcludePage = URLJoin(urlExcludeQparams, randomSeed && `?random_seed=${randomSeed}`, orderFormat && `?sort=${orderFormat}`);
+  const [items, hasMore, status, page, urlExcludePage] = useListState(props.location.key,
+    (randomSeed) => {
+      const { orderFormat } = getImageUrlComposition(props);
+
+      return (
+        URLJoin(
+          urlExcludeQparams,
+          orderFormat && `?sort=${orderFormat}`,
+          randomSeed && `?random_seed=${randomSeed}`
+        )
+      );
+    }
+  );
+  const [isShowTopComponent, setIsShowTopComponent] = useState(false);
+  const historyDispatch = useHistoryDispatch();
 
   const { isLoading, resData, request } = useAxios(
     URLJoin(urlExcludePage, `?page=${page}`),
@@ -107,16 +118,19 @@ export const ImageListModel = forwardRef((props, ref) => {
               writer: item.blog.writer,
             })
           );
-          setItems(items.concat(newImages));
-          setStatus("success");
+          historyDispatch({ type: "APPEND_LIST_ITEMS", locationKey: props.location.key, items: newImages });
+
+          historyDispatch({ type: "SET_LIST_STATUS", locationKey: props.location.key, status: "success" });
           if (res.data.length < 20) {
-            setHasMore(false);
+            historyDispatch({ type: "SET_LIST_HAS_MORE", locationKey: props.location.key, hasMore: false });
           }
         } else {
           if (page == 1) {
-            setHasMore(false);
-            setStatus("image_not_found");
-          } else setHasMore(false);
+            historyDispatch({ type: "SET_LIST_HAS_MORE", locationKey: props.location.key, hasMore: false });
+            historyDispatch({ type: "SET_LIST_STATUS", locationKey: props.location.key, status: "image_not_found" });
+          } else {
+            historyDispatch({ type: "SET_LIST_HAS_MORE", locationKey: props.location.key, hasMore: false });
+          }
         }
 
         // relatedImageTitle表示
@@ -124,21 +138,18 @@ export const ImageListModel = forwardRef((props, ref) => {
       },
       errorCallback: err => {
         if (err.response.status === 404) {
-          setHasMore(false);
-          setStatus("image_not_found");
+          historyDispatch({ type: "SET_LIST_HAS_MORE", locationKey: props.location.key, hasMore: false });
+          historyDispatch({ type: "SET_LIST_STATUS", locationKey: props.location.key, status: "image_not_found" });
         }
       },
       finallyCallback: () => {
-        incrPage();
+        historyDispatch({ type: "INCREMENT_LIST_PAGE", locationKey: props.location.key })
       },
       didRequestCallback: r => console.info(r),
-      didMountRequest: true,
     },
   );
 
-  useImperativeHandle(ref, () => ({
-    getCurrentPage: () => page,
-  }));
+  useListDidMountRequest(props.location.key, request, urlExcludePage);
 
   return (
     render(hasMore, status, page, urlExcludePage, isLoading, request, items, isShowTopComponent, isFluid, isExcludeAds)

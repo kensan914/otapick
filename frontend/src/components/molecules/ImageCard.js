@@ -7,6 +7,7 @@ import { downloadImage } from "../organisms/ImageView";
 import { MobileBottomMenu } from "./MobileMenu";
 import { withCookies } from "react-cookie";
 import { BASE_URL } from "../modules/env";
+import LazyLoad from "react-lazyload";
 
 
 class DownloadButton extends React.Component {
@@ -98,12 +99,18 @@ class SuperImageCard extends React.Component {
       <>
         <div className="image-card" ref={(imageCardRef) => this.imageCardRef = imageCardRef}
           onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }}
-          onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}>
+          onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}
+        >
           <Link to={{ pathname: this.props.url, state: { prevSrc: this.props.src } }}>
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
+              {/* <LazyLoad width="500" height="500" once placeholder={
+                <div style={{ width: 500, height: 500, backgroundColor: "red" }} />
+              }> */}
               <img className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")} src={isSmp ? this.props.src["250x"] : ""}
                 srcSet={!isSmp ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x` : ""}
-                alt={generateAlt(this.props.group, this.props.writer.name)} id={this.props.imageID} />
+                alt={generateAlt(this.props.group, this.props.writer.name)} id={this.props.imageID}
+              />
+              {/* </LazyLoad> */}
             </div>
           </Link>
 

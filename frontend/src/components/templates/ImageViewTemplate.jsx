@@ -1,9 +1,8 @@
 import React from "react";
-import { URLJoin, generateKeepAliveName, getGroup, checkMatchParams, generateKeepAliveNameInfo, isMobile, isSmp } from "../modules/utils";
+import { URLJoin, getGroup, checkMatchParams, isMobile, isSmp } from "../modules/utils";
 import { BASE_URL } from "../modules/env";
 import ImageView from "../organisms/ImageView";
-import { KeepAlive } from "react-keep-alive";
-import  ImageList  from "../organisms/List/ImageList";
+import ImageList from "../organisms/List/ImageList";
 import ToTopButton from "../atoms/ToTopButton";
 import BackButton from "../atoms/BackButton";
 import Headline from "../molecules/Headline";
@@ -21,8 +20,6 @@ class ImageViewTemplate extends React.Component {
       groupID: props.match.params.groupID,
       blogCt: props.match.params.blogCt,
       order: Number(props.match.params.order),
-      keepAliveName: generateKeepAliveName(props.location.key),
-      keepAliveNameView: generateKeepAliveNameInfo(props.location.key),
       imageViewURL: URLJoin(BASE_URL, "image/", props.match.params.groupID, props.match.params.blogCt, props.match.params.order),
       blogViewURL: URLJoin(BASE_URL, "blog/", props.match.params.groupID, props.match.params.blogCt),
     };
@@ -40,7 +37,6 @@ class ImageViewTemplate extends React.Component {
     if (prevGroupID !== groupID || prevBlogCt !== blogCt || prevOrder !== order) {
       this.setState({
         group: getGroup(groupID), groupID: groupID, blogCt: blogCt, order: Number(order),
-        keepAliveName: generateKeepAliveName(this.props.location.key), keepAliveNameView: generateKeepAliveNameInfo(this.props.location.key),
         imageViewURL: URLJoin(BASE_URL, "image/", groupID, blogCt, order), blogViewURL: URLJoin(BASE_URL, "blog/", groupID, blogCt),
       });
       return;
@@ -58,27 +54,23 @@ class ImageViewTemplate extends React.Component {
             {domState => (
               <DomDispatchContext.Consumer>
                 {domDispatch => (
-                  <KeepAlive name={"ImageView" + this.state.keepAliveNameView}>
-                    <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
-                      keepAliveNameView={this.state.keepAliveNameView} prevSrc={typeof this.props.location.state !== "undefined" ? this.props.location.state.prevSrc : null} domState={domState} domDispatch={domDispatch} />
-                  </KeepAlive>
+                  <ImageView group={this.state.group} groupID={this.state.groupID} blogCt={this.state.blogCt} order={this.state.order} imageViewURL={this.state.imageViewURL} blogViewURL={this.state.blogViewURL}
+                    prevSrc={typeof this.props.location.state !== "undefined" ? this.props.location.state.prevSrc : null} domState={domState} domDispatch={domDispatch} />
                 )}
               </DomDispatchContext.Consumer>
             )}
           </DomStateContext.Consumer>
 
           {/* Google Adsense */}
-          <div className="container mt-4" key={this.state.keepAliveName}>
+          <div className="container mt-4" >
             {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
           </div>
 
-          <KeepAlive name={"ImageList" + this.state.keepAliveName}>
-            <div className="container-fluid text-muted mt-3 list-container-fluid">
-              <ImageList groupID={this.state.groupID} group={this.state.group} blogCt={this.state.blogCt} order={this.state.order} type="RELATED_IMAGES" keepAliveName={this.state.keepAliveName} topComponent={
-                <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>
-              } />
-            </div>
-          </KeepAlive>
+          <div className="container-fluid text-muted mt-3 list-container-fluid">
+            <ImageList type="RELATED_IMAGES" topComponent={
+              <h3 className={"text-center related-image-title " + (isSmp ? "mt-2" : "")}>関連画像</h3>
+            } />
+          </div>
           <ToTopButton />
         </>
       }</>

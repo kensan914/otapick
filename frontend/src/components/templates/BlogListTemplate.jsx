@@ -3,9 +3,8 @@ import BlogListInfo from "../molecules/info/BlogListInfo";
 import BlogList from "../organisms/List/BlogList";
 import Headline from "../molecules/Headline";
 import queryString from "query-string";
-import { KeepAlive } from "react-keep-alive";
 import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, getGroup, generateKeepAliveName, generateKeepAliveNameInfo, checkMatchParams, isMobile } from "../modules/utils";
+import { URLJoin, getGroup, checkMatchParams, isMobile } from "../modules/utils";
 import { withRouter } from "react-router-dom";
 
 
@@ -22,8 +21,6 @@ class BlogListTemplate extends React.Component {
       narrowingPost: typeof qs.post == "undefined" ? "" : qs.post,
       groupID: props.match.params.groupID,
       ct: props.match.params.ct,
-      keepAliveName: generateKeepAliveName(props.location.key),
-      keepAliveNameInfo: generateKeepAliveNameInfo(props.location.key),
     }
   };
 
@@ -40,11 +37,10 @@ class BlogListTemplate extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const groupID = this.props.match.params.groupID;
     const prevGroupID = prevProps.match.params.groupID;
-    const ct = this.props.match.params.ct;
     const prevCt = prevProps.match.params.ct;
     const qs = queryString.parse(this.props.location.search);
+    const { groupID, ct, orderFormat } = getBlogUrlComposition(this.props);
 
     // When the group changed
     if (ct === undefined) {
@@ -53,9 +49,7 @@ class BlogListTemplate extends React.Component {
           groupID: groupID,
           ct: ct,
           group: getGroup(groupID),
-          keepAliveName: generateKeepAliveName(this.props.location.key),
-          keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
-          orderFormat: typeof qs.sort == "undefined" ? "newer_post" : qs.sort,
+          orderFormat: orderFormat,
           narrowingKeyword: "",
           narrowingPost: "",
         });
@@ -69,9 +63,7 @@ class BlogListTemplate extends React.Component {
           groupID: groupID,
           ct: ct,
           group: getGroup(groupID),
-          keepAliveName: generateKeepAliveName(this.props.location.key),
-          keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
-          orderFormat: typeof qs.sort == "undefined" ? "newer_post" : qs.sort,
+          orderFormat: orderFormat,
           narrowingKeyword: "",
           narrowingPost: "",
         });
@@ -83,15 +75,11 @@ class BlogListTemplate extends React.Component {
     if (qs.sort && this.state.orderFormat !== qs.sort) {
       this.setState({
         orderFormat: qs.sort,
-        keepAliveName: generateKeepAliveName(this.props.location.key),
-        keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
       });
       return;
     } else if (!qs.sort && this.state.orderFormat !== "newer_post") {
       this.setState({
         orderFormat: "newer_post",
-        keepAliveName: generateKeepAliveName(this.props.location.key),
-        keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
       });
       return;
     }
@@ -101,27 +89,16 @@ class BlogListTemplate extends React.Component {
     if ((qs.keyword === undefined ? "" : qs.keyword) != this.state.narrowingKeyword) {
       willChangeState = Object.assign(willChangeState, {
         narrowingKeyword: qs.keyword === undefined ? "" : qs.keyword,
-        keepAliveName: generateKeepAliveName(this.props.location.key),
-        keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
       });
     }
     if ((qs.post === undefined ? "" : qs.post) != this.state.narrowingPost) {
       willChangeState = Object.assign(willChangeState, {
         narrowingPost: qs.post === undefined ? "" : qs.post,
-        keepAliveName: generateKeepAliveName(this.props.location.key),
-        keepAliveNameInfo: generateKeepAliveNameInfo(this.props.location.key),
       });
     }
     if (Object.keys(willChangeState).length > 2) {
       this.setState(willChangeState);
       return;
-    }
-
-    // When the same link
-    if (prevProps.location.key !== this.props.location.key) {
-      this.setState({
-        keepAliveName: generateKeepAliveName(this.props.location.key),
-      });
     }
   }
 
@@ -131,17 +108,12 @@ class BlogListTemplate extends React.Component {
         <div className="container mt-3 text-muted">
           <Headline title="ブログ一覧" type="blogs" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
 
-          <KeepAlive name={this.state.keepAliveNameInfo}>
-            <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-              narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} keepAliveNameInfo={this.state.keepAliveNameInfo} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false} />
-          </KeepAlive>
+          <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
+            narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false} />
           {(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") &&
             (!isMobile && <div className="py-2"></div>)
           }
-          <KeepAlive name={this.state.keepAliveName}>
-            <BlogList groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-              narrowingPost={this.state.narrowingPost} keepAliveName={this.state.keepAliveName} />
-          </KeepAlive>
+          <BlogList />
 
           <ToTopButton />
         </div>
@@ -151,3 +123,16 @@ class BlogListTemplate extends React.Component {
 };
 
 export default withRouter(BlogListTemplate);
+
+
+export const getBlogUrlComposition = (props) => {
+  const groupID = props.match.params.groupID;
+  const ct = props.match.params.ct;
+
+  const qs = queryString.parse(props.location.search);
+  const orderFormat = typeof qs.sort == "undefined" ? "newer_post" : qs.sort;
+  const narrowingKeyword = typeof qs.keyword == "undefined" ? "" : qs.v;
+  const narrowingPost = typeof qs.post == "undefined" ? "" : qs.post;
+
+  return { groupID, ct, orderFormat, narrowingKeyword, narrowingPost };
+}

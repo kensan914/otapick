@@ -1,25 +1,32 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import BlogCard from "../../molecules/BlogCard";
 import { URLJoin, getGroup } from "../../modules/utils";
-import { withRouter } from "react-router-dom";
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
 import { SquareAds } from "../../atoms/Adsense";
 import { useAxios } from "../../modules/axios";
-import List, { useList } from "./List";
+import List, { useListDidMountRequest, useListState } from "./List";
+import { useHistoryDispatch } from "../../contexts/HistoryContext";
+import { getBlogUrlComposition } from "../../templates/BlogListTemplate";
 
 
 const BlogList = withRouter((props) => {
-  const { groupID, ct, orderFormat, narrowingKeyword, narrowingPost, keepAliveName } = props;
+  const [items, hasMore, status, page, urlExcludePage] = useListState(props.location.key,
+    (randomSeed) => {
+      const { groupID, ct, orderFormat, narrowingKeyword, narrowingPost } = getBlogUrlComposition(props);
 
-  const [randomSeed, items, setItems, hasMore, setHasMore, status, setStatus, page, incrPage] = useList();
-
-  const urlExcludePage = URLJoin(
-    BASE_URL, "blogs/", groupID, ct,
-    orderFormat && `?sort=${orderFormat}`,
-    narrowingKeyword && `?keyword=${narrowingKeyword}`,
-    narrowingPost && `?post=${narrowingPost}`,
-    randomSeed && `?random_seed=${randomSeed}`
+      return (
+        URLJoin(
+          BASE_URL, "blogs/", groupID, ct,
+          orderFormat && `?sort=${orderFormat}`,
+          narrowingKeyword && `?keyword=${narrowingKeyword}`,
+          narrowingPost && `?post=${narrowingPost}`,
+          randomSeed && `?random_seed=${randomSeed}`,
+        ));
+    }
   );
+
+  const historyDispatch = useHistoryDispatch();
 
   const { isLoading, resData, request } = useAxios(
     URLJoin(urlExcludePage, `?page=${page}`),
@@ -41,36 +48,35 @@ const BlogList = withRouter((props) => {
           })
         );
 
+        historyDispatch({ type: "APPEND_LIST_ITEMS", locationKey: props.location.key, items: newBlogs });
+        historyDispatch({ type: "SET_LIST_STATUS", locationKey: props.location.key, status: "success" });
+
         if (res.data.length < 20) {
-          setItems(items.concat(newBlogs));
-          setHasMore(false);
-          setStatus("success");
-        } else {
-          setItems(items.concat(newBlogs));
-          setStatus("success");
+          historyDispatch({ type: "SET_LIST_HAS_MORE", locationKey: props.location.key, hasMore: false });
         }
       } else {
+        historyDispatch({ type: "SET_LIST_HAS_MORE", locationKey: props.location.key, hasMore: false });
         if (page == 1) {
-          setHasMore(false);
-          setStatus("blog_not_found");
-        } else setHasMore(false);
+          historyDispatch({ type: "SET_LIST_STATUS", locationKey: props.location.key, status: "blog_not_found" });
+        }
       }
     },
     errorCallback: err => {
       if (err.response.status === 404) {
-        setHasMore(false);
-        setStatus("blog_not_found");
+        historyDispatch({ type: "SET_LIST_HAS_MORE", locationKey: props.location.key, hasMore: false });
+        historyDispatch({ type: "SET_LIST_STATUS", locationKey: props.location.key, status: "blog_not_found" });
       }
     },
     finallyCallback: () => {
-      incrPage();
+      historyDispatch({ type: "INCREMENT_LIST_PAGE", locationKey: props.location.key })
     },
     didRequestCallback: r => console.log(r),
-    didMountRequest: true,
   });
 
+  useListDidMountRequest(props.location.key, request, urlExcludePage);
+
   return (
-    <List keepAliveName={keepAliveName} hasMore={hasMore} status={status} page={page} urlExcludePage={urlExcludePage} isLoading={isLoading} request={request}>
+    <List hasMore={hasMore} status={status} page={page} urlExcludePage={urlExcludePage} isLoading={isLoading} request={request}>
       {items.map(({ groupID, blogCt, title, postDate, writer, numOfViews, numOfDownloads, thumbnail, url, officialUrl }, i) => (
         <div key={i}>
           <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3 blog-card">

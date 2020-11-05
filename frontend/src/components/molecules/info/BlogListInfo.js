@@ -3,10 +3,11 @@ import NarrowButton from "../../atoms/NarrowButton";
 import SortButton from "../../atoms/SortButton";
 import NarrowCard from "../NarrowCard";
 import axios from "axios";
-import { URLJoin, isSmp, isMobile, updateMeta, generateKeepAliveNameInfo, gtagTo } from "../../modules/utils";
+import { URLJoin, isSmp, isMobile, updateMeta, gtagTo } from "../../modules/utils";
 import { withRouter } from "react-router-dom";
 import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION } from "../../modules/env";
 import { MobileBottomMenu } from "../MobileMenu";
+import { getBlogUrlComposition } from "../../templates/BlogListTemplate";
 
 
 class BlogListInfo extends React.Component {
@@ -15,10 +16,9 @@ class BlogListInfo extends React.Component {
     this.state = {
       title: "",
       numOfHit: 0,
-      sortButtonTitle: this.convertSortButtonTitle(),
+      sortButtonTitle: this.convertSortButtonTitle(props.orderFormat),
       metaTitle: "",
     }
-    this.getBlogListInfo(this.props.groupID, this.props.ct);
   }
 
   getBlogListInfo(groupID, ct) {
@@ -36,8 +36,7 @@ class BlogListInfo extends React.Component {
               status: "not_found",
               metaTitle: "Not Found Blog"
             });
-            if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key))
-              updateMeta({ title: "Not Found Blog", discription: BLOGS_DISCRIPTION });
+            updateMeta({ title: "Not Found Blog", discription: BLOGS_DISCRIPTION });
           } else {
             this.setState({
               title: res.data.title,
@@ -45,8 +44,7 @@ class BlogListInfo extends React.Component {
               status: "success",
               metaTitle: res.data.meta_title,
             });
-            if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key))
-              updateMeta({ title: `${res.data.meta_title}のブログ一覧`, discription: BLOGS_DISCRIPTION });
+            updateMeta({ title: `${res.data.meta_title}のブログ一覧`, discription: BLOGS_DISCRIPTION });
           }
         })
         .catch(err => {
@@ -58,8 +56,8 @@ class BlogListInfo extends React.Component {
     }, DELAY_TIME);
   }
 
-  convertSortButtonTitle() {
-    switch (this.props.orderFormat) {
+  convertSortButtonTitle(orderFormat) {
+    switch (orderFormat) {
       case "newer_post":
         return "新着順";
       case "older_post":
@@ -77,11 +75,16 @@ class BlogListInfo extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.getBlogListInfo(this.props.groupID, this.props.ct);
+  }
+
   componentDidUpdate(prevProps) {
-    if (this.props.keepAliveNameInfo === generateKeepAliveNameInfo(this.props.location.key)) {
-      if (this.props.location !== prevProps.location) {
-        updateMeta({ title: `${this.state.metaTitle}のブログ一覧`, discription: BLOGS_DISCRIPTION });
-      }
+    if (this.props.location !== prevProps.location) {
+      const { groupID, ct, orderFormat } = getBlogUrlComposition(this.props);
+      this.setState({ sortButtonTitle: this.convertSortButtonTitle(orderFormat) })
+      this.getBlogListInfo(groupID, ct);
+      updateMeta({ title: `${this.state.metaTitle}のブログ一覧`, discription: BLOGS_DISCRIPTION });
     }
   }
 

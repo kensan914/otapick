@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { KeepAlive } from "react-keep-alive";
 import { withRouter } from "react-router-dom";
 import { BASE_URL } from "../modules/env";
-import { generateKeepAliveName, isMobile, URLJoin } from "../modules/utils";
+import { isMobile, URLJoin } from "../modules/utils";
 import { HorizontalLoader } from "../molecules/Loader";
 import ProfileButtonGroup from "../molecules/ProfileButtonGroup";
 import ImageList from "../organisms/List/ImageList";
@@ -11,11 +10,6 @@ import ProfileView from "../organisms/ProfileView";
 
 const UserTemplate = (props) => {
   const { profile, username, isMe, isLoading } = props;
-  const [keepAliveName, setKeepAliveName] = useState(generateKeepAliveName(props.location.key));
-
-  useEffect(() => {
-    setKeepAliveName(generateKeepAliveName(props.location.key));
-  }, [props.location]);
 
   return (
     <>
@@ -32,12 +26,9 @@ const UserTemplate = (props) => {
           <div className="container mt-3 text-muted">
             <ProfileButtonGroup username={username} />
           </div>
-          {/* KeepAliveコンポーネントは初期レンダー時に必ずレンダーされるように設計する。初回はローディング中でレンダーせず、後からレンダーし始めるとエラーになる。 */}
-          <KeepAlive name={keepAliveName}>
-            <div className="container-fluid text-muted mt-3 list-container-fluid">
-              <ImageList url={URLJoin(BASE_URL, "images/")} keepAliveName={keepAliveName} related />
-            </div>
-          </KeepAlive>
+          <div className="container-fluid text-muted mt-3 list-container-fluid">
+            <ImageList related />
+          </div>
         </> :
         <div style={{ marginTop: 300 }} />
       }

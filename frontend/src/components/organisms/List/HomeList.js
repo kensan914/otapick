@@ -1,25 +1,25 @@
 import React, { useRef, useState } from "react";
+import { withRouter } from "react-router-dom";
 import BlogCard from "../../molecules/BlogCard";
-import { URLJoin, getGroup, generateWavesVals, isMobile } from "../../modules/utils";
+import { URLJoin, getGroup, generateWavesVals, isMobile, generateRandomSeed } from "../../modules/utils";
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
 import ImageCard from "../../molecules/ImageCard";
 import MemberCard from "../../molecules/MemberCard";
 import { SquareAds } from "../../atoms/Adsense";
 import AdsenseCard from "../../molecules/AdsenseCard";
 import { useAxios } from "../../modules/axios";
-import List, { useList } from "./List";
+import List from "./List";
 import { ImageListModel } from "./ImageList";
+import { useHistoryState } from "../../contexts/HistoryContext";
 
 
-const HomeList = (props) => {
-  const { keepAliveName } = props;
-
-  const [randomSeed] = useList();
+const HomeList = withRouter((props) => {
+  const [randomSeed] = useState(generateRandomSeed());
   const [additionalItems, setAdditionalItems] = useState([]);
   const additionalItemsStartPage = useRef(0);
   const [wavesVals] = useState(generateWavesVals());
 
-  const imageListModeRef = useRef(null);
+  const historyState = useHistoryState();
 
   useAxios(
     URLJoin(BASE_URL, "home/additional/", `?random_seed=${randomSeed}`),
@@ -83,17 +83,17 @@ const HomeList = (props) => {
         }
 
         setAdditionalItems(_additionalItems);
-        additionalItemsStartPage.current = imageListModeRef.current ? imageListModeRef.current.getCurrentPage() : 1;
+        additionalItemsStartPage.current = historyState.listStates[props.location.key] ? historyState.listStates[props.location.key].page : 1;
       }
     },
     didMountRequest: true,
   });
 
   return (
-    <ImageListModel {...props} type="HOME" ref={imageListModeRef} render={(hasMore, status, page, urlExcludePage, isLoading, request, items) => {
+    <ImageListModel {...props} type="HOME" render={(hasMore, status, page, urlExcludePage, isLoading, request, items) => {
       let additionalItemsIndex = 0;
       return (
-        <List keepAliveName={keepAliveName} hasMore={hasMore} status={status} page={page} urlExcludePage={urlExcludePage} isLoading={isLoading} request={request}>
+        <List hasMore={hasMore} status={status} page={page} urlExcludePage={urlExcludePage} isLoading={isLoading} request={request}>
           {items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => {
             let additionalItem;
             if (
@@ -149,7 +149,7 @@ const HomeList = (props) => {
       );
     }} />
   );
-}
+});
 
 
 export default HomeList;

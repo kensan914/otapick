@@ -5,11 +5,12 @@ import { CookiesProvider } from "react-cookie";
 import { setUserAgent, setBodyPadding, getIsMobile } from "./components/modules/utils";
 import LocationAdmin from "./components/atoms/LocationAdmin";
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, setEnvConstant } from "./components/modules/env";
+import "./static/css/index.css";
 import Screens from "./components/Screens";
 import AuthProvider from "./components/contexts/AuthContext";
 import DomProvider from "./components/contexts/DomContext";
-import { ProfileProvider } from "./components/contexts/ProfileContext";
-import "./static/css/index.css";
+import ProfileProvider from "./components/contexts/ProfileContext";
+import HistoryProvider from "./components/contexts/HistoryContext";
 
 
 class App extends React.Component {
@@ -26,9 +27,11 @@ class App extends React.Component {
           <AuthProvider>
             <DomProvider>
               <ProfileProvider>
-                <LocationAdmin>
-                  <Screens />
-                </LocationAdmin>
+                <HistoryProvider>
+                  <LocationAdmin>
+                    <Screens />
+                  </LocationAdmin>
+                </HistoryProvider>
               </ProfileProvider>
             </DomProvider>
           </AuthProvider>
