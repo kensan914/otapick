@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { withRouter } from "react-router-dom";
 import BlogCard from "../../molecules/BlogCard";
 import { URLJoin, getGroup, generateWavesVals, isMobile, generateRandomSeed } from "../../modules/utils";
@@ -10,18 +10,24 @@ import AdsenseCard from "../../molecules/AdsenseCard";
 import { useAxios } from "../../modules/axios";
 import List from "./List";
 import { ImageListModel } from "./ImageList";
-import { useHistoryState } from "../../contexts/HistoryContext";
+import { useHistoryDispatch, useHistoryState } from "../../contexts/HistoryContext";
 
 
-const HomeList = withRouter((props) => {
+const HomeList = (props) => {
   const [randomSeed] = useState(generateRandomSeed());
-  const [additionalItems, setAdditionalItems] = useState([]);
-  const additionalItemsStartPage = useRef(0);
+  // const [additionalItems, setAdditionalItems] = useState([]);
+  // const additionalItemsStartPage = useRef(0);
   const [wavesVals] = useState(generateWavesVals());
 
   const historyState = useHistoryState();
+  const page = useRef(1);
+  useEffect(() => {
+    if (historyState.listStates[props.location.key]) {
+      page.current = historyState.listStates[props.location.key].page;
+    }
+  }, [historyState.listStates]);
 
-  useAxios(
+  const { request } = useAxios(
     URLJoin(BASE_URL, "home/additional/", `?random_seed=${randomSeed}`),
     "get", {
     thenCallback: res => {
@@ -82,13 +88,28 @@ const HomeList = withRouter((props) => {
           }
         }
 
-        setAdditionalItems(_additionalItems);
-        additionalItemsStartPage.current = historyState.listStates[props.location.key] ? historyState.listStates[props.location.key].page : 1;
+
+        // setAdditionalItems(_additionalItems);
+        // additionalItemsStartPage.current = page.current;
+        console.log(page.current);
+        historyDispatch({ type: "APPEND_LIST_ADDITIONAL_ITEMS", locationKey: props.location.key, additionalItems: _additionalItems, additionalItemsStartPage: page.current });
       }
     },
-    didMountRequest: true,
+    // didMountRequest: true,
+    didRequestCallback: (r) => console.log(r),
   });
 
+  const historyDispatch = useHistoryDispatch();
+  useEffect(() => {
+    if (!historyState.listStates[props.location.key]) {
+      const randomSeed = generateRandomSeed();
+      historyDispatch({ type: "INIT_LIST_STATE", locationKey: props.location.key, randomSeed: randomSeed });
+      request();
+    }
+  }, [props.location.key]);
+
+  const additionalItems = historyState.listStates[props.location.key] ? historyState.listStates[props.location.key].additionalItems : []
+  const additionalItemsStartPage = historyState.listStates[props.location.key] ? historyState.listStates[props.location.key].additionalItemsStartPage : 1
   return (
     <ImageListModel {...props} type="HOME" render={(hasMore, status, page, urlExcludePage, isLoading, request, items) => {
       let additionalItemsIndex = 0;
@@ -99,7 +120,7 @@ const HomeList = withRouter((props) => {
             if (
               (i % 10 === 0) &&  // item10コごとに表示
               additionalItems.length > additionalItemsIndex &&
-              (Math.floor(i / 20) >= additionalItemsStartPage.current)  // additionalItemsがloadされた以降に表示されるように
+              (Math.floor(i / 20) >= additionalItemsStartPage)  // additionalItemsがloadされた以降に表示されるように
             ) {
               const add = additionalItems[additionalItemsIndex];
               if (add === null) {
@@ -149,7 +170,7 @@ const HomeList = withRouter((props) => {
       );
     }} />
   );
-});
+};
 
 
-export default HomeList;
+export default withRouter(HomeList);

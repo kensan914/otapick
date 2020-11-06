@@ -62,6 +62,18 @@ const historyReducer = (prevState, action) => {
         listStates: _listStates,
       };
 
+    case "APPEND_LIST_ADDITIONAL_ITEMS":
+      /** listStateにadditionalItems, additionalItemsStartPageを追加。
+       * @param {Object} action [type, locationKey, additionalItems, additionalItemsStartPage] */
+
+      _listStates[action.locationKey].additionalItems = (_listStates[action.locationKey].additionalItems ? _listStates[action.locationKey].additionalItems : []).concat(action.additionalItems);
+      _listStates[action.locationKey].additionalItemsStartPage = action.additionalItemsStartPage;
+
+      return {
+        ...prevState,
+        listStates: _listStates,
+      };
+
     default:
       console.error(`Not found "${action.type}" action.type.`);
       return;
@@ -74,6 +86,8 @@ export const initListState = {
   hasMore: true,
   status: "",
   page: 1,
+  additionalItems: [],
+  additionalItemsStartPage: 1,
 };
 
 const initHistoryState = {
