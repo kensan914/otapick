@@ -62,6 +62,8 @@ const initAuthState = {
   token: undefined,
 };
 
+Object.freeze(initAuthState);
+
 const AuthStateContext = createContext({ ...initAuthState });
 const AuthDispatchContext = createContext(undefined);
 

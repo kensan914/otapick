@@ -67,6 +67,7 @@ const initScrollStates = {
   isShowSubNB: false,
   isTop: true,
 };
+Object.freeze(initScrollStates);
 
 const initDomState = {
   accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"]
@@ -75,6 +76,7 @@ const initDomState = {
   scrollPos: 0,
   ...initScrollStates,
 };
+Object.freeze(initDomState);
 
 export const DomStateContext = createContext({ ...initDomState });
 export const DomDispatchContext = createContext(undefined);
@@ -97,6 +99,7 @@ const DomProvider = ({ children }) => {
 
     window.addEventListener("scroll", scrollHandler, true);
     window.addEventListener("beforeunload", beforeunloadHandler, true);
+
     return () => {
       window.removeEventListener("scroll", scrollHandler);
       window.removeEventListener("beforeunload", beforeunloadHandler);

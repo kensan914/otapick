@@ -89,10 +89,12 @@ export const initListState = {
   additionalItems: [],
   additionalItemsStartPage: 1,
 };
+Object.freeze(initListState);
 
 const initHistoryState = {
   listStates: {},
 };
+Object.freeze(initHistoryState);
 
 const HistoryStateContext = createContext({ ...initHistoryState });
 const HistoryDispatchContext = createContext(undefined);

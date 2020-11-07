@@ -14,6 +14,8 @@ const initProfile = {
   me: true,
 };
 
+Object.freeze(initProfile);
+
 const ProfileReducer = (prevState, action) => {
   let _profile;
   switch (action.type) {
