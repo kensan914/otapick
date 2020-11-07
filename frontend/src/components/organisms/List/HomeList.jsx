@@ -88,10 +88,6 @@ const HomeList = (props) => {
           }
         }
 
-
-        // setAdditionalItems(_additionalItems);
-        // additionalItemsStartPage.current = page.current;
-        console.log(page.current);
         historyDispatch({ type: "APPEND_LIST_ADDITIONAL_ITEMS", locationKey: props.location.key, additionalItems: _additionalItems, additionalItemsStartPage: page.current });
       }
     },
