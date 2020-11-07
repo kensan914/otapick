@@ -34,7 +34,7 @@ export const ModeSelectButtonDropdown = (props) => {
         <DropdownItem header>グループ選択</DropdownItem>
         <DropdownItem divider />
         {Object.values(GROUPS).map(groupObj => (
-          <DropdownItem key={groupObj.id} tag={Link} to={`/${props.type}/${groupObj.id}`}>{`${groupObj.name}`}</DropdownItem>
+          <DropdownItem key={groupObj.id} tag={Link} to={`/${props.type}/${groupObj.id}/`}>{`${groupObj.name}`}</DropdownItem>
         ))}
       </div>
     )

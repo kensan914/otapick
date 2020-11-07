@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { Switch, Route } from "react-router-dom";
-import { Provider } from "react-keep-alive";
 import { isMobile } from "./modules/utils";
 import Footer from "./organisms/Footer";
 import BlogViewTemplate from "./templates/BlogViewTemplate";
@@ -28,15 +27,7 @@ const Screens = (props) => {
     domDispatch({ type: "SET_FOOTER_REF", footerRef: footerRef });
   }, []);
 
-  const renderDefault = (component) => (
-    // <Provider include={/^(?!ImageView|ImageList|bookmark).*$/} exclude={/^(ImageView|ImageList|bookmark).*$/}>
-    // { component }
-    // </Provider>
-    component
-  );
-
   return (
-    // <Provider max={4}>
     <>
       <NavigationBar />
       <NavigationAdmin isShowNBShadow={domState.isShowNBShadow} isShowNB={domState.isShowNB} isShowSubNB={domState.isShowSubNB} isTop={domState.isTop} domDispatch={domDispatch} />
@@ -44,51 +35,37 @@ const Screens = (props) => {
 
       <Switch>
         <Route exact path="/" render={() =>
-          // <Provider include={/^(?!ImageView|ImageList|bookmark).*$/} exclude={/^(ImageView|ImageList|bookmark).*$/}>
           <HomeTemplate />
-          // </Provider>
         } />
 
-        <Route exact path="/blogs/" render={() => renderDefault(<BlogListTemplate />)} />
-        <Route exact path="/blogs/:groupID/" render={() => renderDefault(<BlogListTemplate />)} />
-        <Route exact path="/blogs/:groupID/:ct/" render={() => renderDefault(<BlogListTemplate />)} />
+        <Route exact path="/blogs/" render={() => <BlogListTemplate />} />
+        <Route exact path="/blogs/:groupID/" render={() => <BlogListTemplate />} />
+        <Route exact path="/blogs/:groupID/:ct/" render={() => <BlogListTemplate />} />
 
-        <Route exact path="/images/" render={() => renderDefault(<ImageListTemplate />)} />
-        <Route exact path="/images/:groupID/" render={() => renderDefault(<ImageListTemplate />)} />
-        <Route exact path="/images/:groupID/:ct/" render={() => renderDefault(<ImageListTemplate />)} />
+        <Route exact path="/images/" render={() => <ImageListTemplate />} />
+        <Route exact path="/images/:groupID/" render={() => <ImageListTemplate />} />
+        <Route exact path="/images/:groupID/:ct/" render={() => <ImageListTemplate />} />
 
 
 
-        <Route exact path="/search/" render={() => renderDefault(<BlogSearchListTemplate />)} />
+        <Route exact path="/search/" render={() => <BlogSearchListTemplate />} />
 
-        <Route exact path="/members/" render={() => renderDefault(<MemberListTemplate />)} />
+        <Route exact path="/members/" render={() => <MemberListTemplate />} />
 
-        <Route exact path="/blog/:groupID/:blogCt/" render={() => renderDefault(<BlogViewTemplate />)} />
+        <Route exact path="/blog/:groupID/:blogCt/" render={() => <BlogViewTemplate />} />
 
-        <Route exact path="/image/:groupID/:blogCt/:order/" render={() => (
-          // <Provider include={/^(ImageView|ImageList).*$/} exclude={/^(?!ImageView|ImageList).*$/}>
-          <ImageViewTemplate />
-          // </Provider>
-        )} />
+        <Route exact path="/image/:groupID/:blogCt/:order/" render={() => <ImageViewTemplate />} />
 
-        {/* TODO(TODOで検索): PCだと一応機能する。が、mobileだとエラー吐く */}
-        <Route exact path="/users/:username/" render={() => (
-          // <Provider include={/^(bookmark).*$/} exclude={/^(?!bookmark).*$/}>
-          <UsersDetailPage />
-          // </Provider>
-        )} />
+        <Route exact path="/users/:username/" render={() => <UsersDetailPage />} />
 
-        <Route exact path="/contact/" render={() => renderDefault(<TermsTemplate mode="contact" />)} />
-        <Route exact path="/terms-of-service/" render={() => renderDefault(<TermsTemplate mode="termsOfService" />)} />
-        <Route exact path="/privacy-policy/" render={() => renderDefault(<TermsTemplate mode="privacyPolicy" />)} />
+        <Route exact path="/contact/" render={() => <TermsTemplate mode="contact" />} />
+        <Route exact path="/terms-of-service/" render={() => <TermsTemplate mode="termsOfService" />} />
+        <Route exact path="/privacy-policy/" render={() => <TermsTemplate mode="privacyPolicy" />} />
 
-        <Route render={() => (
-          renderDefault(<NotFound404 footerRef={footerRef} domDispatch={domDispatch} />)
-        )} />
+        <Route render={() => <NotFound404 footerRef={footerRef} domDispatch={domDispatch} />} />
       </Switch>
 
       <Footer ref={footerRef} />
-      {/* </Provider> */}
     </>
   );
 }

@@ -44,13 +44,13 @@ const domReducer = (prevState, action) => {
        * @param {Object} action [type] */
 
       const result = watchCurrentPosition(prevState.scrollPos);
-      // stateListのkeyが一つでもnullの場合、stateListは初期化(画面遷移時)
+      // stateListのkeyが一つでもnullの場合、stateListは変更しない(window以外のスクロール時)
       let canUpdateStateList = true;
       if (Object.values(result.stateList)[0] === null) canUpdateStateList = false;
 
       return {
         ...prevState,
-        ...(canUpdateStateList ? result.stateList : initScrollStates),
+        ...(canUpdateStateList ? result.stateList : {}),
         scrollPos: result.scrollPos,
       };
 

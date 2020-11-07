@@ -15,6 +15,7 @@ export const unnecessarySubNavbarUrls = [
 ];
 // footerを表示しないページのurl. HIDE: location.pathname is "/blogs/:groupID", SHOW: location.pathname is "/search"
 export const hiddenFooterURLConditions = [
+  "/users",
   "/blogs",
   "/images",
   "/image",

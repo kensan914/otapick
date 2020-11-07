@@ -85,20 +85,15 @@ class BlogListTemplate extends React.Component {
     }
 
     // When the narrowing changed
-    let willChangeState = { narrowingKeyword: "", narrowingPost: "" };
     if ((qs.keyword === undefined ? "" : qs.keyword) != this.state.narrowingKeyword) {
-      willChangeState = Object.assign(willChangeState, {
+      this.setState({
         narrowingKeyword: qs.keyword === undefined ? "" : qs.keyword,
       });
     }
     if ((qs.post === undefined ? "" : qs.post) != this.state.narrowingPost) {
-      willChangeState = Object.assign(willChangeState, {
+      this.setState({
         narrowingPost: qs.post === undefined ? "" : qs.post,
       });
-    }
-    if (Object.keys(willChangeState).length > 2) {
-      this.setState(willChangeState);
-      return;
     }
   }
 
@@ -131,7 +126,7 @@ export const getBlogUrlComposition = (props) => {
 
   const qs = queryString.parse(props.location.search);
   const orderFormat = typeof qs.sort == "undefined" ? "newer_post" : qs.sort;
-  const narrowingKeyword = typeof qs.keyword == "undefined" ? "" : qs.v;
+  const narrowingKeyword = typeof qs.keyword == "undefined" ? "" : qs.keyword;
   const narrowingPost = typeof qs.post == "undefined" ? "" : qs.post;
 
   return { groupID, ct, orderFormat, narrowingKeyword, narrowingPost };

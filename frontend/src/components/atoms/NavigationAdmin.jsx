@@ -1,12 +1,17 @@
-import React from 'react';
-import { isMobile } from '../modules/utils';
-import { SUB_NAVBAR_HEIGHT, NAVBAR_HEIGHT, BOTTOM_NAVBAR_HEIGHT, TOTOP_BUTTON_M } from '../modules/env';
-import { withRouter } from 'react-router-dom';
+import React from "react";
+import { isMobile } from "../modules/utils";
+import { SUB_NAVBAR_HEIGHT, NAVBAR_HEIGHT, BOTTOM_NAVBAR_HEIGHT, TOTOP_BUTTON_M } from "../modules/env";
+import { withRouter } from "react-router-dom";
 
 
-// navbar, subnavbar shadow付与
-// navbar, subnavbar show, hide制御
-// PCでのsubnavbar の挙動
+/**
+ * navbar, subnavbar shadow付与
+ * navbar, subnavbar show, hide制御
+ * PCでのsubnavbar の挙動
+ * 
+ * 注：このコンポーネントは流れてきたPropsに忠実に従いスクロールに伴うコンポーネントの非表示の責務を持つ。
+ * したがって、「特定の場合に限りpropsに反して非表示にする」などをするべきではない。（現状そのような分岐はutils.js/watchCurrentPositionに記述）
+ */
 class NavigationAdmin extends React.Component {
   exeSuper(subNavbarExistFunc, subNavbarNullFunc) {
     const subNavbar = document.getElementById("otapick-sub-navbar");

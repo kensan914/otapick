@@ -15,6 +15,7 @@ const BlogList = withRouter((props) => {
     (randomSeed) => {
       const { groupID, ct, orderFormat, narrowingKeyword, narrowingPost } = getBlogUrlComposition(props);
 
+      console.log(groupID, ct, orderFormat, narrowingKeyword, narrowingPost);
       return (
         URLJoin(
           BASE_URL, "blogs/", groupID, ct,
