@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
+    'admin.apps.AdminConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
     'maintenance_mode',
+    'django_hosts',
 ]
 
 MIDDLEWARE = [
@@ -58,9 +60,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'maintenance_mode.middleware.MaintenanceModeMiddleware',
+    'django_hosts.middleware.HostsRequestMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
+ROOT_HOSTCONF = 'config.hosts'
+DEFAULT_HOST = ''
 
 TEMPLATES = [
     {
