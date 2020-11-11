@@ -1,7 +1,7 @@
 import requests
 from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
-from allauth.account.signals import user_signed_up
+from allauth.account.signals import user_signed_up, user_logged_in
 from django.dispatch import receiver
 from django.shortcuts import redirect
 from django.views import View
@@ -61,6 +61,7 @@ class LoginView(View):
 loginView = LoginView.as_view()
 
 
+@receiver(user_logged_in)
 @receiver(user_signed_up)
 def retrieve_social_data(request, user, **kwargs):
     """Signal, that gets extra data from social login and put it to profile."""

@@ -177,6 +177,7 @@ class ImageView extends ViewTemplate {
       imageView = (<div className="py-0 py-sm-5"><NotFoundMessage type="imageFailed" margin={true} /></div>);
     } else if (this.state.status === "success") {
       const image = this.state.images[this.props.order];
+      console.log(image, this.props.order);
       imageViewText = (
         <div className="ml-1 ml-sm-3 ml-lg-4 image-view-text">
           <div className="d-flex justify-content-between mt-1 mt-sm-3 mt-lg-2 mb-2 image-view-header">
@@ -186,20 +187,20 @@ class ImageView extends ViewTemplate {
               </div>
               <ViewTooltip target={"num-of-image-views-icon"} title="この画像の閲覧数" />
               {"\u00A0"}
-              {image.num_of_views}
+              {image ? image.num_of_views : 0}
 
               <div className="ml-3" id="num-of-image-downloads-icon">
                 <i className="fas fa-download" style={{ color: "gray" }}></i>
               </div>
               <ViewTooltip target={"num-of-image-downloads-icon"} title="この画像のダウンロード数" />
               {"\u00A0"}
-              {image.num_of_downloads}
+              {image ? image.num_of_downloads : 0}
             </div>
 
             {!isMobile &&
               <div className="col-5 col-md-4 col-lg-3 text-right">
                 <Button className={"rounded-circle p-0 image-view-download-button " + this.props.group}
-                  onClick={() => downloadImage(URLJoin(BASE_URL, image.url), this.props.cookies, this.incrementNumOfDownloads, this.props.order)} id="image-view-download-button" />
+                  onClick={() => image && downloadImage(URLJoin(BASE_URL, image.url), this.props.cookies, this.incrementNumOfDownloads, this.props.order)} id="image-view-download-button" />
                 <ViewTooltip target={"image-view-download-button"} title="この画像をダウンロード" />
               </div>
             }
@@ -239,7 +240,7 @@ class ImageView extends ViewTemplate {
             {isMobile
               ? <MobileBottomMenu id="image-view-card-menu" type="imageViewCard" title={`${this.state.title}（${this.state.writer.name}）`}
                 url={this.state.url} officialUrl={this.state.officialUrl} writer={this.state.writer} />
-              : <DetailButton officialUrl={this.state.officialUrl} url={image.url} incrementNumOfDownloads={this.incrementNumOfDownloads} order={this.props.order} cookies={this.props.cookies} />
+              : <DetailButton officialUrl={this.state.officialUrl} url={image && image.url} incrementNumOfDownloads={this.incrementNumOfDownloads} order={this.props.order} cookies={this.props.cookies} />
             }
           </div>
         </div>
