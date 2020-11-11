@@ -32,10 +32,6 @@ urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
 
-#Debug=Falseでもadminへアクセスできてしまうため、対処
-if settings.DEBUG:
-    urlpatterns += [path('admin/', admin.site.urls)]
-
 # catch all other URL
 urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
 urlpatterns += [path('', main.views.indexView, name='indexView')]
