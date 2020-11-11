@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
+    'admin.apps.AdminConfig',
     'account.apps.AccountConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
@@ -56,11 +57,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.twitter',
     'maintenance_mode',
+    'django_hosts',
 ]
 
 SITE_ID = 1
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,9 +72,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'maintenance_mode.middleware.MaintenanceModeMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
+ROOT_HOSTCONF = 'config.hosts'
+DEFAULT_HOST = ''
 
 TEMPLATES = [
     {

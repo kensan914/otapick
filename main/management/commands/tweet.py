@@ -23,7 +23,7 @@ class Command(BaseCommand):
             print('type error.')
             quit()
 
-        if not options['blog'] ^ options['image']:
+        if not options['blog'] ^ options['image'] and options['view']:
             print('mode error.')
             quit()
 
