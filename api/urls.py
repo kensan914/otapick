@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from account import views as account_views
+
 
 app_name = 'api'
 urlpatterns = [
@@ -24,4 +26,6 @@ urlpatterns = [
     path('relatedImages/<int:group_id>/<int:blog_ct>/<int:order>/', views.relatedImageListAPIView, name='relatedImageListAPI'),
     path('home/', views.homeAPIView, name='homeAPI'),
     path('home/additional/', views.homeAdditionalAPIView, name='homeAdditionalAPI'),
+    path('me/', account_views.meAPIView, name='meAPI'),
+    path('users/<str:username>/', account_views.userAPIView, name='userAPI'),
 ]

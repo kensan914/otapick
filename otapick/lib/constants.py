@@ -1,5 +1,12 @@
+from config import settings
+
+### Version ###
+VERSION = '4.3.0'
+
 ### URL ###
-OTAPICK_URL = 'otapick.com'
+OTAPICK_URL = 'http://192.168.11.17:8000' if settings.DEBUG else 'https://otapick.com'
+OTAPICK_URL_LOOP_BACK = 'http://127.0.0.1:8000' if settings.DEBUG else 'https://otapick.com'
+
 IMAGE_NOT_FOUND_URL = '/static/img/imageNotFound.png' # image not found
 IMAGE_NOT_FOUND_ORDERLY_URL= '/static/img/otapick_logo.png' # image not found ver orderly
 OTAPICK_LOGO = '/static/img/otapick_logo.png' # otapick logo (square)
@@ -23,3 +30,7 @@ TWITTER_CK = "EndyyIz6105OLMVZLj48whPTl"
 TWITTER_CS = "6UcaWCKZSk9Z5a4HRwYoyVU4e2Kucmrt3bFdg7SP5q2c5iTMyB"
 TWITTER_AT = "1227261179380162560-cQdyzZXEqUaW7i2kmUHa5ImE9mNJWv"
 TWITTER_AS = "ulqsDBaJG8eeb7kRZ4DOWpsG6XXVOJvi5YXHF64uC4RaV"
+
+### twitter auth ###
+TWITTER_CK_AUTH = "VIW4HJoCkbQL7gbu9UKQKCfVN"
+TWITTER_CS_AUTH = "AOliVAgYbE75enqZ8PkGG1lDGnPNq2enT0u5Ih2etsL3cuPv0q"
