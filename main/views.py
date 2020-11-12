@@ -33,10 +33,9 @@ class MaintenanceView(BaseView):
         f.close()
         print(mode_state)
         if mode_state == '0':
-            redirect('/')
+            return redirect('/')
         else:
             return render(request, '503.html')
-
 
 
 maintenanceView = MaintenanceView.as_view()
