@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
-    'admin_host.apps.AdminHostConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
@@ -76,7 +75,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 ROOT_HOSTCONF = 'config.hosts'
-DEFAULT_HOST = 'www' # 空文字だと内部で行われるcheckでfalse判定になりエラーになる(migration時)
+DEFAULT_HOST = 'default' # 空文字だと内部で行われるcheckでfalse判定になりエラーになる(migration時)
 
 TEMPLATES = [
     {
