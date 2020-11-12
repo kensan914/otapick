@@ -37,7 +37,7 @@ urlpatterns = [
 if settings.DEBUG:
     set_admin_env()
     urlpatterns.append(
-        path('admin/', admin.site.urls),
+        path('admin/', admin.site.urls)
     )
 
 # catch all other URL
