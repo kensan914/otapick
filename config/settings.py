@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
-    'otapick.apps.OtapickConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
@@ -207,7 +206,7 @@ ADMIN_SHORTCUTS = [
                 'url': '/maintenance-mode/on/',
                 'title': 'メンテナンス開始',
                 'icon': 'toggle-on',
-                'count_new': 'otapick.lib.utils.geneMaintenanceMessage',
+                'count_new': 'main.utils.geneMaintenanceMessage',
             },
             {
                 'url': '/maintenance-mode/off/',
