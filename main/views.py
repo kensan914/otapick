@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from config import settings
 from django.views import View
+import otapick
 
 
 class BaseView(View):
@@ -27,7 +28,13 @@ indexAdminView = IndexAdminView.as_view()
 
 class MaintenanceView(BaseView):
     def get(self, request, *args, **kwargs):
-        return render(request, '503.html')
+        with open('../config/maintenance_mode_state.txt') as f:
+            mode_state = otapick.clean_text(f.read())
+            print(mode_state)
+            if mode_state == '0':
+                redirect('/')
+            else:
+                return render(request, '503.html')
 
 
 maintenanceView = MaintenanceView.as_view()
