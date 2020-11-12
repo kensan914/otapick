@@ -202,7 +202,7 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'account.serializers.AuthSerializer',
+    # 'USER_DETAILS_SERIALIZER': 'account.serializers.AuthSerializer',
 }
 
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
