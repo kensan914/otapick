@@ -20,6 +20,8 @@ import main.views
 import main.redirect
 from config import settings
 from django.views.static import serve
+from admin.urls import set_admin_env
+
 
 urlpatterns = [
     path('api/', include('api.urls')),
@@ -30,7 +32,15 @@ urlpatterns = [
     path('search/member/', main.redirect.redirectMembersView, name="redirectMembersView"),
 
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+
+    path('maintenance-mode/', include('maintenance_mode.urls')),
 ]
+
+if settings.DEBUG:
+    set_admin_env()
+    urlpatterns.append(
+        path('admin/', admin.site.urls),
+    )
 
 # catch all other URL
 urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
