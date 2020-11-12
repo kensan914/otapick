@@ -70,3 +70,7 @@ def checkIsMaintaining(BASE_DIR):
     mode_state = otapick.clean_text(f.read())
     f.close()
     return mode_state == '1'
+
+
+def geneMaintenanceMessage():
+    return 'メンテナンス中' if checkIsMaintaining(settings.BASE_DIR) else ''
