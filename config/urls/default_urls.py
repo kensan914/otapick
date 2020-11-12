@@ -7,7 +7,6 @@ from django.views.static import serve
 
 urlpatterns = [
     path('api/', include('api.urls')),
-    path('accounts/', include('account.urls')),
 
     # past URL
     path('search/group/blog/<int:group_id>/', main.redirect.redirectBlogsGView, name="redirectBlogsGView"),
