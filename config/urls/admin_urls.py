@@ -9,7 +9,7 @@ admin.site.site_title = 'ヲタピック管理サイト'
 admin.site.index_title = 'ホーム'
 
 urlpatterns = [
-    path('admin/', include(admin.site.urls)),
+    path('admin/', include((admin.site.urls, 'admin'),)),
     path('maintenance-mode/', include('maintenance_mode.urls')),
     path('', include(default_urls)),
 ]
