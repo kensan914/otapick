@@ -13,34 +13,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include, re_path
 import main.views
 import main.redirect
 from config import settings
-from django.views.static import serve
-from admin.urls import set_admin_env
+from config.urls import default_urls
 
 
 urlpatterns = [
-    path('api/', include('api.urls')),
-    # past URL
-    path('search/group/blog/<int:group_id>/', main.redirect.redirectBlogsGView, name="redirectBlogsGView"),
-    path('search/member/blog/<int:group_id>/<str:ct>/', main.redirect.redirectBlogsMView, name="redirectBlogsMView"),
-    path('download/<int:group_id>/<int:blog_ct>/<int:order>/', main.redirect.redirectImageView, name="redirectImageView"),
-    path('search/member/', main.redirect.redirectMembersView, name="redirectMembersView"),
-
-    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-
-    path('maintenance-mode/', include('maintenance_mode.urls')),
+    path('', include(default_urls)),
 ]
 
 if settings.DEBUG:
-    set_admin_env()
     urlpatterns.append(
-        path('admin/', admin.site.urls),
+        path('admin/', admin.site.urls)
     )
+
 
 # catch all other URL
 urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
