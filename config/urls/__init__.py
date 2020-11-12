@@ -23,14 +23,13 @@ from config.urls import default_urls
 
 urlpatterns = [
     path('', include(default_urls)),
+    path('admin/', admin.site.urls if settings.DEBUG else main.views.maintenanceView),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        path('admin/', admin.site.urls),
         path('maintenance-mode/', include('maintenance_mode.urls')),
     ]
-
 
 # catch all other URL
 urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]

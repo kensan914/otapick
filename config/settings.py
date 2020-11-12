@@ -35,6 +35,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 INSTALLED_APPS = [
+    'admin_shortcuts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -185,9 +186,37 @@ REST_FRAMEWORK = {
 }
 
 # django-maintenance-mode
+MAINTENANCE_MODE = None
 MAINTENANCE_MODE_STATE_FILE_PATH = 'config/maintenance_mode_state.txt'
-MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
+MAINTENANCE_MODE_IGNORE_URLS = (r'^/admin/',)
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
+
+# django-admin-shortcuts
+ADMIN_SHORTCUTS = [
+    {
+        'shortcuts': [
+            {
+                'url': '/',
+                'open_new_window': True,
+            },
+            {
+                'url_name': 'admin:logout',
+                'icon': 'sign-out-alt',
+            },
+            {
+                'url': '/maintenance-mode/on/',
+                'title': 'メンテナンス開始',
+                'icon': 'toggle-on',
+                'count_new': 'main.utils.geneMaintenanceMessage',
+            },
+            {
+                'url': '/maintenance-mode/off/',
+                'title': 'メンテナンス終了',
+                'icon': 'toggle-off',
+            }
+        ]
+    },
+]
 
 
 ####################
