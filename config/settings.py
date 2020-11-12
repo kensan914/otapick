@@ -43,13 +43,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
-    'admin.apps.AdminConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.twitter',
     'maintenance_mode',
     'django_hosts',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
@@ -66,7 +75,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 ROOT_HOSTCONF = 'config.hosts'
-DEFAULT_HOST = ''
+DEFAULT_HOST = 'default'
 
 TEMPLATES = [
     {
@@ -166,10 +175,38 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES_val,
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
-    ]
+    ],
+    # JWT
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    )
 }
 
 # django-maintenance-mode
 MAINTENANCE_MODE_STATE_FILE_PATH = 'config/maintenance_mode_state.txt'
 MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
+
+
+####################
+## Authentication ##
+####################
+# AUTH_USER_MODEL = 'custom_account.Account'
+REST_USE_JWT = True  # https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
+
+REST_SESSION_LOGIN = False
+CORS_ORIGIN_ALLOW_ALL = True
+JWT_AUTH = {
+    'JWT_VERIFY_EXPIRATION': False,
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'account.serializers.AuthSerializer',
+}
+
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'  # メール検証
+ACCOUNT_EMAIL_REQUIRED = True  # signup時、email必須
+ACCOUNT_USERNAME_REQUIRED = False  # signup時、username不要
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # 使用するログイン方法を指定（='username'|'email'|'username_email'） emailの場合、ACCOUNT_EMAIL_REQUIRED==Trueの必要がある

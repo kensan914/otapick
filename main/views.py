@@ -9,8 +9,17 @@ class BaseView(View):
 
 
 class IndexView(BaseView):
+    index_context = dict(**BaseView.context, **{'fqdn': '127.0.0.1:8000' if settings.DEBUG else 'otapick.com'})
+
     def get(self, request, *args, **kwargs):
-        return render(request, self.html_path, self.context)
+        return render(request, self.html_path, self.index_context)
 
 
 indexView = IndexView.as_view()
+
+
+class IndexAdminView(IndexView):
+    index_context = dict(**BaseView.context, **{'fqdn': 'admin.otapick.com'})
+
+
+indexAdminView = IndexAdminView.as_view()
