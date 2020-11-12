@@ -126,7 +126,8 @@ class BlogListAPIView(views.APIView):
         order_format = self.request.GET.get('sort')
         narrowing_keyword = self.request.GET.get('keyword')
         narrowing_post = self.request.GET.get('post')
-        page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+        _page = self.request.GET.get('page')
+        page = int(_page) if _page is not None and _page.isdecimal() else 1
         random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
 
         if group_id is not None:
@@ -225,7 +226,8 @@ class ImageListAPIView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         group_id, ct = otapick.shape_ct(self.kwargs.get('group_id'), self.kwargs.get('ct'))
-        page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+        _page = self.request.GET.get('page')
+        page = int(_page) if _page is not None and _page.isdecimal() else 1
         random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
         order_format = self.request.GET.get('sort')
 
@@ -280,7 +282,8 @@ class RelatedImageListAPIView(ImageListAPIView):
         group_id = self.kwargs.get('group_id')
         blog_ct = self.kwargs.get('blog_ct')
         order = self.kwargs.get('order')
-        page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+        _page = self.request.GET.get('page')
+        page = int(_page) if _page is not None and _page.isdecimal() else 1
 
         blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
         if blogs.exists() and Image.objects.filter(publisher=blogs.first(), order=order).exists():
@@ -296,7 +299,8 @@ relatedImageListAPIView = RelatedImageListAPIView.as_view()
 class HomeAPIView(ImageListAPIView):
     def get(self, request, *args, **kwargs):
         random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
-        page = int(self.request.GET.get('page')) if self.request.GET.get('page') is not None else 1
+        _page = self.request.GET.get('page')
+        page = int(_page) if _page is not None and _page.isdecimal() else 1
 
         images = Image.objects.all()
         images_id_list = otapick.sort_by_recommend_score(images, page, random_seed, self.paginate_by)

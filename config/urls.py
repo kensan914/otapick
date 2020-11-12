@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include, re_path
 import main.views
@@ -24,6 +23,8 @@ from django.views.static import serve
 
 urlpatterns = [
     path('api/', include('api.urls')),
+    path('accounts/', include('account.urls')),
+
     # past URL
     path('search/group/blog/<int:group_id>/', main.redirect.redirectBlogsGView, name="redirectBlogsGView"),
     path('search/member/blog/<int:group_id>/<str:ct>/', main.redirect.redirectBlogsMView, name="redirectBlogsMView"),
