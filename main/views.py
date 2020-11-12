@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.template import loader
 from config import settings
 from django.views import View
+import otapick
 
 
 class BaseView(View):
@@ -23,3 +26,15 @@ class IndexAdminView(IndexView):
 
 
 indexAdminView = IndexAdminView.as_view()
+
+
+class MaintenanceView(BaseView):
+    def get(self, request, *args, **kwargs):
+        isMaintaining = otapick.checkIsMaintaining(settings.BASE_DIR)
+        if isMaintaining:
+            return HttpResponse(loader.render_to_string('503.html'), status=503)
+        else:
+            return redirect('/')
+
+
+maintenanceView = MaintenanceView.as_view()
