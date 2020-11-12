@@ -20,7 +20,7 @@ import main.views
 import main.redirect
 from config import settings
 from django.views.static import serve
-from admin.urls import set_admin_env
+from .admin_urls import set_admin_env
 
 
 urlpatterns = [
