@@ -131,4 +131,4 @@ class ImageSerializer(serializers.ModelSerializer):
         return otapick.generate_image_src(obj)
 
     def get_url(self, obj):
-        return '/image/{}/{}/{}'.format(obj.publisher.publishing_group.group_id, obj.publisher.blog_ct, obj.order)
+        return '/image/{}/{}/{}/'.format(obj.publisher.publishing_group.group_id, obj.publisher.blog_ct, obj.order)

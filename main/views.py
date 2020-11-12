@@ -8,7 +8,7 @@ import otapick
 
 class BaseView(View):
     html_path = 'frontend/index.html'
-    context = {'static_update': '?4.2.1', 'debug': settings.env.bool('DEBUG')}
+    context = {'static_update': '?{}'.format(otapick.VERSION), 'debug': settings.env.bool('DEBUG')}
 
 
 class IndexView(BaseView):
