@@ -11,5 +11,6 @@ from django.urls import path, include
 # app_name = 'admin'
 urlpatterns = [
     path('maintenance-mode/', include('maintenance_mode.urls')),
-    path('', include('admin.urls')),
+    # path('', include('admin.urls')),
+    path('admin/', admin.site.urls),
 ]
