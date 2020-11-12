@@ -8,7 +8,6 @@ admin.site.site_header = 'ヲタピック管理サイト'
 admin.site.site_title = 'ヲタピック管理サイト'
 admin.site.index_title = 'ホーム'
 
-app_name = 'admin'
 urlpatterns = [
     path('admin/', include(admin.site.urls)),
     path('maintenance-mode/', include('maintenance_mode.urls')),
