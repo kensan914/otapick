@@ -26,9 +26,10 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns.append(
-        path('admin/', admin.site.urls)
-    )
+    urlpatterns += [
+        path('admin/', admin.site.urls),
+        path('maintenance-mode/', include('maintenance_mode.urls')),
+    ]
 
 
 # catch all other URL
