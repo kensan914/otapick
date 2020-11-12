@@ -14,6 +14,7 @@ urlpatterns = [
     # path('', include('admin.urls')),
     # path('admin/', admin.site.urls),
 
-    path('', admin.site.urls, name='admin'),
+    path('', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('maintenance-mode/', include('maintenance_mode.urls')),
 ]
