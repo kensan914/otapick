@@ -75,7 +75,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 ROOT_HOSTCONF = 'config.hosts'
-DEFAULT_HOST = 'default' # 空文字だと内部で行われるcheckでfalse判定になりエラーになる(migration時)
+DEFAULT_HOST = 'admin' # 空文字だと内部で行われるcheckでfalse判定になりエラーになる(migration時)
 
 TEMPLATES = [
     {
