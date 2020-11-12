@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import environ
-import otapick
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
+    'otapick.apps.OtapickConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
@@ -207,7 +207,7 @@ ADMIN_SHORTCUTS = [
                 'url': '/maintenance-mode/on/',
                 'title': 'メンテナンス開始',
                 'icon': 'toggle-on',
-                'count_new': 'メンテナンス中' if otapick.checkIsMaintaining(BASE_DIR) else '',
+                'count_new': 'otapick.lib.utils.geneMaintenanceMessage',
             },
             {
                 'url': '/maintenance-mode/off/',
