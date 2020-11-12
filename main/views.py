@@ -10,7 +10,7 @@ class BaseView(View):
 
 class IndexView(BaseView):
     def get(self, request, *args, **kwargs):
-        return render(request, self.html_path, self.context)
+        return render(request, self.html_path, self.context.update({'fqdn': 'otapick.com'}))
 
 
 indexView = IndexView.as_view()
