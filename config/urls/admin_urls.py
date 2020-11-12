@@ -11,9 +11,9 @@ admin.site.index_title = 'ホーム'
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('maintenance-mode/', include('maintenance_mode.urls')),
-    # path('', include(default_urls)),
+    path('', include(default_urls)),
 ]
 
 # catch all other URL
-# urlpatterns += [re_path(r'^.*/$', main.views.indexAdminView, name='indexAdminView')]
-# urlpatterns += [path('', main.views.indexAdminView, name='indexAdminView')]
+urlpatterns += [re_path(r'^.*/$', main.views.indexAdminView, name='indexAdminView')]
+urlpatterns += [path('', main.views.indexAdminView, name='indexAdminView')]
