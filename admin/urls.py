@@ -8,8 +8,8 @@ def set_admin_env():
     admin.site.index_title = 'ホーム'
 
 set_admin_env()
-app_name = 'admin'
+# app_name = 'admin'
 urlpatterns = [
-    path('maintenance-mode/', include('maintenance_mode.urls')),
-    path('', admin.site.urls, name="index"),
+    # path('maintenance-mode/', include('maintenance_mode.urls')),
+    path('', admin.site.urls),
 ]
