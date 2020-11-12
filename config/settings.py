@@ -76,7 +76,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 ROOT_HOSTCONF = 'config.hosts'
-DEFAULT_HOST = ''
+DEFAULT_HOST = 'www' # 空文字だと内部で行われるcheckでfalse判定になりエラーになる(migration時)
 
 TEMPLATES = [
     {
