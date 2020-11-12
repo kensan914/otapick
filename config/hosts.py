@@ -1,7 +1,6 @@
 from . import settings
 from django_hosts import patterns, host
-from admin import admin_urls
-
+from admin_host import admin_urls
 
 host_patterns = patterns(
     '',

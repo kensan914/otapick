@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
-    'admin.apps.AdminConfig',
+    'admin_host.apps.AdminHostConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
