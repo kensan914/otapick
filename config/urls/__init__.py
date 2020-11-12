@@ -25,10 +25,11 @@ urlpatterns = [
     path('', include(default_urls)),
 ]
 
-if settings.DEBUG:
-    urlpatterns.append(
-        path('admin/', admin.site.urls)
-    )
+print(settings.MAINTENANCE_MODE)
+if settings.MAINTENANCE_MODE:
+    urlpatterns += [
+        path('admin/', admin.site.urls if settings.DEBUG else main.views.maintenanceView),
+    ]
 
 
 # catch all other URL
