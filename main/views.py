@@ -23,3 +23,11 @@ class IndexAdminView(IndexView):
 
 
 indexAdminView = IndexAdminView.as_view()
+
+
+class MaintenanceView(BaseView):
+    def get(self, request, *args, **kwargs):
+        return render(request, '503.html')
+
+
+maintenanceView = MaintenanceView.as_view()
