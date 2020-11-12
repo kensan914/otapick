@@ -9,5 +9,6 @@ def set_admin_env():
 
 set_admin_env()
 urlpatterns = [
+    path('maintenance-mode/', include('maintenance_mode.urls')),
     path('', admin.site.urls),
 ]

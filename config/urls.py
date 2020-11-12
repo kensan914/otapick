@@ -32,8 +32,6 @@ urlpatterns = [
     path('search/member/', main.redirect.redirectMembersView, name="redirectMembersView"),
 
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-
-    path('maintenance-mode/', include('maintenance_mode.urls')),
 ]
 
 if settings.DEBUG:
