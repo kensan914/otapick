@@ -76,7 +76,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 ROOT_HOSTCONF = 'config.hosts'
-DEFAULT_HOST = 'admin'
+DEFAULT_HOST = 'default'
 
 TEMPLATES = [
     {
