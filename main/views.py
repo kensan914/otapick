@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.template import loader
 from config import settings
 from django.views import View
 import otapick
@@ -35,7 +37,7 @@ class MaintenanceView(BaseView):
         if mode_state == '0':
             return redirect('/')
         else:
-            return render(request, '503.html')
+            return HttpResponse(loader.render_to_string('503.html'), status=503)
 
 
 maintenanceView = MaintenanceView.as_view()
