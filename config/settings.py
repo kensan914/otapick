@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
-    'admin.apps.AdminConfig',
     'account.apps.AccountConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
@@ -77,7 +76,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 ROOT_HOSTCONF = 'config.hosts'
-DEFAULT_HOST = ''
+DEFAULT_HOST = 'default'
 
 TEMPLATES = [
     {
@@ -187,11 +186,14 @@ REST_FRAMEWORK = {
 
 # django-maintenance-mode
 MAINTENANCE_MODE_STATE_FILE_PATH = 'config/maintenance_mode_state.txt'
+MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
+MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 
 ####################
 ## Authentication ##
 ####################
+# AUTH_USER_MODEL = 'custom_account.Account'
 AUTH_USER_MODEL = 'custom_account.Account'
 REST_USE_JWT = True  # https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
 

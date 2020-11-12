@@ -20,6 +20,7 @@ import main.redirect
 from config import settings
 from django.views.static import serve
 
+
 urlpatterns = [
     path('api/', include('api.urls')),
     path('accounts/', include('account.urls')),
@@ -32,6 +33,11 @@ urlpatterns = [
 
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
+
+if settings.DEBUG:
+    urlpatterns.append(
+        path('admin/', admin.site.urls)
+    )
 
 # catch all other URL
 urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
