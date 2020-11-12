@@ -23,7 +23,8 @@ from config.urls import default_urls
 
 urlpatterns = [
     path('', include(default_urls)),
-    path('admin/', admin.site.urls if settings.DEBUG else main.views.maintenanceView),
+    # path('admin/', admin.site.urls if settings.DEBUG else main.views.maintenanceView),
+    re_path(r'^admin/', main.views.maintenanceView),
 ]
 
 # print(settings.MAINTENANCE_MODE)
