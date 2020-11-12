@@ -10,7 +10,8 @@ from django.urls import path, include
 # set_admin_env()
 # app_name = 'admin'
 urlpatterns = [
+    path('', admin.site.urls),
     path('maintenance-mode/', include('maintenance_mode.urls')),
     # path('', include('admin.urls')),
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
 ]
