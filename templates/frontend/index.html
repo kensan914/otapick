@@ -36,7 +36,9 @@
   <div id="root"></div>
   {% csrf_token %}
   <script>
-      window.env.fqdn = {{ fqdn }};
+      window.env = {
+          fqdn: "{{ fqdn }}",
+      };
   </script>
   <script src="{% static "frontend/main.js" %}{{ static_update }}"></script>
 </body>
