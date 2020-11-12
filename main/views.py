@@ -30,14 +30,11 @@ indexAdminView = IndexAdminView.as_view()
 
 class MaintenanceView(BaseView):
     def get(self, request, *args, **kwargs):
-        f = open('{}/config/maintenance_mode_state.txt'.format(settings.BASE_DIR))
-        mode_state = otapick.clean_text(f.read())
-        f.close()
-        print(mode_state)
-        if mode_state == '0':
-            return redirect('/')
-        else:
+        isMaintaining = otapick.checkIsMaintaining(settings.BASE_DIR)
+        if isMaintaining:
             return HttpResponse(loader.render_to_string('503.html'), status=503)
+        else:
+            return redirect('/')
 
 
 maintenanceView = MaintenanceView.as_view()
