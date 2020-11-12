@@ -9,9 +9,9 @@ admin.site.site_title = 'ヲタピック管理サイト'
 admin.site.index_title = 'ホーム'
 
 urlpatterns = [
-    path('', include(default_urls)),
-    path('admin/', admin.site.urls, name='admin'),
+    path('admin/', include(admin.site.urls), name='admin'),
     path('maintenance-mode/', include('maintenance_mode.urls')),
+    path('', include(default_urls)),
 ]
 
 # catch all other URL
