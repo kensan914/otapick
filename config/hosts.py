@@ -5,4 +5,5 @@ host_patterns = patterns(
     '',
     host(r'', settings.ROOT_URLCONF, name=''),
     host(r'admin', 'admin.urls', name='admin'),
+    host(r'www', 'admin.urls', name='www'),
 )
