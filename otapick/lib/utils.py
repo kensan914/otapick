@@ -72,5 +72,3 @@ def checkIsMaintaining(BASE_DIR):
     return mode_state == '1'
 
 
-def geneMaintenanceMessage():
-    return 'メンテナンス中' if checkIsMaintaining(settings.BASE_DIR) else ''
