@@ -191,7 +191,7 @@ MAINTENANCE_MODE_STATE_FILE_PATH = 'config/maintenance_mode_state.txt'
 ####################
 ## Authentication ##
 ####################
-AUTH_USER_MODEL = 'custom_account.Account'
+# AUTH_USER_MODEL = 'custom_account.Account'
 REST_USE_JWT = True  # https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
 
 REST_SESSION_LOGIN = False
