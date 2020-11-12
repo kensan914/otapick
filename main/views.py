@@ -28,7 +28,7 @@ indexAdminView = IndexAdminView.as_view()
 
 class MaintenanceView(BaseView):
     def get(self, request, *args, **kwargs):
-        with open('../config/maintenance_mode_state.txt') as f:
+        with open('{}/config/maintenance_mode_state.txt'.format(settings.BASE_DIR)) as f:
             mode_state = otapick.clean_text(f.read())
             print(mode_state)
             if mode_state == '0':
