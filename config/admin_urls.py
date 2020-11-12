@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+import config
 
 
 def set_admin_env():
@@ -9,12 +10,7 @@ def set_admin_env():
 
 set_admin_env()
 urlpatterns = [
-    # path('', admin.site.urls),
-    # path('maintenance-mode/', include('maintenance_mode.urls')),
-    # path('', include('admin.urls')),
-    # path('admin/', admin.site.urls),
-
-    # path('', admin.site.urls),
+    path('', config.urls),
     path('admin/', admin.site.urls, name='admin'),
     path('maintenance-mode/', include('maintenance_mode.urls')),
 ]
