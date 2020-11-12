@@ -10,7 +10,7 @@ export const URLJoin = (...args) => {
       break;
     }
   }
-  return args.join("/").replace(/[\/]+/g, "/").replace(/^(.+):\//, "$1://").replace(/^file:/, "file:/").replace(/\/(\?|&|#[^!])/g, "$1").replace(/\?/g, "&").replace("&", "?")
+  return args.join("/").replace(/[\/]+/g, "/").replace(/^(.+):\//, "$1://").replace(/^file:/, "file:/").replace(/\/(\?|&|#[^!])/g, "$1").replace(/\?/g, "&").replace("&", "/?")
 }
 
 export const scrollTop = () => {
@@ -120,22 +120,6 @@ export const getIsMobile = () => {
   }
 }
 
-export const generateKeepAliveName = (key) => {
-  if (typeof key == "undefined") {
-    return "keepAliveInit";
-  } else {
-    return key;
-  }
-}
-
-export const generateKeepAliveNameInfo = (key) => {
-  if (typeof key == "undefined") {
-    return "keepAliveInitInfo";
-  } else {
-    return key + "info";
-  }
-}
-
 export const generateAlt = (group, writerName, type) => {
   let groupName;
   Object.values(GROUPS).forEach(groupObj => {
@@ -200,18 +184,18 @@ export const setBodyPadding = (pxVal) => {
 
 
 // scrollの監視
-export const watchCurrentPosition = (startPos) => {
+export const watchCurrentPosition = (scrollPos) => {
   const currentPos = scrollTop();
   let stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null };
 
-  if (startPos !== currentPos) { // window以外のscrollを発火させない
+  if (scrollPos !== currentPos) { // window以外のscrollを発火させない
     if (currentPos === 0) {
       stateList.isShowNBShadow = false;
       stateList.isShowNB = true;
       stateList.isShowSubNB = false;
       stateList.isTop = true;
     } else {
-      if (currentPos > startPos) { // down
+      if (currentPos > scrollPos) { // down
         if (currentPos < SHOW_NAVBAR_POS) {
           stateList.isShowNB = true;
           stateList.isShowNBShadow = true;
@@ -226,7 +210,7 @@ export const watchCurrentPosition = (startPos) => {
         }
         stateList.isShowSubNB = false;
 
-      } else if (startPos > currentPos) { // up
+      } else if (scrollPos > currentPos) { // up
         stateList.isShowNB = true;
         stateList.isShowNBShadow = true;
         if (currentPos < SHOW_SUB_NAVBAR_POS) {
@@ -242,7 +226,7 @@ export const watchCurrentPosition = (startPos) => {
       stateList.isShowSubNB = true;
     }
   }
-  return { stateList: stateList, startPos: currentPos };
+  return { stateList: stateList, scrollPos: currentPos };
 }
 
 
@@ -300,4 +284,62 @@ export const gtagTo = (pathname) => {
       "page_path": pathname
     });
   }
+}
+
+
+export const storeItem = (key, value) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getItem = (key) => {
+  try {
+    return localStorage.getItem(key);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const storeJson = (key, value) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getJson = (key) => {
+  try {
+    const json = localStorage.getItem(key);
+    if (json === null) return null;
+    else return JSON.parse(json);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const removeItem = (key) => {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+/** オブジェクトに不正なkeyが含まれていないか判定
+ * @param {array} correctKeys
+ * @param {Object} targetObj
+ * @param {function} discoverIncorrectCallback (incorrectkey{string}) => {}
+ * */
+export const checkCorrectKey = (correctKeys, targetObj, discoverIncorrectCallback) => {
+  const targetObjKeys = Object.keys(targetObj);
+  targetObjKeys.forEach(targetObjKey => {
+    if (!correctKeys.includes(targetObjKey)) {
+      discoverIncorrectCallback(targetObjKey);
+    }
+  })
 }

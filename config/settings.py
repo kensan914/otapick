@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
+    'account.apps.AccountConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
@@ -193,6 +194,10 @@ MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 ## Authentication ##
 ####################
 # AUTH_USER_MODEL = 'custom_account.Account'
+<<<<<<< HEAD
+=======
+AUTH_USER_MODEL = 'custom_account.Account'
+>>>>>>> 99a3cd061b7930919ffe96940496070fc2c464ec
 REST_USE_JWT = True  # https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
 
 REST_SESSION_LOGIN = False
@@ -202,7 +207,11 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 REST_AUTH_SERIALIZERS = {
+<<<<<<< HEAD
     # 'USER_DETAILS_SERIALIZER': 'account.serializers.AuthSerializer',
+=======
+    'USER_DETAILS_SERIALIZER': 'account.serializers.AuthSerializer',
+>>>>>>> 99a3cd061b7930919ffe96940496070fc2c464ec
 }
 
 # https://django-allauth.readthedocs.io/en/latest/configuration.html

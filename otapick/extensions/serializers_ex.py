@@ -5,15 +5,15 @@ from main.models import Member, Group
 
 def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
     if blog is not None:
-        return '/blog/{}/{}'.format(blog.publishing_group.group_id, blog.blog_ct)
+        return '/blog/{}/{}/'.format(blog.publishing_group.group_id, blog.blog_ct)
     elif member is not None:
         ct = ''
         if member.independence: ct = member.ct
         elif member.belonging_group.group_id == 1: ct = Member.objects.get(belonging_group__group_id=1, temporary=True).ct
         elif member.belonging_group.group_id == 2: ct = Member.objects.get(belonging_group__group_id=2, temporary=True).ct
 
-        blogs_url = '/blogs/{}/{}'.format(member.belonging_group.group_id, ct)
-        images_url = '/images/{}/{}'.format(member.belonging_group.group_id, ct)
+        blogs_url = '/blogs/{}/{}/'.format(member.belonging_group.group_id, ct)
+        images_url = '/images/{}/{}/'.format(member.belonging_group.group_id, ct)
         if needBlogs ^ needImages:
             if needBlogs: return blogs_url
             if needImages: return images_url
