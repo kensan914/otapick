@@ -10,7 +10,7 @@ admin.site.index_title = 'ホーム'
 
 app_name = 'admin'
 urlpatterns = [
-    path('admin/', admin.site.urls, name='index'),
+    path('admin/', include(admin.site.urls, namespace='admin')),
     path('maintenance-mode/', include('maintenance_mode.urls')),
     path('', include(default_urls)),
 ]
