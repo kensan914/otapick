@@ -1,6 +1,7 @@
-import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DISCRIPTION, SITE_NAME, HOME_TITLE, GA_TRACKING_ID, DEBUG, GROUPS } from "./env";
+import Lottie from "lottie-web";
+import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DESCRIPTION, SITE_NAME, HOME_TITLE, GA_TRACKING_ID, DEBUG, GROUPS } from "./env";
 
-// ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undifined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo" 
+// ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undefined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo" 
 export const URLJoin = (...args) => {
   args = args.filter(n => n !== undefined);
   for (let i = args.length - 1; i >= 0; i--) {
@@ -10,7 +11,7 @@ export const URLJoin = (...args) => {
       break;
     }
   }
-  return args.join("/").replace(/[\/]+/g, "/").replace(/^(.+):\//, "$1://").replace(/^file:/, "file:/").replace(/\/(\?|&|#[^!])/g, "$1").replace(/\?/g, "&").replace("&", "?")
+  return args.join("/").replace(/[\/]+/g, "/").replace(/^(.+):\//, "$1://").replace(/^file:/, "file:/").replace(/\/(\?|&|#[^!])/g, "$1").replace(/\?/g, "&").replace("&", "/?")
 }
 
 export const scrollTop = () => {
@@ -120,22 +121,6 @@ export const getIsMobile = () => {
   }
 }
 
-export const generateKeepAliveName = (key) => {
-  if (typeof key == "undefined") {
-    return "keepAliveInit";
-  } else {
-    return key;
-  }
-}
-
-export const generateKeepAliveNameInfo = (key) => {
-  if (typeof key == "undefined") {
-    return "keepAliveInitInfo";
-  } else {
-    return key + "info";
-  }
-}
-
 export const generateAlt = (group, writerName, type) => {
   let groupName;
   Object.values(GROUPS).forEach(groupObj => {
@@ -200,18 +185,18 @@ export const setBodyPadding = (pxVal) => {
 
 
 // scrollの監視
-export const watchCurrentPosition = (startPos) => {
+export const watchCurrentPosition = (scrollPos) => {
   const currentPos = scrollTop();
   let stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null };
 
-  if (startPos !== currentPos) { // window以外のscrollを発火させない
+  if (scrollPos !== currentPos) { // window以外のscrollを発火させない
     if (currentPos === 0) {
       stateList.isShowNBShadow = false;
       stateList.isShowNB = true;
       stateList.isShowSubNB = false;
       stateList.isTop = true;
     } else {
-      if (currentPos > startPos) { // down
+      if (currentPos > scrollPos) { // down
         if (currentPos < SHOW_NAVBAR_POS) {
           stateList.isShowNB = true;
           stateList.isShowNBShadow = true;
@@ -226,7 +211,7 @@ export const watchCurrentPosition = (startPos) => {
         }
         stateList.isShowSubNB = false;
 
-      } else if (startPos > currentPos) { // up
+      } else if (scrollPos > currentPos) { // up
         stateList.isShowNB = true;
         stateList.isShowNBShadow = true;
         if (currentPos < SHOW_SUB_NAVBAR_POS) {
@@ -242,7 +227,7 @@ export const watchCurrentPosition = (startPos) => {
       stateList.isShowSubNB = true;
     }
   }
-  return { stateList: stateList, startPos: currentPos };
+  return { stateList: stateList, scrollPos: currentPos };
 }
 
 
@@ -255,29 +240,31 @@ export const documentScrollHandler = e => {
 
 // 長押しEvent
 export const addLongPressEventListeners = (elm, longPressedFunc) => {
-  let longpressTimer;
+  if (!elm) return;
+
+  let longPressTimer;
   elm.addEventListener("touchstart", e => {
-    longpressTimer = setTimeout(() => {
+    longPressTimer = setTimeout(() => {
       longPressedFunc();
     }, LONG_PRESS_TIME);
   })
   elm.addEventListener("touchend", e => {
-    clearTimeout(longpressTimer);
+    clearTimeout(longPressTimer);
   });
   elm.addEventListener("touchmove", e => {
-    clearTimeout(longpressTimer);
+    clearTimeout(longPressTimer);
   });
 }
 
 
 // metaタグ更新
-// metaData: metaデータを保持したオブジェクト ex) {title: "メンバーリスト", discription: "...",}
+// metaData: metaデータを保持したオブジェクト ex) {title: "メンバーリスト", description: "...",}
 export const updateMeta = (metaData) => {
   // update title
-  if ("title" in metaData) {
+  if ("title" in metaData && metaData.title !== HOME_TITLE) {
     document.title = `${metaData.title}｜${SITE_NAME}`;
   } else {
-    document.title = `${HOME_TITLE}｜${SITE_NAME}`;
+    document.title = `${SITE_NAME}｜${HOME_TITLE}`;
   }
 
   // update meta
@@ -286,7 +273,7 @@ export const updateMeta = (metaData) => {
     const metaName = headMeta.getAttribute("name");
     if (metaName !== null) {
       if (metaName.indexOf("description") !== -1) {
-        headMeta.setAttribute("content", metaData.discription + DISCRIPTION);
+        headMeta.setAttribute("content", metaData.description + DESCRIPTION);
       }
     }
   }
@@ -300,4 +287,103 @@ export const gtagTo = (pathname) => {
       "page_path": pathname
     });
   }
+}
+
+
+export const storeItem = (key, value) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getItem = (key) => {
+  try {
+    return localStorage.getItem(key);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const storeJson = (key, value) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getJson = (key) => {
+  try {
+    const json = localStorage.getItem(key);
+    if (json === null) return null;
+    else return JSON.parse(json);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const removeItem = (key) => {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+/** オブジェクトに不正なkeyが含まれていないか判定
+ * @param {array} correctKeys
+ * @param {Object} targetObj
+ * @param {function} discoverIncorrectCallback (incorrectkey{string}) => {}
+ * */
+export const checkCorrectKey = (correctKeys, targetObj, discoverIncorrectCallback) => {
+  const targetObjKeys = Object.keys(targetObj);
+  targetObjKeys.forEach(targetObjKey => {
+    if (!correctKeys.includes(targetObjKey)) {
+      discoverIncorrectCallback(targetObjKey);
+    }
+  })
+}
+
+/** スネークケースのobjのkeyをすべてキャメルケースに変換
+ * */
+export const cvtKeyFromSnakeToCamel = (obj) => {
+  return (
+    Object.fromEntries(
+      Object.entries(obj).map(([k, v]) => [fromSnakeToCamel(k), v])
+    )
+  );
+}
+
+/** スネークケースのtextをキャメルケースに変換(例外: id => ID)
+ * */
+export const fromSnakeToCamel = (text) => {
+  const textConvertedID = text.replace(/_id/g, s => "ID");
+  return textConvertedID.replace(/_./g, (s) => {
+    return s.charAt(1).toUpperCase();
+  });
+}
+
+
+/** そのcomponentがキャッシュされているか否か
+ * */
+export const checkNotCached = (props) => (
+  Object.keys(props.match).indexOf("__isComputedUnmatch") === -1
+);
+
+
+/** isFavoriteのGetter・Setterを作成
+ * */
+export const geneIsFavoriteGetterSetter = (favoriteState, domDispatch, imageID) => {
+  const getIsFavorite = () => (
+    favoriteState[imageID]
+  );
+
+  const setIsFavorite = (val) => {
+    domDispatch({ type: "SET_FAVORITE", imageID: imageID, isFavorite: val });
+  }
+
+  return { getIsFavorite, setIsFavorite };
 }

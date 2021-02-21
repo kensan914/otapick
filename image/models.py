@@ -1,4 +1,5 @@
 from django.db import models
+from account.models import Account
 from main.models import Blog
 
 
@@ -42,3 +43,17 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.publisher.title) + '/' + str(self.order)
+
+
+class Favorite(models.Model):
+    class Meta:
+        db_table = 'favorite'
+        ordering = ['-created_at']
+        unique_together = ('image', 'user')
+
+    image = models.ForeignKey(Image, verbose_name='画像', on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, verbose_name='ユーザ', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='追加日')
+
+    def __str__(self):
+        return '{}({})'.format(str(self.user.name), str(self.created_at))

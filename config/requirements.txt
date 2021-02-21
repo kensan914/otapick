@@ -32,9 +32,10 @@ tweepy==3.8.0
 ua-parser==0.8.0
 urllib3==1.25.7
 user-agents==2.0
-uWSGI==2.0.18
 vine==1.3.0
 zipp==0.6.0
 numpy==1.19.0
 djangorestframework==3.11.0
 django-maintenance-mode==0.15.0
+django-hosts==4.0
+django-admin-shortcuts==2.0.0

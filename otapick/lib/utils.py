@@ -59,3 +59,14 @@ def generate_watch_more(url):
         'background_image': otapick.WATCH_MORE_IMG_URL,
         'url': url,
     }
+
+
+def checkIsMaintaining(BASE_DIR):
+    """
+    メンテナンス状況の取得
+    :return: true(メンテナンス中) false(メンテナンスしていない)
+    """
+    f = open('{}/config/maintenance_mode_state.txt'.format(BASE_DIR))
+    mode_state = otapick.clean_text(f.read())
+    f.close()
+    return mode_state == '1'

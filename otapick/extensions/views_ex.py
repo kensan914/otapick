@@ -28,7 +28,7 @@ class BlogListInfo(ListInfo):
     def get_result(self):
         if self.group_id is None:
             self.title = 'おすすめ'
-            self.meta_title = '櫻坂46・日向坂46・欅坂46のおすすめ'
+            self.meta_title = '櫻坂46・日向坂46'
             narrowing_blogs = Blog.objects.all()
         elif self.ct is None:
             groups = Group.objects.filter(group_id=self.group_id)
@@ -58,11 +58,11 @@ class ImageListInfo(ListInfo):
     def get_result(self):
         if self.group_id == 0:
             self.title = 'ホーム'
-            self.meta_title = '櫻坂46・日向坂46・欅坂46を保存するなら'
+            self.meta_title = '櫻坂46・日向坂46を保存するなら'
             images = Image.objects.all()
         elif self.group_id is None:
             self.title = 'おすすめ'
-            self.meta_title = '櫻坂46・日向坂46・欅坂46のおすすめ'
+            self.meta_title = '櫻坂46・日向坂46'
             images = Image.objects.all()
         elif self.ct is None:
             groups = Group.objects.filter(group_id=self.group_id)
@@ -153,11 +153,11 @@ def sort_images_by_related(blog, order, page, paginate_by):
     return selected_id_list
 
 
-def generate_images_data(images):
+def generate_images_data(images, request):
     data = []
     for image in images:
         if image is not None:
-            image_data = ImageSerializer(image).data
+            image_data = ImageSerializer(image, context={'me': request.user}).data
             blog_data = BlogSerializer(image.publisher).data
             data.append({'image': image_data, 'blog': blog_data})
         else:
@@ -185,7 +185,7 @@ def generate_resource_data(resources, max_rank, rank_type, resource_type, prefix
     return resources_data
 
 
-def get_additional_data(random_seed):
+def get_additional_data(random_seed, request):
     data = []
     data_length = 50
     max_rank = 3
@@ -211,7 +211,7 @@ def get_additional_data(random_seed):
 
         for i, images_data_part in enumerate(images_data):
             if images_data_part is not None:
-                image_data = ImageSerializer(images_data_part['resource']).data
+                image_data = ImageSerializer(images_data_part['resource'], context={'me': request.user}).data
                 blog_data = BlogSerializer(images_data_part['resource'].publisher).data
                 images_data_part['resource_info'].update({'image': image_data, 'blog': blog_data})
                 data.append(images_data_part['resource_info'])
