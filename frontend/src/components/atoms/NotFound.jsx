@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BACKGROUNG_IMG_URL, GROUPS } from "../modules/env";
+import { BACKGROUND_IMG_URL, GROUPS } from "../modules/env";
+import { isSmp } from "../modules/utils";
 
 
 export class NotFoundBlogsContent extends React.Component {
@@ -10,7 +11,7 @@ export class NotFoundBlogsContent extends React.Component {
         {!this.props.hideAlert &&
           <div className="alert alert-danger search-suggestions-title" role="alert" style={{ borderRadius: "1rem" }}>このURLは有効ではありません。入力されたURLのページからブログが見つかりませんでした。</div>
         }
-        <div className="mx-2 search-suggestions-discription">
+        <div className="mx-2 search-suggestions-description">
           <p>入力されたURLのページにブログ情報が含まれているか、今一度ご確認ください。</p>
           <p>現在、<a target="_blank" href={GROUPS["1"].blogUrl}>{`${GROUPS["1"].name}公式ブログ`}</a>・
           <a target="_blank" href={GROUPS["2"].blogUrl}>{`${GROUPS["2"].name}公式ブログ`}</a>・
@@ -31,7 +32,7 @@ export class NotFoundMembersContent extends React.Component {
         {!this.props.hideAlert &&
           <div className="alert alert-danger search-suggestions-title" role="alert" style={{ borderRadius: "1rem" }}>該当するメンバーが見つかりませんでした。</div>
         }
-        <div className="mx-2 search-suggestions-discription">
+        <div className="mx-2 search-suggestions-description">
           <p>入力された文字列に間違いがないか、以下を参考に今一度ご確認ください。</p>
           <p><i className="fas fa-hand-point-right" />現在ニックネームやあだ名による検索はサポートしておりません。ご了承ください。</p>
           <p><i className="fas fa-hand-point-right" />ひらがなでの入力をお試しください。</p>
@@ -62,7 +63,7 @@ export class NotFoundImagesContent extends React.Component {
   };
 };
 
-export class NotFoundBlogsFaildContent extends React.Component {
+export class NotFoundBlogsFailedContent extends React.Component {
   render() {
     return (
       <div className={this.props.className} style={this.props.style}>
@@ -78,7 +79,7 @@ export class NotFoundBlogsFaildContent extends React.Component {
   };
 };
 
-export class NotFoundImagesFaildContent extends React.Component {
+export class NotFoundImagesFailedContent extends React.Component {
   render() {
     return (
       <div className={this.props.className} style={this.props.style}>
@@ -88,6 +89,22 @@ export class NotFoundImagesFaildContent extends React.Component {
         <div className="mx-2">
           <p>申し訳ございません。お探しの画像は見つかりませんでした。</p>
           <p>お探しの画像が掲載されているブログが公式ブログから一時的にアクセスできない状況にあるか、移動もしくは削除された可能性があります。</p>
+        </div>
+      </div>
+    );
+  };
+};
+
+export class NotFoundFavoriteImagesContent extends React.Component {
+  render() {
+    return (
+      <div className={this.props.className} style={this.props.style}>
+        {!this.props.hideAlert &&
+          <div className="alert alert-danger" role="alert" style={{ borderRadius: "1rem" }}>マイフォルダに追加された画像がありません。</div>
+        }
+        <div className="mx-2">
+          {!isSmp && <p>マイフォルダに追加された画像がありません。</p>}
+          <p>お気に入りの画像を探して{" "}<i className="far fa-bookmark" />{" "}を押すことで、ここからいつでも確認できます。</p>
         </div>
       </div>
     );
@@ -136,14 +153,21 @@ export class NotFoundMessage extends React.Component {
       content = (
         <>
           <span className="display-3" style={{ color: "white" }}>Not Found Blog</span>
-          <NotFoundBlogsFaildContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
+          <NotFoundBlogsFailedContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "imageFailed") {
       content = (
         <>
           <span className="display-3" style={{ color: "white" }}>Not Found Image</span>
-          <NotFoundImagesFaildContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
+          <NotFoundImagesFailedContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
+        </>
+      );
+    } else if (this.props.type === "favoriteImage") {
+      content = (
+        <>
+          <span className="display-3" style={{ color: "white" }}>Not Found Image</span>
+          <NotFoundFavoriteImagesContent className="p-3 mt-3 mb-2 notfound-message-body" hideAlert={true} />
         </>
       );
     } else if (this.props.type === "404") {
@@ -157,7 +181,7 @@ export class NotFoundMessage extends React.Component {
 
     return (
       <div className={"notfound-message py-4 px-3 px-sm-4 shadow-sm text-muted " + (this.props.margin && "notfound-message-margin-bottom")}
-        style={{ backgroundImage: `url(${BACKGROUNG_IMG_URL})` }}>
+        style={{ backgroundImage: `url(${BACKGROUND_IMG_URL})` }}>
         {content}
       </div>
     );

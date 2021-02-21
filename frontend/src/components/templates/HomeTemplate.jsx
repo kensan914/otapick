@@ -1,8 +1,7 @@
 import React from "react";
-import HomeList from '../organisms/List/HomeList';
-import Headline from '../molecules/Headline';
-import ToTopButton from "../atoms/ToTopButton";
-import { isMobile } from '../modules/utils';
+import HomeList from "../organisms/List/HomeList";
+import Headline from "../molecules/Headline";
+import { isMobile } from "../modules/utils";
 import ImageListInfo from "../molecules/info/ImageListInfo";
 import { withRouter } from "react-router-dom";
 
@@ -20,9 +19,8 @@ class HomeTemplate extends React.Component {
         <ImageListInfo groupID={0} hide={true} home={true} />
 
         {!isMobile && <div className="py-2"></div>}
-        <HomeList />
 
-        <ToTopButton />
+        <HomeList />
       </div>
     );
   };

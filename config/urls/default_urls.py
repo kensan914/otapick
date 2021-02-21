@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path, include, re_path
 import main.redirect
 from config import settings
@@ -7,6 +6,7 @@ from django.views.static import serve
 
 urlpatterns = [
     path('api/', include('api.urls')),
+    path('accounts/', include('account.urls')),
 
     # past URL
     path('search/group/blog/<int:group_id>/', main.redirect.redirectBlogsGView, name="redirectBlogsGView"),

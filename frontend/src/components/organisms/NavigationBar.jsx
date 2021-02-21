@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Button } from "reactstrap";
+import { Navbar, NavbarBrand, Nav, DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 import SearchDownshift from "../molecules/SearchDownshift"
 import { isMobile, isSmp } from "../modules/utils";
@@ -86,7 +86,12 @@ const NavigationBar = (props) => {
             {authState.status === "Authenticated" &&
               <>
                 <DropdownItem divider />
-                <DropdownItem onClick={() => authDispatch({ type: "COMPLETE_LOGOUT", profileDispatch: profileDispatch })}>ログアウト{" "}<i className="fas fa-sign-out-alt" /></DropdownItem>
+                <DropdownItem onClick={() => {
+                  authDispatch({ type: "COMPLETE_LOGOUT", profileDispatch: profileDispatch });
+                  window.location.href = "/";
+                }}>
+                  ログアウト{" "}<i className="fas fa-sign-out-alt" />
+                </DropdownItem>
               </>
             }
           </DropdownMenu>

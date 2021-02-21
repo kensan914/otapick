@@ -2,8 +2,7 @@ import React from "react";
 import ImageList from "../organisms/List/ImageList";
 import Headline from "../molecules/Headline";
 import queryString from "query-string";
-import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, getGroup, checkMatchParams, isMobile } from "../modules/utils";
+import { URLJoin, getGroup, checkMatchParams, isMobile, checkNotCached } from "../modules/utils";
 import ImageListInfo from "../molecules/info/ImageListInfo";
 import { withRouter } from "react-router-dom";
 
@@ -11,14 +10,16 @@ import { withRouter } from "react-router-dom";
 class ImageListTemplate extends React.Component {
   constructor(props) {
     super(props);
-    this.isRender = checkMatchParams(props.history, props.match.params.groupID, props.match.params.ct);
+    const groupID = props.match.params.groupID;
+    const ct = props.match.params.ct;
 
+    this.isRender = checkMatchParams(props.history, groupID, ct);
     const qs = queryString.parse(props.location.search);
     this.state = {
-      group: getGroup(props.match.params.groupID),
-      groupID: props.match.params.groupID,
+      group: getGroup(groupID),
+      groupID: groupID,
       orderFormat: typeof qs.sort == "undefined" ? "recommend" : qs.sort,
-      ct: props.match.params.ct,
+      ct: ct,
     }
   };
 
@@ -35,46 +36,49 @@ class ImageListTemplate extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const prevGroupID = prevProps.match.params.groupID;
-    const prevCt = prevProps.match.params.ct;
-    const qs = queryString.parse(this.props.location.search);
-    const { groupID, ct, orderFormat } = getImageUrlComposition(this.props);
+    if (checkNotCached(this.props)) {
+      const { groupID, ct, orderFormat } = getImageUrlComposition(this.props);
+      const prevImageUrlComposition = getImageUrlComposition(prevProps);
+      const prevGroupID = prevImageUrlComposition.groupID;
+      const prevCt = prevImageUrlComposition.ct;
+      const qs = queryString.parse(this.props.location.search);
 
-    // When the group changed
-    if (ct === undefined) {
-      if (prevGroupID !== groupID || prevCt !== ct) {
+      // When the group changed
+      if (ct === undefined) {
+        if (prevGroupID !== groupID || prevCt !== ct) {
+          this.setState({
+            groupID: groupID,
+            ct: ct,
+            group: getGroup(groupID),
+            orderFormat: orderFormat,
+          });
+          return;
+        }
+      }
+      // When the member changed
+      else {
+        if (prevGroupID !== groupID || prevCt !== ct) {
+          this.setState({
+            groupID: groupID,
+            ct: ct,
+            group: getGroup(groupID),
+          });
+          return;
+        }
+      }
+
+      // When the order format changed
+      if (qs.sort && this.state.orderFormat !== qs.sort) {
         this.setState({
-          groupID: groupID,
-          ct: ct,
-          group: getGroup(groupID),
-          orderFormat: orderFormat,
+          orderFormat: qs.sort,
+        });
+        return;
+      } else if (!qs.sort && this.state.orderFormat !== "recommend") {
+        this.setState({
+          orderFormat: "recommend",
         });
         return;
       }
-    }
-    // When the member changed
-    else {
-      if (prevGroupID !== groupID || prevCt !== ct) {
-        this.setState({
-          groupID: groupID,
-          ct: ct,
-          group: getGroup(groupID),
-        });
-        return;
-      }
-    }
-
-    // When the order format changed
-    if (qs.sort && this.state.orderFormat !== qs.sort) {
-      this.setState({
-        orderFormat: qs.sort,
-      });
-      return;
-    } else if (!qs.sort && this.state.orderFormat !== "recommend") {
-      this.setState({
-        orderFormat: "recommend",
-      });
-      return;
     }
   }
 
@@ -84,34 +88,27 @@ class ImageListTemplate extends React.Component {
         <div className="container mt-3 text-muted">
           <Headline title="画像一覧" type="images" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
 
-          {/* <div id={this.state.keepAliveNameInfo}> */}
-          <div>
-            <ImageListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat}
-              pushHistory={(qs) => this.pushHistory(qs)} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false} />
-          </div>
+          <ImageListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat}
+            pushHistory={(qs) => this.pushHistory(qs)} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false} />
 
           {(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") &&
             (!isMobile && <div className="py-2"></div>)
           }
 
-          {/* <div id={this.state.keepAliveName}> */}
-          <div>
-            <ImageList />
-          </div>
-
-          <ToTopButton />
+          <ImageList />
         </div>
       }</>
     );
   };
 };
 
+
 export default withRouter(ImageListTemplate);
 
 
 export const getImageUrlComposition = (props) => {
-  const groupID = props.match.params.groupID;
-  const ct = props.match.params.ct;
+  const groupID = props.match.params ? props.match.params.groupID : null;
+  const ct = props.match.params ? props.match.params.ct : null;
 
   const qs = queryString.parse(props.location.search);
   const orderFormat = typeof qs.sort == "undefined" ? "recommend" : qs.sort;

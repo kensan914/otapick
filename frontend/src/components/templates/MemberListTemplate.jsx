@@ -6,7 +6,7 @@ import { URLJoin, updateMeta, gtagTo } from "../modules/utils";
 import axios from "axios";
 import { getGroup, generateWavesVals } from "../modules/utils";
 import { Collapse } from "reactstrap";
-import { BASE_URL, DELAY_TIME, GROUPS, MEMBERS_DISCRIPTION } from "../modules/env";
+import { BASE_URL, DELAY_TIME, GROUPS, MEMBERS_DESCRIPTION } from "../modules/env";
 import { LoaderScreen } from "../molecules/Loader";
 import { withRouter } from "react-router-dom";
 
@@ -104,7 +104,7 @@ class MemberListTemplate extends React.Component {
               togglerMemory: _togglerMemory,
             });
 
-            updateMeta({ title: `${GROUPS["1"].name}・${GROUPS["2"].name}｜メンバーリスト`, discription: MEMBERS_DISCRIPTION });
+            updateMeta({ title: `メンバーリスト｜${GROUPS["1"].name}・${GROUPS["2"].name}`, description: MEMBERS_DESCRIPTION });
           }
         })
         .catch(err => {

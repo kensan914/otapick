@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip} from 'reactstrap';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Tooltip } from 'reactstrap';
+import { Link, withRouter } from 'react-router-dom';
 import { shortenNum, generateAlt, isMobile, isSmp } from '../modules/utils';
 import { MobileBottomMenu } from './MobileMenu';
 
@@ -22,14 +22,17 @@ const DetailButton = (props) => {
 };
 
 const CardTooltip = (props) => {
+  const { target, title } = props;
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
+  const toggle = () => { setTooltipOpen(!tooltipOpen); };
 
   return (
-    <Tooltip placement="top" isOpen={tooltipOpen} target={props.target} toggle={toggle} >
-      {props.title}
-    </Tooltip>
-  )
+    document.getElementById(target) && (
+      <Tooltip placement="top" isOpen={tooltipOpen} target={target} toggle={toggle} >
+        {title}
+      </Tooltip>
+    )
+  );
 }
 
 class SuperBlogCard extends React.Component {
@@ -57,13 +60,19 @@ class SuperBlogCard extends React.Component {
                       <i className="fas fa-external-link-alt"></i>
                     </a>
                   </div>
-                  <CardTooltip target={`to-official-page-${this.props.id}`} title="公式ブログで確認" />
+                  <CardTooltip
+                    target={`to-official-page-${this.props.id}`}
+                    title="公式ブログで確認"
+                  />
                   <div className="col-4 p-0 ml-2" id={`to-download-page-${this.props.id}`}>
                     <Link to={this.props.url} style={{ color: "white" }}>
                       <i className="fas fa-download"></i>
                     </Link>
                   </div>
-                  <CardTooltip target={`to-download-page-${this.props.id}`} title="ダウンロードページへ" />
+                  <CardTooltip
+                    target={`to-download-page-${this.props.id}`}
+                    title="ダウンロードページへ"
+                  />
                 </div>
               </span>
             }
@@ -121,15 +130,11 @@ class SuperBlogCard extends React.Component {
 }
 
 
-export class OrderlyBlogCard extends React.Component {
-  render() {
-    return (
-      <div className="otapick-card-back blog-card col-6 col-md-4 col-lg-3 mb-3 px-2 px-sm-3">
-        <SuperBlogCard {...this.props} orderly={true} />
-      </div>
-    );
-  }
-}
+export const OrderlyBlogCard = withRouter((props) => (
+  <div className="otapick-card-back blog-card col-6 col-md-4 col-lg-3 mb-3 px-2 px-sm-3">
+    <SuperBlogCard {...props} orderly={true} />
+  </div>
+));
 
 
 class BlogCard extends React.Component {
@@ -151,4 +156,6 @@ class BlogCard extends React.Component {
   };
 };
 
-export default BlogCard;
+
+// 1ページに数百単位でレンダリングされるコンポーネントのため、BlogCardのprops・stateに変更があったときのみ再レンダー
+export default React.memo(withRouter(BlogCard));

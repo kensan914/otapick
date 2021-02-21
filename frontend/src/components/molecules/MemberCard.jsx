@@ -28,14 +28,25 @@ class MemberCard extends React.Component {
     return (
       <>
         <div className={"member-card mx-auto " + this.props.belongingGroup}>
-          <div className={"member-card-header " + (!isMobile ? "pc" : "")} onClick={() => { this.props.history.push(this.props.url["images"]); }}>
+          {/* <div className={"member-card-header " + (!isMobile ? "pc" : "")} onClick={() => { this.props.history.push(this.props.url["images"]); }}>
             <div className="member-card-overlay"
               style={{ backgroundImage: `url(${this.props.image})` }}>
             </div>
             <img src={this.props.image} className="mb-3 mb-sm-4" alt={generateAlt(this.props.belongingGroup, (this.props.lastKanji + this.props.firstKanji), "member")} />
             <h4 className="m-0">{this.props.lastKanji} {this.props.firstKanji}</h4>
             <p style={{ color: "whitesmoke" }}>{this.props.lastKana} {this.props.firstKana}</p>
-          </div>
+          </div> */}
+
+          <Link to={this.props.url["images"]} style={{ textDecoration: "none" }}>
+            <div className={"member-card-header " + (!isMobile ? "pc" : "")} >
+              <div className="member-card-overlay"
+                style={{ backgroundImage: `url(${this.props.image})` }}>
+              </div>
+              <img src={this.props.image} className="mb-3 mb-sm-4" alt={generateAlt(this.props.belongingGroup, (this.props.lastKanji + this.props.firstKanji), "member")} />
+              <h4 className="m-0">{this.props.lastKanji} {this.props.firstKanji}</h4>
+              <p style={{ color: "whitesmoke" }}>{this.props.lastKana} {this.props.firstKana}</p>
+            </div>
+          </Link>
 
           <svg className="waves" viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
             <defs>

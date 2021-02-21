@@ -1,9 +1,9 @@
 import React from 'react';
 import SortButton from '../../atoms/SortButton';
 import axios from 'axios';
-import { URLJoin, isSmp, isMobile, updateMeta, gtagTo } from '../../modules/utils';
+import { URLJoin, isSmp, isMobile, updateMeta, gtagTo, checkNotCached } from '../../modules/utils';
 import { withRouter } from 'react-router-dom';
-import { BASE_URL, DELAY_TIME, IMAGES_DISCRIPTION, HOME_TITLE } from '../../modules/env';
+import { BASE_URL, DELAY_TIME, IMAGES_DESCRIPTION, HOME_TITLE } from '../../modules/env';
 import { MobileBottomMenu } from '../MobileMenu';
 import { getImageUrlComposition } from '../../templates/ImageListTemplate';
 
@@ -35,8 +35,8 @@ class ImageListInfo extends React.Component {
               status: "not_found",
               metaTitle: this.props.home ? HOME_TITLE : "Not Found Image",
             });
-            if (!this.props.home) updateMeta({ title: "Not Found Image", discription: IMAGES_DISCRIPTION });
-            else updateMeta({ title: HOME_TITLE, discription: "" });
+            if (!this.props.home) updateMeta({ title: "Not Found Image", description: IMAGES_DESCRIPTION });
+            else updateMeta({ title: HOME_TITLE, description: "" });
           } else {
             this.setState({
               title: res.data.title,
@@ -44,8 +44,8 @@ class ImageListInfo extends React.Component {
               status: "success",
               metaTitle: this.props.home ? HOME_TITLE : res.data.meta_title,
             });
-            if (!this.props.home) updateMeta({ title: `${res.data.meta_title}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
-            else updateMeta({ title: HOME_TITLE, discription: "" });
+            if (!this.props.home) updateMeta({ title: `${res.data.meta_title}の画像・写真一覧`, description: IMAGES_DESCRIPTION });
+            else updateMeta({ title: HOME_TITLE, description: "" });
           }
         })
         .catch(err => {
@@ -77,12 +77,14 @@ class ImageListInfo extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.location !== prevProps.location) {
-      const { groupID, ct, orderFormat } = getImageUrlComposition(this.props);
-      this.setState({ sortButtonTitle: this.convertSortButtonTitle(orderFormat) })
-      this.getImageListInfo(groupID, ct);
-      if (!this.props.home) updateMeta({ title: `${this.state.metaTitle}の画像・写真一覧`, discription: IMAGES_DISCRIPTION });
-      else updateMeta({ title: this.state.metaTitle, discription: "" });
+    if (checkNotCached(this.props)) {
+      if (this.props.location !== prevProps.location) {
+        const { groupID, ct, orderFormat } = getImageUrlComposition(this.props);
+        this.setState({ sortButtonTitle: this.convertSortButtonTitle(orderFormat) })
+        this.getImageListInfo(groupID, ct);
+        if (!this.props.home) updateMeta({ title: `${this.state.metaTitle}の画像・写真一覧`, description: IMAGES_DESCRIPTION });
+        else updateMeta({ title: this.state.metaTitle, description: "" });
+      }
     }
   }
 
@@ -97,7 +99,7 @@ class ImageListInfo extends React.Component {
                 <hr className="info-hr" />
                 <div className="row justify-content-between">
                   <div className="col-12 col-md-6 col-lg-7 col-xl-8">
-                    <div className="info-discription my-1 my-sm-0">検索結果（<b>{this.state.numOfHit}</b>件）</div>
+                    <div className="info-description my-1 my-sm-0">検索結果（<b>{this.state.numOfHit}</b>件）</div>
                   </div>
 
                   {this.state.status === "success" &&

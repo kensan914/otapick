@@ -1,33 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { withRouter } from "react-router-dom";
 import BlogCard from "../../molecules/BlogCard";
 import { URLJoin, getGroup, generateWavesVals, isMobile, generateRandomSeed } from "../../modules/utils";
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
 import ImageCard from "../../molecules/ImageCard";
 import MemberCard from "../../molecules/MemberCard";
-import { SquareAds } from "../../atoms/Adsense";
-import AdsenseCard from "../../molecules/AdsenseCard";
+import { SquareAds } from "../../atoms/AdSense";
+import AdSenseCard from "../../molecules/AdSenseCard";
 import { useAxios } from "../../modules/axios";
 import List from "./List";
 import { ImageListModel } from "./ImageList";
-import { useHistoryDispatch, useHistoryState } from "../../contexts/HistoryContext";
+import { useAuthState } from "../../contexts/AuthContext";
 
 
 const HomeList = (props) => {
   const [randomSeed] = useState(generateRandomSeed());
-  // const [additionalItems, setAdditionalItems] = useState([]);
-  // const additionalItemsStartPage = useRef(0);
   const [wavesVals] = useState(generateWavesVals());
 
-  const historyState = useHistoryState();
-  const page = useRef(1);
-  useEffect(() => {
-    if (historyState.listStates[props.location.key]) {
-      page.current = historyState.listStates[props.location.key].page;
-    }
-  }, [historyState.listStates]);
+  const authState = useAuthState();
 
-  const { request } = useAxios(
+  const [additionalItems, setAdditionalItems] = useState([]);
+  const additionalItemsStartPage = useRef(-1);
+
+  const { resData } = useAxios(
     URLJoin(BASE_URL, "home/additional/", `?random_seed=${randomSeed}`),
     "get", {
     thenCallback: res => {
@@ -48,6 +43,8 @@ const HomeList = (props) => {
               writer: item.blog.writer,
               type: "image",
               message: item.message,
+              order: item.image.order,
+              isFavorite: item.image.is_favorite,
             });
           } else if (item.type === "blog") {
             _additionalItems.push({
@@ -88,54 +85,95 @@ const HomeList = (props) => {
           }
         }
 
-        historyDispatch({ type: "APPEND_LIST_ADDITIONAL_ITEMS", locationKey: props.location.key, additionalItems: _additionalItems, additionalItemsStartPage: page.current });
+        setAdditionalItems(_additionalItems);
       }
     },
-    // didMountRequest: true,
     didRequestCallback: (r) => console.log(r),
+    shouldRequestDidMount: true,
+    token: authState.token,
   });
 
-  const historyDispatch = useHistoryDispatch();
-  useEffect(() => {
-    if (!historyState.listStates[props.location.key]) {
-      const randomSeed = generateRandomSeed();
-      historyDispatch({ type: "INIT_LIST_STATE", locationKey: props.location.key, randomSeed: randomSeed });
-      request();
-    }
-  }, [props.location.key]);
-
-  const additionalItems = historyState.listStates[props.location.key] ? historyState.listStates[props.location.key].additionalItems : []
-  const additionalItemsStartPage = historyState.listStates[props.location.key] ? historyState.listStates[props.location.key].additionalItemsStartPage : 1
   return (
     <ImageListModel {...props} type="HOME" render={(hasMore, status, page, urlExcludePage, isLoading, request, items) => {
+      // additionalItemsStartPageの設定
+      if (additionalItemsStartPage.current === -1 && resData) {
+        additionalItemsStartPage.current = page;
+      }
+
       let additionalItemsIndex = 0;
       return (
-        <List hasMore={hasMore} status={status} page={page} urlExcludePage={urlExcludePage} isLoading={isLoading} request={request}>
-          {items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer }, i) => {
+        <List
+          hasMore={hasMore}
+          status={status}
+          page={page}
+          urlExcludePage={urlExcludePage}
+          isLoading={isLoading}
+          request={request}
+        >
+          {items.map(({ groupID, blogCt, blogTitle, src, url, blogUrl, officialUrl, writer, order, isFavorite }, i) => {
             let additionalItem;
             if (
               (i % 10 === 0) &&  // item10コごとに表示
               additionalItems.length > additionalItemsIndex &&
-              (Math.floor(i / 20) >= additionalItemsStartPage)  // additionalItemsがloadされた以降に表示されるように
+              (Math.floor(i / 20) >= additionalItemsStartPage.current)  // additionalItemsがloadされた以降に表示されるように
             ) {
               const add = additionalItems[additionalItemsIndex];
+              const cardID = `additional_${additionalItemsIndex}_${props.location.key}`
               if (add === null) {
                 additionalItem = null;
               } else if (add.type === "image") {
                 additionalItem =
-                  <ImageCard id={`additional_${additionalItemsIndex}`} groupID={add.groupID} group={getGroup(add.groupID)} blogCt={add.blogCt} blogTitle={add.blogTitle}
-                    src={add.src} url={add.url} blogUrl={add.blogUrl} officialUrl={add.officialUrl} writer={add.writer} message={add.message} />
+                  <ImageCard
+                    id={cardID}
+                    groupID={add.groupID}
+                    group={getGroup(add.groupID)}
+                    blogCt={add.blogCt}
+                    blogTitle={add.blogTitle}
+                    src={add.src}
+                    url={add.url}
+                    blogUrl={add.blogUrl}
+                    officialUrl={add.officialUrl}
+                    writer={add.writer}
+                    message={add.message}
+                    order={add.order}
+                    isFavorite={add.isFavorite}
+                  />
               } else if (add.type === "blog") {
                 additionalItem =
-                  <BlogCard id={`additional_${additionalItemsIndex}`} groupID={add.groupID} group={getGroup(add.groupID)} blogCt={add.blogCt} thumbnail={add.thumbnail} title={add.title}
-                    writer={add.writer} postDate={add.postDate} numOfViews={add.numOfViews} numOfDownloads={add.numOfDownloads} url={add.url} officialUrl={add.officialUrl} message={add.message} />
+                  <BlogCard
+                    id={cardID}
+                    groupID={add.groupID}
+                    group={getGroup(add.groupID)}
+                    blogCt={add.blogCt}
+                    thumbnail={add.thumbnail}
+                    title={add.title}
+                    writer={add.writer}
+                    postDate={add.postDate}
+                    numOfViews={add.numOfViews}
+                    numOfDownloads={add.numOfDownloads}
+                    url={add.url}
+                    officialUrl={add.officialUrl}
+                    message={add.message}
+                  />
               } else if (add.type === "member") {
                 additionalItem =
-                  <MemberCard id={`additional_${additionalItemsIndex}`} ct={add.ct} image={add.image} url={add.url} officialUrl={add.officialUrl} lastKanji={add.lastKanji} firstKanji={add.firstKanji} lastKana={add.lastKana}
-                    firstKana={add.firstKana} belongingGroup={add.belongingGroup} wavesVals={wavesVals} message={add.message} />
+                  <MemberCard
+                    id={cardID}
+                    ct={add.ct}
+                    image={add.image}
+                    url={add.url}
+                    officialUrl={add.officialUrl}
+                    lastKanji={add.lastKanji}
+                    firstKanji={add.firstKanji}
+                    lastKana={add.lastKana}
+                    firstKana={add.firstKana}
+                    belongingGroup={add.belongingGroup}
+                    wavesVals={wavesVals}
+                    message={add.message}
+                  />
               } else if (add.type === "twitter") {
                 additionalItem =
-                  <AdsenseCard url={add.url} src={add.src} message={add.message} />;
+                  <AdSenseCard url={add.url} src={add.src} message={add.message} />;
               }
               additionalItemsIndex++;
             }
@@ -144,8 +182,20 @@ const HomeList = (props) => {
             return (
               <div key={i}>
                 <div className={gridItemClassName}>
-                  <ImageCard id={i} groupID={groupID} group={getGroup(groupID)} blogCt={blogCt} blogTitle={blogTitle}
-                    src={src} url={url} blogUrl={blogUrl} officialUrl={officialUrl} writer={writer} />
+                  <ImageCard
+                    id={i}
+                    groupID={groupID}
+                    group={getGroup(groupID)}
+                    blogCt={blogCt}
+                    blogTitle={blogTitle}
+                    src={src}
+                    url={url}
+                    blogUrl={blogUrl}
+                    officialUrl={officialUrl}
+                    writer={writer}
+                    order={order}
+                    isFavorite={isFavorite}
+                  />
                 </div >
                 {/* additionalItem */}
                 {additionalItem &&
@@ -153,7 +203,7 @@ const HomeList = (props) => {
                     {additionalItem}
                   </div>
                 }
-                {/* Google Adsense */}
+                {/* Google AdSense */}
                 {(i % ADS_INTERVAL === ADS_INDEX) &&
                   <div className={gridItemClassName + (isMobile ? "mb-4" : "")} >
                     <SquareAds />

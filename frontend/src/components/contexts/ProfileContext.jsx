@@ -5,25 +5,23 @@ import { getJson, removeItem, storeJson, URLJoin } from "../modules/utils";
 import { useAuthState } from "./AuthContext";
 
 
-const initProfile = {
+const initProfile = Object.freeze({
   id: "",
   username: "",
   email: "",
   name: "",
   image: "",
   me: true,
-};
-
-Object.freeze(initProfile);
+});
 
 const ProfileReducer = (prevState, action) => {
   let _profile;
   switch (action.type) {
     case "SET_PROFILE":
-      /** profileをset。localstorageのlogdoutProfileを削除する。
+      /** profileをset。localstorageのloggedoutProfileを削除する。
        * @param {Object} action [type, profile] */
 
-      removeItem("logdoutProfile");
+      removeItem("loggedoutProfile");
       _profile = Object.assign(prevState.profile, action.profile);
       storeJson("profile", _profile);
 
@@ -33,11 +31,11 @@ const ProfileReducer = (prevState, action) => {
       };
 
     case "RESET_PROFILE_TO_LOGOUT":
-      /** ログアウトによるプロフィールのリセット。localstorageのprofileをlogdoutProfileにコピーする。
+      /** ログアウトによるプロフィールのリセット。localstorageのprofileをloggedoutProfileにコピーする。
        * @param {Object} action [type] */
 
       removeItem("profile");
-      storeJson("logdoutProfile", prevState.profile);
+      storeJson("loggedoutProfile", prevState.profile);
       return {
         ...prevState,
         profile: { ...initProfile },

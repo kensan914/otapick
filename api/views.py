@@ -2,10 +2,11 @@ import os
 import urllib.parse
 import zipfile
 from django.http import FileResponse, HttpResponse
-from rest_framework import status, views
+from rest_framework import status, views, permissions
 from rest_framework.response import Response
 import otapick.db.scores.controller
 from api.serializers import *
+from image.models import Favorite
 from main.models import Member, Blog, Group
 import otapick
 
@@ -43,7 +44,7 @@ class BlogDetailAPIView(views.APIView):
         blogs = Blog.objects.filter(publishing_group__group_id=group_id, blog_ct=blog_ct)
         if blogs.exists():
             blog = blogs.first()
-            blog_data = BlogSerializerVerDetail(blog).data
+            blog_data = BlogSerializerVerDetail(blog, context={'me': request.user}).data
             blog_data['status'] = 'success'
             return Response(blog_data, status.HTTP_200_OK)
         else:
@@ -263,7 +264,7 @@ class ImageListAPIView(views.APIView):
             images_id_list = otapick.sort_by_recommend_score(images, page, random_seed, self.paginate_by)
             images = [images.get(id=pk) for pk in images_id_list]
 
-        return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
+        return Response(otapick.generate_images_data(images, request), status.HTTP_200_OK)
 
 imageListAPIView = ImageListAPIView.as_view()
 
@@ -289,7 +290,7 @@ class RelatedImageListAPIView(ImageListAPIView):
         if blogs.exists() and Image.objects.filter(publisher=blogs.first(), order=order).exists():
             images_id_list = otapick.sort_images_by_related(blogs.first(), order, page, self.paginate_by)
             images = [Image.objects.get(id=pk) for pk in images_id_list]
-            return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
+            return Response(otapick.generate_images_data(images, request), status.HTTP_200_OK)
         else:
             return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
 
@@ -306,7 +307,7 @@ class HomeAPIView(ImageListAPIView):
         images_id_list = otapick.sort_by_recommend_score(images, page, random_seed, self.paginate_by)
         images = [images.get(id=pk) for pk in images_id_list]
 
-        return Response(otapick.generate_images_data(images), status.HTTP_200_OK)
+        return Response(otapick.generate_images_data(images, request), status.HTTP_200_OK)
 
 homeAPIView = HomeAPIView.as_view()
 
@@ -314,7 +315,7 @@ homeAPIView = HomeAPIView.as_view()
 class HomeAdditionalAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
         random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get('random_seed') is not None else 0
-        return Response(otapick.get_additional_data(random_seed), status.HTTP_200_OK)
+        return Response(otapick.get_additional_data(random_seed, request), status.HTTP_200_OK)
 
 homeAdditionalAPIView = HomeAdditionalAPIView.as_view()
 
@@ -446,3 +447,68 @@ class SearchSuggestionsInitAPIView(views.APIView):
 
 
 searchSuggestionsInitAPIView = SearchSuggestionsInitAPIView.as_view()
+
+
+# imageテーブルとaccountテーブルの中間テーブル(favoriteテーブル)をリソースとして捉えた
+class FavoriteAPIView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_image(self, kwargs):
+        group_id = kwargs.get('group_id')
+        blog_ct = kwargs.get('blog_ct')
+        order = kwargs.get('order')
+        images = Image.objects.filter(publisher__publishing_group__group_id=group_id, publisher__blog_ct=blog_ct, order=order)
+        if images.exists():
+            return images.first()
+        else:
+            return
+
+    def get_favorite(self, image, user):
+        favorites = Favorite.objects.filter(image=image, user=user)
+        if favorites.exists():
+            return favorites.first()
+        else:
+            return
+
+    # 中間テーブル(favoriteテーブル)を作成しているが、べき等性があるためput
+    def put(self, request, *args, **kwargs):
+        image = self.get_image(self.kwargs)
+        if image is not None:
+            favorite = self.get_favorite(image, request.user)
+            if favorite is None:
+                Favorite.objects.create(
+                    image=image,
+                    user=request.user,
+                )
+            return Response({'status': 'success'}, status.HTTP_200_OK)
+        return Response({'status': 'not_found'}, status.HTTP_404_NOT_FOUND)
+
+    # 中間テーブル(favoriteテーブル)を削除しているため
+    def delete(self, request, *args, **kwargs):
+        image = self.get_image(self.kwargs)
+        if image is not None:
+            favorite = self.get_favorite(image, request.user)
+            if favorite is not None:
+                favorite.delete()
+            return Response(status.HTTP_204_NO_CONTENT)
+        return Response({'status': 'not_found'}, status.HTTP_404_NOT_FOUND)
+
+
+favoriteAPIView = FavoriteAPIView.as_view()
+
+
+class FavoriteListAPIView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    paginate_by = 20
+
+    def get(self, request, *args, **kwargs):
+        _page = self.request.GET.get('page')
+        page = int(_page) if _page is not None and _page.isdecimal() else 1
+
+        favorites = Favorite.objects.filter(user=request.user)
+        favorites = favorites[self.paginate_by * (page - 1): self.paginate_by * page]
+        images = [favorite.image for favorite in favorites]
+        return Response(otapick.generate_images_data(images, request), status.HTTP_200_OK)
+
+
+favoriteListAPIView = FavoriteListAPIView.as_view()

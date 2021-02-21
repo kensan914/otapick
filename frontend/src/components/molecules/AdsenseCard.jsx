@@ -2,7 +2,7 @@ import React from "react";
 import { isMobile } from "../modules/utils";
 
 
-class AdsenseCard extends React.Component {
+class AdSenseCard extends React.Component {
   render() {
     return (
       <>
@@ -34,4 +34,4 @@ class AdsenseCard extends React.Component {
   };
 };
 
-export default AdsenseCard;
+export default AdSenseCard;

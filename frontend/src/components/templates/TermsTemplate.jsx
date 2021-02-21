@@ -1,8 +1,8 @@
 import React from "react";
-import Headline from '../molecules/Headline';
+import Headline from "../molecules/Headline";
 import { withRouter } from "react-router-dom";
-import { BACKGROUNG_IMG_URL } from "../modules/env";
-import { ContactContent, TermsOfServiceContent, PrivacyPolicyContent } from "../atoms/ArticleContents";
+import { BACKGROUND_IMG_URL } from "../modules/env";
+import { ContactContent, TermsOfServiceContent, PrivacyPolicyContent } from "../atoms/TermsContents";
 import { updateMeta, gtagTo } from "../modules/utils";
 
 
@@ -14,14 +14,14 @@ class TermsTemplate extends React.Component {
   };
 
   componentDidMount() {
-    updateMeta({ title: this.titleHash[this.props.mode], discription: "" });
+    updateMeta({ title: this.titleHash[this.props.mode], description: "" });
     gtagTo(this.props.location.pathname);
     this.accessedMode[this.props.mode] = true;
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.location !== this.props.location) {
-      updateMeta({ title: this.titleHash[this.props.mode], discription: "" });
+      updateMeta({ title: this.titleHash[this.props.mode], description: "" });
       if (!this.accessedMode[this.props.mode]) {
         gtagTo(this.props.location.pathname);
         this.accessedMode[this.props.mode] = true;
@@ -44,7 +44,7 @@ class TermsTemplate extends React.Component {
         <Headline type="terms" mode={this.props.mode} titleHash={this.titleHash} />
 
         <div className="container p-0 p-sm-4">
-          <div className={"shadow-sm text-muted article article-margin-bottom py-2 px-2"} style={{ backgroundImage: `url(${BACKGROUNG_IMG_URL})` }}>
+          <div className={"shadow-sm text-muted article article-margin-bottom py-2 px-2"} style={{ backgroundImage: `url(${BACKGROUND_IMG_URL})` }}>
             <div className="article-body p-4">
               {content}
             </div>

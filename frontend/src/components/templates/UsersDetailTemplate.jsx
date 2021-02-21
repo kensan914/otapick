@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { withRouter } from "react-router-dom";
-import { BASE_URL } from "../modules/env";
-import { isMobile, URLJoin } from "../modules/utils";
+import { isMobile } from "../modules/utils";
 import { HorizontalLoader } from "../molecules/Loader";
 import ProfileButtonGroup from "../molecules/ProfileButtonGroup";
 import ImageList from "../organisms/List/ImageList";
@@ -23,11 +22,11 @@ const UserTemplate = (props) => {
 
       {isMe ?
         <>
-          <div className="container mt-3 text-muted">
+          <div className="container-fluid mt-3 text-muted">
             <ProfileButtonGroup username={username} />
           </div>
-          <div className="container-fluid text-muted mt-3 list-container-fluid">
-            <ImageList related />
+          <div className="container-fluid text-muted mt-3 list-container-fluid favorite-images-container">
+            <ImageList type="FAVORITE_IMAGES" />
           </div>
         </> :
         <div style={{ marginTop: 300 }} />

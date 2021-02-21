@@ -39,18 +39,18 @@ class SearchDownshift extends React.Component {
         .get(url)
         .then(res => {
           const initSuggestionsBlogs = res.data["blogs"].map((blog, index) =>
-            ({
-              title: blog.title,
-              backgroundImage: blog.background_image,
-              url: blog.url,
-            })
+          ({
+            title: blog.title,
+            backgroundImage: blog.background_image,
+            url: blog.url,
+          })
           );
           const initSuggestionsMembers = res.data["members"].map((member, index) =>
-            ({
-              title: member.title,
-              backgroundImage: member.background_image,
-              url: member.url,
-            })
+          ({
+            title: member.title,
+            backgroundImage: member.background_image,
+            url: member.url,
+          })
           );
           this.setState({
             initSuggestionsBlogs: initSuggestionsBlogs,
@@ -72,11 +72,11 @@ class SearchDownshift extends React.Component {
         .then(res => {
           if (res.data["status"] === "success") {
             const suggestionsItems = res.data["items"].map((item, index) =>
-              ({
-                title: item.title,
-                backgroundImage: item.background_image,
-                url: item.url,
-              })
+            ({
+              title: item.title,
+              backgroundImage: item.background_image,
+              url: item.url,
+            })
             );
             this.setState({
               suggestionsItems: suggestionsItems,
@@ -174,11 +174,11 @@ class SearchDownshift extends React.Component {
   }
 
   documentTouchmoveHandler = e => {
-    // スマホスクロール無効(menubox以外) https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
+    // スマホスクロール無効(menuBox以外) https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
     const downshiftBox = document.getElementById("downshift-box");
-    const searchSuggestionhBox = document.getElementById("search-suggestions-box");
+    const searchSuggestionBox = document.getElementById("search-suggestions-box");
 
-    if (e.target.closest("#downshift-box") === downshiftBox && searchSuggestionhBox.scrollTop !== 0 && searchSuggestionhBox.scrollTop + searchSuggestionhBox.clientHeight !== searchSuggestionhBox.scrollHeight) {
+    if (e.target.closest("#downshift-box") === downshiftBox && searchSuggestionBox.scrollTop !== 0 && searchSuggestionBox.scrollTop + searchSuggestionBox.clientHeight !== searchSuggestionBox.scrollHeight) {
       e.stopPropagation();
     } else {
       if (e.cancelable) {
@@ -189,18 +189,18 @@ class SearchDownshift extends React.Component {
 
   addEventListeners() {
     if (isMobile) {
-      const searchSuggestionhBox = document.getElementById("search-suggestions-box");
-      if (searchSuggestionhBox !== null) {
+      const searchSuggestionBox = document.getElementById("search-suggestions-box");
+      if (searchSuggestionBox !== null) {
         document.addEventListener("mousewheel", documentScrollHandler, { passive: false });
         document.addEventListener("touchmove", this.documentTouchmoveHandler, { passive: false });
-        searchSuggestionhBox.scrollTop = 1;
+        searchSuggestionBox.scrollTop = 1;
         // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
-        searchSuggestionhBox.addEventListener("scroll", e => {
-          if (searchSuggestionhBox.scrollTop === 0) {
-            searchSuggestionhBox.scrollTop = 1;
+        searchSuggestionBox.addEventListener("scroll", e => {
+          if (searchSuggestionBox.scrollTop === 0) {
+            searchSuggestionBox.scrollTop = 1;
           }
-          else if (searchSuggestionhBox.scrollTop + searchSuggestionhBox.clientHeight === searchSuggestionhBox.scrollHeight) {
-            searchSuggestionhBox.scrollTop = searchSuggestionhBox.scrollTop - 1;
+          else if (searchSuggestionBox.scrollTop + searchSuggestionBox.clientHeight === searchSuggestionBox.scrollHeight) {
+            searchSuggestionBox.scrollTop = searchSuggestionBox.scrollTop - 1;
           }
         });
       }
@@ -296,139 +296,139 @@ class SearchDownshift extends React.Component {
           highlightedIndex,
           selectedItem,
         }) => (
-            <div className={"my-0 justify-content-center col " + (isMobile ? "pr-2" : "")}>
-              <form className="form-inline" autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
-                <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="検索する" value={this.state.qvalue}
-                  aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxLength="100"></input>
-              </form>
+          <div className={"my-0 justify-content-center col " + (isMobile ? "pr-2" : "")}>
+            <form className="form-inline" autoComplete="off" onSubmit={this.handleSubmit.bind(this)}>
+              <input {...getInputProps()} className="col form-control autocomplete rounded-pill" type="search" placeholder="検索する" value={this.state.qvalue}
+                aria-label="Search" onFocus={() => this.onFocusInput()} id="search-input" ref={this.searchInputRef} maxLength="100"></input>
+            </form>
 
-              <div {...getMenuProps()} style={downshiftBoxStyle} id="downshift-box" className={isMobile ? "mobile" : ""}>
-                {this.state.isOpenInit &&
-                  <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2 smp" : "")}
-                    style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
-                    {isMobile &&
-                      <Button className="rounded-circle transparent-button-mobile float-right mt-1"
+            <div {...getMenuProps()} style={downshiftBoxStyle} id="downshift-box" className={isMobile ? "mobile" : ""}>
+              {this.state.isOpenInit &&
+                <div className={"container text-muted border search-suggestions-box " + (isMobile ? "mobile " : " ") + (isSmp ? "px-2 smp" : "")}
+                  style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
+                  {isMobile &&
+                    <Button className="rounded-circle transparent-button-mobile float-right mt-1"
+                      onClick={() => this.endSearchWork()}>
+                      <i className="fas fa-times" />
+                    </Button>
+                  }
+                  <div className={"mt-3 " + (isSmp ? "mb-2" : "mb-4")}>
+                    <h5 className="search-suggestions-title">検索方法</h5>
+                    <p className="mx-2 search-suggestions-description"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>を入力してください。</p>
+                    <hr className="mb-0" />
+                    <h5 className="my-2 search-suggestions-title">メンバーから画像を探す</h5>
+                    <div className={"row " + (isSmp ? "mx-0" : "mx-1")}>
+                      {this.state.initSuggestionsMembers.length > 0
+                        ? this.state.initSuggestionsMembers
+                          .map((item, index) => (
+                            <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3 p-0">
+                              <div className="m-1 search-suggestions-items"
+                                {...getItemProps({
+                                  key: item.id,
+                                  index,
+                                  item,
+                                  style: {
+                                    fontWeight: selectedItem === item ? "bold" : "normal",
+                                    backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
+                                    position: "relative",
+                                    height: 100,
+                                    backgroundSize: "cover",
+                                  },
+                                })}
+                              >
+                                <div className="d-flex align-items-center justify-content-center search-suggestions-items-wrapper"
+                                  style={{ backgroundColor: highlightedIndex === index ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
+                                  <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        : <HorizontalLoader />
+                      }
+                    </div>
+                    <hr className="mb-0" />
+                    <h5 className="my-2 search-suggestions-title">新着・人気ブログ</h5>
+                    <div className={"row " + (isSmp ? "mx-0" : "mx-1")}>
+                      {this.state.initSuggestionsBlogs.length > 0
+                        ? this.state.initSuggestionsBlogs
+                          .map((item, index) => (
+                            <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3 p-0">
+                              <div className="m-1 search-suggestions-items"
+                                {...getItemProps({
+                                  key: item.id,
+                                  index: index + 6,
+                                  item,
+                                  style: {
+                                    fontWeight: selectedItem === item ? "bold" : "normal",
+                                    backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
+                                    position: "relative",
+                                    height: 100,
+                                    backgroundSize: "cover",
+                                  },
+                                })}
+                              >
+                                <div className="d-flex align-items-center justify-content-center search-suggestions-items-wrapper"
+                                  style={{ backgroundColor: highlightedIndex === index + 6 ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
+                                  <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        : <HorizontalLoader />
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+
+              {!this.state.isOpen || this.state.isOpenInit ? null : (
+                <div className={"container text-muted border search-suggestions-box " + (isSmp ? "px-2 " : "") + (!isMobile ? "py-2 " : "mobile ") + ((!isSmp && isMobile) ? "pb-2" : "")}
+                  style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
+                  {isMobile &&
+                    <div className="col text-right p-0">
+                      <Button className="rounded-circle transparent-button-mobile mt-1"
                         onClick={() => this.endSearchWork()}>
                         <i className="fas fa-times" />
                       </Button>
-                    }
-                    <div className={"mt-3 " + (isSmp ? "mb-2" : "mb-4")}>
-                      <h5 className="search-suggestions-title">検索方法</h5>
-                      <p className="mx-2 search-suggestions-discription"><b>メンバーの名前</b>、または<b>公式ブログのURL</b>を入力してください。</p>
-                      <hr className="mb-0" />
-                      <h5 className="my-2 search-suggestions-title">メンバーから画像を探す</h5>
-                      <div className={"row " + (isSmp ? "mx-0" : "mx-1")}>
-                        {this.state.initSuggestionsMembers.length > 0
-                          ? this.state.initSuggestionsMembers
-                            .map((item, index) => (
-                              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
-                                <div className="m-1 search-suggestions-items"
-                                  {...getItemProps({
-                                    key: item.id,
-                                    index,
-                                    item,
-                                    style: {
-                                      fontWeight: selectedItem === item ? "bold" : "normal",
-                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
-                                      position: "relative",
-                                      height: 100,
-                                      backgroundSize: "cover",
-                                    },
-                                  })}
-                                >
-                                  <div className="d-flex align-items-center justify-content-center search-suggestions-items-wraper"
-                                    style={{ backgroundColor: highlightedIndex === index ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
-                                    <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
-                                  </div>
+                    </div>
+                  }
+                  <div className={"mb-3 " + (!isMobile ? "mt-2" : "")}>
+                    {suggestionsMessage}
+                    <div className="row mx-1">
+                      {this.state.suggestionsStatus === "" && <HorizontalLoader />}
+                      {
+                        this.state.suggestionsItems
+                          .map((item, index) => (
+                            <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
+                              <div className="m-1 search-suggestions-items"
+                                {...getItemProps({
+                                  key: item.id,
+                                  index,
+                                  item,
+                                  style: {
+                                    fontWeight: selectedItem === item ? "bold" : "normal",
+                                    backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
+                                    position: "relative",
+                                    height: 100,
+                                    backgroundSize: "cover",
+                                  },
+                                })}
+                              >
+                                <div className="d-flex align-items-center justify-content-center search-suggestions-items-wrapper"
+                                  style={{ backgroundColor: highlightedIndex === index ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
+                                  <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
                                 </div>
                               </div>
-                            ))
-                          : <HorizontalLoader />
-                        }
-                      </div>
-                      <hr className="mb-0" />
-                      <h5 className="my-2 search-suggestions-title">新着・人気ブログ</h5>
-                      <div className={"row " + (isSmp ? "mx-0" : "mx-1")}>
-                        {this.state.initSuggestionsBlogs.length > 0
-                          ? this.state.initSuggestionsBlogs
-                            .map((item, index) => (
-                              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
-                                <div className="m-1 search-suggestions-items"
-                                  {...getItemProps({
-                                    key: item.id,
-                                    index: index + 6,
-                                    item,
-                                    style: {
-                                      fontWeight: selectedItem === item ? "bold" : "normal",
-                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
-                                      position: "relative",
-                                      height: 100,
-                                      backgroundSize: "cover",
-                                    },
-                                  })}
-                                >
-                                  <div className="d-flex align-items-center justify-content-center search-suggestions-items-wraper"
-                                    style={{ backgroundColor: highlightedIndex === index + 6 ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
-                                    <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          : <HorizontalLoader />
-                        }
-                      </div>
+                            </div>
+                          ))
+                      }
                     </div>
                   </div>
-                }
-
-                {!this.state.isOpen || this.state.isOpenInit ? null : (
-                  <div className={"container text-muted border search-suggestions-box " + (isSmp ? "px-2 " : "") + (!isMobile ? "py-2 " : "mobile ") + ((!isSmp && isMobile) ? "pb-2" : "")}
-                    style={{ overflowY: "auto", overflowX: "hidden" }} id="search-suggestions-box">
-                    {isMobile &&
-                      <div className="col text-right p-0">
-                        <Button className="rounded-circle transparent-button-mobile mt-1"
-                          onClick={() => this.endSearchWork()}>
-                          <i className="fas fa-times" />
-                        </Button>
-                      </div>
-                    }
-                    <div className={"mb-3 " + (!isMobile ? "mt-2" : "")}>
-                      {suggestionsMessage}
-                      <div className="row mx-1">
-                        {this.state.suggestionsStatus === "" && <HorizontalLoader />}
-                        {
-                          this.state.suggestionsItems
-                            .map((item, index) => (
-                              <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3" style={{ padding: 0 }}>
-                                <div className="m-1 search-suggestions-items"
-                                  {...getItemProps({
-                                    key: item.id,
-                                    index,
-                                    item,
-                                    style: {
-                                      fontWeight: selectedItem === item ? "bold" : "normal",
-                                      backgroundImage: item.backgroundImage !== null ? `url(${item.backgroundImage})` : "",
-                                      position: "relative",
-                                      height: 100,
-                                      backgroundSize: "cover",
-                                    },
-                                  })}
-                                >
-                                  <div className="d-flex align-items-center justify-content-center search-suggestions-items-wraper"
-                                    style={{ backgroundColor: highlightedIndex === index ? "rgba( 0, 0, 0, 0.5 )" : "rgba( 0, 0, 0, 0.25 )", position: "absolute" }} >
-                                    <div className="text-center" style={{ color: "white", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3, overflow: "hidden", width: "80%" }}><b>{item.title}</b></div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                        }
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
+        )}
       </Downshift>
     );
   };

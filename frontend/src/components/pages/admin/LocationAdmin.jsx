@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { withRouter } from "react-router-dom";
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, unnecessarySubNavbarUrls } from "../modules/env";
-import { isMobile, setBodyPadding, setInitLocationKey } from "../modules/utils";
+import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, dontShowSubNavbarUrls } from "../../modules/env";
+import { isMobile, setBodyPadding, setInitLocationKey } from "../../modules/utils";
 
 
 const LocationAdmin = (props) => {
@@ -16,7 +16,7 @@ const LocationAdmin = (props) => {
     window.scrollTo(0, 0);
     document.activeElement.blur();
 
-    unnecessarySubNavbarUrls.some((unnecessarySubNavbarUrl, index, array) => {
+    dontShowSubNavbarUrls.some((unnecessarySubNavbarUrl, index, array) => {
       if (!isMobile || location.pathname.startsWith(unnecessarySubNavbarUrl)) {
         setBodyPadding(NAVBAR_HEIGHT);
         return true;

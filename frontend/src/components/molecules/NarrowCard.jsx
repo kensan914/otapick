@@ -42,7 +42,7 @@ class NarrowCard extends React.Component {
 
     this.handleClickMonthBox = this.handleClickMonthBox.bind(this)
     this.handleAMonthChange = this.handleAMonthChange.bind(this)
-    this.handleAMonthDissmis = this.handleAMonthDissmis.bind(this)
+    this.handleAMonthDismiss = this.handleAMonthDismiss.bind(this)
   }
 
   handleChangeKw(e) {
@@ -56,7 +56,7 @@ class NarrowCard extends React.Component {
       this.setState({ mvalue: {} });
     } else this.setState({ mvalue: { year: changedYear, month: changedMonth } });
   }
-  handleAMonthDissmis(value) {
+  handleAMonthDismiss(value) {
     //
   }
   applyNarrowing() {
@@ -65,7 +65,7 @@ class NarrowCard extends React.Component {
     if (Object.keys(this.state.mvalue).length !== 0) queryParams["post"] = `${this.state.mvalue.year}-${this.state.mvalue.month}`;
     this.props.pushHistory(queryParams);
   }
-  handleCancell() {
+  handleCancel() {
     this.setState({
       kwvalue: "",
       mvalue: {},
@@ -106,7 +106,7 @@ class NarrowCard extends React.Component {
                     value={this.initMvalue}
                     lang={pickerLang.months}
                     onChange={this.handleAMonthChange}
-                    onDismiss={this.handleAMonthDissmis}
+                    onDismiss={this.handleAMonthDismiss}
                   >
                     <MonthBox value={makeText(mvalue)} onClick={this.handleClickMonthBox} />
                   </Picker>
@@ -115,7 +115,7 @@ class NarrowCard extends React.Component {
 
               <hr />
               <div className="row">
-                <Button color="light" className="rounded-pill ml-auto mr-3 d-flex align-items-center" onClick={() => this.handleCancell()}
+                <Button color="light" className="rounded-pill ml-auto mr-3 d-flex align-items-center" onClick={() => this.handleCancel()}
                   style={{ border: "solid 1px silver", borderRadius: "5%", backgroundColor: "#F4F3F3", color: "dimgray" }}>
                   条件を解除
                 </Button>

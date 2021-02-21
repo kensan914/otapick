@@ -1,6 +1,7 @@
-import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DISCRIPTION, SITE_NAME, HOME_TITLE, GA_TRACKING_ID, DEBUG, GROUPS } from "./env";
+import Lottie from "lottie-web";
+import { SHOW_NAVBAR_POS, SHOW_SUB_NAVBAR_POS, LONG_PRESS_TIME, DESCRIPTION, SITE_NAME, HOME_TITLE, GA_TRACKING_ID, DEBUG, GROUPS } from "./env";
 
-// ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undifined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo" 
+// ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undefined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo" 
 export const URLJoin = (...args) => {
   args = args.filter(n => n !== undefined);
   for (let i = args.length - 1; i >= 0; i--) {
@@ -239,29 +240,31 @@ export const documentScrollHandler = e => {
 
 // 長押しEvent
 export const addLongPressEventListeners = (elm, longPressedFunc) => {
-  let longpressTimer;
+  if (!elm) return;
+
+  let longPressTimer;
   elm.addEventListener("touchstart", e => {
-    longpressTimer = setTimeout(() => {
+    longPressTimer = setTimeout(() => {
       longPressedFunc();
     }, LONG_PRESS_TIME);
   })
   elm.addEventListener("touchend", e => {
-    clearTimeout(longpressTimer);
+    clearTimeout(longPressTimer);
   });
   elm.addEventListener("touchmove", e => {
-    clearTimeout(longpressTimer);
+    clearTimeout(longPressTimer);
   });
 }
 
 
 // metaタグ更新
-// metaData: metaデータを保持したオブジェクト ex) {title: "メンバーリスト", discription: "...",}
+// metaData: metaデータを保持したオブジェクト ex) {title: "メンバーリスト", description: "...",}
 export const updateMeta = (metaData) => {
   // update title
-  if ("title" in metaData) {
+  if ("title" in metaData && metaData.title !== HOME_TITLE) {
     document.title = `${metaData.title}｜${SITE_NAME}`;
   } else {
-    document.title = `${HOME_TITLE}｜${SITE_NAME}`;
+    document.title = `${SITE_NAME}｜${HOME_TITLE}`;
   }
 
   // update meta
@@ -270,7 +273,7 @@ export const updateMeta = (metaData) => {
     const metaName = headMeta.getAttribute("name");
     if (metaName !== null) {
       if (metaName.indexOf("description") !== -1) {
-        headMeta.setAttribute("content", metaData.discription + DISCRIPTION);
+        headMeta.setAttribute("content", metaData.description + DESCRIPTION);
       }
     }
   }
@@ -342,4 +345,45 @@ export const checkCorrectKey = (correctKeys, targetObj, discoverIncorrectCallbac
       discoverIncorrectCallback(targetObjKey);
     }
   })
+}
+
+/** スネークケースのobjのkeyをすべてキャメルケースに変換
+ * */
+export const cvtKeyFromSnakeToCamel = (obj) => {
+  return (
+    Object.fromEntries(
+      Object.entries(obj).map(([k, v]) => [fromSnakeToCamel(k), v])
+    )
+  );
+}
+
+/** スネークケースのtextをキャメルケースに変換(例外: id => ID)
+ * */
+export const fromSnakeToCamel = (text) => {
+  const textConvertedID = text.replace(/_id/g, s => "ID");
+  return textConvertedID.replace(/_./g, (s) => {
+    return s.charAt(1).toUpperCase();
+  });
+}
+
+
+/** そのcomponentがキャッシュされているか否か
+ * */
+export const checkNotCached = (props) => (
+  Object.keys(props.match).indexOf("__isComputedUnmatch") === -1
+);
+
+
+/** isFavoriteのGetter・Setterを作成
+ * */
+export const geneIsFavoriteGetterSetter = (favoriteState, domDispatch, imageID) => {
+  const getIsFavorite = () => (
+    favoriteState[imageID]
+  );
+
+  const setIsFavorite = (val) => {
+    domDispatch({ type: "SET_FAVORITE", imageID: imageID, isFavorite: val });
+  }
+
+  return { getIsFavorite, setIsFavorite };
 }

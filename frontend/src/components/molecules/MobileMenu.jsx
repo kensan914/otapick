@@ -22,7 +22,7 @@ class MobileMenu extends React.Component {
   }
 
   documentTouchmoveHandler = e => {
-    // スマホスクロール無効(menubox以外) https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
+    // スマホスクロール無効(menuBox以外) https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
     const menuBox = document.getElementById(this.boxID);
     const scrollMenuBox = document.getElementById(this.scrollBoxID);
 
@@ -175,7 +175,15 @@ export class _MobileTopMenu extends MobileMenu {
             <>
               <MobileMenuHr />
               <div className="my-2" />
-              <MobileMenuLink onClick={() => { this.endWork(); this.props.authDispatch({ type: "COMPLETE_LOGOUT", profileDispatch: this.props.profileDispatch }) }} title="ログアウト" iconClass="fas fa-sign-out-alt" />
+              <MobileMenuLink
+                onClick={() => {
+                  this.endWork();
+                  this.props.authDispatch({ type: "COMPLETE_LOGOUT", profileDispatch: this.props.profileDispatch });
+                  window.location.href = "/";
+                }}
+                title="ログアウト"
+                iconClass="fas fa-sign-out-alt"
+              />
             </>
           }
         </>

@@ -1,18 +1,20 @@
 import React from "react";
-import { getGroup, gtagTo } from "../modules/utils";
-import axios from "axios";
+import { cvtKeyFromSnakeToCamel, getGroup, gtagTo } from "../modules/utils";
 import { URLJoin } from "../modules/utils";
 import { BASE_URL, DELAY_TIME } from "../modules/env";
-
+import authAxios from "../modules/axios";
 
 
 class ViewTemplate extends React.Component {
   constructor(props) {
     super(props);
+    const groupID = props.match.params.groupID;
+    const blogCt = props.match.params.blogCt;
+
     this.initState = {
-      group: getGroup(this.props.match.params.groupID),
-      groupID: this.props.match.params.groupID,
-      blogCt: this.props.match.params.blogCt,
+      group: getGroup(groupID),
+      groupID: groupID,
+      blogCt: blogCt,
       title: "",
       postDate: "",
       writer: {},
@@ -35,7 +37,7 @@ class ViewTemplate extends React.Component {
 
   getBlog() {
     setTimeout(() => {
-      axios
+      authAxios(this.props.authState.token)
         .get(this.blogViewURL)
         .then(res => {
           let blogData = {};
@@ -60,7 +62,7 @@ class ViewTemplate extends React.Component {
               this.updateMetaVerView("get_image_failed");
             } else {
               this.setState(Object.assign({
-                images: res.data["images"],
+                images: res.data["images"].map(image => cvtKeyFromSnakeToCamel(image)),
                 status: "success",
                 VIEW_KEY: res.data["VIEW_KEY"],
                 DOWNLOAD_KEY: res.data["DOWNLOAD_KEY"],
@@ -105,7 +107,7 @@ class ViewTemplate extends React.Component {
       this.setState(prevState => {
         let images = prevState.images;
         if (images.length > order)
-          images[Number(order)].num_of_views += 1;
+          images[Number(order)].numOfViews += 1;
         return { images: images };
       });
     }
@@ -120,7 +122,7 @@ class ViewTemplate extends React.Component {
       this.setState(prevState => {
         let images = prevState.images;
         if (images.length > order)
-          images[Number(order)].num_of_downloads += num;
+          images[Number(order)].numOfDownloads += num;
         return { images: images };
       });
     }

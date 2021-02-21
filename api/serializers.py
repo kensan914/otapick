@@ -1,6 +1,6 @@
 from rest_framework import serializers
 import otapick
-from image.models import Image
+from image.models import Image, Favorite
 from main.models import Member, Blog
 
 
@@ -78,7 +78,7 @@ class BlogSerializerVerDetail(BlogSerializer):
 
     def get_images(self, obj):
         images = Image.objects.filter(publisher=obj).order_by('order')
-        return ImageSerializer(images, many=True).data
+        return ImageSerializer(images, many=True, context={'me': self.context['me']}).data
 
     def get_VIEW_KEY(self, obj):
         return otapick.VIEW_KEY
@@ -121,14 +121,21 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views']
+        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views', 'is_favorite']
 
     src = serializers.SerializerMethodField()
     upload_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
     url = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     def get_src(self, obj):
         return otapick.generate_image_src(obj)
 
     def get_url(self, obj):
         return '/image/{}/{}/{}/'.format(obj.publisher.publishing_group.group_id, obj.publisher.blog_ct, obj.order)
+
+    def get_is_favorite(self, obj):
+        if 'me' in self.context and not self.context['me'].is_anonymous:
+            return Favorite.objects.filter(image=obj, user=self.context['me']).exists()
+        else:
+            return

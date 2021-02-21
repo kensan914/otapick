@@ -68,7 +68,7 @@ class BlogSearchListTemplate extends React.Component {
               searchType: res.data["type"],
             });
 
-            updateMeta({ title: `${res.data["title"]}｜ブログ検索結果`, discription: "" });
+            updateMeta({ title: `${res.data["title"]}｜ブログ検索結果`, description: "" });
           } else if (res.data["status"] === "success" && res.data["type"] === "member") {
             const members = res.data["items"].map((member, index) =>
               ({
@@ -95,7 +95,7 @@ class BlogSearchListTemplate extends React.Component {
               wavesVals: generateWavesVals(),
             });
 
-            updateMeta({ title: `"${queryString.parse(this.props.location.search).q}"｜メンバー検索結果`, discription: "" });
+            updateMeta({ title: `"${queryString.parse(this.props.location.search).q}"｜メンバー検索結果`, description: "" });
           } else {
             let title;
             if (res.data["type"] === "url") title = "ブログが見つかりませんでした。";
@@ -112,9 +112,9 @@ class BlogSearchListTemplate extends React.Component {
               searchType: res.data["type"],
             });
 
-            if (res.data["type"] === "url") updateMeta({ title: "Not Found Blog", discription: "" });
-            else if (res.data["type"] === "member") updateMeta({ title: "Not Found Member", discription: "" });
-            else updateMeta({ title: "Not Found", discription: "" });
+            if (res.data["type"] === "url") updateMeta({ title: "Not Found Blog", description: "" });
+            else if (res.data["type"] === "member") updateMeta({ title: "Not Found Member", description: "" });
+            else updateMeta({ title: "Not Found", description: "" });
           }
         })
         .catch(err => {

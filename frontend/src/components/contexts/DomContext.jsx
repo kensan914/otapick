@@ -1,10 +1,11 @@
-import React, { createContext, useReducer, useContext, useEffect, useRef } from "react";
-import { watchCurrentPosition } from "../modules/utils";
+import React, { createContext, useReducer, useContext } from "react";
 
 
 const domReducer = (prevState, action) => {
+  let _favoriteState;
+
   switch (action.type) {
-    case "ACCESSE_TO_BLOG":
+    case "ACCESS_TO_BLOG":
       /** accessedBlogsにblogIDを追加
        * @param {Object} action [type, blogID] */
 
@@ -13,7 +14,7 @@ const domReducer = (prevState, action) => {
         accessedBlogs: [...prevState.accessedBlogs, action.blogID],
       };
 
-    case "ACCESSE_TO_IMAGE":
+    case "ACCESS_TO_IMAGE":
       /** accessedImagesにimageIDを追加
        * @param {Object} action [type, imageID] */
 
@@ -31,6 +32,18 @@ const domReducer = (prevState, action) => {
         footerRef: action.footerRef,
       };
 
+    case "SET_SUBNAVBAR_REF":
+      /** set subNavbarRef
+       * @param {Object} action [type, subNavbarRef, locationKey] */
+
+      const _subNavbarRefs = prevState.subNavbarRefs;
+      _subNavbarRefs[action.locationKey] = action.subNavbarRef;
+
+      return {
+        ...prevState,
+        subNavbarRefs: _subNavbarRefs,
+      };
+
     case "APPLY_SHOW_FOOTER":
       /** 外部からフッターを表示する。
        * @param {Object} action [type, location] */
@@ -38,20 +51,30 @@ const domReducer = (prevState, action) => {
       if (prevState.footerRef !== null) prevState.footerRef.current.applyShowFooter(action.location);
       return { ...prevState, };
 
-    case "HANDLE_SCROLL":
-      /** scrollHandler。スクロールごとに呼ばれスクロール関連のstateを一括更新。
-       *  ex) stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null }
-       * @param {Object} action [type] */
+    case "INIT_FAVORITE":
+      /** init favoriteState. 既にfavoriteStateにimageが存在する場合は、上書きしない
+       * @param {Object} action [type, imageID, isFavorite] */
 
-      const result = watchCurrentPosition(prevState.scrollPos);
-      // stateListのkeyが一つでもnullの場合、stateListは変更しない(window以外のスクロール時)
-      let canUpdateStateList = true;
-      if (Object.values(result.stateList)[0] === null) canUpdateStateList = false;
+      _favoriteState = prevState.favoriteState;
+      if (!(action.imageID in _favoriteState)) {
+        _favoriteState[action.imageID] = action.isFavorite;
+      }
 
       return {
         ...prevState,
-        ...(canUpdateStateList ? result.stateList : {}),
-        scrollPos: result.scrollPos,
+        favoriteState: _favoriteState,
+      };
+
+    case "SET_FAVORITE":
+      /** set subNavbarRef
+       * @param {Object} action [type, imageID, isFavorite] */
+
+      _favoriteState = prevState.favoriteState;
+      _favoriteState[action.imageID] = action.isFavorite;
+
+      return {
+        ...prevState,
+        favoriteState: _favoriteState,
       };
 
     default:
@@ -60,23 +83,19 @@ const domReducer = (prevState, action) => {
   }
 };
 
-
-const initScrollStates = {
-  isShowNBShadow: false,
-  isShowNB: true,
-  isShowSubNB: false,
-  isTop: true,
-};
-Object.freeze(initScrollStates);
-
-const initDomState = {
-  accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"]
-  accessedImages: [], // ["1_34360_0_2341234", "2_34230_3_51451345"]
+const initDomState = Object.freeze({
+  accessedBlogs: [],  // ["1_34360_2341234", "2_34230_51451345"] （`${groupID}_${blogCt}_${location.key}`）
+  accessedImages: [],  // ["1_34360_0_2341234", "2_34230_3_51451345"] （`${groupID}_${blogCt}_${order}_${location.key}`）
   footerRef: null,
-  scrollPos: 0,
-  ...initScrollStates,
-};
-Object.freeze(initDomState);
+
+  // ↓scrollAdmin用。cache導入によりsubNavbarが複数存在しうる。
+  // また、id(`otapick-sub-navbar-${location.key}`)で管理していたが、遷移してからid反映にラグがあるためrefで管理
+  subNavbarRefs: {},
+
+  // { `${groupID}_${blogCt}_${order}`: {boolean}, }
+  // ex) { 1_34360_0 : true, 2_34230_3: false, }
+  favoriteState: {},
+});
 
 export const DomStateContext = createContext({ ...initDomState });
 export const DomDispatchContext = createContext(undefined);
@@ -91,20 +110,9 @@ export const useDomDispatch = () => {
 };
 
 const DomProvider = ({ children }) => {
-  const [domState, domDispatch] = useReducer(domReducer, { ...initDomState });
-
-  useEffect(() => {
-    const scrollHandler = e => domDispatch({ type: "HANDLE_SCROLL" });
-    const beforeunloadHandler = e => window.scrollTo(0, 0);
-
-    window.addEventListener("scroll", scrollHandler, true);
-    window.addEventListener("beforeunload", beforeunloadHandler, true);
-
-    return () => {
-      window.removeEventListener("scroll", scrollHandler);
-      window.removeEventListener("beforeunload", beforeunloadHandler);
-    };
-  }, []);
+  const [domState, domDispatch] = useReducer(domReducer, {
+    ...initDomState,
+  });
 
   return (
     <DomStateContext.Provider value={domState}>

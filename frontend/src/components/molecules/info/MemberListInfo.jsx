@@ -27,7 +27,7 @@ export class MemberListInfo extends React.Component {
             <hr className="info-hr" />
             <div className="row justify-content-between">
               <div className="col-12 col-md-6 col-lg-7 col-xl-8">
-                <div className="info-discription my-1 my-sm-0">検索結果（<b>{this.props.numOfHit}</b>件）</div>
+                <div className="info-description my-1 my-sm-0">検索結果（<b>{this.props.numOfHit}</b>件）</div>
               </div>
             </div>
           </div>

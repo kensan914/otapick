@@ -38,16 +38,16 @@ class BlogViewInfo extends React.Component {
           }
           <div className="row download-info mt-3">
             {!Object.keys(this.props.writer).length
-              ? <Link to="" className={"info-discription ml-3 small " + this.props.group}>{"\u00A0"}</Link>
-              : <Link to={this.props.writer.url["blogs"]} className={"info-discription ml-3 small " + this.props.group}>
+              ? <Link to="" className={"info-description ml-3 small " + this.props.group}>{"\u00A0"}</Link>
+              : <Link to={this.props.writer.url["blogs"]} className={"info-description ml-3 small " + this.props.group}>
                 {!this.props.writer.name ? "\u00A0" : this.props.writer.name}
               </Link>
             }
-            <p className="info-discription ml-3 small mb-0">{this.props.postDate}</p>
+            <p className="info-description ml-3 small mb-0">{this.props.postDate}</p>
           </div>
           <hr className="info-hr" />
           <div className="row ml-2 ml-sm-3">
-            <div className="row col-12 col-sm-7 col-md-8 col-lg-9 col-xl-10 info-discription">
+            <div className="row col-12 col-sm-7 col-md-8 col-lg-9 col-xl-10 info-description">
               <div className="d-flex align-items-center" id="num-of-views-icon">
                 <i className="fas fa-eye" style={{ color: "gray" }}></i>
               </div>
@@ -68,7 +68,7 @@ class BlogViewInfo extends React.Component {
 
             </div>
 
-            <div className="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2 info-discription px-0 mt-2 mt-sm-0">
+            <div className="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2 info-description px-0 mt-2 mt-sm-0">
               <a href={this.props.officialUrl} className={this.props.group} target="_blank" id="officialLink">
                 <div className="download-official-a">
                   <i className="fas fa-external-link-alt"></i>{"\u00A0"}{officialLinkTitle}

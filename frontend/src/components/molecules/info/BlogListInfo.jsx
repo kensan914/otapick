@@ -5,7 +5,7 @@ import NarrowCard from "../NarrowCard";
 import axios from "axios";
 import { URLJoin, isSmp, isMobile, updateMeta, gtagTo } from "../../modules/utils";
 import { withRouter } from "react-router-dom";
-import { BASE_URL, DELAY_TIME, BLOGS_DISCRIPTION } from "../../modules/env";
+import { BASE_URL, DELAY_TIME, BLOGS_DESCRIPTION } from "../../modules/env";
 import { MobileBottomMenu } from "../MobileMenu";
 import { getBlogUrlComposition } from "../../templates/BlogListTemplate";
 
@@ -36,7 +36,7 @@ class BlogListInfo extends React.Component {
               status: "not_found",
               metaTitle: "Not Found Blog"
             });
-            updateMeta({ title: "Not Found Blog", discription: BLOGS_DISCRIPTION });
+            updateMeta({ title: "Not Found Blog", description: BLOGS_DESCRIPTION });
           } else {
             this.setState({
               title: res.data.title,
@@ -44,7 +44,7 @@ class BlogListInfo extends React.Component {
               status: "success",
               metaTitle: res.data.meta_title,
             });
-            updateMeta({ title: `${res.data.meta_title}のブログ一覧`, discription: BLOGS_DISCRIPTION });
+            updateMeta({ title: `${res.data.meta_title}のブログ一覧`, description: BLOGS_DESCRIPTION });
           }
         })
         .catch(err => {
@@ -84,7 +84,7 @@ class BlogListInfo extends React.Component {
       const { groupID, ct, orderFormat } = getBlogUrlComposition(this.props);
       this.setState({ sortButtonTitle: this.convertSortButtonTitle(orderFormat) })
       this.getBlogListInfo(groupID, ct);
-      updateMeta({ title: `${this.state.metaTitle}のブログ一覧`, discription: BLOGS_DISCRIPTION });
+      updateMeta({ title: `${this.state.metaTitle}のブログ一覧`, description: BLOGS_DESCRIPTION });
     }
   }
 
@@ -113,7 +113,7 @@ class BlogListInfo extends React.Component {
                 <hr className="info-hr" />
                 <div className="row justify-content-between">
                   <div className="col-12 col-md-6 col-lg-7 col-xl-8">
-                    <div className="info-discription my-1 my-sm-0">検索結果（<b>{this.state.numOfHit}</b>件）</div>
+                    <div className="info-description my-1 my-sm-0">検索結果（<b>{this.state.numOfHit}</b>件）</div>
                   </div>
 
                   {this.state.status === "success" &&

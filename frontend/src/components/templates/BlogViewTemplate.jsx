@@ -10,10 +10,11 @@ import { LOAD_IMG_URL, BASE_URL } from "../modules/env";
 import { withRouter } from "react-router-dom";
 import { NotFoundMessage } from "../atoms/NotFound";
 import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
-import { SquareAds, LandscapeAds } from "../atoms/Adsense";
+import { SquareAds, LandscapeAds } from "../atoms/AdSense";
 import ViewTemplate from "./ViewTemplate";
 import { withCookies } from "react-cookie";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
+import { AuthStateContext } from "../contexts/AuthContext";
 
 
 class BlogViewTemplate extends ViewTemplate {
@@ -71,13 +72,13 @@ class BlogViewTemplate extends ViewTemplate {
   updateMetaVerView(status, blogTitle, blogWriter) {
     if (this.isRender) {
       if (status === "success") {
-        updateMeta({ title: `${blogTitle}(${blogWriter})｜ブログ詳細`, discription: `${blogWriter}のブログ「${blogTitle}」です。` });
+        updateMeta({ title: `${blogTitle}(${blogWriter})｜ブログ詳細`, description: `${blogWriter}のブログ「${blogTitle}」です。` });
       } else if (status === "get_image_failed") {
-        updateMeta({ title: "Not Found Image", discription: "" });
+        updateMeta({ title: "Not Found Image", description: "" });
       } else if (status === "blog_not_found") {
-        updateMeta({ title: "Not Found Blog", discription: "" });
+        updateMeta({ title: "Not Found Blog", description: "" });
       } else if (status === "accepted") {
-        updateMeta({ title: "画像取得中", discription: "" });
+        updateMeta({ title: "画像取得中", description: "" });
       }
     }
   }
@@ -95,7 +96,7 @@ class BlogViewTemplate extends ViewTemplate {
         const blogID = `${this.state.groupID}_${this.state.blogCt}_${this.props.location.key}`;
         if (!this.props.domState.accessedBlogs.includes(blogID)) {
           this.putView();
-          this.props.domDispatch({ type: "ACCESSE_TO_BLOG", blogID: blogID })
+          this.props.domDispatch({ type: "ACCESS_TO_BLOG", blogID: blogID })
         }
       }
     }
@@ -147,7 +148,7 @@ class BlogViewTemplate extends ViewTemplate {
             : <BlogSearchListInfo group={this.state.group} title={this.state.title} numOfHit={0} />
           }
 
-          {/* Google Adsense */}
+          {/* Google AdSense */}
           <div className="container mt-4" >
             {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
           </div>
@@ -159,15 +160,16 @@ class BlogViewTemplate extends ViewTemplate {
   }
 }
 
-
-
-
 export default withRouter(withCookies((props) => (
   <DomStateContext.Consumer>
     {domState =>
       <DomDispatchContext.Consumer>
         {domDispatch => (
-          <BlogViewTemplate {...props} domState={domState} domDispatch={domDispatch} />
+          <AuthStateContext.Consumer>
+            {authState => (
+              <BlogViewTemplate {...props} domState={domState} domDispatch={domDispatch} authState={authState} />
+            )}
+          </AuthStateContext.Consumer>
         )}
       </DomDispatchContext.Consumer>}
   </DomStateContext.Consumer>

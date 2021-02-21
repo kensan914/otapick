@@ -3,11 +3,13 @@ import BackButton from "../atoms/BackButton";
 import { Button, ButtonGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledTooltip } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import { URLJoin, isMobile } from "../modules/utils";
+import { URLJoin, isMobile, checkNotCached } from "../modules/utils";
 import { BASE_URL, GROUPS } from "../modules/env";
 import { Link } from "react-router-dom";
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
 import { MobileTopMenu } from "./MobileMenu";
+import { DomDispatchContext } from "../contexts/DomContext";
+import LinkButton from "../atoms/LinkButton";
 
 
 export const ModeSelectButtonDropdown = (props) => {
@@ -54,29 +56,49 @@ export const ModeSelectButtonDropdown = (props) => {
 }
 
 export class TypeChangeButton extends React.Component {
-  changeType(currentType, groupID, ct) {
-    let url;
+  getChangeTypeUrl(currentType, groupID, ct) {
+    // let url;
     if (currentType === "blogs") {
-      url = URLJoin("/images/", groupID, ct);
+      return URLJoin("/images/", groupID, ct);
     } else if (currentType === "images") {
-      url = URLJoin("/blogs/", groupID, ct);
+      return URLJoin("/blogs/", groupID, ct);
     }
-    this.props.history.push(url);
+    // this.props.history.push(url);
   }
 
   render() {
-    let tooltipContent;
-    if (this.props.type === "blogs") {
-      tooltipContent = "画像一覧に切り替えます";
-    } else if (this.props.type === "images") {
-      tooltipContent = "ブログ一覧に切り替えます";
-    }
+    const tooltipContent = (this.props.type === "blogs") ? "画像一覧に切り替えます" : "ブログ一覧に切り替えます";
+    const exchangeIcon = (this.props.type === "blogs") ?
+      <i className="far fa-images" /> :
+      <i className="far fa-newspaper" />;
+
     return (
       <>
-        <Button className="rounded-circle p-0 type-change-button ml-1" id={this.props.id}
-          onClick={() => this.changeType(this.props.type, this.props.groupID, this.props.ct)}>
-          <i className="fas fa-sync-alt" style={{ color: "gray" }}></i>
-        </Button>
+        <LinkButton
+          to={this.getChangeTypeUrl(this.props.type, this.props.groupID, this.props.ct)}
+          className="rounded-pill type-change-button ml-1"
+          id={this.props.id}
+        >
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ color: "gray", fontSize: 20 }}
+          >
+            <i className="fas fa-exchange-alt mr-1 my-0" style={{ fontSize: 12 }} />
+            {exchangeIcon}
+          </div>
+        </LinkButton>
+        {/* <Button
+          className="rounded-pill type-change-button ml-1" id={this.props.id}
+          // onClick={() => this.changeType(this.props.type, this.props.groupID, this.props.ct)}
+        >
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ color: "gray", fontSize: 20 }}
+          >
+            <i className="fas fa-exchange-alt mr-1 my-0" style={{ fontSize: 12 }} />
+            {exchangeIcon}
+          </div>
+        </Button> */}
         <UncontrolledTooltip placement="bottom" target={this.props.id}>
           {tooltipContent}
         </UncontrolledTooltip>
@@ -91,8 +113,13 @@ class Headline extends React.Component {
     this.initMembers = {};
     Object.values(GROUPS).forEach(group => this.initMembers[group.id] = []);
     this.state = {
-      membersCollection: this.initMembers, // {"1": [[1期生], [2期生]], "2": [[1期生], [2期生], [3期生]]}
+      membersCollection: this.initMembers,  // {"1": [[1期生], [2期生]], "2": [[1期生], [2期生], [3期生]]}
     }
+
+    // scrollAdminに使用。cacheされた時、裏でprops.location.keyが暗黙に変化し、全てのheadlineが同じidになってしまうため、グローバルstateで管理
+    this.subNavbarRef = React.createRef();
+    this.InitUrl = props.match.url;
+    props.domDispatch({ type: "SET_SUBNAVBAR_REF", subNavbarRef: this.subNavbarRef, locationKey: props.location.key });
   };
 
   componentDidMount() {
@@ -107,10 +134,10 @@ class Headline extends React.Component {
               _membersCollection[groupObj.id] = [];
               for (const membersByGene of res.data[groupObj.key]) {
                 _membersCollection[groupObj.id].push(membersByGene.map(member =>
-                  ({
-                    url: member.url,
-                    full_kanji: member.full_kanji,
-                  })
+                ({
+                  url: member.url,
+                  full_kanji: member.full_kanji,
+                })
                 ))
               }
             }
@@ -126,28 +153,64 @@ class Headline extends React.Component {
     }
   }
 
-  getModeSelectButtonGroup = (fixed) => {
-    if (this.props.type === "blogs" || this.props.type === "images") {
-      const contents = (<>
-        <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "recommend" ? "active" : "")}
-          onClick={() => this.props.history.push(`/${this.props.type}/`)}><b>おすすめ</b></Button>
+  componentDidUpdate(prevProps) {
+    // "/"から"/"の遷移など、route(url)が変化せずComponentがそのままの場合
+    if (checkNotCached(this.props) && this.props.match.url === this.InitUrl) {
+      if (this.props.location.key !== prevProps.location.key) {
+        this.props.domDispatch({ type: "SET_SUBNAVBAR_REF", subNavbarRef: this.subNavbarRef, locationKey: this.props.location.key });
+      }
+    }
+  }
 
-        {Object.values(GROUPS).map(groupObj => (
-          <Button key={groupObj.id} className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
-            onClick={() => this.props.history.push(`/${this.props.type}/${groupObj.id}`)}>
-            <b>{groupObj.name}</b>
-            {groupObj.isActive && (fixed
-              ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
-              : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
-            )}
+  getModeSelectButtonGroup = (fixed) => {
+    const ButtonGroupPC = ({ children }) => (
+      <ButtonGroup size="lg" className="mt-3 mt-lg-0">{children}</ButtonGroup>
+    );
+
+    if (this.props.type === "blogs" || this.props.type === "images") {
+      const contents = (
+        <>
+          {/* <LinkButton
+            className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "recommend" ? "active" : "")}
+            to={`/${this.props.type}/`}
+          >
+            <h5 className="m-0">おすすめ</h5>
+          </LinkButton> */}
+          <Button
+            className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "recommend" ? "active" : "")}
+            onClick={() => this.props.history.push(`/${this.props.type}/`)}
+          >
+            <b>おすすめ</b>
           </Button>
-        ))}
-      </>);
+
+          {Object.values(GROUPS).map(groupObj => (
+            // <LinkButton
+            //   key={groupObj.id}
+            //   className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
+            //   to={`/${this.props.type}/${groupObj.id}`}
+            // >
+            //   <h5 className="m-0">{groupObj.name}</h5>
+            //   {groupObj.isActive && (fixed
+            //     ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
+            //     : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
+            //   )}
+            // </LinkButton>
+            <Button key={groupObj.id} className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
+              onClick={() => this.props.history.push(`/${this.props.type}/${groupObj.id}`)}>
+              <b>{groupObj.name}</b>
+              {groupObj.isActive && (fixed
+                ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
+                : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
+              )}
+            </Button>
+          ))}
+        </>
+      );
 
       if (isMobile || fixed) {
         return <>{contents}</>;
       } else {
-        return <ButtonGroup size="lg">{contents}</ButtonGroup>;
+        return <ButtonGroupPC>{contents}</ButtonGroupPC>;
       }
     } else if (this.props.type === "blogView" && !isMobile) {
       const contents = (
@@ -161,7 +224,7 @@ class Headline extends React.Component {
       if (fixed) {
         return <>{contents}</>;
       } else {
-        return <ButtonGroup size="lg">{contents}</ButtonGroup>;
+        return <ButtonGroupPC>{contents}</ButtonGroupPC>;
       }
     } else if (this.props.type === "members") {
       const contents = (
@@ -201,7 +264,6 @@ class Headline extends React.Component {
         <Button className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center" : "")}
           onClick={() => this.props.history.push("/blogs/")}>
           <b>ブログ一覧</b>
-
 
           {fixed
             ? <MobileTopMenu id="modeSelectVewHomeBlogs" type="modeSelectVewHome" blogsORimages="blogs" />
@@ -252,7 +314,11 @@ class Headline extends React.Component {
     return (
       <>
         {/* fixed headline */}
-        <div className="fixed-headline border-bottom text-muted pl-0 pl-lg-3" style={{ top: NAVBAR_HEIGHT, height: SUB_NAVBAR_HEIGHT }} id="otapick-sub-navbar">
+        <div
+          className="fixed-headline border-bottom text-muted pl-0 pl-lg-3"
+          style={{ top: NAVBAR_HEIGHT, height: SUB_NAVBAR_HEIGHT }}
+          ref={this.subNavbarRef}
+        >
           <BackButton mini={true} className="mr-0 mr-lg-2" />
 
           {(this.props.title && (fixedModeSelectButtonGroupVerLeft || fixedModeSelectButtonGroup)) &&
@@ -301,4 +367,11 @@ class Headline extends React.Component {
   }
 }
 
-export default withRouter(Headline);
+
+export default withRouter((props) => (
+  <DomDispatchContext.Consumer>
+    {domDispatch => (
+      <Headline {...props} domDispatch={domDispatch} />
+    )}
+  </DomDispatchContext.Consumer>
+));

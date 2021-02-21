@@ -3,8 +3,7 @@ import BlogListInfo from "../molecules/info/BlogListInfo";
 import BlogList from "../organisms/List/BlogList";
 import Headline from "../molecules/Headline";
 import queryString from "query-string";
-import ToTopButton from "../atoms/ToTopButton";
-import { URLJoin, getGroup, checkMatchParams, isMobile } from "../modules/utils";
+import { URLJoin, getGroup, checkMatchParams, isMobile, checkNotCached } from "../modules/utils";
 import { withRouter } from "react-router-dom";
 
 
@@ -37,82 +36,93 @@ class BlogListTemplate extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const prevGroupID = prevProps.match.params.groupID;
-    const prevCt = prevProps.match.params.ct;
-    const qs = queryString.parse(this.props.location.search);
-    const { groupID, ct, orderFormat } = getBlogUrlComposition(this.props);
+    if (checkNotCached(this.props)) {
+      const { groupID, ct, orderFormat } = getBlogUrlComposition(this.props);
+      const prevBlogUrlComposition = getBlogUrlComposition(prevProps);
+      const prevGroupID = prevBlogUrlComposition.groupID;
+      const prevCt = prevBlogUrlComposition.ct;
+      const qs = queryString.parse(this.props.location.search);
 
-    // When the group changed
-    if (ct === undefined) {
-      if (prevGroupID !== groupID || prevCt !== ct) {
+      // When the group changed
+      if (ct === undefined) {
+        if (prevGroupID !== groupID || prevCt !== ct) {
+          this.setState({
+            groupID: groupID,
+            ct: ct,
+            group: getGroup(groupID),
+            orderFormat: orderFormat,
+            narrowingKeyword: "",
+            narrowingPost: "",
+          });
+          return;
+        }
+      }
+      // When the member changed
+      else {
+        if (prevGroupID !== groupID || prevCt !== ct) {
+          this.setState({
+            groupID: groupID,
+            ct: ct,
+            group: getGroup(groupID),
+            orderFormat: orderFormat,
+            narrowingKeyword: "",
+            narrowingPost: "",
+          });
+          return;
+        }
+      }
+
+      // When the order format changed
+      if (qs.sort && this.state.orderFormat !== qs.sort) {
         this.setState({
-          groupID: groupID,
-          ct: ct,
-          group: getGroup(groupID),
-          orderFormat: orderFormat,
-          narrowingKeyword: "",
-          narrowingPost: "",
+          orderFormat: qs.sort,
+        });
+        return;
+      } else if (!qs.sort && this.state.orderFormat !== "newer_post") {
+        this.setState({
+          orderFormat: "newer_post",
         });
         return;
       }
-    }
-    // When the member changed
-    else {
-      if (prevGroupID !== groupID || prevCt !== ct) {
+
+      // When the narrowing changed
+      if ((qs.keyword === undefined ? "" : qs.keyword) != this.state.narrowingKeyword) {
         this.setState({
-          groupID: groupID,
-          ct: ct,
-          group: getGroup(groupID),
-          orderFormat: orderFormat,
-          narrowingKeyword: "",
-          narrowingPost: "",
+          narrowingKeyword: qs.keyword === undefined ? "" : qs.keyword,
         });
-        return;
       }
-    }
-
-    // When the order format changed
-    if (qs.sort && this.state.orderFormat !== qs.sort) {
-      this.setState({
-        orderFormat: qs.sort,
-      });
-      return;
-    } else if (!qs.sort && this.state.orderFormat !== "newer_post") {
-      this.setState({
-        orderFormat: "newer_post",
-      });
-      return;
-    }
-
-    // When the narrowing changed
-    if ((qs.keyword === undefined ? "" : qs.keyword) != this.state.narrowingKeyword) {
-      this.setState({
-        narrowingKeyword: qs.keyword === undefined ? "" : qs.keyword,
-      });
-    }
-    if ((qs.post === undefined ? "" : qs.post) != this.state.narrowingPost) {
-      this.setState({
-        narrowingPost: qs.post === undefined ? "" : qs.post,
-      });
+      if ((qs.post === undefined ? "" : qs.post) != this.state.narrowingPost) {
+        this.setState({
+          narrowingPost: qs.post === undefined ? "" : qs.post,
+        });
+      }
     }
   }
 
   render() {
     return (
-      <>{this.isRender &&
-        <div className="container mt-3 text-muted">
-          <Headline title="ブログ一覧" type="blogs" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
+      <>
+        {this.isRender &&
+          <div className="container mt-3 text-muted">
+            <Headline title="ブログ一覧" type="blogs" mode={this.state.group ? this.state.group : "recommend"} groupID={this.state.groupID} ct={this.state.ct} />
 
-          <BlogListInfo groupID={this.state.groupID} ct={this.state.ct} group={this.state.group} orderFormat={this.state.orderFormat} narrowingKeyword={this.state.narrowingKeyword}
-            narrowingPost={this.state.narrowingPost} pushHistory={(qs) => this.pushHistory(qs)} hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false} />
-          {(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") &&
-            (!isMobile && <div className="py-2"></div>)
-          }
-          <BlogList />
-
-          <ToTopButton />
-        </div>
-      }</>
+            <BlogListInfo
+              groupID={this.state.groupID}
+              ct={this.state.ct}
+              group={this.state.group}
+              orderFormat={this.state.orderFormat}
+              narrowingKeyword={this.state.narrowingKeyword}
+              narrowingPost={this.state.narrowingPost}
+              pushHistory={(qs) => this.pushHistory(qs)}
+              hide={(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") ? true : false}
+            />
+            {(typeof this.state.groupID === "undefined" && typeof this.state.ct === "undefined") &&
+              (!isMobile && <div className="py-2"></div>)
+            }
+            <BlogList />
+          </div>
+        }
+      </>
     );
   };
 };
@@ -121,8 +131,8 @@ export default withRouter(BlogListTemplate);
 
 
 export const getBlogUrlComposition = (props) => {
-  const groupID = props.match.params.groupID;
-  const ct = props.match.params.ct;
+  const groupID = props.match.params ? props.match.params.groupID : null;
+  const ct = props.match.params ? props.match.params.ct : null;
 
   const qs = queryString.parse(props.location.search);
   const orderFormat = typeof qs.sort == "undefined" ? "newer_post" : qs.sort;

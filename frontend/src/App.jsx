@@ -1,44 +1,63 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { CookiesProvider } from "react-cookie";
+import { BrowserRouter, withRouter } from "react-router-dom";
+import { CookiesProvider, withCookies } from "react-cookie";
 
-import { setUserAgent, setBodyPadding, getIsMobile } from "./components/modules/utils";
-import LocationAdmin from "./components/atoms/LocationAdmin";
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, setEnvConstant } from "./components/modules/env";
+import { getItem, setUserAgent } from "./components/modules/utils";
+import LocationAdmin from "./components/pages/admin/LocationAdmin";
+import { setEnvConstant } from "./components/modules/env";
 import "./static/css/index.css";
 import Screens from "./components/Screens";
 import AuthProvider from "./components/contexts/AuthContext";
 import DomProvider from "./components/contexts/DomContext";
 import ProfileProvider from "./components/contexts/ProfileContext";
-import HistoryProvider from "./components/contexts/HistoryContext";
+import ScrollAdmin from "./components/pages/admin/ScrollAdmin";
 
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    setUserAgent();
-    setEnvConstant();
-  }
-
   render() {
     return (
       <CookiesProvider>
-        <BrowserRouter>
-          <AuthProvider>
-            <DomProvider>
-              <ProfileProvider>
-                <HistoryProvider>
-                  <LocationAdmin>
-                    <Screens />
-                  </LocationAdmin>
-                </HistoryProvider>
-              </ProfileProvider>
-            </DomProvider>
-          </AuthProvider>
-        </BrowserRouter>
+        <Provider />
       </CookiesProvider>
     );
   }
 }
 
+
 export default App;
+
+
+class _Provider extends React.Component {
+  constructor(props) {
+    super(props);
+    setUserAgent();
+    setEnvConstant();
+
+    // localstorage(優先), cookiesからtokenを取得
+    this.token = getItem("token");
+    if (!this.token && Object.keys(props.cookies.cookies).indexOf("token") !== -1) {
+      this.token = props.cookies.get("token");
+      props.cookies.remove("token");
+    }
+  }
+
+  render() {
+    return (
+      <BrowserRouter>
+        <AuthProvider token={this.token}>
+          <DomProvider>
+            <ProfileProvider>
+              <LocationAdmin>
+                <ScrollAdmin>
+                  <Screens />
+                </ScrollAdmin>
+              </LocationAdmin>
+            </ProfileProvider>
+          </DomProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    );
+  }
+}
+
+const Provider = withCookies(_Provider);

@@ -7,6 +7,7 @@ import Masonry from "react-masonry-component";
 import ImageCard from "../molecules/ImageCard";
 import { addLongPressEventListeners, isMobile, isSmp } from "../modules/utils";
 import { withCookies } from "react-cookie";
+import { withRouter } from "react-router-dom";
 
 
 class BlogView extends React.Component {
@@ -15,7 +16,7 @@ class BlogView extends React.Component {
     this.state = {
       allCheck: false,
       check: Array(this.props.images.length).fill(false),
-      showAleart: false,
+      showAlert: false,
     }
     this.modalRef = React.createRef();
   }
@@ -39,7 +40,7 @@ class BlogView extends React.Component {
           this.setState({
             allCheck: false,
             check: Array(this.props.images.length).fill(false),
-            showAleart: false,
+            showAlert: false,
           })
 
           const blob = new Blob([res.data], {
@@ -50,7 +51,7 @@ class BlogView extends React.Component {
           this.props.incrementNumOfDownloads(-1, orderList.length);
         });
     } else {
-      if (!this.state.showAleart) this.setState({ showAleart: true });
+      if (!this.state.showAlert) this.setState({ showAlert: true });
     }
   }
 
@@ -90,29 +91,31 @@ class BlogView extends React.Component {
   }
 
   loadOriginalImage() {
-    let imageObjcts = [];
+    let imageObjects = [];
     for (const [index, image] of this.props.images.entries()) {
       if (this.props.mode === "view") {
-        imageObjcts.push(new Image());
-        imageObjcts[index].onload = setTimeout(() => {
-          const targetImage = document.getElementById(`image_${image.order}`);
+        imageObjects.push(new Image());
+        imageObjects[index].onload = setTimeout(() => {
+          const blogImageID = this.geneImageID(image.order);
+          const targetImage = document.getElementById(blogImageID);
           if (targetImage !== null) {
             if (isSmp) {
-              targetImage.setAttribute("src", imageObjcts[index].src);
+              targetImage.setAttribute("src", imageObjects[index].src);
               targetImage.removeAttribute("srcset");
             } else {
-              targetImage.setAttribute("srcset", `${imageObjcts[index].src} 1x, ${imageObjcts[index].src} 2x`);
+              targetImage.setAttribute("srcset", `${imageObjects[index].src} 1x, ${imageObjects[index].src} 2x`);
               targetImage.removeAttribute("src");
             }
           }
         }, DELAY_TIME);
-        imageObjcts[index].src = image.src["originals"];
+        imageObjects[index].src = image.src["originals"];
       } else if (this.props.mode === "download") {
-        imageObjcts.push(new Image());
-        imageObjcts[index].onload = setTimeout(() => {
-          document.getElementById(`image_${image.order}`).style.backgroundImage = "url(" + imageObjcts[index].src + ")";
+        imageObjects.push(new Image());
+        imageObjects[index].onload = setTimeout(() => {
+          const blogImageID = this.geneImageID(image.order);
+          document.getElementById(blogImageID).style.backgroundImage = "url(" + imageObjects[index].src + ")";
         }, DELAY_TIME);
-        imageObjcts[index].src = image.src["originals"];
+        imageObjects[index].src = image.src["originals"];
       }
     }
   }
@@ -121,7 +124,8 @@ class BlogView extends React.Component {
     this.loadOriginalImage();
 
     for (const image of this.props.images) {
-      addLongPressEventListeners(document.getElementById(`image_${image.order}`), () => this.props.putDownload(image.order));
+      const blogImageID = this.geneImageID(image.order);
+      addLongPressEventListeners(document.getElementById(blogImageID), () => this.props.putDownload(image.order));
     }
   }
 
@@ -131,6 +135,11 @@ class BlogView extends React.Component {
       this.loadOriginalImage();
     }
   }
+
+  // cache導入でimageIDが複数存在しうるため（今のところBlogViewはcache対象外であるが）
+  geneImageID = (order) => (
+    `blog-image-${this.props.groupID}_${this.props.blogCt}_${order}_${this.props.location.key}`
+  );a
 
   render() {
     if (this.props.mode === "view") {
@@ -146,10 +155,23 @@ class BlogView extends React.Component {
             <div className="alert alert-success mb-1" role="alert" style={{ borderRadius: "1rem", fontSize: 14 }}>画像を長押しして保存をおこなってください</div>
           }
           <Masonry options={options} className="mt-3 image-list-in-blog-view">
-            {this.props.images.map(({ src, url, order }, i) => (
+            {this.props.images.map(({ src, url, order, isFavorite }, i) => (
               <div key={i} className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2">
-                <ImageCard key={i} id={i} groupID={this.props.groupID} group={this.props.group} blogCt={this.props.blogCt} blogTitle={this.props.blogTitle}
-                  src={src} url={url} blogUrl={this.props.blogUrl} officialUrl={this.props.officialUrl} writer={this.props.writer} imageID={`image_${order}`} />
+                <ImageCard
+                  key={i}
+                  groupID={this.props.groupID}
+                  group={this.props.group}
+                  blogCt={this.props.blogCt}
+                  blogTitle={this.props.blogTitle}
+                  src={src}
+                  url={url}
+                  blogUrl={this.props.blogUrl}
+                  officialUrl={this.props.officialUrl}
+                  writer={this.props.writer}
+                  imgID={this.geneImageID(order)}
+                  order={order}
+                  isFavorite={isFavorite}
+                />
               </div >
             ))}
           </Masonry>
@@ -188,7 +210,7 @@ class BlogView extends React.Component {
 
               </div>
             </div>
-            {this.state.showAleart &&
+            {this.state.showAlert &&
               <div className="alert alert-danger py-2 mb-5 mt-0" role="alert" style={{ borderRadius: "1rem" }}>
                 画像を選択してください。
             </div>
@@ -208,4 +230,4 @@ class BlogView extends React.Component {
 };
 
 
-export default withCookies(BlogView);
+export default withRouter(withCookies(BlogView));

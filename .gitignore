@@ -148,3 +148,5 @@ cron/
 registerer_ex.py
 
 static/text/
+
+*.code-workspace

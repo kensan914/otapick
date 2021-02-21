@@ -18,10 +18,10 @@ const authReducer = (prevState, action) => {
 
     case "COMPLETE_SIGNIN":
       /** state関連の初期化 signin時に実行
-       * @param {Object} action [type, token, startUpLogind] */
+       * @param {Object} action [type, token, startUpLoggedin] */
 
       storeItem("token", action.token);
-      action.startUpLogind();
+      action.startUpLoggedin();
       return {
         ...prevState,
         status: "Authenticated",
@@ -64,8 +64,8 @@ const initAuthState = {
 
 Object.freeze(initAuthState);
 
-const AuthStateContext = createContext({ ...initAuthState });
-const AuthDispatchContext = createContext(undefined);
+export const AuthStateContext = createContext({ ...initAuthState });
+export const AuthDispatchContext = createContext(undefined);
 
 export const useAuthState = () => {
   const context = useContext(AuthStateContext);
@@ -76,19 +76,15 @@ export const useAuthDispatch = () => {
   return context;
 };
 
-const AuthProvider = ({ children, cookies }) => {
-  const [authState, authDispatch] = useReducer(authReducer, { ...initAuthState });
+const AuthProvider = ({ children, token }) => {
+  const [authState, authDispatch] = useReducer(authReducer, {
+    ...initAuthState,
+    ...(token ? { status: "Authenticated" } : {}),
+    ...(token ? { token: token } : {}),
+  });
 
   useEffect(() => {
-    let _token = getItem("token");
-
-    if (Object.keys(cookies.cookies).indexOf("token") !== -1) {
-      _token = cookies.get("token");
-      storeItem("token", _token);
-      cookies.remove("token");
-    }
-
-    if (_token) authDispatch({ type: "COMPLETE_SIGNIN", token: _token, startUpLogind: () => { } });
+    if (token) authDispatch({ type: "COMPLETE_SIGNIN", token: token, startUpLoggedin: () => { } });
   }, []);
 
   return (
@@ -100,4 +96,4 @@ const AuthProvider = ({ children, cookies }) => {
   );
 };
 
-export default withCookies(AuthProvider);
+export default AuthProvider;

@@ -17,7 +17,7 @@ class NotFound404 extends React.Component {
     if (isMobile) {
       setBodyPadding(NAVBAR_HEIGHT);
     }
-    updateMeta({ title: "404 Page Not Found", discription: "" });
+    updateMeta({ title: "404 Page Not Found", description: "" });
     gtagTo(this.props.location.pathname);
   }
 

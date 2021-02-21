@@ -1,7 +1,7 @@
 import React from "react";
 import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import { Link } from "react-router-dom";
-import { GROUPS, hiddenFooterURLConditions } from "../modules/env";
+import { GROUPS, dontShowFooterUrls } from "../modules/env";
 
 
 class Footer extends React.Component {
@@ -35,7 +35,7 @@ class Footer extends React.Component {
 
   checkFooter() {
     let haveToHide = false;
-    for (const hiddenFooterURLCondition of hiddenFooterURLConditions) {
+    for (const hiddenFooterURLCondition of dontShowFooterUrls) {
       if (hiddenFooterURLCondition === "/") {
         if (this.props.location.pathname === "/") {
           if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
@@ -140,7 +140,7 @@ class Footer extends React.Component {
             </div>
           </footer>
           <div className="col-12 text-center py-4 text-muted" id="copyright">
-            <p className="small m-0">Copyright &copy; otapick 2020 All rights reserved.</p>
+            <p className="small m-0">Copyright &copy; otapick 2021 All rights reserved.</p>
           </div>
         </>
       );

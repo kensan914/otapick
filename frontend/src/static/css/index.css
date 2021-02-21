@@ -1227,7 +1227,7 @@ a.sakura {
     background-repeat: no-repeat;
 }
 
-.search-suggestions-items-wraper {
+.search-suggestions-items-wrapper {
     content: '';
     top: 0;
     right: 0;
@@ -1269,7 +1269,7 @@ a.sakura {
     padding: 5!important;
 }
 
-.search-suggestions-discription {
+.search-suggestions-description {
     word-wrap: break-word;
 }
 
@@ -1300,10 +1300,10 @@ a.sakura {
         margin-right: 5px;
         margin-left: 5px;
     }
-    .search-suggestions-discription {
+    .search-suggestions-description {
         font-size: 14px;
     }
-    .info-discription {
+    .info-description {
         font-size: 14px;
     }
     .info-hr {
@@ -1843,18 +1843,77 @@ footer {
     flex-shrink: 0;
 }
 
-.image-card-download-button {
+.image-card-download-button, .image-card-favorite-button, .image-card-favorite-button-transparent {
     flex-shrink: 0;
     position: absolute;
     top: 8px;
-    right: 8px;
     width: 40px;
     height: 40px;
     transition-duration: 0s!important;
     border: none;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.image-card-download-button:hover, .image-card-favorite-button:hover {
+    background-color: white!important;
+}
+
+.image-card-download-button:active, .image-card-favorite-button:active {
+    background-color: white!important;
+}
+
+.image-card-favorite-button-transparent, .image-card-favorite-button-transparent:hover, .image-card-favorite-button-transparent:active {
+    background-color: transparent!important;
+}
+
+.image-card-download-button {
+    right: 8px;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.image-card-favorite-button, .image-card-favorite-button-transparent {
+    left: 8px;
+}
+
+.image-card-favorite-button:focus, .image-card-favorite-button-transparent:focus {
+    box-shadow: none;
+}
+
+.lottie-favorite, .lottie-favorite-deactive {
+    width: 28px;
+    height: 28px;
+}
+
+.lottie-favorite-deactive {
+    /* (40px - 28px) / 2 */
+    margin-left: 6px;
+}
+
+.lottie-favorite {
+    /* (40px - 28px) / 2 - 1px */
+    margin-left: 5px;
+    margin-bottom: 1px;
+}
+
+.lottie-favorite-image-view, .lottie-favorite-image-view-deactive {
+    width: 2rem;
+    height: 2rem;
+}
+
+.lottie-favorite-image-view-deactive {
+    /* (3rem - 2rem) / 2 */
+    margin-left: calc((3rem - 2rem) / 2);
+}
+
+.lottie-favorite-image-view {
+    /* (3rem - 2rem) / 2 - 1px */
+    margin-left: calc((3rem - 2rem) / 2 - 1px);
+    margin-bottom: 1px;
+}
+
+.lottie-favorite-shadow>svg {
+    filter: drop-shadow(2px 2px mediumorchid);
 }
 
 /* イラストレーターで作成したSVGを別名で保存(SVG形式)
@@ -1940,7 +1999,7 @@ SVGコード...を押下
 
 .type-change-button {
     background-color: rgba(255, 255, 255, 0);
-    width: 2.5rem;
+    /* width: 2.5rem; */
     height: 2.5rem;
     border: none;
     transition-duration: 0s!important;
@@ -2017,7 +2076,7 @@ SVGコード...を押下
     width: 100%;
 }
 
-.image-view-detail-button, .image-view-download-button, .image-view-to-official-button {
+.image-view-detail-button, .image-view-download-button, .image-view-favorite-button, .image-view-to-official-button {
     transition-duration: 0s!important;
     color: dimgray;
     height: 3rem;
@@ -2025,18 +2084,26 @@ SVGコード...を押下
     border: none;
 }
 
-.image-view-detail-button, .image-view-download-button {
+.image-view-detail-button, .image-view-download-button, .image-view-favorite-button {
     width: 3rem;
 }
 
-.image-view-detail-button:hover, .image-view-download-button:hover, .image-view-to-official-button:hover {
+.image-view-detail-button:hover, .image-view-download-button:hover, .image-view-favorite-button:hover, .image-view-to-official-button:hover {
     color: dimgray!important;
     background-color: whitesmoke!important;
 }
 
-.image-view-detail-button:active, .image-view-download-button:active, .image-view-to-official-button:active {
+.image-view-detail-button:active, .image-view-download-button:active, .image-view-favorite-button:active, .image-view-to-official-button:active {
     color: dimgray!important;
     background-color: whitesmoke!important;
+}
+
+.image-view-favorite-button.mobile:active, .image-view-favorite-button.mobile:hover {
+    background-color: white!important;
+}
+
+.image-view-favorite-button:focus, .image-view-favorite-button:active {
+    box-shadow: none!important;
 }
 
 .image-view-to-official-button {
@@ -2322,7 +2389,7 @@ SVGコード...を押下
     z-index: 999!important;
 }
 
-/* Google adsense */
+/* Google AdSense */
 
 #ad_iframe {
     left: 50%;
@@ -2493,4 +2560,8 @@ SVGコード...を押下
     vertical-align: middle;
     padding-top: 0;
     padding-bottom: 0;
+}
+
+.favorite-images-container {
+    min-height: 30rem;
 }
