@@ -16,6 +16,7 @@ def get_thumbnail_upload_to(instance, filename):
 class Image(models.Model):
     class Meta:
         db_table = 'image'
+        verbose_name = verbose_name_plural = 'ブログ画像'
         unique_together = ('publisher', 'order')
         indexes = [
             models.Index(fields=['-publisher', 'order'], name='newer_post'),
@@ -48,6 +49,7 @@ class Image(models.Model):
 class Favorite(models.Model):
     class Meta:
         db_table = 'favorite'
+        verbose_name = verbose_name_plural = 'お気に入り画像'
         ordering = ['-created_at']
         unique_together = ('image', 'user')
 

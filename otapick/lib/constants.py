@@ -7,9 +7,9 @@ VERSION = '4.3.0'
 OTAPICK_URL = 'http://192.168.11.18:8000' if settings.DEBUG else 'https://otapick.com'
 OTAPICK_URL_LOOP_BACK = 'http://127.0.0.1:8000' if settings.DEBUG else 'https://otapick.com'
 
-IMAGE_NOT_FOUND_URL = '/static/img/imageNotFound.png' # image not found
-IMAGE_NOT_FOUND_ORDERLY_URL= '/static/img/otapick_logo.png' # image not found ver orderly
-OTAPICK_LOGO = '/static/img/otapick_logo.png' # otapick logo (square)
+IMAGE_NOT_FOUND_URL = '/static/img/logo_rectangle_margin.png' # image not found
+IMAGE_NOT_FOUND_ORDERLY_URL = '/static/img/logo_square_margin.png' # image not found ver orderly
+OTAPICK_LOGO = '/static/img/logo_square_margin.png' # otapick logo (square)
 WATCH_MORE_IMG_URL = '/static/img/watch_more.png' # watch more button's background
 TWITTER_ADS_URLS = [
     '/static/img/twitter_ads/1_01.png',

@@ -1,0 +1,26 @@
+#header {
+    background-color: whitesmoke;
+    color: mediumpurple;
+}
+
+#header a {
+    color: gray!important;
+}
+
+.module caption, form h2 {
+    background: deepskyblue!important;
+    border-radius: 17px;
+}
+
+.admin_shortcuts .shortcuts {
+    background: whitesmoke!important;
+}
+
+.admin_shortcuts .shortcuts a {
+    background: mediumpurple!important;
+    border-color: rebeccapurple!important;
+}
+
+.breadcrumbs {
+    background: mediumpurple!important;
+}

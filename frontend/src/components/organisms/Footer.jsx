@@ -1,15 +1,20 @@
 import React from "react";
 import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import { Link } from "react-router-dom";
-import { GROUPS, dontShowFooterUrls } from "../modules/env";
-
+import {
+  GROUPS,
+  dontShowFooterUrls,
+  OTAPICK_BRAND_IMG_URL,
+} from "../modules/env";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 class Footer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       show: true,
-    }
+    };
     this.exclusiveKeys = [];
   }
 
@@ -38,12 +43,15 @@ class Footer extends React.Component {
     for (const hiddenFooterURLCondition of dontShowFooterUrls) {
       if (hiddenFooterURLCondition === "/") {
         if (this.props.location.pathname === "/") {
-          if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
+          if (this.exclusiveKeys.indexOf(this.props.location.key) === -1)
+            haveToHide = true;
           break;
         }
-      }
-      else if (this.props.location.pathname.startsWith(hiddenFooterURLCondition)) {
-        if (this.exclusiveKeys.indexOf(this.props.location.key) === -1) haveToHide = true;
+      } else if (
+        this.props.location.pathname.startsWith(hiddenFooterURLCondition)
+      ) {
+        if (this.exclusiveKeys.indexOf(this.props.location.key) === -1)
+          haveToHide = true;
         break;
       }
     }
@@ -74,7 +82,6 @@ class Footer extends React.Component {
           <footer className={"footer bg-light text-muted " + this.props.class}>
             <div className="container">
               <div className="row">
-
                 <div className="col-xl-3 col-lg-12 col-xs-12 text-center mb-5">
                   <Link className="navbar-brand ml-4 ml-xl-0" to="/" />
                 </div>
@@ -83,13 +90,17 @@ class Footer extends React.Component {
                   <ul className="footer-menu">
                     <span className="font-weight-bold">画像を探す</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
-                    {Object.values(GROUPS).map(groupObj => (
+                    {Object.values(GROUPS).map((groupObj) => (
                       <React.Fragment key={groupObj.id}>
                         <li>
-                          <Link to={`/images/${groupObj.id}`}>{`${groupObj.name} 画像一覧`}</Link>
+                          <Link
+                            to={`/images/${groupObj.id}`}
+                          >{`${groupObj.name} 画像一覧`}</Link>
                         </li>
                         <li>
-                          <Link to={`/blogs/${groupObj.id}`}>{`${groupObj.name} ブログ一覧`}</Link>
+                          <Link
+                            to={`/blogs/${groupObj.id}`}
+                          >{`${groupObj.name} ブログ一覧`}</Link>
                         </li>
                       </React.Fragment>
                     ))}
@@ -103,13 +114,19 @@ class Footer extends React.Component {
                   <ul className="footer-menu">
                     <span className="font-weight-bold">公式リンク</span>
                     <hr className="my-1 mr-4 mr-lg-0" />
-                    {Object.values(GROUPS).map(groupObj => (
+                    {Object.values(GROUPS).map((groupObj) => (
                       <React.Fragment key={groupObj.id}>
                         <li>
-                          <a target="_blank" href={groupObj.blogUrl}>{`${groupObj.name} 公式ブログ `}<i className="fas fa-external-link-alt"></i></a>
+                          <a target="_blank" href={groupObj.blogUrl}>
+                            {`${groupObj.name} 公式ブログ `}
+                            <FontAwesomeIcon icon={faExternalLinkAlt} />
+                          </a>
                         </li>
                         <li>
-                          <a target="_blank" href={groupObj.topUrl}>{`${groupObj.name} 公式サイト `}<i className="fas fa-external-link-alt"></i></a>
+                          <a target="_blank" href={groupObj.topUrl}>
+                            {`${groupObj.name} 公式サイト `}
+                            <FontAwesomeIcon icon={faExternalLinkAlt} />
+                          </a>
                         </li>
                       </React.Fragment>
                     ))}
@@ -130,25 +147,27 @@ class Footer extends React.Component {
                       <Link to="/privacy-policy">プライバシーポリシー</Link>
                     </li>
                     <li>
-                      <a target="_blank" href="https://twitter.com/otapick">公式Twitter<i
-                        className="fas fa-external-link-alt"></i></a>
+                      <a target="_blank" href="https://twitter.com/otapick">
+                        公式Twitter
+                        <FontAwesomeIcon icon={faExternalLinkAlt} />
+                      </a>
                     </li>
                   </ul>
                 </div>
-
               </div>
             </div>
           </footer>
           <div className="col-12 text-center py-4 text-muted" id="copyright">
-            <p className="small m-0">Copyright &copy; otapick 2021 All rights reserved.</p>
+            <p className="small m-0">
+              Copyright &copy; otapick 2021 All rights reserved.
+            </p>
           </div>
         </>
       );
     } else {
-      return (<></>);
+      return <></>;
     }
-  };
-};
-
+  }
+}
 
 export default withRouterInnerRef(Footer);

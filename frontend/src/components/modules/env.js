@@ -5,10 +5,9 @@ export const FQDN = window.env.fqdn;
 export const BASE_URL = DEBUG ? `http://${FQDN}/api/` : `https://${FQDN}/api/`;
 export const DELAY_TIME = DEBUG ? 0 : 0;
 
-export const OTAPICK_BRAND_IMG_URL = "/static/img/otapick.png";
+export const OTAPICK_BRAND_IMG_URL = "/static/img/logotitle.png";
 export const LOAD_IMG_URL = "/static/img/otapick_logo_back.png";
 export const BACKGROUND_IMG_URL = "/static/img/background.png";
-
 
 //---------- URLパスによる振る舞い変更 ----------//
 // show〇〇Urls(〇〇を表示する)  or  dontShow〇〇Urls(〇〇を表示しない) <= 404ページ、つまり該当しなかった場合どうしたいかで選択。
@@ -16,9 +15,7 @@ export const BACKGROUND_IMG_URL = "/static/img/background.png";
 // パフォーマンス向上のため、頻繁にアクセスするページ順に。
 //---------------------------------------------//
 // mobileのサブNavbarを表示しないページのurl.
-export const dontShowSubNavbarUrls = [
-  "/users",
-];
+export const dontShowSubNavbarUrls = ["/users"];
 // toTopボタンを表示するページのurl
 export const showToTopButtonUrls = [
   "/",
@@ -53,9 +50,9 @@ export const setEnvConstant = () => {
   MOBILE_TOP_MENU_MT = isSmp ? 48.5 : 52;
   NAVBAR_HEIGHT = isSmp ? 61 : 67;
   SUB_NAVBAR_HEIGHT = isSmp ? 55 : 60;
-  TOTOP_BUTTON_M = isSmp ? 16 : (isMobile ? 32 : 48);
+  TOTOP_BUTTON_M = isSmp ? 16 : isMobile ? 32 : 48;
   TOTOP_BUTTON_DIAMETER = isSmp ? 48 : 64;
-}
+};
 
 export const NAVBAR_LS_ZINDEX = 998;
 export const SUB_NAVBAR_LS_ZINDEX = 997;
@@ -80,7 +77,7 @@ import bookmarkHinataAnimationData from "../../static/lottie/bookmark_hinata.jso
 import bookmarkKeyakiAnimationData from "../../static/lottie/bookmark_keyaki.json";
 // groups 改名時は、ここを変更するだけでよい
 export const GROUPS = {
-  "1": {
+  1: {
     id: "1",
     name: "櫻坂46",
     key: "sakura",
@@ -91,7 +88,7 @@ export const GROUPS = {
     isActive: true,
     bookmarkAnimationData: bookmarkSakuraAnimationData,
   },
-  "3": {
+  3: {
     id: "3",
     name: "欅坂46",
     key: "keyaki",
@@ -102,12 +99,13 @@ export const GROUPS = {
     isActive: false,
     bookmarkAnimationData: bookmarkKeyakiAnimationData,
   },
-  "2": {
+  2: {
     id: "2",
     name: "日向坂46",
     key: "hinata",
     blogUrl: "https://www.hinatazaka46.com/s/official/diary/member?ima=0000",
-    blogUrlExample: "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000",
+    blogUrlExample:
+      "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000",
     topUrl: "https://www.hinatazaka46.com/s/official/?ima=0000",
     domain: "hinatazaka46.com",
     isActive: true,

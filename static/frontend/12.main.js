@@ -1,0 +1,39 @@
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[12],{
+
+/***/ "./src/components/atoms/ToTopButton.jsx":
+/*!**********************************************!*\
+  !*** ./src/components/atoms/ToTopButton.jsx ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _modules_env__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modules/env */ \"./src/components/modules/env.js\");\n/* harmony import */ var _modules_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../modules/utils */ \"./src/components/modules/utils.js\");\n\n\n\n\nclass ToTopButton extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {\n  constructor(...args) {\n    var _temp;\n\n    return _temp = super(...args), this.getScrolled = () => {\n      return window.pageYOffset !== undefined ? window.pageYOffset : document.documentElement.scrollTop;\n    }, this.toTop = () => {\n      var scrolled = this.getScrolled();\n      window.scrollTo(0, Math.floor(scrolled / 2));\n\n      if (scrolled > 0) {\n        window.setTimeout(this.toTop, 30);\n      }\n    }, _temp;\n  }\n\n  render() {\n    let totopButtonStyle = {\n      width: _modules_env__WEBPACK_IMPORTED_MODULE_1__[\"TOTOP_BUTTON_DIAMETER\"],\n      height: _modules_env__WEBPACK_IMPORTED_MODULE_1__[\"TOTOP_BUTTON_DIAMETER\"],\n      right: _modules_env__WEBPACK_IMPORTED_MODULE_1__[\"TOTOP_BUTTON_M\"]\n    };\n\n    if (_modules_utils__WEBPACK_IMPORTED_MODULE_2__[\"isMobile\"]) {\n      Object.assign(totopButtonStyle, {\n        bottom: _modules_env__WEBPACK_IMPORTED_MODULE_1__[\"TOTOP_BUTTON_M\"] + _modules_env__WEBPACK_IMPORTED_MODULE_1__[\"BOTTOM_NAVBAR_HEIGHT\"]\n      });\n    } else {\n      Object.assign(totopButtonStyle, {\n        bottom: _modules_env__WEBPACK_IMPORTED_MODULE_1__[\"TOTOP_BUTTON_M\"]\n      });\n    }\n\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(\"button\", {\n      onClick: this.toTop,\n      id: \"otapick-totop-button\",\n      className: \"btn rounded-circle p-0 otapick-totop-button shadow\",\n      style: totopButtonStyle\n    });\n  }\n\n}\n\n;\n/* harmony default export */ __webpack_exports__[\"default\"] = (ToTopButton);\n\n//# sourceURL=webpack:///./src/components/atoms/ToTopButton.jsx?");
+
+/***/ }),
+
+/***/ "./src/components/modules/withRouterInnerRef.jsx":
+/*!*******************************************************!*\
+  !*** ./src/components/modules/withRouterInnerRef.jsx ***!
+  \*******************************************************/
+/*! exports provided: withRouterInnerRef */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"withRouterInnerRef\", function() { return withRouterInnerRef; });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ \"./node_modules/react-router-dom/esm/react-router-dom.js\");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n // withRouterをつかった子コンポーネントは、refで参照できないので対処\n// https://ja.coder.work/so/javascript/1182871\n\nconst withRouterInnerRef = WrappedComponent => {\n  class InnerComponentWithRef extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {\n    render() {\n      const {\n        forwardRef,\n        ...rest\n      } = this.props;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WrappedComponent, _extends({}, rest, {\n        ref: forwardRef\n      }));\n    }\n\n  }\n\n  const ComponentWithRef = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__[\"withRouter\"])(InnerComponentWithRef, {\n    withRef: true\n  });\n  return react__WEBPACK_IMPORTED_MODULE_0___default.a.forwardRef((props, ref) => {\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ComponentWithRef, _extends({}, props, {\n      forwardRef: ref\n    }));\n  });\n};\n\n//# sourceURL=webpack:///./src/components/modules/withRouterInnerRef.jsx?");
+
+/***/ }),
+
+/***/ "./src/components/organisms/LowerRightMenu.jsx":
+/*!*****************************************************!*\
+  !*** ./src/components/organisms/LowerRightMenu.jsx ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _modules_withRouterInnerRef__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../modules/withRouterInnerRef */ \"./src/components/modules/withRouterInnerRef.jsx\");\n/* harmony import */ var _atoms_ToTopButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../atoms/ToTopButton */ \"./src/components/atoms/ToTopButton.jsx\");\n/* harmony import */ var _modules_env__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modules/env */ \"./src/components/modules/env.js\");\n\n\n\n\nconst LowerRightMenu = Object(_modules_withRouterInnerRef__WEBPACK_IMPORTED_MODULE_1__[\"withRouterInnerRef\"])(props => {\n  const [isShowToTop, setIsShowToTop] = Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useState\"])(false);\n\n  const checkShowableButtons = (setIsShow, showUrls = [], dontShowUrls = []) => {\n    const isShowable = showUrls.length > 0;\n    const urls = isShowable ? showUrls : dontShowUrls;\n    const isMatch = urls.some(url => {\n      if (url === \"/\") {\n        if (props.location.pathname === \"/\") {\n          return true;\n        }\n      } else if (location.pathname.startsWith(url)) {\n        return true;\n      }\n    }); // isMatch: Urlsにマッチした, isShowable: 表示していいUrlsか\n    // これらの排他的論理和の否定: 同じ真偽値=>true, 違う真偽値=>false\n\n    setIsShow(!(isMatch ^ isShowable));\n  };\n\n  Object(react__WEBPACK_IMPORTED_MODULE_0__[\"useEffect\"])(() => {\n    checkShowableButtons(setIsShowToTop, _modules_env__WEBPACK_IMPORTED_MODULE_3__[\"showToTopButtonUrls\"], []);\n  }, [props.location]);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, isShowToTop && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_atoms_ToTopButton__WEBPACK_IMPORTED_MODULE_2__[\"default\"], null));\n});\n/* harmony default export */ __webpack_exports__[\"default\"] = (Object(_modules_withRouterInnerRef__WEBPACK_IMPORTED_MODULE_1__[\"withRouterInnerRef\"])(LowerRightMenu));\n\n//# sourceURL=webpack:///./src/components/organisms/LowerRightMenu.jsx?");
+
+/***/ })
+
+}]);

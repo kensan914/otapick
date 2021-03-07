@@ -4,6 +4,7 @@ from django.db import models
 class Group(models.Model):
     class Meta:
         db_table = 'group'
+        verbose_name = verbose_name_plural = 'グループ'
         ordering = ['group_id']
 
     group_id = models.IntegerField(verbose_name='グループID', unique=True)
@@ -27,6 +28,7 @@ def get_upload_to(instance, filename):
 class Member(models.Model):
     class Meta:
         db_table = 'member'
+        verbose_name = verbose_name_plural = 'メンバー'
         unique_together = ('ct', 'belonging_group')
         ordering = ['belonging_group', 'generation', 'full_kana']
 
@@ -54,6 +56,7 @@ class Member(models.Model):
 class Blog(models.Model):
     class Meta:
         db_table = 'blog'
+        verbose_name = verbose_name_plural = 'ブログ'
         unique_together = ('blog_ct', 'writer')
         ordering = ['post_date', 'order_for_simul']
 

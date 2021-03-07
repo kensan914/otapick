@@ -1,9 +1,10 @@
 import React from "react";
+import axios from "axios";
+
 import { cvtKeyFromSnakeToCamel, getGroup, gtagTo } from "../modules/utils";
 import { URLJoin } from "../modules/utils";
 import { BASE_URL, DELAY_TIME } from "../modules/env";
 import authAxios from "../modules/axios";
-
 
 class ViewTemplate extends React.Component {
   constructor(props) {
@@ -30,16 +31,22 @@ class ViewTemplate extends React.Component {
       DOWNLOAD_KEY: "",
     };
     this.state = this.initState;
-    this.blogViewURL = URLJoin(BASE_URL, "blog/", this.state.groupID, this.state.blogCt);
+    this.blogViewURL = URLJoin(
+      BASE_URL,
+      "blog/",
+      this.state.groupID,
+      this.state.blogCt
+    );
     this.incrementNumOfViews = this.incrementNumOfViews.bind(this);
     this.incrementNumOfDownloads = this.incrementNumOfDownloads.bind(this);
-  };
+  }
 
   getBlog() {
     setTimeout(() => {
-      authAxios(this.props.authState.token)
+      // authAxios(this.props.authState.token)
+      axios
         .get(this.blogViewURL)
-        .then(res => {
+        .then((res) => {
           let blogData = {};
           if (!this.state.status && res.data["status"] !== "blog_not_found") {
             blogData = {
@@ -55,41 +62,73 @@ class ViewTemplate extends React.Component {
 
           if (res.data["status"] === "success") {
             // order error
-            if (typeof this.props.order !== "undefined" && res.data["images"].length <= this.props.order) {
-              this.setState(Object.assign({
-                status: "get_image_failed"
-              }, blogData));
+            if (
+              typeof this.props.order !== "undefined" &&
+              res.data["images"].length <= this.props.order
+            ) {
+              this.setState(
+                Object.assign(
+                  {
+                    status: "get_image_failed",
+                  },
+                  blogData
+                )
+              );
               this.updateMetaVerView("get_image_failed");
             } else {
-              this.setState(Object.assign({
-                images: res.data["images"].map(image => cvtKeyFromSnakeToCamel(image)),
-                status: "success",
-                VIEW_KEY: res.data["VIEW_KEY"],
-                DOWNLOAD_KEY: res.data["DOWNLOAD_KEY"],
-              }, blogData));
-              this.updateMetaVerView("success", blogData.title, blogData.writer.name);
+              this.setState(
+                Object.assign(
+                  {
+                    images: res.data["images"].map((image) =>
+                      cvtKeyFromSnakeToCamel(image)
+                    ),
+                    status: "success",
+                    VIEW_KEY: res.data["VIEW_KEY"],
+                    DOWNLOAD_KEY: res.data["DOWNLOAD_KEY"],
+                  },
+                  blogData
+                )
+              );
+              this.updateMetaVerView(
+                "success",
+                blogData.title,
+                blogData.writer.name
+              );
             }
-          } else if (res.data["status"] === "start_download" || res.data["status"] === "downloading") {
-            this.setState(Object.assign({
-              progress: res.data["progress"],
-              loadingImageUrl: res.data["loading_image"],
-              status: "accepted",
-            }, blogData));
+          } else if (
+            res.data["status"] === "start_download" ||
+            res.data["status"] === "downloading"
+          ) {
+            this.setState(
+              Object.assign(
+                {
+                  progress: res.data["progress"],
+                  loadingImageUrl: res.data["loading_image"],
+                  status: "accepted",
+                },
+                blogData
+              )
+            );
             this.updateMetaVerView("accepted");
           } else if (res.data["status"] === "blog_not_found") {
             this.setState({
               status: "blog_not_found",
-              title: "ブログが見つかりませんでした。"
+              title: "ブログが見つかりませんでした。",
             });
             this.updateMetaVerView("blog_not_found");
           } else if (res.data["status"] === "get_image_failed") {
-            this.setState(Object.assign({
-              status: "get_image_failed"
-            }, blogData));
+            this.setState(
+              Object.assign(
+                {
+                  status: "get_image_failed",
+                },
+                blogData
+              )
+            );
             this.updateMetaVerView("get_image_failed");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -99,30 +138,30 @@ class ViewTemplate extends React.Component {
   }
 
   incrementNumOfViews(order = -1) {
-    if (order < 0) { // blog
-      this.setState(prevState => (
-        { numOfViews: prevState.numOfViews + 1 }
-      ));
-    } else { // image
-      this.setState(prevState => {
+    if (order < 0) {
+      // blog
+      this.setState((prevState) => ({ numOfViews: prevState.numOfViews + 1 }));
+    } else {
+      // image
+      this.setState((prevState) => {
         let images = prevState.images;
-        if (images.length > order)
-          images[Number(order)].numOfViews += 1;
+        if (images.length > order) images[Number(order)].numOfViews += 1;
         return { images: images };
       });
     }
   }
 
   incrementNumOfDownloads(order = -1, num = 1) {
-    if (order < 0) { // 総DL数
-      this.setState(prevState => (
-        { numOfDownloads: prevState.numOfDownloads + num }
-      ));
-    } else { // DL数
-      this.setState(prevState => {
+    if (order < 0) {
+      // 総DL数
+      this.setState((prevState) => ({
+        numOfDownloads: prevState.numOfDownloads + num,
+      }));
+    } else {
+      // DL数
+      this.setState((prevState) => {
         let images = prevState.images;
-        if (images.length > order)
-          images[Number(order)].numOfDownloads += num;
+        if (images.length > order) images[Number(order)].numOfDownloads += num;
         return { images: images };
       });
     }
@@ -134,21 +173,25 @@ class ViewTemplate extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     // blog の読み込みが開始したとき
-    if (prevState.status !== this.state.status && this.state.status === "accepted") {
+    if (
+      prevState.status !== this.state.status &&
+      this.state.status === "accepted"
+    ) {
       this.reqCount = 0;
-      this.intervalReqID = setInterval(
-        () => {
-          if (this.reqCount++ <= 20) {
-            this.getBlog();
-          } else {
-            this.setState({ status: "get_image_failed" });
-            clearInterval(this.intervalReqID);
-          }
-        }, 1000
-      );
+      this.intervalReqID = setInterval(() => {
+        if (this.reqCount++ <= 20) {
+          this.getBlog();
+        } else {
+          this.setState({ status: "get_image_failed" });
+          clearInterval(this.intervalReqID);
+        }
+      }, 1000);
     }
     // blog の読み込みが終了したとき
-    if (prevState.status !== this.state.status && prevState.status === "accepted") {
+    if (
+      prevState.status !== this.state.status &&
+      prevState.status === "accepted"
+    ) {
       clearInterval(this.intervalReqID);
     }
   }
@@ -157,6 +200,5 @@ class ViewTemplate extends React.Component {
     clearInterval(this.intervalReqID);
   }
 }
-
 
 export default ViewTemplate;

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { isMobile, watchCurrentPosition } from "../../modules/utils";
-import { SUB_NAVBAR_HEIGHT, NAVBAR_HEIGHT, BOTTOM_NAVBAR_HEIGHT, TOTOP_BUTTON_M } from "../../modules/env";
+import {
+  SUB_NAVBAR_HEIGHT,
+  NAVBAR_HEIGHT,
+  BOTTOM_NAVBAR_HEIGHT,
+  TOTOP_BUTTON_M,
+} from "../../modules/env";
 import { withRouter } from "react-router-dom";
-import { DomStateContext } from "../../contexts/DomContext";
-
+import { useDomState } from "../../contexts/DomContext";
 
 /**
  * scrollState(isShowNBShadow, isShowNB, isShowSubNB, isTop)の管理。
@@ -15,106 +19,96 @@ import { DomStateContext } from "../../contexts/DomContext";
  * 注：scrollStateに忠実に従いスクロールに伴うコンポーネントの表示・非表示の責務を持つ。
  * したがって、「特定の場合に限りscrollStateに反して非表示にする」などをするべきではない。（現状そのような分岐はutils.js/watchCurrentPositionに記述）
  */
-class ScrollAdmin extends React.Component {
-  constructor(props) {
-    super(props);
-    this.initScrollStates = {
-      isShowNBShadow: false,
-      isShowNB: true,
-      isShowSubNB: false,
-      isTop: true,
-    };
-    Object.freeze(this.initScrollStates);
+const ScrollAdmin = (props) => {
+  const [isShowNBShadow, setIsShowNBShadow] = useState(false);
+  const [isShowNB, setIsShowNB] = useState(true);
+  const [isShowSubNB, setIsShowSubNB] = useState(false);
+  const [isTop, setIsTop] = useState(true);
+  const scrollPos = useRef(0);
 
-    this.state = {
-      ...this.initScrollStates,
-    };
-    this.scrollPos = 0;
-  }
+  const setStateList = (_stateList) => {
+    "isShowNBShadow" in _stateList &&
+      setIsShowNBShadow(_stateList.isShowNBShadow);
+    "isShowNB" in _stateList && setIsShowNB(_stateList.isShowNB);
+    "isShowSubNB" in _stateList && setIsShowSubNB(_stateList.isShowSubNB);
+    "isTop" in _stateList && setIsTop(_stateList.isTop);
+  };
 
   /** scrollHandler。スクロールごとに呼ばれスクロール関連のstateを一括更新。
-  *  ex) stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null }
-  **/
-  scrollHandler = e => {
-    const result = watchCurrentPosition(this.scrollPos);
+   *  ex) stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null }
+   **/
+  const scrollHandler = (e) => {
+    const result = watchCurrentPosition(scrollPos.current);
     // stateListのvalueが一つでもnullの場合、stateListは変更しない(window以外のスクロール時)
     const resultValues = Object.values(result.stateList);
-    if (resultValues.findIndex(val => val === null) === -1) {
-      this.setState({ ...result.stateList });
+    if (resultValues.findIndex((val) => val === null) === -1) {
+      setStateList({ ...result.stateList });
     }
-    this.scrollPos = result.scrollPos;
-  }
+    scrollPos.current = result.scrollPos;
+  };
 
-  beforeunloadHandler = e => window.scrollTo(0, 0);
+  const beforeunloadHandler = (e) => window.scrollTo(0, 0);
 
-  componentDidMount() {
-    window.addEventListener("scroll", this.scrollHandler, true);
-    window.addEventListener("beforeunload", this.beforeunloadHandler, true);
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHandler, true);
+    window.addEventListener("beforeunload", beforeunloadHandler, true);
 
     if (!isMobile) {
-      if (this.state.isShowSubNB) {
-        this.exeShowSub();
-      }
-      else {
-        this.exeHideSub();
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.scrollHandler);
-    window.removeEventListener("beforeunload", this.beforeunloadHandler);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.isShowNBShadow !== this.state.isShowNBShadow || this.props.location !== prevProps.location) {
-      if (this.state.isShowNBShadow) {
-        this.exeAddShadow();
-      }
-      else {
-        this.exeRemoveShadow();
+      if (isShowSubNB) {
+        exeShowSub();
+      } else {
+        exeHideSub();
       }
     }
 
-    if (prevState.isShowNB !== this.state.isShowNB || this.props.location !== prevProps.location) {
-      if (isMobile) {
-        if (this.state.isShowNB) {
-          this.exeShow();
-        }
-        else {
-          this.exeHide();
-        }
+    return () => {
+      window.removeEventListener("scroll", scrollHandler);
+      window.removeEventListener("beforeunload", beforeunloadHandler);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isShowNBShadow) {
+      exeAddShadow();
+    } else {
+      exeRemoveShadow();
+    }
+  }, [isShowNBShadow, props.location]);
+
+  useEffect(() => {
+    if (isShowNB) {
+      exeShow();
+    } else {
+      exeHide();
+    }
+  }, [isShowNB, props.location]);
+
+  const domState = useDomState();
+  useEffect(() => {
+    if (!isMobile) {
+      if (isShowSubNB) {
+        exeShowSub();
+      } else {
+        exeHideSub();
       }
     }
+  }, [isShowSubNB, props.location, Object.keys(domState.subNavbarRefs).length]);
 
-    if (prevState.isShowSubNB !== this.state.isShowSubNB || this.props.location !== prevProps.location) {
-      if (!isMobile) {
-        if (this.state.isShowSubNB) {
-          this.exeShowSub();
-        }
-        else {
-          this.exeHideSub();
-        }
-      }
+  useEffect(() => {
+    if (isTop) {
+      exeHideToTop();
+    } else {
+      exeShowToTop();
     }
+  }, [isTop, props.location]);
 
-    if (prevState.isTop !== this.state.isTop || this.props.location !== prevProps.location) {
-      if (this.state.isTop) {
-        this.exeHideToTop();
-      }
-      else {
-        this.exeShowToTop();
-      }
-    }
+  useEffect(() => {
+    scrollHandler();
+  }, [props.location]);
 
-    if (this.props.location !== prevProps.location) {
-      this.scrollHandler();
-    }
-  }
-
-  exeSuper(subNavbarExistFunc, subNavbarNullFunc) {
+  const exeSuper = (subNavbarExistFunc, subNavbarNullFunc) => {
     // cache導入によりotapick-sub-navbarが複数存在しうるため、domStateにsubNavbarRefのコレクションで管理
-    const subNavbarRef = this.props.domState.subNavbarRefs[this.props.location.key];
+    const subNavbarRef = domState.subNavbarRefs[props.location.key];
     const subNavbar = subNavbarRef ? subNavbarRef.current : null;
 
     const navbar = document.getElementById("otapick-navbar");
@@ -129,19 +123,19 @@ class ScrollAdmin extends React.Component {
     else {
       subNavbarNullFunc(navbar, bottomNavbar, toTopButton);
     }
-  }
+  };
 
-  addShadow(elm, transition) {
+  const addShadow = (elm, transition) => {
     elm.style.transition = transition + "s";
     elm.classList.add("shadow");
-  }
+  };
 
-  removeShadow(elm, transition) {
+  const removeShadow = (elm, transition) => {
     elm.style.transition = transition + "s";
     elm.classList.remove("shadow");
-  }
+  };
 
-  show(elm, isNavbar) {
+  const show = (elm, isNavbar) => {
     elm.style.transitionTimingFunction = "ease-out";
     if (isNavbar) {
       elm.style.transition = "0.3s";
@@ -150,9 +144,9 @@ class ScrollAdmin extends React.Component {
       elm.style.transition = "0.35s";
       elm.style.top = NAVBAR_HEIGHT + "px";
     }
-  }
+  };
 
-  hide(elm, isNavbar) {
+  const hide = (elm, isNavbar) => {
     elm.style.transitionTimingFunction = "ease-out";
     if (isNavbar) {
       elm.style.transition = "0.35s";
@@ -161,9 +155,9 @@ class ScrollAdmin extends React.Component {
       elm.style.transition = "0.3s";
       elm.style.top = "-" + SUB_NAVBAR_HEIGHT + "px";
     }
-  }
+  };
 
-  showBottom(btm, totop) {
+  const showBottom = (btm, totop) => {
     if (btm !== null) {
       btm.style.transitionTimingFunction = "ease-out";
       btm.style.transition = "0.3s";
@@ -174,9 +168,9 @@ class ScrollAdmin extends React.Component {
       totop.style.transition = "0.3s";
       totop.style.bottom = TOTOP_BUTTON_M + BOTTOM_NAVBAR_HEIGHT + "px";
     }
-  }
+  };
 
-  hideBottom(btm, totop) {
+  const hideBottom = (btm, totop) => {
     if (btm !== null) {
       btm.style.transitionTimingFunction = "ease-out";
       btm.style.transition = "0.3s";
@@ -187,86 +181,124 @@ class ScrollAdmin extends React.Component {
       totop.style.transition = "0.3s";
       totop.style.bottom = TOTOP_BUTTON_M + "px";
     }
-  }
+  };
 
-  hideSub(elm) {
+  const hideSub = (elm) => {
     elm.style.transition = "0.1s";
     elm.style.transitionTimingFunction = "ease-out";
-    elm.style.top = (NAVBAR_HEIGHT - SUB_NAVBAR_HEIGHT) + "px";
-  }
+    elm.style.top = NAVBAR_HEIGHT - SUB_NAVBAR_HEIGHT + "px";
+  };
 
-  showToTop(elm) {
+  const showToTop = (elm) => {
     if (elm !== null) {
       elm.classList.remove("hide");
       elm.classList.add("show");
     }
-  }
+  };
 
-  hideToTop(elm) {
+  const hideToTop = (elm) => {
     if (elm !== null) {
       elm.classList.remove("show");
       elm.classList.add("hide");
     }
-  }
+  };
 
-  exeAddShadow() {
-    this.exeSuper(
-      (sub, nav) => { this.addShadow(sub, 0.3); this.removeShadow(nav, 0); },
-      (nav) => { this.addShadow(nav, 0.3); });
-  }
+  const exeAddShadow = () => {
+    exeSuper(
+      (sub, nav) => {
+        addShadow(sub, 0.3);
+        removeShadow(nav, 0);
+      },
+      (nav) => {
+        addShadow(nav, 0.3);
+      }
+    );
+  };
 
-  exeRemoveShadow() {
-    this.exeSuper(
-      (sub, nav) => { this.removeShadow(sub, 0); this.removeShadow(nav, 0); },
-      (nav) => this.removeShadow(nav, 0));
-  }
+  const exeRemoveShadow = () => {
+    exeSuper(
+      (sub, nav) => {
+        removeShadow(sub, 0);
+        removeShadow(nav, 0);
+      },
+      (nav) => removeShadow(nav, 0)
+    );
+  };
 
-  exeShow() {
-    this.exeSuper(
-      (sub, nav, btm, totop) => { this.show(sub, false); this.show(nav, true); this.showBottom(btm, totop); },
-      (nav, btm, totop) => { this.show(nav, true); this.showBottom(btm, totop) });
-  }
+  const exeShow = () => {
+    exeSuper(
+      (sub, nav, btm, totop) => {
+        show(sub, false);
+        show(nav, true);
+        showBottom(btm, totop);
+      },
+      (nav, btm, totop) => {
+        show(nav, true);
+        showBottom(btm, totop);
+      }
+    );
+  };
 
-  exeHide() {
-    this.exeSuper(
-      (sub, nav, btm, totop) => { this.hide(sub, false); this.hide(nav, true); this.hideBottom(btm, totop); },
-      (nav, btm, totop) => { this.hide(nav, true); this.hideBottom(btm, totop); });
-  }
+  const exeHide = () => {
+    exeSuper(
+      (sub, nav, btm, totop) => {
+        hide(sub, false);
+        hide(nav, true);
+        hideBottom(btm, totop);
+      },
+      (nav, btm, totop) => {
+        hide(nav, true);
+        hideBottom(btm, totop);
+      }
+    );
+  };
 
-  exeShowSub() {
-    this.exeSuper(
-      (sub) => { this.show(sub, false); },
-      () => { return });
-  }
+  const exeShowSub = () => {
+    exeSuper(
+      (sub) => {
+        show(sub, false);
+      },
+      () => {
+        return;
+      }
+    );
+  };
 
-  exeHideSub() {
-    this.exeSuper(
-      (sub) => { this.hideSub(sub); },
-      () => { return });
-  }
+  const exeHideSub = () => {
+    exeSuper(
+      (sub) => {
+        hideSub(sub);
+      },
+      () => {
+        return;
+      }
+    );
+  };
 
-  exeShowToTop() {
-    this.exeSuper(
-      (sub, nav, btm, totop) => { this.showToTop(totop); },
-      (sub, nav, totop) => { this.showToTop(totop); });
-  }
+  const exeShowToTop = () => {
+    exeSuper(
+      (sub, nav, btm, totop) => {
+        showToTop(totop);
+      },
+      (sub, nav, totop) => {
+        showToTop(totop);
+      }
+    );
+  };
 
-  exeHideToTop() {
-    this.exeSuper(
-      (sub, nav, btm, totop) => { this.hideToTop(totop); },
-      (sub, nav, totop) => { this.hideToTop(totop); });
-  }
+  const exeHideToTop = () => {
+    exeSuper(
+      (sub, nav, btm, totop) => {
+        hideToTop(totop);
+      },
+      (sub, nav, totop) => {
+        hideToTop(totop);
+      }
+    );
+  };
 
-  render() {
-    return this.props.children;
-  }
-}
+  return props.children;
+};
 
 // export default withRouter(ScrollAdmin);
-export default withRouter((props) => (
-  <DomStateContext.Consumer>
-    {domState => (
-      <ScrollAdmin {...props} domState={domState} />
-    )}
-  </DomStateContext.Consumer>
-));
+export default withRouter((props) => <ScrollAdmin {...props} />);

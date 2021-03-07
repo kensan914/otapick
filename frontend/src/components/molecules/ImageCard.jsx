@@ -1,8 +1,19 @@
 import React, { useEffect } from "react";
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from "reactstrap";
+import {
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "reactstrap";
 import { Link } from "react-router-dom";
 
-import { geneIsFavoriteGetterSetter, generateAlt, isMobile, isSmp } from "../modules/utils";
+import {
+  geneIsFavoriteGetterSetter,
+  generateAlt,
+  isMobile,
+  isSmp,
+} from "../modules/utils";
 import { URLJoin } from "../modules/utils";
 import { downloadImage } from "../organisms/ImageView";
 import { MobileBottomMenu } from "./MobileMenu";
@@ -11,15 +22,21 @@ import { BASE_URL } from "../modules/env";
 import FavoriteButton from "../atoms/FavoriteButton";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
 import LazyLoad from "react-lazyload";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faCrown } from "@fortawesome/free-solid-svg-icons";
 
 class DownloadButton extends React.Component {
   render() {
     return (
       <Button
-        className={"rounded-circle p-0 image-card-download-button " + this.props.group}
+        className={
+          "rounded-circle p-0 image-card-download-button " + this.props.group
+        }
         title="この画像をダウンロードする"
-        onClick={() => downloadImage(URLJoin(BASE_URL, this.props.url), this.props.csrftoken)} />
+        onClick={() =>
+          downloadImage(URLJoin(BASE_URL, this.props.url), this.props.csrftoken)
+        }
+      />
     );
   }
 }
@@ -28,12 +45,18 @@ class ToBlogButton extends React.Component {
   render() {
     return (
       <>
-        {this.props.title != "" &&
-          <Link to={this.props.url} className="btn btn-primary rounded-pill image-to-blog-button image-card-button text-left d-flex align-items-center"
-            role="button" title={`「${this.props.title}」を確認`}>
-            <h6 className="omit-title m-0" style={{ fontSize: 14 }}>{this.props.title}</h6>
+        {this.props.title != "" && (
+          <Link
+            to={this.props.url}
+            className="btn btn-primary rounded-pill image-to-blog-button image-card-button text-left d-flex align-items-center"
+            role="button"
+            title={`「${this.props.title}」を確認`}
+          >
+            <h6 className="omit-title m-0" style={{ fontSize: 14 }}>
+              {this.props.title}
+            </h6>
           </Link>
-        }
+        )}
       </>
     );
   }
@@ -44,29 +67,59 @@ class DetailButton extends React.Component {
     super(props);
     this.state = {
       dropdownOpen: false,
-    }
+    };
     this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       if (prevState.dropdownOpen) this.props.hideMenu();
-      return { dropdownOpen: !prevState.dropdownOpen }
+      return { dropdownOpen: !prevState.dropdownOpen };
     });
   }
 
   render() {
     return (
-      <ButtonDropdown direction="right" isOpen={this.state.dropdownOpen} toggle={this.toggle} className="image-card-detail-button-super text-center">
-        <DropdownToggle color="light" className="p-0 image-card-detail-button image-card-button rounded-circle">
-          <i className="fas fa-bars"></i>
+      <ButtonDropdown
+        direction="right"
+        isOpen={this.state.dropdownOpen}
+        toggle={this.toggle}
+        className="image-card-detail-button-super text-center"
+      >
+        <DropdownToggle
+          color="light"
+          className="p-0 image-card-detail-button image-card-button rounded-circle"
+        >
+          <FontAwesomeIcon icon={faBars} />
         </DropdownToggle>
         <DropdownMenu className="bold">
-          <DropdownItem tag={Link} to={{ pathname: this.props.url, state: { prevSrc: this.props.src } }}>詳細ページへ</DropdownItem>
+          <DropdownItem
+            tag={Link}
+            to={{
+              pathname: this.props.url,
+              state: { prevSrc: this.props.src },
+            }}
+          >
+            詳細ページへ
+          </DropdownItem>
           <DropdownItem divider />
-          <DropdownItem tag={Link} to={this.props.writer.url["images"]}>{`「${this.props.writer.name}」の他の画像を探す`}</DropdownItem>
-          <DropdownItem onClick={() => downloadImage(URLJoin(BASE_URL, this.props.url), this.props.csrftoken)}>この画像をダウンロードする</DropdownItem>
-          <DropdownItem href={this.props.officialUrl} target="_blank">公式ブログで確認</DropdownItem>
+          <DropdownItem
+            tag={Link}
+            to={this.props.writer.url["images"]}
+          >{`「${this.props.writer.name}」の他の画像を探す`}</DropdownItem>
+          <DropdownItem
+            onClick={() =>
+              downloadImage(
+                URLJoin(BASE_URL, this.props.url),
+                this.props.csrftoken
+              )
+            }
+          >
+            この画像をダウンロードする
+          </DropdownItem>
+          <DropdownItem href={this.props.officialUrl} target="_blank">
+            公式ブログで確認
+          </DropdownItem>
         </DropdownMenu>
       </ButtonDropdown>
     );
@@ -79,12 +132,16 @@ class ImageCard extends React.Component {
     this.state = {
       isOpenMenu: false,
       cardHeight: 0,
-    }
-    this.isHover = false
+    };
+    this.isHover = false;
     this.detailButtonRef = React.createRef();
     this.imageID = props.imageID;
 
-    this.setIsFavorite = geneIsFavoriteGetterSetter({}, props.domDispatch, this.imageID).setIsFavorite;
+    this.setIsFavorite = geneIsFavoriteGetterSetter(
+      {},
+      props.domDispatch,
+      this.imageID
+    ).setIsFavorite;
     this.csrftoken = props.cookies.get("csrftoken");
   }
 
@@ -98,7 +155,7 @@ class ImageCard extends React.Component {
         }
       }
     }
-  }
+  };
 
   hideMenu = () => {
     if (!this.isHover) this.setState({ isOpenMenu: false });
@@ -106,20 +163,30 @@ class ImageCard extends React.Component {
 
   componentDidMount = () => {
     // update this.state.cardHeight
-    if (this.imageCardRef && this.state.cardHeight !== this.imageCardRef.clientHeight) {
+    if (
+      this.imageCardRef &&
+      this.state.cardHeight !== this.imageCardRef.clientHeight
+    ) {
       this.setState({ cardHeight: this.imageCardRef.clientHeight });
     }
 
     // init isFavorite
-    this.props.domDispatch({ type: "INIT_FAVORITE", imageID: this.imageID, isFavorite: this.props.initIsFavorite });
-  }
+    this.props.domDispatch({
+      type: "INIT_FAVORITE",
+      imageID: this.imageID,
+      isFavorite: this.props.initIsFavorite,
+    });
+  };
 
   componentDidUpdate = () => {
     console.log("レンダーimageCard");
-    if (this.imageCardRef && this.imageCardRef.clientHeight > this.state.cardHeight) {
+    if (
+      this.imageCardRef &&
+      this.imageCardRef.clientHeight > this.state.cardHeight
+    ) {
       this.setState({ cardHeight: this.imageCardRef.clientHeight });
     }
-  }
+  };
 
   render() {
     const isShowMenu = this.state.isOpenMenu && !isMobile;
@@ -129,26 +196,42 @@ class ImageCard extends React.Component {
       <>
         <div
           className="image-card"
-          ref={(imageCardRef) => this.imageCardRef = imageCardRef}
+          ref={(imageCardRef) => (this.imageCardRef = imageCardRef)}
           // onMouseEnter={() => { console.log("エンター"); this.setIsOpenMenu(true); this.isHover = true; }}
-          onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }}
-          onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}
+          onMouseEnter={() => {
+            this.setIsOpenMenu(true);
+            this.isHover = true;
+          }}
+          onMouseLeave={() => {
+            this.setIsOpenMenu(false);
+            this.isHover = false;
+          }}
         >
-          <Link to={{ pathname: this.props.url, state: { prevSrc: this.props.src, } }}>
+          <Link
+            to={{
+              pathname: this.props.url,
+              state: { prevSrc: this.props.src },
+            }}
+          >
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
               {/* <LazyLoad width="500" height="500" once placeholder={
                 <div style={{ width: 500, height: 500, backgroundColor: "red" }} />
               }> */}
 
-
-                <img
-                  className={"image-card-img " + (this.props.orderly ? "newpost-thumbnail" : "")}
-                  src={isSmp ? this.props.src["250x"] : ""}
-                  srcSet={!isSmp ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x` : ""}
-                  alt={generateAlt(this.props.group, this.props.writer.name)}
-                  id={this.props.imgID || this.imageID}
-                />
-
+              <img
+                className={
+                  "image-card-img " +
+                  (this.props.orderly ? "newpost-thumbnail" : "")
+                }
+                src={isSmp ? this.props.src["250x"] : ""}
+                srcSet={
+                  !isSmp
+                    ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x`
+                    : ""
+                }
+                alt={generateAlt(this.props.group, this.props.writer.name)}
+                id={this.props.imgID || this.imageID}
+              />
 
               {/* </LazyLoad> */}
             </div>
@@ -167,12 +250,19 @@ class ImageCard extends React.Component {
             cardHeight={this.state.cardHeight}
           />
           {/* } */}
-          {(isShowMenu && isEnoughHighMenu) &&
-            <DownloadButton group={this.props.group} url={this.props.url} csrftoken={this.csrftoken} />
-          }
-          {isShowMenu &&
+          {isShowMenu && isEnoughHighMenu && (
+            <DownloadButton
+              group={this.props.group}
+              url={this.props.url}
+              csrftoken={this.csrftoken}
+            />
+          )}
+          {isShowMenu && (
             <>
-              <ToBlogButton url={this.props.blogUrl} title={this.props.blogTitle} />
+              <ToBlogButton
+                url={this.props.blogUrl}
+                title={this.props.blogTitle}
+              />
               <DetailButton
                 url={this.props.url}
                 officialUrl={this.props.officialUrl}
@@ -183,25 +273,40 @@ class ImageCard extends React.Component {
                 csrftoken={this.csrftoken}
               />
             </>
-          }
+          )}
         </div>
 
-        {(this.props.message || isMobile) &&
-          <div className="image-card-footer" >
+        {(this.props.message || isMobile) && (
+          <div className="image-card-footer">
             <div className={"image-card-message " + (isMobile ? "mobile" : "")}>
-              {this.props.message &&
+              {this.props.message && (
                 <Link
-                  to={{ pathname: this.props.url, state: { prevSrc: this.props.src, } }}
-                  onMouseEnter={() => { this.setIsOpenMenu(true); this.isHover = true; }}
-                  onMouseLeave={() => { this.setIsOpenMenu(false); this.isHover = false; }}
-                  style={{ textDecoration: "none" }}>
-                  <div className={"card-message mx-auto py-2 " + (!isMobile ? "pc" : "")}>
-                    <i className="fas fa-crown" style={{ color: "gold" }}></i>{" "}<b>{this.props.message}</b>
+                  to={{
+                    pathname: this.props.url,
+                    state: { prevSrc: this.props.src },
+                  }}
+                  onMouseEnter={() => {
+                    this.setIsOpenMenu(true);
+                    this.isHover = true;
+                  }}
+                  onMouseLeave={() => {
+                    this.setIsOpenMenu(false);
+                    this.isHover = false;
+                  }}
+                  style={{ textDecoration: "none" }}
+                >
+                  <div
+                    className={
+                      "card-message mx-auto py-2 " + (!isMobile ? "pc" : "")
+                    }
+                  >
+                    <FontAwesomeIcon icon={faCrown} style={{ color: "gold" }} />{" "}
+                    <b>{this.props.message}</b>
                   </div>
                 </Link>
-              }
+              )}
             </div>
-            {isMobile &&
+            {isMobile && (
               <MobileBottomMenu
                 id={this.props.id}
                 type="imageCard"
@@ -211,9 +316,9 @@ class ImageCard extends React.Component {
                 writer={this.props.writer}
                 src={this.props.src}
               />
-            }
+            )}
           </div>
-        }
+        )}
       </>
     );
   }
@@ -228,9 +333,9 @@ const withImageCard = () => {
     const imageID = `${props.groupID}_${props.blogCt}_${props.order}`;
     return (
       <DomStateContext.Consumer>
-        {domState => (
+        {(domState) => (
           <DomDispatchContext.Consumer>
-            {domDispatch => (
+            {(domDispatch) => (
               <_ImageCard
                 {...props}
                 orderly={false}
@@ -244,7 +349,7 @@ const withImageCard = () => {
         )}
       </DomStateContext.Consumer>
     );
-  }
-}
+  };
+};
 
 export default withImageCard();

@@ -39,7 +39,7 @@ class AccountManager(BaseUserManager):
 class Account(AbstractBaseUser):
     class Meta:
         db_table = 'account'
-        verbose_name = 'account'
+        verbose_name = verbose_name_plural = 'アカウント'
         ordering = ['-date_joined']
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

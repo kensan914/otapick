@@ -5,11 +5,10 @@ import { isMobile } from "../modules/utils";
 import ImageListInfo from "../molecules/info/ImageListInfo";
 import { withRouter } from "react-router-dom";
 
-
 class HomeTemplate extends React.Component {
   constructor(props) {
     super(props);
-  };
+  }
 
   render() {
     return (
@@ -23,7 +22,7 @@ class HomeTemplate extends React.Component {
         <HomeList />
       </div>
     );
-  };
-};
+  }
+}
 
 export default withRouter(HomeTemplate);
