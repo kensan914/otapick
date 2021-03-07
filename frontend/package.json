@@ -81,6 +81,9 @@
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx}": [
       "npm run lint"
+    ],
+    "*": [
+      "pwd"
     ]
   }
 }
