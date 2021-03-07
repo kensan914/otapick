@@ -80,7 +80,7 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx}": [
-      "npm run lint:win32"
+      "npm run lint"
     ]
   }
 }

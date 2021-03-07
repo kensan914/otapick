@@ -127,7 +127,6 @@ const FavoriteButton = withCookies((props) => {
     // 画像ロード後に表示。また、menuが非表示でもお気に入り登録されていればアイコンのみ表示される。
     const isShowFavoriteButton = cardHeight > 0 && (isFavorite || isShowMenu);
 
-    const lelele;
     return (
       <Button
         className={`rounded-circle p-0 ${
