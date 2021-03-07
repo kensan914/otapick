@@ -4,7 +4,6 @@ import { BASE_URL } from "../modules/env";
 import { getJson, removeItem, storeJson, URLJoin } from "../modules/utils";
 import { useAuthState } from "./AuthContext";
 
-
 const initProfile = Object.freeze({
   id: "",
   username: "",
@@ -68,10 +67,15 @@ const ProfileProvider = ({ children }) => {
   });
 
   const authState = useAuthState();
-  const { isLoading, resData, request } = useAxios(URLJoin(BASE_URL, "me/"), "get", {
-    thenCallback: res => profileDispatch({ type: "SET_PROFILE", profile: res.data }),
-    token: authState.token,
-  });
+  const { isLoading, resData, request } = useAxios(
+    URLJoin(BASE_URL, "me/"),
+    "get",
+    {
+      thenCallback: (res) =>
+        profileDispatch({ type: "SET_PROFILE", profile: res.data }),
+      token: authState.token,
+    }
+  );
 
   useEffect(() => {
     if (authState.status === "Authenticated") {
@@ -87,6 +91,5 @@ const ProfileProvider = ({ children }) => {
     </ProfileStateContext.Provider>
   );
 };
-
 
 export default ProfileProvider;

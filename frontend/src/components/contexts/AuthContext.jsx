@@ -2,7 +2,6 @@ import React, { createContext, useReducer, useContext, useEffect } from "react";
 import { getItem, removeItem, storeItem } from "../modules/utils";
 import { withCookies } from "react-cookie";
 
-
 const authReducer = (prevState, action) => {
   switch (action.type) {
     case "WHILE_SIGNIN":
@@ -84,7 +83,12 @@ const AuthProvider = ({ children, token }) => {
   });
 
   useEffect(() => {
-    if (token) authDispatch({ type: "COMPLETE_SIGNIN", token: token, startUpLoggedin: () => { } });
+    if (token)
+      authDispatch({
+        type: "COMPLETE_SIGNIN",
+        token: token,
+        startUpLoggedin: () => {},
+      });
   }, []);
 
   return (

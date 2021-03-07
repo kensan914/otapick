@@ -6,10 +6,11 @@ import { BASE_URL } from "../modules/env";
 import { checkNotCached, updateMeta, URLJoin } from "../modules/utils";
 import UsersDetailTemplate from "../templates/UsersDetailTemplate";
 
-
 const User = (props) => {
   const profileState = useProfileState();
-  const [username] = useState(checkNotCached(props) ? props.match.params.username : "");
+  const [username] = useState(
+    checkNotCached(props) ? props.match.params.username : ""
+  );
   const isMe = profileState.profile.username === username;
 
   const [userProfile, setUserProfile] = useState({});
@@ -17,11 +18,11 @@ const User = (props) => {
     URLJoin(BASE_URL, "users/", username),
     "get",
     {
-      thenCallback: res => {
+      thenCallback: (res) => {
         setUserProfile(res.data);
         updateMeta({ title: res.data.name, description: "" });
       },
-    },
+    }
   );
 
   useEffect(() => {
@@ -29,9 +30,13 @@ const User = (props) => {
   }, [username]);
 
   return (
-    <UsersDetailTemplate isLoading={isLoading} profile={userProfile} username={username} isMe={isMe} />
+    <UsersDetailTemplate
+      isLoading={isLoading}
+      profile={userProfile}
+      username={username}
+      isMe={isMe}
+    />
   );
-}
-
+};
 
 export default withRouter(User);

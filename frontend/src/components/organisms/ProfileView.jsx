@@ -2,7 +2,6 @@ import React from "react";
 import ProfileIcon from "../atoms/ProfileIcon";
 import { isSmp } from "../modules/utils";
 
-
 const ProfileView = (props) => {
   const { profile } = props;
   const titleFontSize = isSmp ? 16 : 26;
@@ -13,15 +12,16 @@ const ProfileView = (props) => {
         <ProfileIcon imageUrl={profile.image} />
       </div>
       <div className="col-9">
-        <h1 className="profile-title mb-0 mb-sm-2"
-          style={{ fontSize: titleFontSize }}>
+        <h1
+          className="profile-title mb-0 mb-sm-2"
+          style={{ fontSize: titleFontSize }}
+        >
           {profile.name}
         </h1>
         <div>@{profile.username}</div>
       </div>
     </div>
   );
-}
-
+};
 
 export default ProfileView;

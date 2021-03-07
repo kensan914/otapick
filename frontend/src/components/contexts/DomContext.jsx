@@ -1,6 +1,5 @@
 import React, { createContext, useReducer, useContext } from "react";
 
-
 const domReducer = (prevState, action) => {
   let _favoriteState;
 
@@ -48,8 +47,9 @@ const domReducer = (prevState, action) => {
       /** 外部からフッターを表示する。
        * @param {Object} action [type, location] */
 
-      if (prevState.footerRef !== null) prevState.footerRef.current.applyShowFooter(action.location);
-      return { ...prevState, };
+      if (prevState.footerRef !== null)
+        prevState.footerRef.current.applyShowFooter(action.location);
+      return { ...prevState };
 
     case "INIT_FAVORITE":
       /** init favoriteState. 既にfavoriteStateにimageが存在する場合は、上書きしない
@@ -84,8 +84,8 @@ const domReducer = (prevState, action) => {
 };
 
 const initDomState = Object.freeze({
-  accessedBlogs: [],  // ["1_34360_2341234", "2_34230_51451345"] （`${groupID}_${blogCt}_${location.key}`）
-  accessedImages: [],  // ["1_34360_0_2341234", "2_34230_3_51451345"] （`${groupID}_${blogCt}_${order}_${location.key}`）
+  accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"] （`${groupID}_${blogCt}_${location.key}`）
+  accessedImages: [], // ["1_34360_0_2341234", "2_34230_3_51451345"] （`${groupID}_${blogCt}_${order}_${location.key}`）
   footerRef: null,
 
   // ↓scrollAdmin用。cache導入によりsubNavbarが複数存在しうる。

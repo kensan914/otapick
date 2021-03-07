@@ -9,7 +9,6 @@ import { addLongPressEventListeners, isMobile, isSmp } from "../modules/utils";
 import { withCookies } from "react-cookie";
 import { withRouter } from "react-router-dom";
 
-
 class BlogView extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +16,7 @@ class BlogView extends React.Component {
       allCheck: false,
       check: Array(this.props.images.length).fill(false),
       showAlert: false,
-    }
+    };
     this.modalRef = React.createRef();
   }
 
@@ -33,20 +32,22 @@ class BlogView extends React.Component {
           headers: {
             "X-CSRFToken": this.props.cookies.get("csrftoken"),
           },
-          responseType: "blob"
+          responseType: "blob",
         })
-        .then(res => {
+        .then((res) => {
           this.modalRef.current.toggleModal();
           this.setState({
             allCheck: false,
             check: Array(this.props.images.length).fill(false),
             showAlert: false,
-          })
+          });
 
           const blob = new Blob([res.data], {
-            type: res.data.type
+            type: res.data.type,
           });
-          const fileName = res.headers["content-disposition"].match(/filename="(.*)"/)[1];
+          const fileName = res.headers["content-disposition"].match(
+            /filename="(.*)"/
+          )[1];
           saveAs(blob, fileName);
           this.props.incrementNumOfDownloads(-1, orderList.length);
         });
@@ -103,7 +104,10 @@ class BlogView extends React.Component {
               targetImage.setAttribute("src", imageObjects[index].src);
               targetImage.removeAttribute("srcset");
             } else {
-              targetImage.setAttribute("srcset", `${imageObjects[index].src} 1x, ${imageObjects[index].src} 2x`);
+              targetImage.setAttribute(
+                "srcset",
+                `${imageObjects[index].src} 1x, ${imageObjects[index].src} 2x`
+              );
               targetImage.removeAttribute("src");
             }
           }
@@ -113,7 +117,8 @@ class BlogView extends React.Component {
         imageObjects.push(new Image());
         imageObjects[index].onload = setTimeout(() => {
           const blogImageID = this.geneImageID(image.order);
-          document.getElementById(blogImageID).style.backgroundImage = "url(" + imageObjects[index].src + ")";
+          document.getElementById(blogImageID).style.backgroundImage =
+            "url(" + imageObjects[index].src + ")";
         }, DELAY_TIME);
         imageObjects[index].src = image.src["originals"];
       }
@@ -125,7 +130,9 @@ class BlogView extends React.Component {
 
     for (const image of this.props.images) {
       const blogImageID = this.geneImageID(image.order);
-      addLongPressEventListeners(document.getElementById(blogImageID), () => this.props.putDownload(image.order));
+      addLongPressEventListeners(document.getElementById(blogImageID), () =>
+        this.props.putDownload(image.order)
+      );
     }
   }
 
@@ -137,9 +144,9 @@ class BlogView extends React.Component {
   }
 
   // cache導入でimageIDが複数存在しうるため（今のところBlogViewはcache対象外であるが）
-  geneImageID = (order) => (
-    `blog-image-${this.props.groupID}_${this.props.blogCt}_${order}_${this.props.location.key}`
-  );a
+  geneImageID = (order) =>
+    `blog-image-${this.props.groupID}_${this.props.blogCt}_${order}_${this.props.location.key}`;
+  a;
 
   render() {
     if (this.props.mode === "view") {
@@ -151,12 +158,21 @@ class BlogView extends React.Component {
 
       return (
         <div className="container">
-          {isMobile &&
-            <div className="alert alert-success mb-1" role="alert" style={{ borderRadius: "1rem", fontSize: 14 }}>画像を長押しして保存をおこなってください</div>
-          }
+          {isMobile && (
+            <div
+              className="alert alert-success mb-1"
+              role="alert"
+              style={{ borderRadius: "1rem", fontSize: 14 }}
+            >
+              画像を長押しして保存をおこなってください
+            </div>
+          )}
           <Masonry options={options} className="mt-3 image-list-in-blog-view">
             {this.props.images.map(({ src, url, order, isFavorite }, i) => (
-              <div key={i} className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2">
+              <div
+                key={i}
+                className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2"
+              >
                 <ImageCard
                   key={i}
                   groupID={this.props.groupID}
@@ -172,7 +188,7 @@ class BlogView extends React.Component {
                   order={order}
                   isFavorite={isFavorite}
                 />
-              </div >
+              </div>
             ))}
           </Masonry>
         </div>
@@ -183,40 +199,70 @@ class BlogView extends React.Component {
           <form onSubmit={(e) => this.handleSubmit(e)}>
             <div className="col-md-3 col-lg-2 ml-auto" style={{ width: 200 }}>
               <div className="custom-control custom-checkbox">
-                <input name="allCheck" type="checkbox" className="custom-control-input" id="allCheck"
-                  checked={this.state.allCheck} onChange={(e) => this.handleAllCheckChange(e)} />
-                <label className="custom-control-label" htmlFor="allCheck">すべて選択</label>
+                <input
+                  name="allCheck"
+                  type="checkbox"
+                  className="custom-control-input"
+                  id="allCheck"
+                  checked={this.state.allCheck}
+                  onChange={(e) => this.handleAllCheckChange(e)}
+                />
+                <label className="custom-control-label" htmlFor="allCheck">
+                  すべて選択
+                </label>
               </div>
             </div>
 
             <div className="container my-4">
               <div className="row text-center">
-
-                {
-                  this.props.images.map((image, index) => (
-                    <div key={index} className="col-6 col-md-4 col-xl-3 mb-5">
-                      <div style={{ cursor: "pointer" }} onClick={() => this.changeCheck(image.order)}>
-                        <div className={this.props.group}>
-                          <div className={"thumbnail img-thumbnail mx-auto " + (this.state.check[image.order] ? "checked" : "")} id={`image_${image.order}`}
-                            style={{ background: `-webkit-image-set( url(${image.src["250x"]}) 1x, url(${image.src["500x"]}) 2x )`, backgroundSize: "cover", backgroundPosition: "center" }}>
-                            <input className="save_img_checkbox" type="checkbox"
-                              onChange={(e) => this.handleCheckChange(e)} name={image.order} checked={this.state.check[image.order]} />
-                          </div>
+                {this.props.images.map((image, index) => (
+                  <div key={index} className="col-6 col-md-4 col-xl-3 mb-5">
+                    <div
+                      style={{ cursor: "pointer" }}
+                      onClick={() => this.changeCheck(image.order)}
+                    >
+                      <div className={this.props.group}>
+                        <div
+                          className={
+                            "thumbnail img-thumbnail mx-auto " +
+                            (this.state.check[image.order] ? "checked" : "")
+                          }
+                          id={`image_${image.order}`}
+                          style={{
+                            background: `-webkit-image-set( url(${image.src["250x"]}) 1x, url(${image.src["500x"]}) 2x )`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                          }}
+                        >
+                          <input
+                            className="save_img_checkbox"
+                            type="checkbox"
+                            onChange={(e) => this.handleCheckChange(e)}
+                            name={image.order}
+                            checked={this.state.check[image.order]}
+                          />
                         </div>
                       </div>
                     </div>
-                  ))
-                }
-
+                  </div>
+                ))}
               </div>
             </div>
-            {this.state.showAlert &&
-              <div className="alert alert-danger py-2 mb-5 mt-0" role="alert" style={{ borderRadius: "1rem" }}>
+            {this.state.showAlert && (
+              <div
+                className="alert alert-danger py-2 mb-5 mt-0"
+                role="alert"
+                style={{ borderRadius: "1rem" }}
+              >
                 画像を選択してください。
-            </div>
-            }
+              </div>
+            )}
             <div className="mx-auto mb-5" style={{ width: 150 }}>
-              <button type="submit" className={"gradient-btn " + this.props.group} style={{ width: 150 }}>
+              <button
+                type="submit"
+                className={"gradient-btn " + this.props.group}
+                style={{ width: 150 }}
+              >
                 <b>保存</b>
               </button>
             </div>
@@ -226,8 +272,7 @@ class BlogView extends React.Component {
         </>
       );
     }
-  };
-};
-
+  }
+}
 
 export default withRouter(withCookies(BlogView));

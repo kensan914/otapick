@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import AsyncComponent from "./AsyncComponent";
 import { useKeepAliveState } from "./KeepAliveContext";
 
-
 const KeepAlive = (props) => {
   const { children } = props;
   const [locationKey] = useState(props.location.key);
@@ -18,10 +17,10 @@ const KeepAlive = (props) => {
     //   mark.parentNode.insertBefore(keepAliveNode, mark);
     // }
 
-    return (() => {
+    return () => {
       // keepAliveState.storeNode.insertBefore(keepAliveRef.current, keepAliveState.storeNode.firstChild);
       retreatPosition();
-    });
+    };
   }, []);
 
   // useEffect(() => {
@@ -49,43 +48,47 @@ const KeepAlive = (props) => {
       }
       keepAliveRef.parentNode.removeChild(keepAliveRef);
     }
-  }
+  };
 
   const retreatPosition = () => {
     console.log("リトリート");
-    if (keepAliveRef && keepAliveRefNextSibling.current && keepAliveRefNextSibling.current.parentNode) {
+    if (
+      keepAliveRef &&
+      keepAliveRefNextSibling.current &&
+      keepAliveRefNextSibling.current.parentNode
+    ) {
       console.log("リトリート2");
       for (const child of childNodes.current) {
         keepAliveRef.appendChild(child);
       }
-      keepAliveRefNextSibling.current.parentNode.insertBefore(keepAliveRef, keepAliveRefNextSibling.current);
+      keepAliveRefNextSibling.current.parentNode.insertBefore(
+        keepAliveRef,
+        keepAliveRefNextSibling.current
+      );
     }
-  }
+  };
 
   const mounted = useRef(false);
   const setMounted = (value) => {
     mounted.current = value;
-  }
+  };
 
   const getMounted = () => {
     return mounted.current;
-  }
+  };
 
   const getContainer = () => {
-    const keepAliveContainer = document.getElementById(`keepAlive-${locationKey}`);
+    const keepAliveContainer = document.getElementById(
+      `keepAlive-${locationKey}`
+    );
     if (keepAliveContainer) return keepAliveContainer;
 
     const keepAliveDOM = document.createElement("div");
     document.body.appendChild(keepAliveDOM);
     return keepAliveDOM;
-  }
+  };
 
-  return (
-    ReactDOM.render(
-      children,
-      getContainer()
-    )
-  );
+  return ReactDOM.render(children, getContainer());
 
   // return (
   //   <div
@@ -101,7 +104,6 @@ const KeepAlive = (props) => {
   //     </AsyncComponent>
   //   </div>
   // );
-
 
   // const keepAliveContainer = (() => {
   //   const keepAliveDOM = document.createElement("div");
@@ -137,6 +139,6 @@ const KeepAlive = (props) => {
   //     // </div>
   //   );
   // }
-}
+};
 
 export default withRouter(KeepAlive);

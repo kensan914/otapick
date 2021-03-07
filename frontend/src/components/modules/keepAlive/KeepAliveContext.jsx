@@ -1,7 +1,12 @@
-import React, { createContext, useReducer, useContext, useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import * as ReactDOM from "react-dom";
 import createStoreElement from "./utils/createStoreElement";
-
 
 const keepAliveReducer = (prevState, action) => {
   let _listStates = { ...prevState.listStates };
@@ -24,7 +29,11 @@ const keepAliveReducer = (prevState, action) => {
       /** listStateにitemsを追加。
        * @param {Object} action [type, locationKey, items] */
 
-      _listStates[action.locationKey].items = (_listStates[action.locationKey].items ? _listStates[action.locationKey].items : []).concat(action.items);
+      _listStates[action.locationKey].items = (_listStates[action.locationKey]
+        .items
+        ? _listStates[action.locationKey].items
+        : []
+      ).concat(action.items);
 
       return {
         ...prevState,
@@ -68,8 +77,14 @@ const keepAliveReducer = (prevState, action) => {
       /** listStateにadditionalItems, additionalItemsStartPageを追加。
        * @param {Object} action [type, locationKey, additionalItems, additionalItemsStartPage] */
 
-      _listStates[action.locationKey].additionalItems = (_listStates[action.locationKey].additionalItems ? _listStates[action.locationKey].additionalItems : []).concat(action.additionalItems);
-      _listStates[action.locationKey].additionalItemsStartPage = action.additionalItemsStartPage;
+      _listStates[action.locationKey].additionalItems = (_listStates[
+        action.locationKey
+      ].additionalItems
+        ? _listStates[action.locationKey].additionalItems
+        : []
+      ).concat(action.additionalItems);
+      _listStates[action.locationKey].additionalItemsStartPage =
+        action.additionalItemsStartPage;
 
       return {
         ...prevState,
@@ -127,16 +142,16 @@ const KeepAliveProvider = ({ children }) => {
   const caches = useRef({});
   const setCaches = (locationKey, value) => {
     caches.current[locationKey] = value;
-  }
+  };
   const [keepAliveState, keepAliveDispatch] = useReducer(keepAliveReducer, {
     ...initKeepAliveState,
     setCaches,
   });
 
   useEffect(() => {
-    return (() => {
+    return () => {
       document.body.removeChild(keepAliveState.storeNode);
-    });
+    };
   }, []);
 
   return (

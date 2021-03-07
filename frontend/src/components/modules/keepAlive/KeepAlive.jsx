@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import { checkCorrectKey } from "../utils";
 import { useKeepAliveDispatch, useKeepAliveState } from "./KeepAliveContext";
 
-
 const KeepAlive = withRouter((props) => {
   const { keepAliveParentRef, children } = props;
   const [locationKey] = useState(props.location.key);
@@ -29,9 +28,9 @@ const KeepAlive = withRouter((props) => {
   // }
 
   useEffect(() => {
-    return (() => {
+    return () => {
       console.log("アンマウント");
-    });
+    };
   }, []);
 
   useEffect(() => {
@@ -46,8 +45,7 @@ const KeepAlive = withRouter((props) => {
     // )
     children
   );
-})
-
+});
 
 const KeepAliveParent = (props) => {
   const { children } = props;
@@ -55,20 +53,16 @@ const KeepAliveParent = (props) => {
   const [locationKey] = useState(props.location.key);
 
   const content = keepAliveParentRef.current ? (
-    <KeepAlive keepAliveParentRef={keepAliveParentRef}>
-      {children}
-    </KeepAlive>
-  ) : [];
+    <KeepAlive keepAliveParentRef={keepAliveParentRef}>{children}</KeepAlive>
+  ) : (
+    []
+  );
 
   return (
-    <div
-      id={`keepAlive-${locationKey}`}
-      ref={keepAliveParentRef}
-    >
+    <div id={`keepAlive-${locationKey}`} ref={keepAliveParentRef}>
       {content}
     </div>
   );
-}
-
+};
 
 export default withRouter(KeepAliveParent);

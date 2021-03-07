@@ -7,9 +7,18 @@ import { withRouter } from "react-router-dom";
 import { NotFoundMessage } from "../../atoms/NotFound";
 import { useDomDispatch } from "../../contexts/DomContext";
 
-
 const List = withRouter((props) => {
-  const { hasMore, status, page, urlExcludePage, isLoading, request, topComponent, NotFoundComponent, children } = props;
+  const {
+    hasMore,
+    status,
+    page,
+    urlExcludePage,
+    isLoading,
+    request,
+    topComponent,
+    NotFoundComponent,
+    children,
+  } = props;
   const domDispatch = useDomDispatch();
 
   useEffect(() => {
@@ -30,13 +39,13 @@ const List = withRouter((props) => {
     if (hasMore && !isLoading) {
       request({ url: URLJoin(urlExcludePage, `?page=${page}`) });
     }
-  }
+  };
 
   const masonryOptions = {
     itemSelector: ".grid-item",
     // transitionDuration: "0.1s",
     transitionDuration: 0,
-    stagger: 0
+    stagger: 0,
   };
 
   return (
@@ -49,31 +58,34 @@ const List = withRouter((props) => {
         loader={<HorizontalLoader key={0} />}
         className="mb-5"
       >
-        {status === "success" &&
+        {status === "success" && (
           <Masonry
             options={masonryOptions}
             disableImagesLoaded={false}
-          // updateOnEachImageLoad={true}
+            // updateOnEachImageLoad={true}
           >
             {children}
           </Masonry>
-        }
-        {status === "blog_not_found" &&
-          <div><NotFoundMessage type="blogFailed" margin={true} /></div>
-        }
-        {(status === "image_not_found") && (
-          typeof NotFoundComponent === "undefined" ?
-            <div><NotFoundMessage type="imageFailed" margin={true} /></div> :
-            NotFoundComponent
         )}
-      </InfiniteScroll >
+        {status === "blog_not_found" && (
+          <div>
+            <NotFoundMessage type="blogFailed" margin={true} />
+          </div>
+        )}
+        {status === "image_not_found" &&
+          (typeof NotFoundComponent === "undefined" ? (
+            <div>
+              <NotFoundMessage type="imageFailed" margin={true} />
+            </div>
+          ) : (
+            NotFoundComponent
+          ))}
+      </InfiniteScroll>
     </>
   );
 });
 
-
 export default List;
-
 
 /**
  * list componentに必要なstate等を提供
@@ -84,12 +96,20 @@ export const useListState = () => {
   const appendItems = (newItems) => {
     setItems([...items, ...newItems]);
     // setItems(items.concat(newItems));
-  }
+  };
 
   const [status, setStatus] = useState("");
   const hasMoreRef = useRef(true);
   const pageRef = useRef(1);
   const [randomSeed] = useState(generateRandomSeed());
 
-  return [items, appendItems, status, setStatus, hasMoreRef, pageRef, randomSeed];
-}
+  return [
+    items,
+    appendItems,
+    status,
+    setStatus,
+    hasMoreRef,
+    pageRef,
+    randomSeed,
+  ];
+};

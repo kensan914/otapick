@@ -1,7 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-
-const bindLifecycleTypeName = '$$bindLifecycle';
+const bindLifecycleTypeName = "$$bindLifecycle";
 export default class AsyncComponent extends React.Component {
   state = {
     component: null,
@@ -16,7 +15,11 @@ export default class AsyncComponent extends React.Component {
     let sibling = node;
     while (sibling) {
       while (true) {
-        if (node.type && node.type.displayName && node.type.displayName.indexOf(bindLifecycleTypeName) !== -1) {
+        if (
+          node.type &&
+          node.type.displayName &&
+          node.type.displayName.indexOf(bindLifecycleTypeName) !== -1
+        ) {
           return;
         }
         if (node.stateNode) {
@@ -24,7 +27,7 @@ export default class AsyncComponent extends React.Component {
         }
         node = node.child;
       }
-      if (typeof node.type === 'function') {
+      if (typeof node.type === "function") {
         node.stateNode.forceUpdate();
       }
       sibling = sibling.sibling;
@@ -32,8 +35,8 @@ export default class AsyncComponent extends React.Component {
   }
 
   componentDidMount() {
-    const {children} = this.props;
-    Promise.resolve().then(() => this.setState({component: children}));
+    const { children } = this.props;
+    Promise.resolve().then(() => this.setState({ component: children }));
   }
 
   componentDidUpdate() {
