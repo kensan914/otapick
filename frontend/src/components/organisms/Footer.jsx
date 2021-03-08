@@ -1,11 +1,7 @@
 import React from "react";
 import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import { Link } from "react-router-dom";
-import {
-  GROUPS,
-  dontShowFooterUrls,
-  OTAPICK_BRAND_IMG_URL,
-} from "../modules/env";
+import { GROUPS, dontShowFooterUrls } from "../modules/env";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

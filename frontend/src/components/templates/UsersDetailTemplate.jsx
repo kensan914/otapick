@@ -14,7 +14,7 @@ const UserTemplate = (props) => {
       {/* KeepAliveが初期レンダー時のHorizontalLoaderのheightを記憶し、ProfileViewとのheightの差により描画がずれるためheight固定 */}
       <div
         className="container mt-3 text-muted"
-        style={{ height: isMobile ? 90 : 130 }}
+        style={{ height: isMobile ? 130 : 130 }}
       >
         {isLoading ? <HorizontalLoader /> : <ProfileView profile={profile} />}
       </div>

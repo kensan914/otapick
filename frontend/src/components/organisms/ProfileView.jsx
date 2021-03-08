@@ -7,18 +7,20 @@ const ProfileView = (props) => {
   const titleFontSize = isSmp ? 16 : 26;
 
   return (
-    <div className="row my-2 my-sm-4">
-      <div className="col-3 d-flex justify-content-end justify-content-sm-center px-1">
+    <div className="my-2 my-sm-4">
+      {/* <div className="col-3 d-flex justify-content-end justify-content-sm-center px-1"> */}
+      <div className="d-flex justify-content-end justify-content-center pb-3">
         <ProfileIcon imageUrl={profile.image} />
       </div>
-      <div className="col-9">
+      {/* <div className="col-9"> */}
+      <div className="d-flex align-items-center flex-column">
         <h1
-          className="profile-title mb-0 mb-sm-2"
+          className="profile-title pb-0 pb-sm-2 m-0"
           style={{ fontSize: titleFontSize }}
         >
           {profile.name}
         </h1>
-        <div>@{profile.username}</div>
+        <div className="">@{profile.username}</div>
       </div>
     </div>
   );

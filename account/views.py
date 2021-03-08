@@ -25,7 +25,7 @@ twitterLoginAPIView = TwitterLoginAPIView.as_view()
 class TwitterLoginCallbackView(views.APIView):
     def get(self, request, *args, **kwargs):
         if 'denied' in self.request.GET:
-            # TODO error
+            # TODO error handle
             return redirect('indexView')
 
         oauth_token = self.request.GET.get('oauth_token')
@@ -34,7 +34,12 @@ class TwitterLoginCallbackView(views.APIView):
         result = otapick.get_access_token(oauth_token, oauth_verifier)
         q_params = otapick.parse_qsl(result.decode('utf-8'))
 
+        print(1)
+
         url = otapick.OTAPICK_URL + '/accounts/rest-auth/twitter/'
+
+        print(2)
+        print(url)
         data = {'access_token': q_params['oauth_token'], 'token_secret': q_params['oauth_token_secret']}
         res_twitterLoginAPI = requests.post(url, json=data)
 
@@ -43,7 +48,7 @@ class TwitterLoginCallbackView(views.APIView):
             response.set_cookie('token', res_twitterLoginAPI.json()['token'])
             return response
         else:
-            # TODO error
+            # TODO error handle
             return redirect('indexView')
 
 

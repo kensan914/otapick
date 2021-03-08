@@ -49,6 +49,7 @@ const ScrollAdmin = (props) => {
 
   const beforeunloadHandler = (e) => window.scrollTo(0, 0);
 
+  const domState = useDomState();
   useEffect(() => {
     window.addEventListener("scroll", scrollHandler, true);
     window.addEventListener("beforeunload", beforeunloadHandler, true);
@@ -83,7 +84,6 @@ const ScrollAdmin = (props) => {
     }
   }, [isShowNB, props.location]);
 
-  const domState = useDomState();
   useEffect(() => {
     if (!isMobile) {
       if (isShowSubNB) {
@@ -166,7 +166,9 @@ const ScrollAdmin = (props) => {
     if (totop !== null) {
       totop.style.transitionTimingFunction = "ease-out";
       totop.style.transition = "0.3s";
-      totop.style.bottom = TOTOP_BUTTON_M + BOTTOM_NAVBAR_HEIGHT + "px";
+      totop.style.bottom = isMobile
+        ? TOTOP_BUTTON_M + BOTTOM_NAVBAR_HEIGHT
+        : TOTOP_BUTTON_M + "px";
     }
   };
 

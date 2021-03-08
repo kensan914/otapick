@@ -124,7 +124,7 @@ const Screens = (props) => {
             exact
             path="/users/:username/"
             render={() => <UsersDetailPage />}
-            when="always"
+            when="forward" // UsersDetailPageマウント後favorite imagesが更新されないため
             multiple={10}
           />
 

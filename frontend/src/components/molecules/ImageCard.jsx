@@ -231,6 +231,8 @@ class ImageCard extends React.Component {
                 }
                 alt={generateAlt(this.props.group, this.props.writer.name)}
                 id={this.props.imgID || this.imageID}
+                // width={250}
+                // height={250}
               />
 
               {/* </LazyLoad> */}
