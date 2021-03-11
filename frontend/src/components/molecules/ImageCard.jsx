@@ -190,7 +190,6 @@ class ImageCard extends React.Component {
     // preload image
     const imageObject = new Image();
     imageObject.onload = () => {
-      console.log("オンロード");
       this.setState({ isLoadImage: true });
     };
     imageObject.src = this.src;

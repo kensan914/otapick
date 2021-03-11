@@ -41,75 +41,66 @@ const ImageList = (props) => {
               isShowTopComponent && status === "success" && topComponent
             }
             NotFoundComponent={NotFoundComponent}
-            render={(
-              masonryElmWidth /* masonryがlayoutされmasonryElmWidthに変化があるたび変更 */
-            ) => {
-              return (
-                <>
-                  {items.map(
-                    (
-                      {
-                        groupID,
-                        blogCt,
-                        blogTitle,
-                        src,
-                        url,
-                        blogUrl,
-                        officialUrl,
-                        writer,
-                        order,
-                        isFavorite,
-                        width,
-                        height,
-                      },
-                      i
-                    ) => {
-                      const gridItemClassName =
-                        "grid-item " +
-                        (isFluid
-                          ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " +
-                            (isMobile ? "my-1 " : "my-3 ")
-                          : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " +
-                            (isMobile ? "my-1 " : "my-3 "));
-                      return (
-                        <div key={i}>
-                          <div className={gridItemClassName}>
-                            <ImageCard
-                              id={i}
-                              groupID={groupID}
-                              group={getGroup(groupID)}
-                              blogCt={blogCt}
-                              blogTitle={blogTitle}
-                              src={src}
-                              url={url}
-                              blogUrl={blogUrl}
-                              officialUrl={officialUrl}
-                              writer={writer}
-                              order={order}
-                              isFavorite={isFavorite}
-                              masonryElmWidth={masonryElmWidth}
-                              width={width}
-                              height={height}
-                            />
-                          </div>
+          >
+            {items.map(
+              (
+                {
+                  groupID,
+                  blogCt,
+                  blogTitle,
+                  src,
+                  url,
+                  blogUrl,
+                  officialUrl,
+                  writer,
+                  order,
+                  isFavorite,
+                  width,
+                  height,
+                },
+                i
+              ) => {
+                const gridItemClassName =
+                  "grid-item " +
+                  (isFluid
+                    ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " +
+                      (isMobile ? "my-1 " : "my-3 ")
+                    : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " +
+                      (isMobile ? "my-1 " : "my-3 "));
+                return (
+                  <div key={i}>
+                    <div className={gridItemClassName}>
+                      <ImageCard
+                        id={i}
+                        groupID={groupID}
+                        group={getGroup(groupID)}
+                        blogCt={blogCt}
+                        blogTitle={blogTitle}
+                        src={src}
+                        url={url}
+                        blogUrl={blogUrl}
+                        officialUrl={officialUrl}
+                        writer={writer}
+                        order={order}
+                        isFavorite={isFavorite}
+                        // masonryElmWidth={masonryElmWidth}
+                        width={width}
+                        height={height}
+                      />
+                    </div>
 
-                          {!isExcludeAds && i % ADS_INTERVAL === ADS_INDEX && (
-                            <div
-                              className={
-                                gridItemClassName + (isMobile ? "mb-4" : "")
-                              }
-                            >
-                              <SquareAds />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    }
-                  )}
-                </>
-              );
-            }}
-          />
+                    {!isExcludeAds && i % ADS_INTERVAL === ADS_INDEX && (
+                      <div
+                        className={gridItemClassName + (isMobile ? "mb-4" : "")}
+                      >
+                        <SquareAds />
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+            )}
+          </List>
         );
       }}
     />
