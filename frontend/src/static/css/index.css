@@ -2188,6 +2188,7 @@ SVGコード...を押下
 
 .image-card-img {
   width: 100%;
+  height: auto;
 }
 
 /* arrange dropdown-menu */

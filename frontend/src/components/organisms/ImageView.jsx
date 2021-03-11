@@ -401,6 +401,7 @@ class ImageView extends ViewTemplate {
               id="image-view-to-official-button"
               role="button"
               target="_blank"
+              rel="noreferrer"
               href={this.state.officialUrl}
             >
               <h6 className="omit-title m-0 image-view-to-official-title">

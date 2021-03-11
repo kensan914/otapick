@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   ButtonDropdown,
   DropdownToggle,
@@ -21,7 +21,7 @@ import { withCookies } from "react-cookie";
 import { BASE_URL } from "../modules/env";
 import FavoriteButton from "../atoms/FavoriteButton";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
-import LazyLoad from "react-lazyload";
+// import LazyLoad from "react-lazyload";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCrown } from "@fortawesome/free-solid-svg-icons";
 
@@ -132,6 +132,8 @@ class ImageCard extends React.Component {
     this.state = {
       isOpenMenu: false,
       cardHeight: 0,
+      placeholderCardWidth: 0,
+      isLoadImage: false,
     };
     this.isHover = false;
     this.detailButtonRef = React.createRef();
@@ -143,6 +145,11 @@ class ImageCard extends React.Component {
       this.imageID
     ).setIsFavorite;
     this.csrftoken = props.cookies.get("csrftoken");
+
+    this.src = isSmp ? this.props.src["250x"] : "";
+    this.srcset = !isSmp
+      ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x`
+      : "";
   }
 
   setIsOpenMenu = (willOpen) => {
@@ -161,14 +168,18 @@ class ImageCard extends React.Component {
     if (!this.isHover) this.setState({ isOpenMenu: false });
   };
 
-  componentDidMount = () => {
-    // update this.state.cardHeight
+  updateCardHeight = () => {
     if (
       this.imageCardRef &&
-      this.state.cardHeight !== this.imageCardRef.clientHeight
+      Number.isFinite(this.imageCardRef.clientHeight) &&
+      this.imageCardRef.clientHeight > this.state.cardHeight
     ) {
       this.setState({ cardHeight: this.imageCardRef.clientHeight });
     }
+  };
+
+  componentDidMount = () => {
+    this.updateCardHeight();
 
     // init isFavorite
     this.props.domDispatch({
@@ -176,27 +187,37 @@ class ImageCard extends React.Component {
       imageID: this.imageID,
       isFavorite: this.props.initIsFavorite,
     });
+
+    // preload image
+    const imageObject = new Image();
+    imageObject.onload = () => {
+      console.log("オンロード");
+      this.setState({ isLoadImage: true });
+    };
+    imageObject.src = this.src;
+    imageObject.srcset = this.srcset;
   };
 
   componentDidUpdate = () => {
     console.log("レンダーimageCard");
-    if (
-      this.imageCardRef &&
-      this.imageCardRef.clientHeight > this.state.cardHeight
-    ) {
-      this.setState({ cardHeight: this.imageCardRef.clientHeight });
-    }
+    this.updateCardHeight();
   };
 
   render() {
     const isShowMenu = this.state.isOpenMenu && !isMobile;
     const isEnoughHighMenu = this.state.cardHeight > 100;
-
+    const formatWidth =
+      Number.isFinite(this.props.width) && this.props.width > 0
+        ? this.props.width
+        : 250;
+    const formatHeight =
+      Number.isFinite(this.props.height) && this.props.height > 0
+        ? this.props.height
+        : 250;
     return (
       <>
         <div
           className="image-card"
-          ref={(imageCardRef) => (this.imageCardRef = imageCardRef)}
           // onMouseEnter={() => { console.log("エンター"); this.setIsOpenMenu(true); this.isHover = true; }}
           onMouseEnter={() => {
             this.setIsOpenMenu(true);
@@ -214,27 +235,49 @@ class ImageCard extends React.Component {
             }}
           >
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
-              {/* <LazyLoad width="500" height="500" once placeholder={
-                <div style={{ width: 500, height: 500, backgroundColor: "red" }} />
-              }> */}
-
-              <img
-                className={
-                  "image-card-img " +
-                  (this.props.orderly ? "newpost-thumbnail" : "")
-                }
-                src={isSmp ? this.props.src["250x"] : ""}
-                srcSet={
-                  !isSmp
-                    ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x`
-                    : ""
-                }
-                alt={generateAlt(this.props.group, this.props.writer.name)}
-                id={this.props.imgID || this.imageID}
-                // width={250}
-                // height={250}
-              />
-
+              {/* LazyLoadいらんくて、onLoadだけでいけるかも。ある一定の位置までいったらロードし始めるとかじゃなくて、直ぐロードでもよくない？？ */}
+              {/* <LazyLoad
+                  // width={this.props.masonryElmWidth}
+                  height={this.props.masonryElmWidth * 1.8} // テスト
+                  once
+                  placeholder={
+                    <div
+                      ref={(placeholderCardRef) =>
+                        (this.placeholderCardRef = placeholderCardRef)
+                      }
+                      style={{
+                        // width: this.props.masonryElmWidth,
+                        height: this.props.masonryElmWidth * 1.8, // テスト
+                        backgroundColor: "red",
+                      }}
+                    />
+                  }
+                > */}
+              {this.state.isLoadImage ? (
+                <div ref={(imageCardRef) => (this.imageCardRef = imageCardRef)}>
+                  <img
+                    width={formatWidth}
+                    height={formatHeight}
+                    className={
+                      "image-card-img " +
+                      (this.props.orderly ? "newpost-thumbnail" : "")
+                    }
+                    src={this.src}
+                    srcSet={this.srcset}
+                    alt={generateAlt(this.props.group, this.props.writer.name)}
+                    id={this.props.imgID || this.imageID}
+                  />
+                </div>
+              ) : (
+                <img
+                  width={formatWidth}
+                  height={formatHeight}
+                  style={{ backgroundColor: "green" }}
+                  className={`image-card-img ${
+                    this.props.orderly ? "newpost-thumbnail" : ""
+                  }`}
+                />
+              )}
               {/* </LazyLoad> */}
             </div>
           </Link>
@@ -328,10 +371,10 @@ class ImageCard extends React.Component {
 
 // 1ページに数百単位でレンダリングされるコンポーネントのため、
 // ImageCardのprops・stateに変更があったときのみ再レンダー(memo)
-const withImageCard = () => {
+const geneImageCardDom = () => {
   const _ImageCard = React.memo(withCookies(ImageCard));
 
-  return (props) => {
+  const ImageCardWithDom = (props) => {
     const imageID = `${props.groupID}_${props.blogCt}_${props.order}`;
     return (
       <DomStateContext.Consumer>
@@ -352,6 +395,8 @@ const withImageCard = () => {
       </DomStateContext.Consumer>
     );
   };
+
+  return ImageCardWithDom;
 };
 
-export default withImageCard();
+export default geneImageCardDom();

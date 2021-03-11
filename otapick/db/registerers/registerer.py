@@ -94,12 +94,14 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
     for i, blog_info in enumerate(blog_info_list):
         # new blog
         if not Blog.objects.filter(blog_ct=blog_info['blog_ct'], publishing_group__group_id=group_id).exists():
-            blog = Blog(blog_ct=blog_info['blog_ct'],
-                        title=blog_info['title'],
-                        post_date=post_date,
-                        order_for_simul=i,
-                        writer=blog_info['member'],
-                        publishing_group=Group.objects.filter(group_id=group_id).first(),)
+            blog = Blog(
+                blog_ct=blog_info['blog_ct'],
+                title=blog_info['title'],
+                post_date=post_date,
+                order_for_simul=i,
+                writer=blog_info['member'],
+                publishing_group=Group.objects.filter(group_id=group_id).first(),
+            )
             blog_objects.append(blog)
             download_count += 1
         # already saved
@@ -117,7 +119,14 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
                         image = Image(
                             order=order,
                             picture=media,
-                            publisher=blog,)
+                            publisher=blog,
+                        )
+
+                        # set width & height
+                        w, h = otapick.get_image_w_h(image)
+                        image.width = w
+                        image.height = h
+                        
                         image_objects.append(image)
                         order += 1
                     else:

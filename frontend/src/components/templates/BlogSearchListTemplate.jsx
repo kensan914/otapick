@@ -6,6 +6,7 @@ import {
   generateWavesVals,
   updateMeta,
   gtagTo,
+  isMobile,
 } from "../modules/utils";
 import { OrderlyBlogCard } from "../molecules/BlogCard";
 import axios from "axios";
@@ -41,7 +42,10 @@ class BlogSearchListTemplate extends React.Component {
     setTimeout(() => {
       axios
         .get(url, {
-          params: { q: queryString.parse(this.props.location.search).q },
+          params: {
+            q: queryString.parse(this.props.location.search).q,
+            ...(isMobile ? { mobile: "true" } : {}), // paginate_by決定のため
+          },
         })
         .then((res) => {
           if (res.data["status"] === "success" && res.data["type"] === "url") {
@@ -50,7 +54,7 @@ class BlogSearchListTemplate extends React.Component {
               this.props.history.replace(res.data["items"][0].url);
             }
 
-            const blogs = res.data["items"].map((blog, index) => ({
+            const blogs = res.data["items"].map((blog) => ({
               blogCt: blog.blog_ct,
               title: blog.title,
               postDate: blog.post_date,
@@ -80,7 +84,7 @@ class BlogSearchListTemplate extends React.Component {
             res.data["status"] === "success" &&
             res.data["type"] === "member"
           ) {
-            const members = res.data["items"].map((member, index) => ({
+            const members = res.data["items"].map((member) => ({
               image: member.image,
               url: member.url,
               officialUrl: member.official_url,

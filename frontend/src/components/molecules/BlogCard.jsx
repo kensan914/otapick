@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -127,6 +127,7 @@ class SuperBlogCard extends React.Component {
                     id={`to-official-page-${this.props.id}`}
                   >
                     <a
+                      rel="noreferrer"
                       href={this.props.officialUrl}
                       style={{ color: "white" }}
                       target="_blank"

@@ -34,13 +34,19 @@ class ImageAdmin(admin.ModelAdmin):
     format_image.short_description = '画像'
     format_image.empty_value_display = 'No image'
 
+    def format_image_as_detail(self, obj):
+        if obj.picture and obj.picture_250x:
+            return format_html('<a href={} target="_blank"><img src="{}" width="100" style="border-radius: 8px" /></a>', obj.picture.url, obj.picture_250x.url)
+    format_image_as_detail.short_description = '画像'
+    format_image_as_detail.empty_value_display = 'No image'
+
     fieldsets = (
-        (None, {'fields': ('order', 'format_image', 'picture', 'picture_250x', 'picture_500x', 'publisher')}),
+        (None, {'fields': ('order', 'format_image_as_detail', 'picture', 'picture_250x', 'picture_500x', 'width', 'height', 'publisher')}),
         ('スコア', {'fields': (
         'num_of_downloads', 'd1_per_day', 'num_of_views', 'v1_per_day', 'v2_per_day', 'v3_per_day', 'score', 'changed',
         'recommend_score')}),
     )
-    readonly_fields = ('format_image',)
+    readonly_fields = ('format_image_as_detail',)
 
 
 @admin.register(Favorite)
@@ -56,6 +62,12 @@ class FavoriteAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" width="100" style="border-radius: 8px" />', obj.image.picture_250x.url)
     format_image.short_description = '画像'
     format_image.empty_value_display = 'No image'
+
+    def format_image_as_detail(self, obj):
+        if obj.image.picture and obj.image.picture_250x:
+            return format_html('<a href={} target="_blank"><img src="{}" width="100" style="border-radius: 8px" /></a>', obj.image.picture.url, obj.image.picture_250x.url)
+    format_image_as_detail.short_description = '画像'
+    format_image_as_detail.empty_value_display = 'No image'
 
     def format_user_username(self, obj):
         if obj.user.username is not None:
@@ -75,7 +87,7 @@ class FavoriteAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('created_at',)}),
-        ('画像', {'fields': ('format_image', 'image')}),
+        ('画像', {'fields': ('format_image_as_detail', 'image')}),
         ('ユーザ', {'fields': ('format_user_image', 'user')}),
     )
-    readonly_fields = ('created_at', 'format_image', 'format_user_image')
+    readonly_fields = ('created_at', 'format_image_as_detail', 'format_user_image')

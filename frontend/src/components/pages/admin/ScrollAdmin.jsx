@@ -37,7 +37,7 @@ const ScrollAdmin = (props) => {
   /** scrollHandler。スクロールごとに呼ばれスクロール関連のstateを一括更新。
    *  ex) stateList = { isShowNBShadow: null, isShowNB: null, isShowSubNB: null, isTop: null }
    **/
-  const scrollHandler = (e) => {
+  const scrollHandler = () => {
     const result = watchCurrentPosition(scrollPos.current);
     // stateListのvalueが一つでもnullの場合、stateListは変更しない(window以外のスクロール時)
     const resultValues = Object.values(result.stateList);
@@ -47,7 +47,7 @@ const ScrollAdmin = (props) => {
     scrollPos.current = result.scrollPos;
   };
 
-  const beforeunloadHandler = (e) => window.scrollTo(0, 0);
+  const beforeunloadHandler = () => window.scrollTo(0, 0);
 
   const domState = useDomState();
   useEffect(() => {

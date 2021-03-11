@@ -8,7 +8,7 @@ class AdSenseCard extends React.Component {
     return (
       <>
         <div className="image-card">
-          <a target="_blank" href={this.props.url}>
+          <a rel="noreferrer" target="_blank" href={this.props.url}>
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
               <img
                 className={"image-card-img"}
@@ -24,6 +24,7 @@ class AdSenseCard extends React.Component {
             <div className={"image-card-message " + (isMobile ? "mobile" : "")}>
               {this.props.message && (
                 <a
+                  rel="noreferrer"
                   target="_blank"
                   href={this.props.url}
                   style={{ textDecoration: "none" }}

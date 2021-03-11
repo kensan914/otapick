@@ -54,18 +54,16 @@ class SearchDownshift extends React.Component {
       axios
         .get(url)
         .then((res) => {
-          const initSuggestionsBlogs = res.data["blogs"].map((blog, index) => ({
+          const initSuggestionsBlogs = res.data["blogs"].map((blog) => ({
             title: blog.title,
             backgroundImage: blog.background_image,
             url: blog.url,
           }));
-          const initSuggestionsMembers = res.data["members"].map(
-            (member, index) => ({
-              title: member.title,
-              backgroundImage: member.background_image,
-              url: member.url,
-            })
-          );
+          const initSuggestionsMembers = res.data["members"].map((member) => ({
+            title: member.title,
+            backgroundImage: member.background_image,
+            url: member.url,
+          }));
           this.setState({
             initSuggestionsBlogs: initSuggestionsBlogs,
             initSuggestionsMembers: initSuggestionsMembers,
@@ -82,10 +80,15 @@ class SearchDownshift extends React.Component {
     const url = URLJoin(BASE_URL, "searchSuggestions/");
     setTimeout(() => {
       axios
-        .get(url, { params: { q: this.state.qvalue } })
+        .get(url, {
+          params: {
+            q: this.state.qvalue,
+            ...(isMobile ? { mobile: "true" } : {}), // paginate_by決定のため
+          },
+        })
         .then((res) => {
           if (res.data["status"] === "success") {
-            const suggestionsItems = res.data["items"].map((item, index) => ({
+            const suggestionsItems = res.data["items"].map((item) => ({
               title: item.title,
               backgroundImage: item.background_image,
               url: item.url,
@@ -234,7 +237,7 @@ class SearchDownshift extends React.Component {
         });
         searchSuggestionBox.scrollTop = 1;
         // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
-        searchSuggestionBox.addEventListener("scroll", (e) => {
+        searchSuggestionBox.addEventListener("scroll", () => {
           if (searchSuggestionBox.scrollTop === 0) {
             searchSuggestionBox.scrollTop = 1;
           } else if (
@@ -277,6 +280,7 @@ class SearchDownshift extends React.Component {
 
       // Downshiftがviewされたとき
       if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
+        //
       }
 
       // InitDownshiftまたはDownshiftがviewされたとき(検索作業が開始したとき)

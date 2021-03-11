@@ -132,7 +132,9 @@ class BlogListInfo extends React.Component {
                           this.props.group
                         }
                       >
-                        "{this.props.narrowingKeyword}"
+                        {`"`}
+                        {this.props.narrowingKeyword}
+                        {`"`}
                       </span>
                     )}
                     {this.props.narrowingPost && (

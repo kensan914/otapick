@@ -53,8 +53,8 @@ class BlogAdmin(admin.ModelAdmin):
         images = Image.objects.filter(publisher=obj, order=0)
         if images.exists():
             image = images.first()
-            if image.picture_250x:
-                return format_html('<img src="{}" width="100" style="border-radius: 8px" />', image.picture_250x.url)
+            if image.picture and image.picture_250x:
+                return format_html('<a href={} target="_blank"><img src="{}" width="100" style="border-radius: 8px" /></a>', image.picture.url, image.picture_250x.url)
     format_image.short_description = 'サムネイル'
     format_image.empty_value_display = 'No image'
 

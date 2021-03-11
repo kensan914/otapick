@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import { URLJoin, getGroup, isMobile, isSmp } from "../../modules/utils";
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
@@ -41,61 +41,75 @@ const ImageList = (props) => {
               isShowTopComponent && status === "success" && topComponent
             }
             NotFoundComponent={NotFoundComponent}
-          >
-            {items.map(
-              (
-                {
-                  groupID,
-                  blogCt,
-                  blogTitle,
-                  src,
-                  url,
-                  blogUrl,
-                  officialUrl,
-                  writer,
-                  order,
-                  isFavorite,
-                },
-                i
-              ) => {
-                const gridItemClassName =
-                  "grid-item " +
-                  (isFluid
-                    ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " +
-                      (isMobile ? "my-1 " : "my-3 ")
-                    : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " +
-                      (isMobile ? "my-1 " : "my-3 "));
-                return (
-                  <div key={i}>
-                    <div className={gridItemClassName}>
-                      <ImageCard
-                        id={i}
-                        groupID={groupID}
-                        group={getGroup(groupID)}
-                        blogCt={blogCt}
-                        blogTitle={blogTitle}
-                        src={src}
-                        url={url}
-                        blogUrl={blogUrl}
-                        officialUrl={officialUrl}
-                        writer={writer}
-                        order={order}
-                        isFavorite={isFavorite}
-                      />
-                    </div>
+            render={(
+              masonryElmWidth /* masonryがlayoutされmasonryElmWidthに変化があるたび変更 */
+            ) => {
+              return (
+                <>
+                  {items.map(
+                    (
+                      {
+                        groupID,
+                        blogCt,
+                        blogTitle,
+                        src,
+                        url,
+                        blogUrl,
+                        officialUrl,
+                        writer,
+                        order,
+                        isFavorite,
+                        width,
+                        height,
+                      },
+                      i
+                    ) => {
+                      const gridItemClassName =
+                        "grid-item " +
+                        (isFluid
+                          ? "col-6 col-md-4 col-lg-3 col-xl-2 px-1 px-sm-2 " +
+                            (isMobile ? "my-1 " : "my-3 ")
+                          : "col-6 col-md-4 col-lg-3 px-1 px-sm-2 " +
+                            (isMobile ? "my-1 " : "my-3 "));
+                      return (
+                        <div key={i}>
+                          <div className={gridItemClassName}>
+                            <ImageCard
+                              id={i}
+                              groupID={groupID}
+                              group={getGroup(groupID)}
+                              blogCt={blogCt}
+                              blogTitle={blogTitle}
+                              src={src}
+                              url={url}
+                              blogUrl={blogUrl}
+                              officialUrl={officialUrl}
+                              writer={writer}
+                              order={order}
+                              isFavorite={isFavorite}
+                              masonryElmWidth={masonryElmWidth}
+                              width={width}
+                              height={height}
+                            />
+                          </div>
 
-                    {!isExcludeAds && i % ADS_INTERVAL === ADS_INDEX && (
-                      <div
-                        className={gridItemClassName + (isMobile ? "mb-4" : "")}
-                      >
-                        <SquareAds />
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-            )}
-          </List>
+                          {!isExcludeAds && i % ADS_INTERVAL === ADS_INDEX && (
+                            <div
+                              className={
+                                gridItemClassName + (isMobile ? "mb-4" : "")
+                              }
+                            >
+                              <SquareAds />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+                  )}
+                </>
+              );
+            }}
+          />
         );
       }}
     />
@@ -178,13 +192,13 @@ export const ImageListModel = withRouter((props) => {
   const [isShowTopComponent, setIsShowTopComponent] = useState(false);
   const authState = useAuthState();
 
-  const { isLoading, resData, request } = useAxios(
+  const { isLoading, request } = useAxios(
     URLJoin(urlExcludePage, `?page=${pageRef.current}`),
     "get",
     {
       thenCallback: (res) => {
         if (res.data.length > 0) {
-          const newImages = res.data.map((item, index) => ({
+          const newImages = res.data.map((item) => ({
             groupID: item.blog.group_id,
             blogCt: item.blog.blog_ct,
             blogTitle: item.blog.title,
@@ -195,6 +209,8 @@ export const ImageListModel = withRouter((props) => {
             writer: item.blog.writer,
             order: item.image.order,
             isFavorite: item.image.is_favorite,
+            width: item.image.width,
+            height: item.image.height,
           }));
           appendItems(newImages);
           setStatus("success");

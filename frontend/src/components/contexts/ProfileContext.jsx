@@ -67,15 +67,11 @@ const ProfileProvider = ({ children }) => {
   });
 
   const authState = useAuthState();
-  const { isLoading, resData, request } = useAxios(
-    URLJoin(BASE_URL, "me/"),
-    "get",
-    {
-      thenCallback: (res) =>
-        profileDispatch({ type: "SET_PROFILE", profile: res.data }),
-      token: authState.token,
-    }
-  );
+  const { request } = useAxios(URLJoin(BASE_URL, "me/"), "get", {
+    thenCallback: (res) =>
+      profileDispatch({ type: "SET_PROFILE", profile: res.data }),
+    token: authState.token,
+  });
 
   useEffect(() => {
     if (authState.status === "Authenticated") {

@@ -1,4 +1,4 @@
-import Lottie from "lottie-web";
+import UAParser from "ua-parser-js";
 import {
   SHOW_NAVBAR_POS,
   SHOW_SUB_NAVBAR_POS,
@@ -11,19 +11,24 @@ import {
   GROUPS,
 } from "./env";
 
-// ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undefined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo"
+/**
+ * ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undefined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo"
+ */
 export const URLJoin = (...args) => {
-  args = args.filter((n) => n !== undefined);
+  args = args.filter((n) => n !== void 0 && n !== null);
   for (let i = args.length - 1; i >= 0; i--) {
-    if (args[i].toString().startsWith("?")) continue;
-    if (!args[i].toString().endsWith("/")) {
-      args[i] += "/";
-      break;
+    const arg = args[i];
+    if (typeof arg === "string") {
+      if (arg.toString().startsWith("?")) continue;
+      if (!arg.toString().endsWith("/")) {
+        args[i] += "/";
+        break;
+      }
     }
   }
   return args
     .join("/")
-    .replace(/[\/]+/g, "/")
+    .replace(/[/]+/g, "/")
     .replace(/^(.+):\//, "$1://")
     .replace(/^file:/, "file:/")
     .replace(/\/(\?|&|#[^!])/g, "$1")
@@ -96,7 +101,6 @@ export const shortenNum = (num) => {
   }
 };
 
-const UAParser = require("ua-parser-js");
 export let isMobile = true; // スマホ・タブレット: true, PC: false
 export let isSmp = true; // スマホ: true, タブレット・PC: false
 
@@ -264,15 +268,15 @@ export const addLongPressEventListeners = (elm, longPressedFunc) => {
   if (!elm) return;
 
   let longPressTimer;
-  elm.addEventListener("touchstart", (e) => {
+  elm.addEventListener("touchstart", () => {
     longPressTimer = setTimeout(() => {
       longPressedFunc();
     }, LONG_PRESS_TIME);
   });
-  elm.addEventListener("touchend", (e) => {
+  elm.addEventListener("touchend", () => {
     clearTimeout(longPressTimer);
   });
-  elm.addEventListener("touchmove", (e) => {
+  elm.addEventListener("touchmove", () => {
     clearTimeout(longPressTimer);
   });
 };
@@ -302,6 +306,7 @@ export const updateMeta = (metaData) => {
 // Global site tag (gtag.js) - Google Analytics
 export const gtagTo = (pathname) => {
   if (!DEBUG) {
+    // eslint-disable-next-line no-undef
     gtag("config", GA_TRACKING_ID, {
       page_path: pathname,
     });
@@ -379,7 +384,7 @@ export const cvtKeyFromSnakeToCamel = (obj) => {
 /** スネークケースのtextをキャメルケースに変換(例外: id => ID)
  * */
 export const fromSnakeToCamel = (text) => {
-  const textConvertedID = text.replace(/_id/g, (s) => "ID");
+  const textConvertedID = text.replace(/_id/g, () => "ID");
   return textConvertedID.replace(/_./g, (s) => {
     return s.charAt(1).toUpperCase();
   });

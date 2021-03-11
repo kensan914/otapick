@@ -322,6 +322,8 @@ homeAdditionalAPIView = HomeAdditionalAPIView.as_view()
 
 class SearchAPIView(views.APIView):
     q = ''
+    is_mobile = False # mobileクエリパラメータが↓IS_MOBILE_EVALUATION_SIGNと一致するか
+    IS_MOBILE_EVALUATION_SIGN = "true"
 
     def serialize_blogs(self, blogs):
         return BlogSerializer(blogs, many=True).data
@@ -331,18 +333,15 @@ class SearchAPIView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         self.q = self.request.GET.get('q')
+        self.is_mobile = self.request.GET.get('mobile') == self.IS_MOBILE_EVALUATION_SIGN
+
         if self.q:
-            result = otapick.parse_q(self.q)
+            result = otapick.parse_q(self.q, self.is_mobile)
             if result['type'] == 'url':
                 if result['class'] != 'unjust':
                     blogs = otapick.search_blogs(result)
                     if blogs is not None:
                         paginate_by = result['blog_list_paginate_by']
-                        if result['class'] == 'searchByLatest':
-                            if result['group_id'] == 1 or result['group_id'] == 3:
-                                paginate_by = 10
-                            elif result['group_id'] == 2:
-                                paginate_by = 12
                         blogs = blogs[paginate_by * ( result['page'] - 1 ): paginate_by * result['page']]
                         blogs_data = self.serialize_blogs(blogs)
 

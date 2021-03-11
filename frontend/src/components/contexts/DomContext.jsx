@@ -31,10 +31,8 @@ const domReducer = (prevState, action) => {
         footerRef: action.footerRef,
       };
 
-    case "SET_SUBNAVBAR_REF":
-      /** set subNavbarRef
-       * @param {Object} action [type, subNavbarRef, locationKey] */
-
+    case "SET_SUBNAVBAR_REF": /** set subNavbarRef
+     * @param {Object} action [type, subNavbarRef, locationKey] */ {
       const _subNavbarRefs = prevState.subNavbarRefs;
       _subNavbarRefs[action.locationKey] = action.subNavbarRef;
 
@@ -42,6 +40,7 @@ const domReducer = (prevState, action) => {
         ...prevState,
         subNavbarRefs: _subNavbarRefs,
       };
+    }
 
     case "APPLY_SHOW_FOOTER":
       /** 外部からフッターを表示する。

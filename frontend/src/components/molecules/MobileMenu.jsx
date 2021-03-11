@@ -93,7 +93,7 @@ class MobileMenu extends React.Component {
           );
           scrollMenuBox.scrollTop = 1;
           // ↓ https://qiita.com/noraworld/items/2834f2e6f064e6f6d41a
-          scrollMenuBox.addEventListener("scroll", (e) => {
+          scrollMenuBox.addEventListener("scroll", () => {
             if (scrollMenuBox.scrollTop === 0) {
               scrollMenuBox.scrollTop = 1;
             } else if (
@@ -158,11 +158,14 @@ export class _MobileTopMenu extends MobileMenu {
       triggerButton = (
         <>
           {this.props.authState.status === "Authenticated" ? (
-            <Button className="navbar-profile-icon-mobile-button">
+            <Button
+              className="navbar-profile-icon-mobile-button"
+              id={`mobiletopmenu-button-${this.props.id}`}
+              onClick={() => this.toggleWork()}
+            >
               <img
                 src={this.props.profileState.profile.image}
                 className="navbar-profile-icon-mobile"
-                onClick={() => this.toggleWork()}
               />
             </Button>
           ) : (

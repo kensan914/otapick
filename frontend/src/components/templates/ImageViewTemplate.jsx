@@ -35,7 +35,7 @@ class ImageViewTemplate extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (checkNotCached(this.props)) {
       const { groupID, blogCt, order } = getImageViewUrlComposition(this.props);
       const prevImageViewUrlComposition = getImageViewUrlComposition(prevProps);

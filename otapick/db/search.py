@@ -1,5 +1,4 @@
 import re
-
 from django.db.models import Q
 from main.models import Member, Blog
 
@@ -42,6 +41,7 @@ def search_blogs_by_dy(origin_blogs, dy):
 def search_members(q_info):
     # 全角⇒半角
     cleaned_text = q_info['text'].translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
+
     # 最後だけアルファベットの場合、最後を除外(日本語で入力途中の場合 ex. かげやm)
     if len(cleaned_text) > 1:
         last_char = cleaned_text[-1]
@@ -49,6 +49,12 @@ def search_members(q_info):
         p_eng = re.compile('[a-z]+')
         if not p_eng.fullmatch(char_other_than_last) and p_eng.fullmatch(last_char):
             cleaned_text = char_other_than_last
+
+    # メタ文字(* \ | ? +)をエスケープ
+    meta_char_tuple = ('\\', '*', '+', '.', '?', '{', '}', '(', ')', '[', ']', '^', '$', '-', '|', '/')
+    for meta_char in meta_char_tuple:
+        if meta_char in cleaned_text:
+            cleaned_text = cleaned_text.replace(meta_char, '\\{}'.format(meta_char))
 
     members =  Member.objects.filter(
         Q(full_kana__iregex=r'^%s' % cleaned_text) | Q(first_kana__iregex=r'^%s' % cleaned_text) |

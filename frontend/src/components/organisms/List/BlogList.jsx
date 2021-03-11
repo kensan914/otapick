@@ -40,13 +40,13 @@ const BlogList = withRouter((props) => {
 
   const authState = useAuthState();
 
-  const { isLoading, resData, request } = useAxios(
+  const { isLoading, request } = useAxios(
     URLJoin(urlExcludePage, `?page=${pageRef.current}`),
     "get",
     {
       thenCallback: (res) => {
         if (res.data.length > 0) {
-          const newBlogs = res.data.map((blog, index) => ({
+          const newBlogs = res.data.map((blog) => ({
             groupID: blog.group_id,
             blogCt: blog.blog_ct,
             title: blog.title,

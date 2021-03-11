@@ -29,20 +29,20 @@ const FavoriteButton = withCookies((props) => {
 
   const url = URLJoin(BASE_URL, "favorites/", groupID, blogCt, order);
   const putReqFunctions = useAxios(url, "put", {
-    thenCallback: (res) => {
+    thenCallback: () => {
       setIsFavorite(true);
     },
-    catchCallback: (err) => {
+    catchCallback: () => {
       setIsFavorite(false);
     },
     token: authState.token,
     csrftoken: props.cookies.get("csrftoken"),
   });
   const deleteReqFunctions = useAxios(url, "delete", {
-    thenCallback: (res) => {
+    thenCallback: () => {
       setIsFavorite(false);
     },
-    catchCallback: (err) => {
+    catchCallback: () => {
       setIsFavorite(true);
     },
     token: authState.token,

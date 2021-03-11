@@ -113,13 +113,21 @@ class Footer extends React.Component {
                     {Object.values(GROUPS).map((groupObj) => (
                       <React.Fragment key={groupObj.id}>
                         <li>
-                          <a target="_blank" href={groupObj.blogUrl}>
+                          <a
+                            rel="noreferrer"
+                            target="_blank"
+                            href={groupObj.blogUrl}
+                          >
                             {`${groupObj.name} 公式ブログ `}
                             <FontAwesomeIcon icon={faExternalLinkAlt} />
                           </a>
                         </li>
                         <li>
-                          <a target="_blank" href={groupObj.topUrl}>
+                          <a
+                            rel="noreferrer"
+                            target="_blank"
+                            href={groupObj.topUrl}
+                          >
                             {`${groupObj.name} 公式サイト `}
                             <FontAwesomeIcon icon={faExternalLinkAlt} />
                           </a>
@@ -143,7 +151,11 @@ class Footer extends React.Component {
                       <Link to="/privacy-policy">プライバシーポリシー</Link>
                     </li>
                     <li>
-                      <a target="_blank" href="https://twitter.com/otapick">
+                      <a
+                        rel="noreferrer"
+                        target="_blank"
+                        href="https://twitter.com/otapick"
+                      >
                         公式Twitter
                         <FontAwesomeIcon icon={faExternalLinkAlt} />
                       </a>

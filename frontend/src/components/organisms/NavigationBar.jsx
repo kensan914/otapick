@@ -29,7 +29,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
-const NavigationBar = (props) => {
+const NavigationBar = () => {
   const profileState = useProfileState();
   const profileDispatch = useProfileDispatch();
   const authState = useAuthState();

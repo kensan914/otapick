@@ -1,3 +1,5 @@
+import { faFolder } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import LinkButton from "../atoms/LinkButton";
 import { isMobile, isSmp } from "../modules/utils";
@@ -13,6 +15,7 @@ const ProfileButtonGroup = (props) => {
           isMobile ? "mobile" : ""
         } ${isSmp ? "ml-0" : "ml-3"}`}
       >
+        <FontAwesomeIcon icon={faFolder} className="mr-2" />
         <b>マイフォルダ</b>
       </LinkButton>
     </div>

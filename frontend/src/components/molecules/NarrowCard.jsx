@@ -5,28 +5,21 @@ import Picker from "react-month-picker";
 import "../../static/css/month-picker.css";
 
 class MonthBox extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      value: this.props.value || "-/-",
-    };
+  constructor(props) {
+    super(props);
     this._handleClick = this._handleClick.bind(this);
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      value: nextProps.value || "-/-",
-    });
-  }
+
   render() {
     return (
       <input
         className="form-control form-control-sm"
-        value={this.state.value}
+        value={this.props.value}
         id="month_picker"
         name="post"
         onClick={this._handleClick}
         autoComplete="off"
-        onChange={(val) => {}}
+        onChange={() => {}}
       />
     );
   }
@@ -54,8 +47,8 @@ class NarrowCard extends React.Component {
   handleChangeKw(e) {
     this.setState({ kwvalue: e.target.value });
   }
-  handleClickMonthBox(e) {
-    this.refs.pickAMonth.show();
+  handleClickMonthBox() {
+    this.pickAMonth.current.show();
   }
   handleAMonthChange(changedYear, changedMonth) {
     if (
@@ -66,7 +59,7 @@ class NarrowCard extends React.Component {
     } else
       this.setState({ mvalue: { year: changedYear, month: changedMonth } });
   }
-  handleAMonthDismiss(value) {
+  handleAMonthDismiss() {
     //
   }
   applyNarrowing() {
@@ -104,10 +97,10 @@ class NarrowCard extends React.Component {
       ],
     };
     const mvalue = this.state.mvalue;
-    const makeText = (m) => {
+    const makeMonthText = (m) => {
       if (m && m.year && m.month)
         return `${m.year}-${pickerLang.months[m.month - 1]}`;
-      else return "";
+      else return "-/-";
     };
 
     return (
@@ -149,7 +142,7 @@ class NarrowCard extends React.Component {
                 </label>
                 <div className="col-md-10">
                   <Picker
-                    ref="pickAMonth"
+                    ref={this.pickAMonth}
                     years={{ min: 2013 }}
                     value={this.initMvalue}
                     lang={pickerLang.months}
@@ -157,7 +150,7 @@ class NarrowCard extends React.Component {
                     onDismiss={this.handleAMonthDismiss}
                   >
                     <MonthBox
-                      value={makeText(mvalue)}
+                      value={makeMonthText(mvalue)}
                       onClick={this.handleClickMonthBox}
                     />
                   </Picker>

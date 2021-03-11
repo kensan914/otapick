@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from django.utils.timezone import make_aware
 from urllib3.exceptions import InsecureRequestWarning
 from image.models import Image
-from main.models import Member, Blog
+from main.models import Member, Blog, Group
 import otapick
 
 
@@ -19,6 +19,7 @@ def register_external(group_id, ct):
     sleep_time_1 = 1
     sleep_time_3 = 3
 
+    if group_id == 3: group_id = 1 
     if Member.objects.filter(belonging_group__group_id=group_id, ct=ct).exists():
         member = Member.objects.get(belonging_group__group_id=group_id, ct=ct)
     else:
@@ -70,7 +71,7 @@ def register_external(group_id, ct):
                         dt = None
                     return make_aware(dt)
 
-                post_date = otapick.convert_datetime(postdate_tag.text, group_id=2)
+                post_date = convert_datetime(postdate_tag.text, group_id=2)
 
                 content = soup2.select_one('section.blog-view__blog__content')
 
@@ -80,6 +81,7 @@ def register_external(group_id, ct):
                     post_date=post_date,
                     writer=member,
                     text=str(content),
+                    publishing_group=Group.objects.get(group_id=3 if group_id == 1 else group_id)
                 )
 
                 images = content.select('img')

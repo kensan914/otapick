@@ -27,7 +27,11 @@ export class ContactContent extends React.Component {
           </h4>
           <p>
             メールアドレス:{isSmp && <br />}
-            <a target="_blank" href="mailto:otapick210@gmail.com">
+            <a
+              rel="noreferrer"
+              target="_blank"
+              href="mailto:otapick210@gmail.com"
+            >
               otapick210@gmail.com
             </a>
           </p>
@@ -41,7 +45,11 @@ export class ContactContent extends React.Component {
           </h4>
           <p>
             Twitter公式アカウント:{isSmp && <br />}
-            <a target="_blank" href="https://twitter.com/otapick">
+            <a
+              rel="noreferrer"
+              target="_blank"
+              href="https://twitter.com/otapick"
+            >
               ヲタピック
             </a>
           </p>
@@ -101,6 +109,7 @@ export class TermsOfServiceContent extends React.Component {
           <ul>
             <li>
               <a
+                rel="noreferrer"
                 style={{ color: "deepskyblue" }}
                 href="https://twitter.com/"
                 target="_blank"
@@ -237,6 +246,7 @@ export class PrivacyPolicyContent extends React.Component {
           <p>
             ユーザーが、アカウント利用サービスを利用するにあたり、
             <a
+              rel="noreferrer"
               style={{ color: "deepskyblue" }}
               href="https://twitter.com/"
               target="_blank"
@@ -293,6 +303,7 @@ export class PrivacyPolicyContent extends React.Component {
           <a
             href="https://www.google.com/intl/ja_jp/adsense/start/"
             target="_blank"
+            rel="noreferrer"
           >
             Google AdSense
           </a>
@@ -304,16 +315,25 @@ export class PrivacyPolicyContent extends React.Component {
           <a
             href="https://adssettings.google.com/authenticated"
             target="_blank"
+            rel="noreferrer"
           >
             広告設定
           </a>
           でパーソナライズ広告を無効にすることも可能です。 また、
-          <a href="https://www.aboutads.info/choices/" target="_blank">
+          <a
+            href="https://www.aboutads.info/choices/"
+            target="_blank"
+            rel="noreferrer"
+          >
             www.aboutads.info
           </a>
           にアクセスすれば、パーソナライズ広告に使われる第三者配信事業者の
           Cookie を無効にすることも可能です。 Google AdSenseの詳細は「
-          <a href="https://policies.google.com/?hl=ja" target="_blank">
+          <a
+            href="https://policies.google.com/?hl=ja"
+            target="_blank"
+            rel="noreferrer"
+          >
             Googleポリシーと規約
           </a>
           」をご覧ください。
@@ -326,6 +346,7 @@ export class PrivacyPolicyContent extends React.Component {
           <a
             href="https://marketingplatform.google.com/about/analytics/terms/jp/"
             target="_blank"
+            rel="noreferrer"
           >
             Googleアナリティクス利用規約
           </a>

@@ -4,7 +4,6 @@ import axios from "axios";
 import { cvtKeyFromSnakeToCamel, getGroup, gtagTo } from "../modules/utils";
 import { URLJoin } from "../modules/utils";
 import { BASE_URL, DELAY_TIME } from "../modules/env";
-import authAxios from "../modules/axios";
 
 class ViewTemplate extends React.Component {
   constructor(props) {

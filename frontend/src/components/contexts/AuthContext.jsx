@@ -1,6 +1,5 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
-import { getItem, removeItem, storeItem } from "../modules/utils";
-import { withCookies } from "react-cookie";
+import { removeItem, storeItem } from "../modules/utils";
 
 const authReducer = (prevState, action) => {
   switch (action.type) {

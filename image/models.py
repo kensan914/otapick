@@ -30,6 +30,8 @@ class Image(models.Model):
     picture = models.ImageField(verbose_name='イメージ(original)', upload_to=get_upload_to)
     picture_250x = models.ImageField(verbose_name='イメージ(250x)', null=True)
     picture_500x = models.ImageField(verbose_name='イメージ(500x)', null=True)
+    width = models.IntegerField(verbose_name='width(px)', default=0)
+    height = models.IntegerField(verbose_name='height(px)', default=0)
     upload_date = models.DateTimeField(verbose_name='アップロード日', auto_now_add=True)
     publisher = models.ForeignKey(Blog, verbose_name='掲載ブログ', on_delete=models.CASCADE)
     num_of_downloads = models.IntegerField(verbose_name='ダウンロード数', default=0)

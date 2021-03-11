@@ -2,8 +2,10 @@ from PIL import Image
 from otapick.image.abstracts import ImageEditor
 
 
-### 引数widthで指定した幅に圧縮（比率固定） ###
 class ImageCompressor(ImageEditor):
+    """
+    引数widthで指定した幅に圧縮（比率固定）
+    """
     resize_width = 500
 
     def exe_edit(self, img):
@@ -18,8 +20,10 @@ class ImageCompressor(ImageEditor):
         super().edit(img_path=img_path)
 
 
-### 正方形にトリミング。その時、範囲は画像上部に合わせる。（メンバー画像の編集に） ###
 class ImageTrimmer(ImageEditor):
+    """
+    正方形にトリミング。その時、範囲は画像上部に合わせる。（メンバー画像の編集に）
+    """
     trim_type = 'square_up'
 
     def exe_edit(self, img):

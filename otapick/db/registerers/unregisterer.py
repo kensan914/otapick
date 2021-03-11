@@ -16,7 +16,7 @@ def unregister(correct_cts_list, group, unregister_num):
         if len(correct_cts_list) <= page and len(correct_cts_list) < unregister_num:
             blogs_data = blog_crawler.crawl(group_key, page)
             correct_cts_list.append([blog_info['blog_ct'] for blog_info in blogs_data])
-        for blog in Blog.objects.filter(publishing_group__group_id=group_id).order_by('-post_date', 'order_for_simul')[paginate_by*page:paginate_by*(page+1)]:
+        for blog in Blog.objects.filter(publishing_group__group_id=group_id, writer__graduate=False).order_by('-post_date', 'order_for_simul')[paginate_by*page:paginate_by*(page+1)]:
             if not blog.blog_ct in correct_cts_list[page]:
                 otapick.print_console(str(blog.blog_ct) + "/" + str(group_id) + ' blog is not found in official blog on page ' + str(page) + '.')
                 otapick.print_console('Investigate in detail...')

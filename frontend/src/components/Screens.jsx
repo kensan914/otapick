@@ -33,7 +33,7 @@ import { useDomDispatch } from "./contexts/DomContext";
 const UsersDetailPage = React.lazy(() => import("./pages/UsersDetailPage"));
 const LowerRightMenu = React.lazy(() => import("./organisms/LowerRightMenu"));
 
-const Screens = (props) => {
+const Screens = () => {
   const domDispatch = useDomDispatch();
   const footerRef = useRef(0);
 

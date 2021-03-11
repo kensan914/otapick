@@ -17,7 +17,8 @@ const List = withRouter((props) => {
     request,
     topComponent,
     NotFoundComponent,
-    children,
+    // children,
+    render,
   } = props;
   const domDispatch = useDomDispatch();
 
@@ -41,6 +42,7 @@ const List = withRouter((props) => {
     }
   };
 
+  const [masonryElmWidth, setMasonryElmWidth] = useState(0);
   const masonryOptions = {
     itemSelector: ".grid-item",
     // transitionDuration: "0.1s",
@@ -62,9 +64,15 @@ const List = withRouter((props) => {
           <Masonry
             options={masonryOptions}
             disableImagesLoaded={false}
-            // updateOnEachImageLoad={true}
+            onLayoutComplete={(masonryElms) => {
+              // masonryの最初の要素のwidthを取得し(全要素共通のため)、変化があったとき各cardに流す
+              if (masonryElms[0].size.width !== masonryElmWidth) {
+                setMasonryElmWidth(masonryElms[0].size.width);
+              }
+              console.log(masonryElms[0].size.width);
+            }}
           >
-            {children}
+            {render(masonryElmWidth)}
           </Masonry>
         )}
         {status === "blog_not_found" && (

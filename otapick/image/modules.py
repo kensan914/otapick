@@ -3,12 +3,15 @@ import shutil
 import otapick
 from image.models import Image
 from main.models import Blog
+from PIL import Image
 
 
-def compress_blog_image(image):
+def compress_blog_image(image, is_bulk=False):
     """
     image単位で500xと250x、2つの圧縮imageを作成。
+    is_bulk == Trueの時、image.saveは行わずimageを返す
     :param image:
+    :param is_bulk:
     :return:
     """
     base_dir_path = os.path.dirname(str(image.picture.path)) # /www/var/otapick/media/blog_images/1_07/9244
@@ -40,6 +43,9 @@ def compress_blog_image(image):
     ### register media ###
     image.picture_250x = media_250x
     image.picture_500x = media_500x
+
+    if is_bulk:
+        return image
     image.save()
 
 
@@ -68,3 +74,12 @@ def compress_blog_images_by(*, member=None, group=None, console=True):
             if console: otapick.console_with_blog_info(blog, 'compressed!!')
         else:
             if console: otapick.console_with_blog_info(blog, 'image not found!!')
+
+
+def get_image_w_h(image):
+    """
+    imageのwidth・heightを取得しdictで返す
+    :return: {'width': 100, 'height': 200}
+    """
+    pil_image = Image.open(image.picture.path)
+    return pil_image.size

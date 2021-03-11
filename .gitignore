@@ -150,3 +150,6 @@ registerer_ex.py
 static/text/
 
 *.code-workspace
+
+.vscode/
+.idea/

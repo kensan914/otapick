@@ -12,7 +12,10 @@ class Group(models.Model):
     domain = models.CharField(verbose_name='ドメイン', max_length=100)
     key = models.CharField(verbose_name='キー', max_length=30, blank=True)
     is_active = models.BooleanField(verbose_name='活動状況', default=True)
-    blog_list_paginate_by = models.IntegerField(verbose_name='公式ブログリストの1ページ当たりのブログ件数', default=20)
+    blog_list_paginate_by = models.IntegerField(verbose_name='(PC)公式ブログの1ページ当たりのブログ件数', default=20)
+    blog_list_paginate_by_mobile = models.IntegerField(verbose_name='(Mobile)公式ブログの1ページ当たりのブログ件数', default=20)
+    latest_list_paginate_by = models.IntegerField(verbose_name='(PC)公式最新ブログリストのブログ件数', default=12)
+    latest_list_paginate_by_mobile = models.IntegerField(verbose_name='(Mobile)公式最新ブログリストのブログ件数', default=12)
     blog_url_format = models.CharField(verbose_name='公式ブログ詳細ページURIフォーマット(blog_ctを表す{}を一つ含む)', max_length=200, blank=True)
     member_url_format = models.CharField(verbose_name='メンバー詳細ページURIフォーマット(member_ctを表す{}を一つ含む)', max_length=200, blank=True)
 

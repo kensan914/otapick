@@ -106,6 +106,7 @@ class BlogViewInfo extends React.Component {
                 href={this.props.officialUrl}
                 className={this.props.group}
                 target="_blank"
+                rel="noreferrer"
                 id="officialLink"
               >
                 <div className="download-official-a">

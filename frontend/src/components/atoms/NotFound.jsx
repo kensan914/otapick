@@ -28,16 +28,19 @@ export class NotFoundBlogsContent extends React.Component {
           <p>
             現在、
             <a
+              rel="noreferrer"
               target="_blank"
               href={GROUPS["1"].blogUrl}
             >{`${GROUPS["1"].name}公式ブログ`}</a>
             ・
             <a
+              rel="noreferrer"
               target="_blank"
               href={GROUPS["2"].blogUrl}
             >{`${GROUPS["2"].name}公式ブログ`}</a>
             ・
             <a
+              rel="noreferrer"
               target="_blank"
               href={GROUPS["3"].blogUrl}
             >{`${GROUPS["3"].name}公式ブログ`}</a>

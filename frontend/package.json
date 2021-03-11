@@ -9,9 +9,12 @@
     "dev": "SET NODE_ENV=development&webpack --mode development",
     "build-dev": "SET NODE_ENV=development&webpack --mode production",
     "build": "webpack --mode production",
+
     "lint": "run-script-os",
     "lint:win32": "npx eslint --fix \"./src/**/*.{ts,tsx,js,jsx}\" & npx prettier --write \"./src/**/*.{ts,tsx,js,jsx,css}\"",
-    "lint:darwin:linux": "npx eslint --fix \"./src/**/*.{ts,tsx,js,jsx}\"; npx prettier --write \"./src/**/*.{ts,tsx,js,jsx,css}\""
+    "lint:darwin:linux": "npx eslint --fix \"./src/**/*.{ts,tsx,js,jsx}\"; npx prettier --write \"./src/**/*.{ts,tsx,js,jsx,css}\"",
+    "justlint": "npx eslint --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
+    "justprettier": "npx prettier --write \"./src/**/*.{ts,tsx,js,jsx,css}\""
   },
   "keywords": [],
   "author": "",
@@ -73,6 +76,12 @@
     "reactstrap": "^8.4.1",
     "ua-parser-js": "^0.7.21"
   },
+  "eslintIgnore": [
+    "/.eslintrc.js",
+    "/.prettierrc.js",
+    "/babel.config.js",
+    "/metro.config.js"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -80,7 +89,8 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx}": [
-      "npm run lint"
+      "npm run justlint",
+      "npm run justprettier"
     ]
   }
 }

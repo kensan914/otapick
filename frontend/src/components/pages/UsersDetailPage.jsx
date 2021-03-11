@@ -14,7 +14,7 @@ const User = (props) => {
   const isMe = profileState.profile.username === username;
 
   const [userProfile, setUserProfile] = useState({});
-  const { isLoading, resData, request } = useAxios(
+  const { isLoading, request } = useAxios(
     URLJoin(BASE_URL, "users/", username),
     "get",
     {

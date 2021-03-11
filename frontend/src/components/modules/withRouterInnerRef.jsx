@@ -14,7 +14,8 @@ export const withRouterInnerRef = (WrappedComponent) => {
 
   const ComponentWithRef = withRouter(InnerComponentWithRef, { withRef: true });
 
-  return React.forwardRef((props, ref) => {
+  const _ComponentWithRef = (props, ref) => {
     return <ComponentWithRef {...props} forwardRef={ref} />;
-  });
+  };
+  return React.forwardRef(_ComponentWithRef);
 };

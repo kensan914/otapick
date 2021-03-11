@@ -1,5 +1,6 @@
 import { getIsSmp, isMobile } from "./utils";
 
+// eslint-disable-next-line no-undef
 export const DEBUG = NODE_ENV === "development";
 export const FQDN = window.env.fqdn;
 export const BASE_URL = DEBUG ? `http://${FQDN}/api/` : `https://${FQDN}/api/`;
