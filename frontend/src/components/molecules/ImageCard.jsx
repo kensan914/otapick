@@ -21,7 +21,6 @@ import { withCookies } from "react-cookie";
 import { BASE_URL } from "../modules/env";
 import FavoriteButton from "../atoms/FavoriteButton";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
-// import LazyLoad from "react-lazyload";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCrown } from "@fortawesome/free-solid-svg-icons";
 
@@ -235,24 +234,6 @@ class ImageCard extends React.Component {
             }}
           >
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
-              {/* LazyLoadいらんくて、onLoadだけでいけるかも。ある一定の位置までいったらロードし始めるとかじゃなくて、直ぐロードでもよくない？？ */}
-              {/* <LazyLoad
-                  // width={this.props.masonryElmWidth}
-                  height={this.props.masonryElmWidth * 1.8} // テスト
-                  once
-                  placeholder={
-                    <div
-                      ref={(placeholderCardRef) =>
-                        (this.placeholderCardRef = placeholderCardRef)
-                      }
-                      style={{
-                        // width: this.props.masonryElmWidth,
-                        height: this.props.masonryElmWidth * 1.8, // テスト
-                        backgroundColor: "red",
-                      }}
-                    />
-                  }
-                > */}
               {this.state.isLoadImage ? (
                 <div ref={(imageCardRef) => (this.imageCardRef = imageCardRef)}>
                   <img
@@ -278,7 +259,6 @@ class ImageCard extends React.Component {
                   }`}
                 />
               )}
-              {/* </LazyLoad> */}
             </div>
           </Link>
 
