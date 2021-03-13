@@ -1519,7 +1519,7 @@ a.sakura {
 
 .otapick-totop-button {
   position: fixed;
-  z-index: 100;
+  z-index: 990;
   opacity: 0;
   animation: 0.8s fadeIn forwards;
   background-position: center;
@@ -2198,6 +2198,7 @@ SVGコード...を押下
   overflow: hidden;
   box-shadow: 0 0 0.35rem rgba(0, 0, 0, 0.15) !important;
   border: none;
+  z-index: 989 !important;
 }
 
 .dropdown-item {

@@ -29,12 +29,15 @@ const User = (props) => {
     request();
   }, [username]);
 
+  const accessKey = this.props.location.state.accessKey;
+
   return (
     <UsersDetailTemplate
       isLoading={isLoading}
       profile={userProfile}
       username={username}
       isMe={isMe}
+      accessKey={accessKey}
     />
   );
 };

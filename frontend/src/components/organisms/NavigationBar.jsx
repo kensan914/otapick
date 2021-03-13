@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import SearchDownshift from "../molecules/SearchDownshift";
-import { isMobile, isSmp } from "../modules/utils";
+import { generateUuid4, isMobile, isSmp } from "../modules/utils";
 import { MobileTopMenu } from "../molecules/MobileMenu";
 import { GROUPS } from "../modules/env";
 import {
@@ -110,7 +110,11 @@ const NavigationBar = () => {
                 </DropdownItem>
                 <DropdownItem
                   tag={Link}
-                  to={`/users/${profileState.profile.username}/`}
+                  // to={`/users/${profileState.profile.username}/`}
+                  to={{
+                    pathname: `/users/${profileState.profile.username}/`,
+                    state: { accessKey: generateUuid4() },
+                  }}
                 >
                   マイページ
                 </DropdownItem>

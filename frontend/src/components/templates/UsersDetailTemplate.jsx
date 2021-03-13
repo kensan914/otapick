@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import { isMobile } from "../modules/utils";
 import { HorizontalLoader } from "../molecules/Loader";
@@ -7,7 +7,14 @@ import ImageList from "../organisms/List/ImageList";
 import ProfileView from "../organisms/ProfileView";
 
 const UserTemplate = (props) => {
-  const { profile, username, isMe, isLoading } = props;
+  const { profile, username, isMe, isLoading, accessKey } = props;
+
+  const [favoriteListKey, setFavoriteListKey] = useState(accessKey);
+  useState(() => {
+    if (typeof accessKey !== "undefined" && favoriteListKey !== accessKey) {
+      setFavoriteListKey(accessKey);
+    }
+  }, [accessKey]);
 
   return (
     <>
@@ -24,7 +31,10 @@ const UserTemplate = (props) => {
           <div className="container-fluid mt-3 text-muted">
             <ProfileButtonGroup username={username} />
           </div>
-          <div className="container-fluid text-muted mt-3 list-container-fluid favorite-images-container">
+          <div
+            key={accessKey}
+            className="container-fluid text-muted mt-3 list-container-fluid favorite-images-container"
+          >
             <ImageList type="FAVORITE_IMAGES" />
           </div>
         </>
