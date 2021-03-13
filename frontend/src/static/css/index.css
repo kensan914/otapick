@@ -2813,3 +2813,38 @@ SVGコード...を押下
 .favorite-images-container {
   min-height: 30rem;
 }
+
+.tooltip-container {
+  display: inline-block;
+}
+.tooltip-wrapper {
+  position: relative;
+  display: flex;
+}
+.tooltip-body {
+  font-size: small;
+  position: absolute;
+  transition: all 0.15s ease 0s;
+  opacity: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  margin: auto;
+  display: block;
+  content: attr(data-tooltip);
+  white-space: nowrap;
+  color: white;
+  background: rgb(20, 20, 20);
+}
+.tooltip-body.top {
+  top: -26px;
+}
+.tooltip-body.top.active {
+  top: -30px;
+}
+.tooltip-body.bottom {
+  bottom: -26px;
+}
+.tooltip-body.bottom.active {
+  bottom: -30px;
+}
