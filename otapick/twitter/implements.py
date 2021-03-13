@@ -8,6 +8,7 @@ from otapick.extensions.serializers_ex import generate_url, generate_official_ur
 from otapick.twitter.abstracts import TwitterBot
 import emoji
 from otapick.twitter.generics import RankBot
+from urllib.parse import urljoin
 
 
 class UpdateBot(TwitterBot):
@@ -41,8 +42,8 @@ class UpdateBot(TwitterBot):
         text += self.generate_link('公式', generate_official_url(blog=blog))
 
         # otapick link
-        text += self.generate_link('もっと見る', OTAPICK_URL +
-                                   generate_url(blog=blog))
+        text += self.generate_link('もっと見る',
+                                   urljoin(OTAPICK_URL, generate_url(blog=blog)))
         text += '\n'
 
         # attention
@@ -88,8 +89,8 @@ class PopularityBot(RankBot):
         self.set_group_id(group_id)
         self.headline_title = '現在人気の画像'
         self.pictures = self.images.values_list('picture', flat=True)
-        self.otapick_link = '{}/images/{}?sort=popularity'.format(
-            OTAPICK_URL, group_id)
+        self.otapick_link = urljoin(
+            OTAPICK_URL, 'images/{}?sort=popularity'.format(group_id))
 
         return super().tweet(images=self.images)
 

@@ -12,6 +12,7 @@ from rest_framework.response import Response
 import otapick
 from account.models import Account
 from account.serializers import MeSerializer, UserSerializer
+from urllib.parse import urljoin
 
 
 class TwitterLoginAPIView(SocialLoginView):
@@ -34,7 +35,7 @@ class TwitterLoginCallbackView(views.APIView):
         result = otapick.get_access_token(oauth_token, oauth_verifier)
         q_params = otapick.parse_qsl(result.decode('utf-8'))
 
-        url = otapick.OTAPICK_URL + '/accounts/rest-auth/twitter/'
+        url = urljoin(otapick.OTAPICK_URL, '/accounts/rest-auth/twitter/')
 
         data = {'access_token': q_params['oauth_token'],
                 'token_secret': q_params['oauth_token_secret']}
