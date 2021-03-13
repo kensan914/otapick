@@ -12,19 +12,26 @@ class Group(models.Model):
     domain = models.CharField(verbose_name='ドメイン', max_length=100)
     key = models.CharField(verbose_name='キー', max_length=30, blank=True)
     is_active = models.BooleanField(verbose_name='活動状況', default=True)
-    blog_list_paginate_by = models.IntegerField(verbose_name='(PC)公式ブログの1ページ当たりのブログ件数', default=20)
-    blog_list_paginate_by_mobile = models.IntegerField(verbose_name='(Mobile)公式ブログの1ページ当たりのブログ件数', default=20)
-    latest_list_paginate_by = models.IntegerField(verbose_name='(PC)公式最新ブログリストのブログ件数', default=12)
-    latest_list_paginate_by_mobile = models.IntegerField(verbose_name='(Mobile)公式最新ブログリストのブログ件数', default=12)
-    blog_url_format = models.CharField(verbose_name='公式ブログ詳細ページURIフォーマット(blog_ctを表す{}を一つ含む)', max_length=200, blank=True)
-    member_url_format = models.CharField(verbose_name='メンバー詳細ページURIフォーマット(member_ctを表す{}を一つ含む)', max_length=200, blank=True)
+    blog_list_paginate_by = models.IntegerField(
+        verbose_name='(PC)公式ブログの1ページ当たりのブログ件数', default=20)
+    blog_list_paginate_by_mobile = models.IntegerField(
+        verbose_name='(Mobile)公式ブログの1ページ当たりのブログ件数', default=20)
+    latest_list_paginate_by = models.IntegerField(
+        verbose_name='(PC)公式最新ブログリストのブログ件数', default=12)
+    latest_list_paginate_by_mobile = models.IntegerField(
+        verbose_name='(Mobile)公式最新ブログリストのブログ件数', default=12)
+    blog_url_format = models.CharField(
+        verbose_name='公式ブログ詳細ページURIフォーマット(blog_ctを表す{}を一つ含む)', max_length=200, blank=True)
+    member_url_format = models.CharField(
+        verbose_name='メンバー詳細ページURIフォーマット(member_ctを表す{}を一つ含む)', max_length=200, blank=True)
 
     def __str__(self):
         return self.name
 
 
 def get_upload_to(instance, filename):
-    media_dir_1 = str(instance.belonging_group.group_id) + '_' + str(instance.ct)
+    media_dir_1 = str(instance.belonging_group.group_id) + \
+        '_' + str(instance.ct)
     return 'member_images/{0}/{1}'.format(media_dir_1, filename)
 
 
@@ -45,12 +52,14 @@ class Member(models.Model):
     last_eng = models.CharField(verbose_name='姓_英', max_length=30, default='')
     first_eng = models.CharField(verbose_name='名_英', max_length=30, default='')
     full_eng = models.CharField(verbose_name='氏名_英', max_length=50, default='')
-    belonging_group = models.ForeignKey(Group, verbose_name='所属グループ', on_delete=models.PROTECT)
+    belonging_group = models.ForeignKey(
+        Group, verbose_name='所属グループ', on_delete=models.PROTECT)
     graduate = models.BooleanField(verbose_name='卒業生', default=False)
     independence = models.BooleanField(verbose_name='独立', default=True)
     temporary = models.BooleanField(verbose_name='仮メンバー', default=False)
     generation = models.IntegerField(verbose_name='期', default=1)
-    image = models.ImageField(verbose_name='宣材写真', upload_to=get_upload_to, null=True)
+    image = models.ImageField(
+        verbose_name='宣材写真', upload_to=get_upload_to, null=True)
 
     def __str__(self):
         return self.full_kanji
@@ -68,10 +77,13 @@ class Blog(models.Model):
     text = models.TextField(verbose_name='本文', max_length=1000000, null=True)
     post_date = models.DateTimeField(verbose_name='投稿日')
     order_for_simul = models.IntegerField(verbose_name='順番(同時投稿用)', default=0)
-    writer = models.ForeignKey(Member, verbose_name='メンバー', on_delete=models.PROTECT)
-    publishing_group = models.ForeignKey(Group, verbose_name='掲載グループ', on_delete=models.PROTECT, null=True)
+    writer = models.ForeignKey(
+        Member, verbose_name='メンバー', on_delete=models.PROTECT)
+    publishing_group = models.ForeignKey(
+        Group, verbose_name='掲載グループ', on_delete=models.PROTECT, null=True)
     num_of_downloads = models.IntegerField(verbose_name='総ダウンロード数', default=0)
-    num_of_most_downloads = models.IntegerField(verbose_name='最大ダウンロード数', default=0)
+    num_of_most_downloads = models.IntegerField(
+        verbose_name='最大ダウンロード数', default=0)
     num_of_views = models.IntegerField(verbose_name='閲覧数', default=0)
     v1_per_day = models.IntegerField(verbose_name='閲覧数(1日目)', default=0)
     v2_per_day = models.IntegerField(verbose_name='閲覧数(2日目)', default=0)

@@ -14,7 +14,8 @@ def get_request_token():
         client = oauth.Client(consumer)
 
         # reqest_token を取得
-        resp, content = client.request('{}?&oauth_callback={}'.format(request_token_url, callback_url))
+        resp, content = client.request(
+            '{}?&oauth_callback={}'.format(request_token_url, callback_url))
         request_token = dict(parse_qsl(content.decode('utf-8')))
         return request_token['oauth_token']
     except Exception as e:

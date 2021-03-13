@@ -6,7 +6,8 @@ from .models import Image, Favorite
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     raw_id_fields = ('publisher',)
-    list_display = ('format_image', 'order', 'format_title', 'format_member', 'format_group', 'num_of_views', 'num_of_downloads',)
+    list_display = ('format_image', 'order', 'format_title', 'format_member',
+                    'format_group', 'num_of_views', 'num_of_downloads',)
     list_display_links = ('format_image',)
     search_fields = ('publisher__title',)
     list_filter = ('publisher__publishing_group', 'publisher__writer',)
@@ -41,10 +42,11 @@ class ImageAdmin(admin.ModelAdmin):
     format_image_as_detail.empty_value_display = 'No image'
 
     fieldsets = (
-        (None, {'fields': ('order', 'format_image_as_detail', 'picture', 'picture_250x', 'picture_500x', 'width', 'height', 'publisher')}),
+        (None, {'fields': ('order', 'format_image_as_detail', 'picture',
+                           'picture_250x', 'picture_500x', 'width', 'height', 'publisher')}),
         ('スコア', {'fields': (
-        'num_of_downloads', 'd1_per_day', 'num_of_views', 'v1_per_day', 'v2_per_day', 'v3_per_day', 'score', 'changed',
-        'recommend_score')}),
+            'num_of_downloads', 'd1_per_day', 'num_of_views', 'v1_per_day', 'v2_per_day', 'v3_per_day', 'score', 'changed',
+            'recommend_score')}),
     )
     readonly_fields = ('format_image_as_detail',)
 
@@ -52,9 +54,11 @@ class ImageAdmin(admin.ModelAdmin):
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     raw_id_fields = ('image', 'user',)
-    list_display = ('format_image', 'format_user_username', 'format_user_name', 'format_user_image', 'created_at',)
+    list_display = ('format_image', 'format_user_username',
+                    'format_user_name', 'format_user_image', 'created_at',)
     list_display_links = ('format_image',)
-    list_filter = ('image__publisher__publishing_group', 'image__publisher__writer',)
+    list_filter = ('image__publisher__publishing_group',
+                   'image__publisher__writer',)
     date_hierarchy = 'created_at'
 
     def format_image(self, obj):
@@ -90,4 +94,5 @@ class FavoriteAdmin(admin.ModelAdmin):
         ('画像', {'fields': ('format_image_as_detail', 'image')}),
         ('ユーザ', {'fields': ('format_user_image', 'user')}),
     )
-    readonly_fields = ('created_at', 'format_image_as_detail', 'format_user_image')
+    readonly_fields = (
+        'created_at', 'format_image_as_detail', 'format_user_image')

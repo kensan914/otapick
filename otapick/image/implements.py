@@ -12,7 +12,8 @@ class ImageCompressor(ImageEditor):
         img_width, img_height = img.size
         resize_height = self.resize_width / img_width * img_height
 
-        img.thumbnail((int(self.resize_width), int(resize_height)), Image.ANTIALIAS)
+        img.thumbnail((int(self.resize_width), int(
+            resize_height)), Image.ANTIALIAS)
         return img
 
     def edit(self, img_path, width=500):

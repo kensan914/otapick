@@ -3,6 +3,7 @@ import tweepy
 from otapick.lib.constants import TWITTER_CK, TWITTER_CS, TWITTER_AT, TWITTER_AS
 import emoji
 
+
 class TwitterBot(metaclass=ABCMeta):
     def __init__(self):
         auth = tweepy.OAuthHandler(TWITTER_CK, TWITTER_CS)
@@ -53,7 +54,8 @@ class TwitterBot(metaclass=ABCMeta):
 
     def generate_link(self, title, link):
         text = ''
-        arrow_double_down = emoji.emojize(':arrow_double_down:', use_aliases=True)
+        arrow_double_down = emoji.emojize(
+            ':arrow_double_down:', use_aliases=True)
         text += '{}{}{}\n'.format(arrow_double_down, title, arrow_double_down)
         text += link
         text += '\n'
@@ -70,6 +72,8 @@ class TwitterBot(metaclass=ABCMeta):
     def set_group_id(self, group_id):
         self.group_id = group_id
         if group_id == 1:
-            self.group_emoji = emoji.emojize(':deciduous_tree:', use_aliases=True)
+            self.group_emoji = emoji.emojize(
+                ':deciduous_tree:', use_aliases=True)
         elif group_id == 2:
-            self.group_emoji = emoji.emojize(':sun_with_face:', use_aliases=True)
+            self.group_emoji = emoji.emojize(
+                ':sun_with_face:', use_aliases=True)

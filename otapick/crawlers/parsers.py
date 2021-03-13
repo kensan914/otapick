@@ -54,11 +54,14 @@ def get_member_image_tag_ex(soup):
 
 def get_blog_image_tags(group_key, soup):
     article_tag = get_article_tag(group_key, soup)
-    if article_tag is None: return
+    if article_tag is None:
+        return
     image_tags = article_tag.find_all('img')
     return image_tags
 
 # for blog list
+
+
 def get_blog_tags(group_key, soup):
     if group_key == 'keyaki':
         blog_tags = soup.select('article')
@@ -96,7 +99,8 @@ def get_blog_url(group_key, blog_tag):
         bottomli_tags = bottomul_tag.select('li')
         blog_url = bottomli_tags[1].find('a').get('href')
     elif group_key == 'hinata':
-        blog_url = blog_tag.select_one('div.p-button__blog_detail').find('a').get('href')
+        blog_url = blog_tag.select_one(
+            'div.p-button__blog_detail').find('a').get('href')
     elif group_key == 'sakura':
         blog_url = blog_tag.find('a').get('href')
     ### Edit ###
@@ -128,7 +132,8 @@ def get_blog_postdate_tag(group_key, blog_tag):
         bottomli_tags = bottomul_tag.select('li')
         postdate_tag = bottomli_tags[0]
     elif group_key == 'hinata':
-        postdate_tag = blog_tag.select_one('div.p-blog-article__info > div.c-blog-article__date')
+        postdate_tag = blog_tag.select_one(
+            'div.p-blog-article__info > div.c-blog-article__date')
     elif group_key == 'sakura':
         postdate_tag = blog_tag.select_one('div.blog-foot p.date.wf-a')
     ### Edit ###
@@ -143,7 +148,8 @@ def get_blog_writer_name(group_key, blog_tag):
     if group_key == 'keyaki':
         writer_name = blog_tag.select_one('div.box-ttl > p.name').text
     elif group_key == 'hinata':
-        writer_name = blog_tag.select_one('div.p-blog-article__info > div.c-blog-article__name').text
+        writer_name = blog_tag.select_one(
+            'div.p-blog-article__info > div.c-blog-article__name').text
     elif group_key == 'sakura':
         writer_name = blog_tag.select_one('div.blog-foot p.name').text
     ### Edit ###

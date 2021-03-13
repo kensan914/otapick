@@ -5,7 +5,8 @@ from otapick.image.implements import ImageCompressor, ImageTrimmer
 
 class MemberImageDownloader(Downloader):
     def set_media_dir_path_list(self, **kwargs):
-        self.media_dir_path_list = ['member_images', str(kwargs['group_id']) + '_' + kwargs['ct']]
+        self.media_dir_path_list = ['member_images', str(
+            kwargs['group_id']) + '_' + kwargs['ct']]
 
     def exe_edit(self, path):
         ImageTrimmer().edit(path)
@@ -24,7 +25,8 @@ class MemberImageDownloaderEx(MemberImageDownloader):
 
 class BlogImageDownloader(Downloader):
     def set_media_dir_path_list(self, **kwargs):
-        self.media_dir_path_list = ['blog_images', str(kwargs['group_id']) + '_' + kwargs['ct'], str(kwargs['blog_ct'])]
+        self.media_dir_path_list = ['blog_images', str(
+            kwargs['group_id']) + '_' + kwargs['ct'], str(kwargs['blog_ct'])]
 
     def download(self, url, group_id, blog_ct, ct):
         if group_id == 3:

@@ -25,6 +25,7 @@ result = {
 }
 '''
 
+
 def parse_q(text, is_mobile):
     result = {'text': text}
     parsed_url = urlparse(text)
@@ -82,6 +83,8 @@ def classify_url(result, splitO, query_set, group, is_mobile):
         return result
 
 # 時間指定されているときの"dy"パラメータを解析し、year, month, day をkeyとして持つdictionaryを作成。
+
+
 def get_dy(dy_text):
     dy = {}
     try:
@@ -95,7 +98,6 @@ def get_dy(dy_text):
     else:
         dy['day'] = None
     return dy
-
 
 
 def parse_text(result):

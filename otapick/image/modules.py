@@ -14,15 +14,20 @@ def compress_blog_image(image, is_bulk=False):
     :param is_bulk:
     :return:
     """
-    base_dir_path = os.path.dirname(str(image.picture.path)) # /www/var/otapick/media/blog_images/1_07/9244
-    dir_path_250x = os.path.join(base_dir_path, '250x') # /www/var/otapick/media/blog_images/1_07/9244/250x
-    dir_path_500x = os.path.join(base_dir_path, '500x') # /www/var/otapick/media/blog_images/1_07/9244/500x
+    base_dir_path = os.path.dirname(
+        str(image.picture.path))  # /www/var/otapick/media/blog_images/1_07/9244
+    # /www/var/otapick/media/blog_images/1_07/9244/250x
+    dir_path_250x = os.path.join(base_dir_path, '250x')
+    # /www/var/otapick/media/blog_images/1_07/9244/500x
+    dir_path_500x = os.path.join(base_dir_path, '500x')
     os.makedirs(dir_path_250x, exist_ok=True)
     os.makedirs(dir_path_500x, exist_ok=True)
 
-    base_file_name = os.path.basename(str(image.picture.path)) # sample.jpg
-    path_250x = os.path.join(dir_path_250x, base_file_name) # /www/var/otapick/media/blog_images/1_07/9244/250x/sample.jpg
-    path_500x = os.path.join(dir_path_500x, base_file_name) # /www/var/otapick/media/blog_images/1_07/9244/500x/sample.jpg
+    base_file_name = os.path.basename(str(image.picture.path))  # sample.jpg
+    # /www/var/otapick/media/blog_images/1_07/9244/250x/sample.jpg
+    path_250x = os.path.join(dir_path_250x, base_file_name)
+    # /www/var/otapick/media/blog_images/1_07/9244/500x/sample.jpg
+    path_500x = os.path.join(dir_path_500x, base_file_name)
 
     ### copy file => 250x, 500x ###
     if os.path.isfile(str(image.picture.path)):
@@ -34,11 +39,14 @@ def compress_blog_image(image, is_bulk=False):
     otapick.ImageCompressor().edit(path_500x, width=500)
 
     ### define media ###
-    base_dir_media = os.path.dirname(str(image.picture)) # blog_images/1_07/9244/
-    dir_min_250x = os.path.join('250x', base_file_name) # /250x/sample.jpg
-    dir_min_500x = os.path.join('500x', base_file_name) # /500x/sample.jpg
-    media_250x = os.path.join(base_dir_media, dir_min_250x) # blog_images/1_07/9244/250x/sample.jpg
-    media_500x = os.path.join(base_dir_media, dir_min_500x) # blog_images/1_07/9244/500x/sample.jpg
+    base_dir_media = os.path.dirname(
+        str(image.picture))  # blog_images/1_07/9244/
+    dir_min_250x = os.path.join('250x', base_file_name)  # /250x/sample.jpg
+    dir_min_500x = os.path.join('500x', base_file_name)  # /500x/sample.jpg
+    # blog_images/1_07/9244/250x/sample.jpg
+    media_250x = os.path.join(base_dir_media, dir_min_250x)
+    # blog_images/1_07/9244/500x/sample.jpg
+    media_500x = os.path.join(base_dir_media, dir_min_500x)
 
     ### register media ###
     image.picture_250x = media_250x
@@ -63,7 +71,8 @@ def compress_blog_images_by(*, member=None, group=None, console=True):
         blogs = Blog.objects.filter(writer=member)
     elif group is not None:
         blogs = Blog.objects.filter(publishing_group=group)
-    else: return
+    else:
+        return
 
     for blog in blogs:
         images = Image.objects.filter(publisher=blog)
@@ -71,9 +80,11 @@ def compress_blog_images_by(*, member=None, group=None, console=True):
             for image in images:
                 if not bool(image.picture_250x) or not bool(image.picture_500x):
                     compress_blog_image(image)
-            if console: otapick.console_with_blog_info(blog, 'compressed!!')
+            if console:
+                otapick.console_with_blog_info(blog, 'compressed!!')
         else:
-            if console: otapick.console_with_blog_info(blog, 'image not found!!')
+            if console:
+                otapick.console_with_blog_info(blog, 'image not found!!')
 
 
 def get_image_w_h(image):

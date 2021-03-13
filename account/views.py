@@ -34,13 +34,10 @@ class TwitterLoginCallbackView(views.APIView):
         result = otapick.get_access_token(oauth_token, oauth_verifier)
         q_params = otapick.parse_qsl(result.decode('utf-8'))
 
-        print(1)
-
         url = otapick.OTAPICK_URL + '/accounts/rest-auth/twitter/'
 
-        print(2)
-        print(url)
-        data = {'access_token': q_params['oauth_token'], 'token_secret': q_params['oauth_token_secret']}
+        data = {'access_token': q_params['oauth_token'],
+                'token_secret': q_params['oauth_token_secret']}
         res_twitterLoginAPI = requests.post(url, json=data)
 
         if res_twitterLoginAPI.status_code == 200:
@@ -70,7 +67,8 @@ loginView = LoginView.as_view()
 @receiver(user_signed_up)
 def retrieve_social_data(request, user, **kwargs):
     """Signal, that gets extra data from social login and put it to profile."""
-    social_accounts = SocialAccount.objects.filter(user=user, provider='twitter')
+    social_accounts = SocialAccount.objects.filter(
+        user=user, provider='twitter')
     if social_accounts.exists():
         social_account = social_accounts.first()
         extra_data = social_account.extra_data

@@ -43,15 +43,18 @@ class Account(AbstractBaseUser):
         ordering = ['-date_joined']
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    username = models.CharField(verbose_name='ユーザネーム', max_length=15, unique=True)
-    email = models.EmailField(verbose_name='メールアドレス', max_length=255, unique=True)
+    username = models.CharField(
+        verbose_name='ユーザネーム', max_length=15, unique=True)
+    email = models.EmailField(verbose_name='メールアドレス',
+                              max_length=255, unique=True)
     name = models.CharField(verbose_name='名前', max_length=50, blank=True)
     profile_image_uri = models.URLField(verbose_name='プロフィール画像', blank=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(verbose_name='登録日', default=timezone.now)
+    date_joined = models.DateTimeField(
+        verbose_name='登録日', default=timezone.now)
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'

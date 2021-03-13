@@ -20,10 +20,13 @@ def print_console(text):
     print('[', datetime.now().strftime("%Y/%m/%d %H:%M:%S"), '] ', end="")
     print(text)
 
+
 def console_with_blog_info(blog, message):
     print('「{}」({}) {}'.format(blog.title, blog.writer.full_kanji, message))
 
 # When last time in loop, return value with True.
+
+
 def lastone(iterable):
     # create iterator
     it = iter(iterable)

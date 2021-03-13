@@ -43,7 +43,8 @@ class MemberSerializerMin(serializers.ModelSerializer):
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', ]
+        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer',
+                  'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', ]
 
     group_id = serializers.IntegerField(source='publishing_group.group_id')
     post_date = serializers.DateTimeField(format='%y/%m/%d')
@@ -65,13 +66,14 @@ class BlogSerializer(serializers.ModelSerializer):
 class BlogSerializerVerDetail(BlogSerializer):
     class Meta:
         model = Blog
-        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views', 'num_of_downloads', 'official_url', 'url', 'images', 'VIEW_KEY', 'DOWNLOAD_KEY']
+        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views',
+                  'num_of_downloads', 'official_url', 'url', 'images', 'VIEW_KEY', 'DOWNLOAD_KEY']
 
     post_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
     url = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
     VIEW_KEY = serializers.SerializerMethodField()
-    DOWNLOAD_KEY  = serializers.SerializerMethodField()
+    DOWNLOAD_KEY = serializers.SerializerMethodField()
 
     def get_url(self, obj):
         return otapick.generate_url(blog=obj)
@@ -121,7 +123,8 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads', 'num_of_views', 'is_favorite', 'width', 'height']
+        fields = ['src', 'upload_date', 'url', 'order', 'num_of_downloads',
+                  'num_of_views', 'is_favorite', 'width', 'height']
 
     src = serializers.SerializerMethodField()
     upload_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')

@@ -17,7 +17,8 @@ class AccountAdmin(admin.ModelAdmin):
     format_image.empty_value_display = 'No image'
 
     fieldsets = (
-        (None, {'fields': ('id', 'username', 'name', 'format_image', 'profile_image_uri',)}),
+        (None, {'fields': ('id', 'username', 'name',
+                           'format_image', 'profile_image_uri',)}),
         ('個人情報', {'fields': ('email',)}),
         ('日付', {'fields': ('date_joined', 'last_login',)}),
         ('パーミッション', {'fields': ('is_active', 'is_staff', 'is_superuser',)}),

@@ -15,8 +15,6 @@ urlpatterns = [
 ]
 
 # catch all other URL
-urlpatterns += [re_path(r'^.*/$', main.views.indexAdminView, name='indexAdminView')]
+urlpatterns += [re_path(r'^.*/$', main.views.indexAdminView,
+                        name='indexAdminView')]
 urlpatterns += [path('', main.views.indexAdminView, name='indexAdminView')]
-
-
-# config/admin_urls.pyを削除した

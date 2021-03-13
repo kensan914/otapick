@@ -44,7 +44,8 @@ keys_with_int_as_value = [
 
 def init_group():
     fin = open('otapick/db/corpus/groupList.csv', 'rt', encoding='utf-8')
-    group_csv_list = csv.DictReader(fin, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
+    group_csv_list = csv.DictReader(
+        fin, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
 
     for group_csv in group_csv_list:
         group_csv = format_dict_csv(group_csv, group_key_list)
@@ -69,11 +70,13 @@ def init_group():
             for key, val in group_csv.items():
                 if key == 'group_id':
                     if target_group.group_id != int(val):
-                        print_console('{}の{}を{}に変更しました。'.format(target_group.name, key, int(val)))
+                        print_console('{}の{}を{}に変更しました。'.format(
+                            target_group.name, key, int(val)))
                         target_group.group_id = int(val)
                 # https://oshiete.goo.ne.jp/qa/8952513.html
                 elif target_group.__dict__[key] != val:
-                    print_console('{}の{}を{}に変更しました。'.format(target_group.name, key, val))
+                    print_console('{}の{}を{}に変更しました。'.format(
+                        target_group.name, key, val))
                     target_group.__dict__[key] = val
                 target_group.save()
     fin.close()
@@ -81,12 +84,14 @@ def init_group():
 
 def init_member():
     fin = open('otapick/db/corpus/memberList.csv', 'rt', encoding='utf-8')
-    member_csv_list = csv.DictReader(fin, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
+    member_csv_list = csv.DictReader(
+        fin, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
 
     for member_csv in member_csv_list:
         member_csv = format_dict_csv(member_csv, member_key_list)
 
-        members = Member.objects.filter(ct=member_csv['ct'], belonging_group__group_id=member_csv['group_id'])
+        members = Member.objects.filter(
+            ct=member_csv['ct'], belonging_group__group_id=member_csv['group_id'])
         if not members.exists():
             Member.objects.create(
                 ct=member_csv['ct'],
@@ -99,7 +104,8 @@ def init_member():
                 last_eng=member_csv['last_eng'],
                 first_eng=member_csv['first_eng'],
                 full_eng=member_csv['last_eng']+member_csv['first_eng'],
-                belonging_group=Group.objects.get(group_id=member_csv['group_id']),
+                belonging_group=Group.objects.get(
+                    group_id=member_csv['group_id']),
                 graduate=member_csv['graduate'],
                 independence=member_csv['independence'],
                 temporary=member_csv['temporary'],
@@ -112,12 +118,15 @@ def init_member():
             for key, val in member_csv.items():
                 if key == 'group_id':
                     if target_member.belonging_group.group_id != int(val):
-                        target_member.belonging_group = Group.objects.get(group_id=int(val))
-                        print_console('{}の{}を{}に変更しました。'.format(target_member.full_kanji, key, int(val)))
+                        target_member.belonging_group = Group.objects.get(
+                            group_id=int(val))
+                        print_console('{}の{}を{}に変更しました。'.format(
+                            target_member.full_kanji, key, int(val)))
                 # https://oshiete.goo.ne.jp/qa/8952513.html
                 elif target_member.__dict__[key] != val:
                     target_member.__dict__[key] = val
-                    print_console('{}の{}を{}に変更しました。'.format(target_member.full_kanji, key, val))
+                    print_console('{}の{}を{}に変更しました。'.format(
+                        target_member.full_kanji, key, val))
                 target_member.save()
     fin.close()
 
@@ -139,6 +148,7 @@ def format_dict_csv(dict_csv, key_list):
 
             new_dict_csv[key] = val
         else:
-            raise Exception('There is an unexpected key({}) in csv.'.format(key))
-    
+            raise Exception(
+                'There is an unexpected key({}) in csv.'.format(key))
+
     return new_dict_csv

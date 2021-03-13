@@ -14,12 +14,15 @@ import otapick
 ガラパゴス
 もう使わないので、これ以上いじらないし、最適化しない。
 """
+
+
 def register_external(group_id, ct):
     up_limit = 100
     sleep_time_1 = 1
     sleep_time_3 = 3
 
-    if group_id == 3: group_id = 1 
+    if group_id == 3:
+        group_id = 1
     if Member.objects.filter(belonging_group__group_id=group_id, ct=ct).exists():
         member = Member.objects.get(belonging_group__group_id=group_id, ct=ct)
     else:
@@ -28,7 +31,7 @@ def register_external(group_id, ct):
     base_url = 'https://archive.sakamichi.co/'
     if group_id == 1:
         member_base_url = base_url + 'keyaki/members/' + member.ct
-    elif group_id ==2:
+    elif group_id == 2:
         member_base_url = base_url + 'hinata/members/' + member.ct
 
     urllib3.disable_warnings(InsecureRequestWarning)
@@ -64,9 +67,11 @@ def register_external(group_id, ct):
                 def convert_datetime(datetime_text, group_id):
                     new_datetime_text = ' '.join(datetime_text.split())
                     if group_id == 1:
-                        dt = datetime.strptime(new_datetime_text, '%Y/%m/%d %H:%M')
+                        dt = datetime.strptime(
+                            new_datetime_text, '%Y/%m/%d %H:%M')
                     elif group_id == 2:
-                        dt = datetime.strptime(new_datetime_text, '%Y.%m.%d %H:%M')
+                        dt = datetime.strptime(
+                            new_datetime_text, '%Y.%m.%d %H:%M')
                     else:
                         dt = None
                     return make_aware(dt)
@@ -81,16 +86,18 @@ def register_external(group_id, ct):
                     post_date=post_date,
                     writer=member,
                     text=str(content),
-                    publishing_group=Group.objects.get(group_id=3 if group_id == 1 else group_id)
+                    publishing_group=Group.objects.get(
+                        group_id=3 if group_id == 1 else group_id)
                 )
 
                 images = content.select('img')
 
-                order=0
+                order = 0
                 for i, image in enumerate(images):
                     image_url = base_url + image['src']
 
-                    media = otapick.BlogImageDownloader().download(image_url, group_id, blog.blog_ct, blog.writer.ct)
+                    media = otapick.BlogImageDownloader().download(
+                        image_url, group_id, blog.blog_ct, blog.writer.ct)
                     if media == 'not_image':  # exclude gif
                         pass
                     elif media is not None:
@@ -113,5 +120,3 @@ def register_external(group_id, ct):
 
         print('go to next page...')
         time.sleep(sleep_time_3)
-
-
