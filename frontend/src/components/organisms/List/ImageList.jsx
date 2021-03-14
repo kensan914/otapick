@@ -83,7 +83,6 @@ const ImageList = (props) => {
                         writer={writer}
                         order={order}
                         isFavorite={isFavorite}
-                        // masonryElmWidth={masonryElmWidth}
                         width={width}
                         height={height}
                       />

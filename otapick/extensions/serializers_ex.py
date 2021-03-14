@@ -46,6 +46,14 @@ def generate_memberimage_url(member):
             return member.image.url
     return otapick.OTAPICK_LOGO
 
+def get_thumbnail_wh(blog):
+    thumbnails = Image.objects.filter(publisher=blog, order=0)
+    if thumbnails.exists():
+        thumbnail = thumbnails.first()
+        return thumbnail.width, thumbnail.height
+    else:
+        return 0, 0
+
 
 def generate_thumbnail_url(blog):
     keys = ['originals', '250x', '500x']

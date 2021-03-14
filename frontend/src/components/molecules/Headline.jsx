@@ -25,6 +25,7 @@ import {
   faImages,
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
+import TooltipComponent from "../atoms/TooltipComponent";
 
 export const ModeSelectButtonDropdown = (props) => {
   const [dropdownOpen, setOpen] = useState(false);
@@ -107,7 +108,7 @@ export class TypeChangeButton extends React.Component {
   }
 
   render() {
-    const tooltipContent =
+    const tooltipTitle =
       this.props.type === "blogs"
         ? "画像一覧に切り替えます"
         : "ブログ一覧に切り替えます";
@@ -119,7 +120,7 @@ export class TypeChangeButton extends React.Component {
       );
 
     return (
-      <>
+      <TooltipComponent title={tooltipTitle} placement="bottom">
         <LinkButton
           to={this.getChangeTypeUrl(
             this.props.type,
@@ -141,10 +142,10 @@ export class TypeChangeButton extends React.Component {
             {exchangeIcon}
           </div>
         </LinkButton>
-        <UncontrolledTooltip placement="bottom" target={this.props.id}>
+        {/* <UncontrolledTooltip placement="bottom" target={this.props.id}>
           {tooltipContent}
-        </UncontrolledTooltip>
-      </>
+        </UncontrolledTooltip> */}
+      </TooltipComponent>
     );
   }
 }

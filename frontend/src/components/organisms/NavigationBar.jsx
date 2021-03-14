@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import SearchDownshift from "../molecules/SearchDownshift";
-import { generateUuid4, isMobile, isSmp } from "../modules/utils";
+import { isMobile, isSmp, generateUuid4 } from "../modules/utils";
 import { MobileTopMenu } from "../molecules/MobileMenu";
 import { GROUPS } from "../modules/env";
 import {

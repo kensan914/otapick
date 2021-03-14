@@ -55,6 +55,8 @@ const BlogList = withRouter((props) => {
             numOfViews: blog.num_of_views,
             numOfDownloads: blog.num_of_downloads,
             thumbnail: blog.thumbnail,
+            thumbnailWidth: blog.thumbnail_width,
+            thumbnailHeight: blog.thumbnail_height,
             url: blog.url,
             officialUrl: blog.official_url,
           }));
@@ -109,6 +111,8 @@ const BlogList = withRouter((props) => {
             thumbnail,
             url,
             officialUrl,
+            thumbnailWidth,
+            thumbnailHeight,
           },
           i
         ) => (
@@ -127,6 +131,8 @@ const BlogList = withRouter((props) => {
                 numOfDownloads={numOfDownloads}
                 url={url}
                 officialUrl={officialUrl}
+                width={thumbnailWidth}
+                height={thumbnailHeight}
               />
             </div>
             {i % ADS_INTERVAL === ADS_INDEX && (

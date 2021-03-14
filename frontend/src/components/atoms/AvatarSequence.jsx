@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TooltipComponent } from "./TooltipComponent";
+import TooltipComponent from "./TooltipComponent";
 
 /** アバター等のアイコンを連続に表示(ex. 推しメン一覧)
  *  要素同士が少し重なり合い, カーソルを合わせると最前面に表示される.

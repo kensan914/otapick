@@ -18,7 +18,7 @@ import { URLJoin } from "../modules/utils";
 import { downloadImage } from "../organisms/ImageView";
 import { MobileBottomMenu } from "./MobileMenu";
 import { withCookies } from "react-cookie";
-import { BASE_URL } from "../modules/env";
+import { BASE_URL, GROUPS } from "../modules/env";
 import FavoriteButton from "../atoms/FavoriteButton";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -156,7 +156,10 @@ class ImageCard extends React.Component {
       if (willOpen && !this.isHover) {
         this.setState({ isOpenMenu: willOpen });
       } else if (!willOpen && this.isHover) {
-        if (!this.detailButtonRef.current.state.dropdownOpen) {
+        if (
+          this.detailButtonRef.current &&
+          !this.detailButtonRef.current.state.dropdownOpen
+        ) {
           this.setState({ isOpenMenu: willOpen });
         }
       }
@@ -212,6 +215,8 @@ class ImageCard extends React.Component {
       Number.isFinite(this.props.height) && this.props.height > 0
         ? this.props.height
         : 250;
+    const groupKey = GROUPS[this.props.groupID]?.key;
+
     return (
       <>
         <div
@@ -249,53 +254,58 @@ class ImageCard extends React.Component {
                   />
                 </div>
               ) : (
-                <img
-                  width={formatWidth}
-                  height={formatHeight}
-                  style={{ backgroundColor: "green" }}
-                  className={`image-card-img ${
-                    this.props.orderly ? "newpost-thumbnail" : ""
-                  }`}
-                />
+                <div className="image-card-preload-img-wrapper">
+                  <div
+                    className={`image-card-preload-img ${groupKey}`} // groupKeyはnotUsed
+                    style={{
+                      backgroundColor: "silver",
+                      paddingTop: `${(formatHeight / formatWidth) * 100}%`,
+                    }}
+                  />
+                </div>
               )}
             </div>
           </Link>
 
-          {/* isOpenMenuがfalseになるたびにFavoriteButtonがunmountされstateがリセットされていたため */}
-          {/* {(this.props.getIsFavorite() !== null) && */}
-          <FavoriteButton
-            group={this.props.group}
-            groupID={this.props.groupID}
-            blogCt={this.props.blogCt}
-            order={this.props.order}
-            isFavorite={this.props.isFavorite}
-            setIsFavorite={this.setIsFavorite}
-            isShowMenu={isShowMenu}
-            cardHeight={this.state.cardHeight}
-          />
-          {/* } */}
-          {isShowMenu && isEnoughHighMenu && (
-            <DownloadButton
-              group={this.props.group}
-              url={this.props.url}
-              csrftoken={this.csrftoken}
-            />
-          )}
-          {isShowMenu && (
+          {this.state.isLoadImage && (
             <>
-              <ToBlogButton
-                url={this.props.blogUrl}
-                title={this.props.blogTitle}
+              {/* isOpenMenuがfalseになるたびにFavoriteButtonがunmountされstateがリセットされていたため */}
+              {/* {(this.props.getIsFavorite() !== null) && */}
+              <FavoriteButton
+                group={this.props.group}
+                groupID={this.props.groupID}
+                blogCt={this.props.blogCt}
+                order={this.props.order}
+                isFavorite={this.props.isFavorite}
+                setIsFavorite={this.setIsFavorite}
+                isShowMenu={isShowMenu}
+                cardHeight={this.state.cardHeight}
               />
-              <DetailButton
-                url={this.props.url}
-                officialUrl={this.props.officialUrl}
-                ref={this.detailButtonRef}
-                hideMenu={() => this.hideMenu()}
-                writer={this.props.writer}
-                src={this.props.src}
-                csrftoken={this.csrftoken}
-              />
+              {/* } */}
+              {isShowMenu && isEnoughHighMenu && (
+                <DownloadButton
+                  group={this.props.group}
+                  url={this.props.url}
+                  csrftoken={this.csrftoken}
+                />
+              )}
+              {isShowMenu && (
+                <>
+                  <ToBlogButton
+                    url={this.props.blogUrl}
+                    title={this.props.blogTitle}
+                  />
+                  <DetailButton
+                    url={this.props.url}
+                    officialUrl={this.props.officialUrl}
+                    ref={this.detailButtonRef}
+                    hideMenu={() => this.hideMenu()}
+                    writer={this.props.writer}
+                    src={this.props.src}
+                    csrftoken={this.csrftoken}
+                  />
+                </>
+              )}
             </>
           )}
         </div>

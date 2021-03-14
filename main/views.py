@@ -13,8 +13,7 @@ class BaseView(View):
 
 
 class IndexView(BaseView):
-    index_context = dict(
-        **BaseView.context, **{'fqdn': otapick.OTAPICK_FQDN if settings.DEBUG else 'otapick.com'})
+    index_context = dict(**BaseView.context, **{'fqdn': otapick.OTAPICK_FQDN})
 
     def get(self, request, *args, **kwargs):
         return render(request, self.html_path, self.index_context)

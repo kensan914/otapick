@@ -51,6 +51,8 @@ const HomeList = (props) => {
                 message: item.message,
                 order: item.image.order,
                 isFavorite: item.image.is_favorite,
+                width: item.image.width,
+                height: item.image.height,
               });
             } else if (item.type === "blog") {
               _additionalItems.push({
@@ -62,6 +64,8 @@ const HomeList = (props) => {
                 numOfViews: item.blog.num_of_views,
                 numOfDownloads: item.blog.num_of_downloads,
                 thumbnail: item.blog.thumbnail,
+                thumbnailWidth: item.blog.thumbnail_width,
+                thumbnailHeight: item.blog.thumbnail_height,
                 url: item.blog.url,
                 officialUrl: item.blog.official_url,
                 type: "blog",
@@ -141,6 +145,8 @@ const HomeList = (props) => {
                   writer,
                   order,
                   isFavorite,
+                  width,
+                  height,
                 },
                 i
               ) => {
@@ -170,6 +176,8 @@ const HomeList = (props) => {
                         message={add.message}
                         order={add.order}
                         isFavorite={add.isFavorite}
+                        width={add.width}
+                        height={add.height}
                       />
                     );
                   } else if (add.type === "blog") {
@@ -188,6 +196,8 @@ const HomeList = (props) => {
                         url={add.url}
                         officialUrl={add.officialUrl}
                         message={add.message}
+                        width={add.thumbnailWidth}
+                        height={add.thumbnailHeight}
                       />
                     );
                   } else if (add.type === "member") {
@@ -238,6 +248,8 @@ const HomeList = (props) => {
                         writer={writer}
                         order={order}
                         isFavorite={isFavorite}
+                        width={width}
+                        height={height}
                       />
                     </div>
                     {/* additionalItem */}

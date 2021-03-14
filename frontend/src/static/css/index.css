@@ -2191,6 +2191,28 @@ SVGコード...を押下
   height: auto;
 }
 
+.image-card-preload-img-wrapper {
+  position: relative;
+  width: 100%;
+}
+.image-card-preload-img {
+  content: "";
+  display: block;
+  padding-top: 50%;
+  background-color: whitesmoke;
+}
+/* .image-card-preload-img.keyaki {
+  opacity: 0.3;
+  background-color: lightgreen;
+}
+.image-card-preload-img.sakura {
+  opacity: 0.3;
+  background-color: lightpink;
+}
+.image-card-preload-img.hinata {
+  opacity: 0.3;
+  background-color: lightskyblue;
+} */
 /* arrange dropdown-menu */
 
 .dropdown-menu {
@@ -2346,10 +2368,13 @@ SVGコード...を押下
 
 .image-view-to-official-button {
   text-align: left;
+}
+
+.image-view-to-official-button-wrapper {
   float: left;
-  max-width: calc(100% - (3rem));
-  /* .image-view-detail-buttonのwidth: 3rem */
   display: inline-block !important;
+  /* .image-view-detail-buttonのwidth: 3rem */
+  max-width: calc(100% - (3rem));
 }
 
 .image-view-to-official-title {
@@ -2815,6 +2840,16 @@ SVGコード...を押下
   min-height: 30rem;
 }
 
+.avatar-sequence-item {
+}
+
+.avatar-sequence-image-wrapper {
+  background-color: white;
+}
+
+.avatar-sequence-image {
+}
+
 .tooltip-container {
   display: inline-block;
 }
@@ -2837,15 +2872,33 @@ SVGコード...を押下
   color: white;
   background: rgb(20, 20, 20);
 }
+
 .tooltip-body.top {
-  top: -26px;
-}
-.tooltip-body.top.active {
-  top: -30px;
+  top: -26px; /*HOVERのスタート位置*/
 }
 .tooltip-body.bottom {
-  bottom: -26px;
+  bottom: -26px; /*HOVERのスタート位置*/
 }
-.tooltip-body.bottom.active {
-  bottom: -30px;
+
+.active .tooltip-body {
+  opacity: 1;
+}
+.active .tooltip-body.top {
+  top: -30px; /*HOVER位置*/
+}
+.active .tooltip-body.bottom {
+  bottom: -30px; /*HOVER位置*/
+}
+
+.saka-mark {
+  border-top: 10px solid transparent;
+  border-right: 10px solid white;
+  border-bottom: 10px solid white;
+  border-left: 10px solid transparent;
+
+  border-top: 10px solid transparent;
+  border-right: 10px solid white;
+
+  border-bottom: 10px solid white;
+  border-left: 10px solid transparent;
 }

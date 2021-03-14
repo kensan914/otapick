@@ -5,32 +5,37 @@ const TooltipComponent = (props) => {
     children,
     title,
     backgroundColor = "rgb(50, 50, 50)",
-    position = "top",
+    placement = "top" /* ?: "bottom"|"top" */,
   } = props;
+  const [tooltipOpen, setTooltipOpen] = useState(false);
 
-  const [isActive, setIsActive] = useState(false);
+  if (!title) return <></>;
 
+  const renderTooltipBody = (placement) => (
+    <div
+      className={`tooltip-body rounded-pill px-2 py-1 ${placement}`}
+      style={{
+        ...(backgroundColor ? { background: backgroundColor } : {}),
+      }}
+    >
+      {title}
+    </div>
+  );
   return (
-    <div className="tooltip-container">
+    <div className={`tooltip-container ${tooltipOpen ? "active" : ""}`}>
       <span className="tooltip-wrapper">
-        <div
-          className={`tooltip-body rounded-pill px-2 py-1 ${position} ${
-            isActive ? "active" : ""
-          }`}
-          style={{ background: backgroundColor }}
-        >
-          {title}
-        </div>
+        {placement === "top" && renderTooltipBody(placement)}
         <div
           onMouseEnter={() => {
-            setIsActive(true);
+            setTooltipOpen(true);
           }}
           onMouseLeave={() => {
-            setIsActive(false);
+            setTooltipOpen(false);
           }}
         >
           {children}
         </div>
+        {placement === "bottom" && renderTooltipBody(placement)}
       </span>
     </div>
   );

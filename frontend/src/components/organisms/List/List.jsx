@@ -57,6 +57,7 @@ const List = withRouter((props) => {
         initialLoad={false}
         loader={<HorizontalLoader key={0} />}
         className="mb-5"
+        threshold={500}
       >
         {status === "success" && (
           <Masonry options={masonryOptions} disableImagesLoaded={false}>

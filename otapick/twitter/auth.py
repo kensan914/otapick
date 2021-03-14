@@ -1,6 +1,7 @@
 import oauth2 as oauth
 from otapick.lib.constants import OTAPICK_URL, TWITTER_CK_AUTH, TWITTER_CS_AUTH
 from urllib.parse import urljoin
+import traceback
 
 request_token_url = 'https://twitter.com/oauth/request_token'
 access_token_url = 'https://twitter.com/oauth/access_token'
@@ -19,7 +20,7 @@ def get_request_token():
         request_token = dict(parse_qsl(content.decode('utf-8')))
         return request_token['oauth_token']
     except Exception as e:
-        print(e)
+        traceback.print_stack()
         return
 
 

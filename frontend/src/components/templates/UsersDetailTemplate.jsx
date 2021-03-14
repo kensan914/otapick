@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { isMobile } from "../modules/utils";
 import { HorizontalLoader } from "../molecules/Loader";
@@ -9,9 +9,10 @@ import ProfileView from "../organisms/ProfileView";
 const UserTemplate = (props) => {
   const { profile, username, isMe, isLoading, accessKey } = props;
 
+  // accessKeyがundefined以外で変化した時、FavoriteListを更新
   const [favoriteListKey, setFavoriteListKey] = useState(accessKey);
-  useState(() => {
-    if (typeof accessKey !== "undefined" && favoriteListKey !== accessKey) {
+  useEffect(() => {
+    if (favoriteListKey !== accessKey && typeof accessKey !== "undefined") {
       setFavoriteListKey(accessKey);
     }
   }, [accessKey]);
@@ -23,19 +24,23 @@ const UserTemplate = (props) => {
         className="container mt-3 text-muted"
         style={{ height: isMobile ? 130 : 130 }}
       >
-        {isLoading ? <HorizontalLoader /> : <ProfileView profile={profile} />}
+        {isLoading ? (
+          <HorizontalLoader />
+        ) : (
+          <ProfileView profile={profile} isMe={isMe} />
+        )}
       </div>
 
       {isMe ? (
         <>
           <div className="container-fluid mt-3 text-muted">
-            <ProfileButtonGroup username={username} />
+            <ProfileButtonGroup
+              username={username}
+              favoriteListKey={favoriteListKey}
+            />
           </div>
-          <div
-            key={accessKey}
-            className="container-fluid text-muted mt-3 list-container-fluid favorite-images-container"
-          >
-            <ImageList type="FAVORITE_IMAGES" />
+          <div className="container-fluid text-muted mt-3 list-container-fluid favorite-images-container">
+            <ImageList key={favoriteListKey} type="FAVORITE_IMAGES" />
           </div>
         </>
       ) : (

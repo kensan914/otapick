@@ -62,7 +62,8 @@ class WriterCard extends React.Component {
         <img
           className="rounded-circle writer-card-image"
           src={this.props.writer.image}
-        ></img>
+          alt={this.props.writer.name}
+        />
         <h6 className="mx-2 mb-0">{this.props.writer.name}</h6>
         {isMobile ? (
           <MobileBottomMenu

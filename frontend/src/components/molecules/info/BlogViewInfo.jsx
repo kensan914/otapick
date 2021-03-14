@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Tooltip } from "reactstrap";
+import React from "react";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { isSmp, isMobile } from "../../modules/utils";
@@ -10,22 +9,7 @@ import {
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-export const ViewTooltip = (props) => {
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
-
-  return (
-    <Tooltip
-      placement="top"
-      isOpen={tooltipOpen}
-      target={props.target}
-      toggle={toggle}
-    >
-      {props.title}
-    </Tooltip>
-  );
-};
+import TooltipComponent from "../../atoms/TooltipComponent";
 
 class BlogViewInfo extends React.Component {
   constructor(props) {
@@ -80,42 +64,50 @@ class BlogViewInfo extends React.Component {
           <hr className="info-hr" />
           <div className="row ml-2 ml-sm-3">
             <div className="row col-12 col-sm-7 col-md-8 col-lg-9 col-xl-10 info-description">
-              <div className="d-flex align-items-center" id="num-of-views-icon">
-                <FontAwesomeIcon icon={faEye} style={{ color: "gray" }} />
-              </div>
-              <ViewTooltip target={"num-of-views-icon"} title="閲覧数" />
+              <TooltipComponent title="閲覧数">
+                <div
+                  className="d-flex align-items-center"
+                  id="num-of-views-icon"
+                >
+                  <FontAwesomeIcon icon={faEye} style={{ color: "gray" }} />
+                </div>
+              </TooltipComponent>
+
               {"\u00A0"}
               <div className="">{this.props.numOfViews}</div>
 
-              <div
-                className="d-flex align-items-center ml-3"
-                id="num-of-downloads-icon"
-              >
-                <FontAwesomeIcon icon={faDownload} style={{ color: "gray" }} />
-              </div>
-              <ViewTooltip
-                target={"num-of-downloads-icon"}
-                title="総ダウンロード数"
-              />
+              <TooltipComponent title="総ダウンロード数">
+                <div
+                  className="d-flex align-items-center ml-3"
+                  id="num-of-downloads-icon"
+                >
+                  <FontAwesomeIcon
+                    icon={faDownload}
+                    style={{ color: "gray" }}
+                  />
+                </div>
+              </TooltipComponent>
+
               {"\u00A0"}
               <div className="">{this.props.numOfDownloads}</div>
             </div>
 
             <div className="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-2 info-description px-0 mt-2 mt-sm-0">
-              <a
-                href={this.props.officialUrl}
-                className={this.props.group}
-                target="_blank"
-                rel="noreferrer"
-                id="officialLink"
-              >
-                <div className="download-official-a">
-                  <FontAwesomeIcon icon={faExternalLinkAlt} />
-                  {"\u00A0"}
-                  {officialLinkTitle}
-                </div>
-              </a>
-              <ViewTooltip target={"officialLink"} title="公式ブログで確認" />
+              <TooltipComponent title="公式ブログで確認">
+                <a
+                  href={this.props.officialUrl}
+                  className={this.props.group}
+                  target="_blank"
+                  rel="noreferrer"
+                  id="officialLink"
+                >
+                  <div className="download-official-a">
+                    <FontAwesomeIcon icon={faExternalLinkAlt} />
+                    {"\u00A0"}
+                    {officialLinkTitle}
+                  </div>
+                </a>
+              </TooltipComponent>
             </div>
           </div>
         </div>

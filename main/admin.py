@@ -27,7 +27,7 @@ class MemberAdmin(admin.ModelAdmin):
 
     def format_image(self, obj):
         if obj.image:
-            return format_html('<img src="{}" width="100" style="border-radius: 8px" />', obj.image.url)
+            return format_html('<a href={} target="_blank"><img src="{}" width="100" style="border-radius: 8px" /></a>', obj.image.url, obj.image.url)
     format_image.short_description = '宣材写真'
     format_image.empty_value_display = 'No image'
 

@@ -19,7 +19,6 @@ import {
   checkNotCached,
   geneIsFavoriteGetterSetter,
 } from "../modules/utils";
-import { ViewTooltip } from "../molecules/info/BlogViewInfo";
 import { Link } from "react-router-dom";
 import WriterCard from "../atoms/WriterCard";
 import { MobileBottomMenu } from "../molecules/MobileMenu";
@@ -38,6 +37,7 @@ import {
   faLink,
   faPencilAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import TooltipComponent from "../atoms/TooltipComponent";
 
 export const downloadImage = (
   url,
@@ -293,23 +293,24 @@ class ImageView extends ViewTemplate {
         <div className="ml-1 ml-sm-3 ml-lg-4 image-view-text">
           <div className="d-flex justify-content-between mt-1 mt-sm-3 mt-lg-2 mb-2 image-view-header">
             <div className="d-flex align-items-center p-0">
-              <div id="num-of-image-views-icon">
-                <FontAwesomeIcon icon={faEye} style={{ color: "gray" }} />
-              </div>
-              <ViewTooltip
-                target={"num-of-image-views-icon"}
-                title="この画像の閲覧数"
-              />
+              <TooltipComponent title="この画像の閲覧数">
+                <div id="num-of-image-views-icon">
+                  <FontAwesomeIcon icon={faEye} style={{ color: "gray" }} />
+                </div>
+              </TooltipComponent>
+
               {"\u00A0"}
               {image ? image.numOfViews : 0}
 
-              <div className="ml-3" id="num-of-image-downloads-icon">
-                <FontAwesomeIcon icon={faDownload} style={{ color: "gray" }} />
-              </div>
-              <ViewTooltip
-                target={"num-of-image-downloads-icon"}
-                title="この画像のダウンロード数"
-              />
+              <TooltipComponent title="この画像のダウンロード数">
+                <div className="ml-3" id="num-of-image-downloads-icon">
+                  <FontAwesomeIcon
+                    icon={faDownload}
+                    style={{ color: "gray" }}
+                  />
+                </div>
+              </TooltipComponent>
+
               {"\u00A0"}
               {image ? image.numOfDownloads : 0}
             </div>
@@ -326,26 +327,24 @@ class ImageView extends ViewTemplate {
               />
               {!isMobile && (
                 <>
-                  <Button
-                    className={
-                      "rounded-circle p-0 image-view-download-button " +
-                      this.props.group
-                    }
-                    onClick={() => {
-                      image &&
-                        downloadImage(
-                          URLJoin(BASE_URL, image.url),
-                          this.csrftoken,
-                          this.incrementNumOfDownloads,
-                          this.props.order
-                        );
-                    }}
-                    id="image-view-download-button"
-                  />
-                  <ViewTooltip
-                    target={"image-view-download-button"}
-                    title="この画像をダウンロード"
-                  />
+                  <TooltipComponent title="この画像をダウンロード">
+                    <Button
+                      className={
+                        "rounded-circle p-0 image-view-download-button " +
+                        this.props.group
+                      }
+                      onClick={() => {
+                        image &&
+                          downloadImage(
+                            URLJoin(BASE_URL, image.url),
+                            this.csrftoken,
+                            this.incrementNumOfDownloads,
+                            this.props.order
+                          );
+                      }}
+                      id="image-view-download-button"
+                    />
+                  </TooltipComponent>
                 </>
               )}
             </div>
@@ -357,12 +356,13 @@ class ImageView extends ViewTemplate {
 
           <div className="image-view-body">
             <div className="d-flex mb-3">
-              <FontAwesomeIcon
-                className="mr-3"
-                icon={faLink}
-                id="image-view-blog-icon"
-              />
-              <ViewTooltip target={"image-view-blog-icon"} title="掲載ブログ" />
+              <TooltipComponent title="掲載ブログ">
+                <FontAwesomeIcon
+                  className="mr-3"
+                  icon={faLink}
+                  id="image-view-blog-icon"
+                />
+              </TooltipComponent>
               <Link to={this.state.url} className="image-view-blog-title">
                 {this.state.title.length > 50 || isSmp ? (
                   this.state.title.length > 0 ? (
@@ -379,40 +379,39 @@ class ImageView extends ViewTemplate {
             </div>
 
             <div className="d-flex align-items-center">
-              <FontAwesomeIcon
-                className="mr-3"
-                icon={faPencilAlt}
-                id="image-view-writer-icon"
-              />
-              <ViewTooltip
-                target={"image-view-writer-icon"}
-                title="ブログを書いたメンバー"
-              />
+              <TooltipComponent title="ブログを書いたメンバー">
+                <FontAwesomeIcon
+                  className="mr-3"
+                  icon={faPencilAlt}
+                  id="image-view-writer-icon"
+                />
+              </TooltipComponent>
+
               <WriterCard writer={this.state.writer} />
             </div>
           </div>
 
           <div className="image-view-footer mt-4 mt-sm-5 mt-lg-2 mb-2">
-            <a
-              className={
-                "btn btn-primary rounded-pill image-view-to-official-button py-0 " +
-                (isSmp ? "px-2" : "")
-              }
-              id="image-view-to-official-button"
-              role="button"
-              target="_blank"
-              rel="noreferrer"
-              href={this.state.officialUrl}
-            >
-              <h6 className="omit-title m-0 image-view-to-official-title">
-                <FontAwesomeIcon icon={faExternalLinkAlt} />{" "}
-                {this.props.group + "zaka46.com"}
-              </h6>
-            </a>
-            <ViewTooltip
-              target={"image-view-to-official-button"}
-              title="公式ブログで確認"
-            />
+            <div className="image-view-to-official-button-wrapper">
+              <TooltipComponent title="公式ブログで確認">
+                <a
+                  className={
+                    "btn btn-primary rounded-pill image-view-to-official-button py-0 " +
+                    (isSmp ? "px-2" : "")
+                  }
+                  id="image-view-to-official-button"
+                  role="button"
+                  target="_blank"
+                  rel="noreferrer"
+                  href={this.state.officialUrl}
+                >
+                  <h6 className="omit-title m-0 image-view-to-official-title">
+                    <FontAwesomeIcon icon={faExternalLinkAlt} />{" "}
+                    {this.props.group + "zaka46.com"}
+                  </h6>
+                </a>
+              </TooltipComponent>
+            </div>
 
             {isMobile ? (
               <MobileBottomMenu

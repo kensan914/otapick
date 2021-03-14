@@ -168,28 +168,32 @@ class BlogView extends React.Component {
             </div>
           )}
           <Masonry options={options} className="mt-3 image-list-in-blog-view">
-            {this.props.images.map(({ src, url, order, isFavorite }, i) => (
-              <div
-                key={i}
-                className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2"
-              >
-                <ImageCard
+            {this.props.images.map(
+              ({ src, url, order, isFavorite, width, height }, i) => (
+                <div
                   key={i}
-                  groupID={this.props.groupID}
-                  group={this.props.group}
-                  blogCt={this.props.blogCt}
-                  blogTitle={this.props.blogTitle}
-                  src={src}
-                  url={url}
-                  blogUrl={this.props.blogUrl}
-                  officialUrl={this.props.officialUrl}
-                  writer={this.props.writer}
-                  imgID={this.geneImageID(order)}
-                  order={order}
-                  isFavorite={isFavorite}
-                />
-              </div>
-            ))}
+                  className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2"
+                >
+                  <ImageCard
+                    key={i}
+                    groupID={this.props.groupID}
+                    group={this.props.group}
+                    blogCt={this.props.blogCt}
+                    blogTitle={this.props.blogTitle}
+                    src={src}
+                    url={url}
+                    blogUrl={this.props.blogUrl}
+                    officialUrl={this.props.officialUrl}
+                    writer={this.props.writer}
+                    imgID={this.geneImageID(order)}
+                    order={order}
+                    isFavorite={isFavorite}
+                    width={width}
+                    height={height}
+                  />
+                </div>
+              )
+            )}
           </Masonry>
         </div>
       );

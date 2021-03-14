@@ -29,15 +29,13 @@ const User = (props) => {
     request();
   }, [username]);
 
-  const accessKey = this.props.location.state.accessKey;
-
   return (
     <UsersDetailTemplate
       isLoading={isLoading}
       profile={userProfile}
       username={username}
       isMe={isMe}
-      accessKey={accessKey}
+      accessKey={props.location?.state?.accessKey} // accessKeyが付与された遷移元の時、FavoriteListを更新
     />
   );
 };

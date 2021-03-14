@@ -46,7 +46,7 @@ const domReducer = (prevState, action) => {
       /** 外部からフッターを表示する。
        * @param {Object} action [type, location] */
 
-      if (prevState.footerRef !== null)
+      if (prevState.footerRef?.current)
         prevState.footerRef.current.applyShowFooter(action.location);
       return { ...prevState };
 

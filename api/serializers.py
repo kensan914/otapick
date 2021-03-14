@@ -50,12 +50,19 @@ class BlogSerializer(serializers.ModelSerializer):
     post_date = serializers.DateTimeField(format='%y/%m/%d')
     writer = MemberSerializerMin(read_only=True)
     thumbnail = serializers.SerializerMethodField()
+    thumbnail_width = serializers.SerializerMethodField()
+    thumbnail_height = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     official_url = serializers.SerializerMethodField()
 
     def get_thumbnail(self, obj):
         return otapick.generate_thumbnail_url(blog=obj)
-
+    def get_thumbnail_width(self, obj):
+        w, h = otapick.get_thumbnail_wh(blog=obj)
+        return w
+    def get_thumbnail_height(self, obj):
+        w, h = otapick.get_thumbnail_wh(blog=obj)
+        return h
     def get_url(self, obj):
         return otapick.generate_url(blog=obj)
 
