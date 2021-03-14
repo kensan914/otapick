@@ -95,29 +95,14 @@ class BlogView extends React.Component {
     let imageObjects = [];
     for (const [index, image] of this.props.images.entries()) {
       if (this.props.mode === "view") {
-        imageObjects.push(new Image());
-        imageObjects[index].onload = setTimeout(() => {
-          const blogImageID = this.geneImageID(image.order);
-          const targetImage = document.getElementById(blogImageID);
-          if (targetImage !== null) {
-            if (isSmp) {
-              targetImage.setAttribute("src", imageObjects[index].src);
-              targetImage.removeAttribute("srcset");
-            } else {
-              targetImage.setAttribute(
-                "srcset",
-                `${imageObjects[index].src} 1x, ${imageObjects[index].src} 2x`
-              );
-              targetImage.removeAttribute("src");
-            }
-          }
-        }, DELAY_TIME);
-        imageObjects[index].src = image.src["originals"];
+        // view
       } else if (this.props.mode === "download") {
         imageObjects.push(new Image());
         imageObjects[index].onload = setTimeout(() => {
           const blogImageID = this.geneImageID(image.order);
-          document.getElementById(blogImageID).style.backgroundImage =
+          const targetImage = document.getElementById(blogImageID);
+          console.log(targetImage, blogImageID);
+          targetImage.style.backgroundImage =
             "url(" + imageObjects[index].src + ")";
         }, DELAY_TIME);
         imageObjects[index].src = image.src["originals"];
@@ -127,13 +112,6 @@ class BlogView extends React.Component {
 
   componentDidMount() {
     this.loadOriginalImage();
-
-    for (const image of this.props.images) {
-      const blogImageID = this.geneImageID(image.order);
-      addLongPressEventListeners(document.getElementById(blogImageID), () =>
-        this.props.putDownload(image.order)
-      );
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -146,7 +124,6 @@ class BlogView extends React.Component {
   // cache導入でimageIDが複数存在しうるため（今のところBlogViewはcache対象外であるが）
   geneImageID = (order) =>
     `blog-image-${this.props.groupID}_${this.props.blogCt}_${order}_${this.props.location.key}`;
-  a;
 
   render() {
     if (this.props.mode === "view") {
@@ -190,6 +167,14 @@ class BlogView extends React.Component {
                     isFavorite={isFavorite}
                     width={width}
                     height={height}
+                    shouldLoadOriginal={true}
+                    didMountImage={() => {
+                      const blogImageID = this.geneImageID(order);
+                      const targetImage = document.getElementById(blogImageID);
+                      addLongPressEventListeners(targetImage, () =>
+                        this.props.putDownload(order)
+                      );
+                    }}
                   />
                 </div>
               )
@@ -231,7 +216,8 @@ class BlogView extends React.Component {
                             "thumbnail img-thumbnail mx-auto " +
                             (this.state.check[image.order] ? "checked" : "")
                           }
-                          id={`image_${image.order}`}
+                          // id={`image_${image.order}`}
+                          id={this.geneImageID(image.order)}
                           style={{
                             background: `-webkit-image-set( url(${image.src["250x"]}) 1x, url(${image.src["500x"]}) 2x )`,
                             backgroundSize: "cover",

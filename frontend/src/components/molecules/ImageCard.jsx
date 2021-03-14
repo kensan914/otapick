@@ -18,7 +18,7 @@ import { URLJoin } from "../modules/utils";
 import { downloadImage } from "../organisms/ImageView";
 import { MobileBottomMenu } from "./MobileMenu";
 import { withCookies } from "react-cookie";
-import { BASE_URL, GROUPS } from "../modules/env";
+import { BASE_URL } from "../modules/env";
 import FavoriteButton from "../atoms/FavoriteButton";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -133,6 +133,11 @@ class ImageCard extends React.Component {
       cardHeight: 0,
       placeholderCardWidth: 0,
       isLoadImage: false,
+
+      src: isSmp ? this.props.src["250x"] : "",
+      srcset: !isSmp
+        ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x`
+        : "",
     };
     this.isHover = false;
     this.detailButtonRef = React.createRef();
@@ -145,10 +150,17 @@ class ImageCard extends React.Component {
     ).setIsFavorite;
     this.csrftoken = props.cookies.get("csrftoken");
 
-    this.src = isSmp ? this.props.src["250x"] : "";
-    this.srcset = !isSmp
-      ? `${this.props.src["250x"]} 1x, ${this.props.src["500x"]} 2x`
-      : "";
+    // default: true
+    this.shouldPreload =
+      typeof this.props.shouldPreload === "undefined"
+        ? true
+        : this.props.shouldPreload;
+
+    // 250x・500xをpreload後にoriginalをloadする(blogView等). default: false
+    this.shouldLoadOriginal =
+      typeof this.props.shouldLoadOriginal === "undefined"
+        ? false
+        : this.props.shouldLoadOriginal;
   }
 
   setIsOpenMenu = (willOpen) => {
@@ -156,10 +168,7 @@ class ImageCard extends React.Component {
       if (willOpen && !this.isHover) {
         this.setState({ isOpenMenu: willOpen });
       } else if (!willOpen && this.isHover) {
-        if (
-          this.detailButtonRef.current &&
-          !this.detailButtonRef.current.state.dropdownOpen
-        ) {
+        if (!this.detailButtonRef.current.state.dropdownOpen) {
           this.setState({ isOpenMenu: willOpen });
         }
       }
@@ -191,17 +200,27 @@ class ImageCard extends React.Component {
     });
 
     // preload image
-    const imageObject = new Image();
-    imageObject.onload = () => {
-      this.setState({ isLoadImage: true });
-    };
-    imageObject.src = this.src;
-    imageObject.srcset = this.srcset;
+    if (this.shouldPreload) {
+      const imageObject = new Image();
+      imageObject.onload = () => {
+        this.setState({ isLoadImage: true });
+        if (this.shouldLoadOriginal)
+          this.setState({ src: this.props.src["originals"], srcset: "" });
+      };
+      imageObject.src = this.state.src;
+      imageObject.srcset = this.state.srcset;
+    }
   };
 
-  componentDidUpdate = () => {
+  componentDidUpdate = (prevProps, prevState) => {
     console.log("レンダーimageCard");
     this.updateCardHeight();
+    if (
+      prevState.isLoadImage !== this.state.isLoadImage &&
+      this.state.isLoadImage
+    ) {
+      this.props.didMountImage && this.props.didMountImage();
+    }
   };
 
   render() {
@@ -215,8 +234,6 @@ class ImageCard extends React.Component {
       Number.isFinite(this.props.height) && this.props.height > 0
         ? this.props.height
         : 250;
-    const groupKey = GROUPS[this.props.groupID]?.key;
-
     return (
       <>
         <div
@@ -238,7 +255,7 @@ class ImageCard extends React.Component {
             }}
           >
             <div className={"image-card-wrapper " + (!isMobile ? "pc" : "")}>
-              {this.state.isLoadImage ? (
+              {!this.shouldPreload || this.state.isLoadImage ? (
                 <div ref={(imageCardRef) => (this.imageCardRef = imageCardRef)}>
                   <img
                     width={formatWidth}
@@ -247,18 +264,33 @@ class ImageCard extends React.Component {
                       "image-card-img " +
                       (this.props.orderly ? "newpost-thumbnail" : "")
                     }
-                    src={this.src}
-                    srcSet={this.srcset}
+                    src={this.state.src}
+                    srcSet={this.state.srcset}
                     alt={generateAlt(this.props.group, this.props.writer.name)}
                     id={this.props.imgID || this.imageID}
                   />
                 </div>
               ) : (
+                // <div className="preload-image-card-wrapper">
+                //   <div
+                //     className="preload-image-card-wrapper-before"
+                //     style={{
+                //       paddingTop: `${(formatHeight / formatWidth) * 100}%`,
+                //     }}
+                //   />
+                //   <div
+                //     className="preload-image-card"
+                //     style={{
+                //       backgroundColor: "lightgray",
+                //     }}
+                //   />
+                // </div>
+
                 <div className="image-card-preload-img-wrapper">
                   <div
-                    className={`image-card-preload-img ${groupKey}`} // groupKeyはnotUsed
+                    className={`image-card-preload-img`} // groupKeyはnotUsed
                     style={{
-                      backgroundColor: "silver",
+                      backgroundColor: "lightgray",
                       paddingTop: `${(formatHeight / formatWidth) * 100}%`,
                     }}
                   />
@@ -269,8 +301,8 @@ class ImageCard extends React.Component {
 
           {this.state.isLoadImage && (
             <>
-              {/* isOpenMenuがfalseになるたびにFavoriteButtonがunmountされstateがリセットされていたため */}
-              {/* {(this.props.getIsFavorite() !== null) && */}
+              {/* isOpenMenuがfalseになるたびにFavoriteButtonがunmountされstateがリセットされていたため
+                {(this.props.getIsFavorite() !== null) && */}
               <FavoriteButton
                 group={this.props.group}
                 groupID={this.props.groupID}
@@ -281,7 +313,6 @@ class ImageCard extends React.Component {
                 isShowMenu={isShowMenu}
                 cardHeight={this.state.cardHeight}
               />
-              {/* } */}
               {isShowMenu && isEnoughHighMenu && (
                 <DownloadButton
                   group={this.props.group}

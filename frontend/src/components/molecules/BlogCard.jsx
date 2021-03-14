@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Tooltip,
 } from "reactstrap";
 import { Link, withRouter } from "react-router-dom";
 import { shortenNum, generateAlt, isMobile, isSmp } from "../modules/utils";
@@ -16,8 +17,6 @@ import {
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { GROUPS } from "../modules/env";
-import TooltipComponent from "../atoms/TooltipComponent";
 
 const DetailButton = (props) => {
   return (
@@ -45,32 +44,52 @@ const DetailButton = (props) => {
   );
 };
 
+const CardTooltip = (props) => {
+  const { target, title, mountedBlogCard } = props;
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const toggle = () => {
+    setTooltipOpen(!tooltipOpen);
+  };
+
+  return (
+    mountedBlogCard &&
+    document.getElementById(target) && (
+      <Tooltip
+        placement="top"
+        isOpen={tooltipOpen}
+        target={target}
+        toggle={toggle}
+      >
+        {title}
+      </Tooltip>
+    )
+  );
+};
+
 class SuperBlogCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       mountedBlogCard: false,
-      isLoadImage: false,
-    };
+      isLoadThumbnail: false,
 
-    this.src = isSmp ? this.props.thumbnail["250x"] : "";
-    this.srcset = !isSmp
-      ? `${this.props.thumbnail["250x"]} 1x, ${this.props.thumbnail["500x"]} 2x`
-      : "";
+      src: this.props.thumbnail["250x"],
+      srcset: !isSmp
+        ? `${this.props.thumbnail["250x"]} 1x, ${this.props.thumbnail["500x"]} 2x`
+        : "",
+    };
   }
 
   componentDidMount() {
     this.setState({ mountedBlogCard: true });
 
-    if (!this.props.orderly) {
-      // preload thumbnail
-      const imageObject = new Image();
-      imageObject.onload = () => {
-        this.setState({ isLoadImage: true });
-      };
-      imageObject.src = this.src;
-      imageObject.srcset = this.srcset;
-    }
+    // preload image
+    const thumbnailObject = new Image();
+    thumbnailObject.onload = () => {
+      this.setState({ isLoadThumbnail: true });
+    };
+    thumbnailObject.src = this.state.src;
+    thumbnailObject.srcset = this.state.srcset;
   }
 
   render() {
@@ -82,7 +101,6 @@ class SuperBlogCard extends React.Component {
       Number.isFinite(this.props.height) && this.props.height > 0
         ? this.props.height
         : 250;
-    const groupKey = GROUPS[this.props.groupID]?.key;
 
     return (
       <div className={"otapick_card " + this.props.group}>
@@ -105,12 +123,12 @@ class SuperBlogCard extends React.Component {
                       "thumbnail"
                     )}
                   />
-                ) : this.state.isLoadImage ? (
+                ) : this.state.isLoadThumbnail ? (
                   <img
                     className="card-img-top"
                     style={{ borderRadius: "0" }}
-                    src={this.src}
-                    srcSet={this.srcset}
+                    src={this.state.src}
+                    srcSet={this.state.srcset}
                     alt={generateAlt(
                       this.props.group,
                       this.props.writer.name,
@@ -118,12 +136,17 @@ class SuperBlogCard extends React.Component {
                     )}
                   />
                 ) : (
-                  <div className="image-card-preload-img-wrapper">
+                  <div className="preload-image-card-wrapper">
                     <div
-                      className={`image-card-preload-img ${groupKey}`} // groupKeyはnotUsed
+                      className="preload-image-card-wrapper-before"
                       style={{
-                        backgroundColor: "lightgray",
                         paddingTop: `${(formatHeight / formatWidth) * 100}%`,
+                      }}
+                    />
+                    <div
+                      className="preload-image-card"
+                      style={{
+                        backgroundColor: "whitesmoke",
                       }}
                     />
                   </div>
@@ -133,31 +156,37 @@ class SuperBlogCard extends React.Component {
             {!isMobile && (
               <span className="more-button">
                 <div className="row justify-content-around">
-                  <TooltipComponent title="公式ブログで確認">
-                    <div
-                      className="col-4 p-0 mr-2"
-                      id={`to-official-page-${this.props.id}`}
+                  <div
+                    className="col-4 p-0 mr-2"
+                    id={`to-official-page-${this.props.id}`}
+                  >
+                    <a
+                      rel="noreferrer"
+                      href={this.props.officialUrl}
+                      style={{ color: "white" }}
+                      target="_blank"
                     >
-                      <a
-                        rel="noreferrer"
-                        href={this.props.officialUrl}
-                        style={{ color: "white" }}
-                        target="_blank"
-                      >
-                        <FontAwesomeIcon icon={faExternalLinkAlt} />
-                      </a>
-                    </div>
-                  </TooltipComponent>
-                  <TooltipComponent title="ダウンロードページへ">
-                    <div
-                      className="col-4 p-0 ml-2"
-                      id={`to-download-page-${this.props.id}`}
-                    >
-                      <Link to={this.props.url} style={{ color: "white" }}>
-                        <FontAwesomeIcon icon={faDownload} />
-                      </Link>
-                    </div>
-                  </TooltipComponent>
+                      <FontAwesomeIcon icon={faExternalLinkAlt} />
+                    </a>
+                  </div>
+                  <CardTooltip
+                    target={`to-official-page-${this.props.id}`}
+                    title="公式ブログで確認"
+                    mountedBlogCard={this.state.mountedBlogCard}
+                  />
+                  <div
+                    className="col-4 p-0 ml-2"
+                    id={`to-download-page-${this.props.id}`}
+                  >
+                    <Link to={this.props.url} style={{ color: "white" }}>
+                      <FontAwesomeIcon icon={faDownload} />
+                    </Link>
+                  </div>
+                  <CardTooltip
+                    target={`to-download-page-${this.props.id}`}
+                    title="ダウンロードページへ"
+                    mountedBlogCard={this.state.mountedBlogCard}
+                  />
                 </div>
               </span>
             )}

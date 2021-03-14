@@ -55,10 +55,10 @@ const BlogList = withRouter((props) => {
             numOfViews: blog.num_of_views,
             numOfDownloads: blog.num_of_downloads,
             thumbnail: blog.thumbnail,
-            thumbnailWidth: blog.thumbnail_width,
-            thumbnailHeight: blog.thumbnail_height,
             url: blog.url,
             officialUrl: blog.official_url,
+            thumbnailWidth: blog.thumbnail_width,
+            thumbnailHeight: blog.thumbnail_height,
           }));
 
           appendItems(newBlogs);

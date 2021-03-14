@@ -44,7 +44,7 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer',
-                  'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', ]
+                  'num_of_views', 'num_of_downloads', 'thumbnail', 'url', 'official_url', 'thumbnail_width', 'thumbnail_height']
 
     group_id = serializers.IntegerField(source='publishing_group.group_id')
     post_date = serializers.DateTimeField(format='%y/%m/%d')
@@ -54,6 +54,8 @@ class BlogSerializer(serializers.ModelSerializer):
     thumbnail_height = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     official_url = serializers.SerializerMethodField()
+    thumbnail_width = serializers.SerializerMethodField()
+    thumbnail_height = serializers.SerializerMethodField()
 
     def get_thumbnail(self, obj):
         return otapick.generate_thumbnail_url(blog=obj)
@@ -68,6 +70,22 @@ class BlogSerializer(serializers.ModelSerializer):
 
     def get_official_url(self, obj):
         return otapick.generate_official_url(blog=obj)
+
+    def get_thumbnail_width(self, obj):
+        thumbnails = Image.objects.filter(publisher=obj, order=0)
+        if thumbnails.exists():
+            thumbnail = thumbnails.first()
+            return thumbnail.width
+        else:
+            return 0
+
+    def get_thumbnail_height(self, obj):
+        thumbnails = Image.objects.filter(publisher=obj, order=0)
+        if thumbnails.exists():
+            thumbnail = thumbnails.first()
+            return thumbnail.height
+        else:
+            return 0
 
 
 class BlogSerializerVerDetail(BlogSerializer):
