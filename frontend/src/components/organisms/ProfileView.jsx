@@ -1,14 +1,38 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect } from "react";
 import AvatarSequence from "../atoms/AvatarSequence";
 import ProfileIcon from "../atoms/ProfileIcon";
+import { GROUPS } from "../modules/env";
 import { isSmp } from "../modules/utils";
 
 const ProfileView = (props) => {
   const { profile, isMe } = props;
   const titleFontSize = isSmp ? 16 : 26;
 
+  const favGroupsItems = profile?.favGroups
+    ? profile.favGroups.map((group) => {
+        return {
+          url: `/images/${group.groupId}/`,
+          alt: group.name,
+          backgroundColor: GROUPS[group.groupId]?.color,
+          contentsNode: <div className="saka-mark" />,
+        };
+      })
+    : [];
+  const geneFavMemberItem = (propertyName) => {
+    return profile[propertyName]
+      ? {
+          url: `/images/${GROUPS[profile[propertyName].belongingGroup].id}/${
+            profile[propertyName].ct
+          }/`,
+          imageUrl: profile[propertyName].image,
+          alt: profile[propertyName].fullKanji,
+        }
+      : {};
+  };
+  const favMemberSakuraItem = geneFavMemberItem("favMemberSakura");
+  const favMemberHinataItem = geneFavMemberItem("favMemberHinata");
   return (
     <div className="my-2 my-sm-4">
       <div className="d-flex justify-content-center pb-3">
@@ -20,29 +44,12 @@ const ProfileView = (props) => {
           <AvatarSequence
             direction="right"
             items={[
-              {
-                url: "5",
-                alt: "櫻坂46",
-                backgroundColor: "pink",
-                contentsNode: <div className="saka-mark" />,
-              },
-              {
-                url: "5",
-                alt: "日向坂46",
-                backgroundColor: "lightskyblue",
-                contentsNode: <div className="saka-mark" />,
-              },
-              {
-                url: "5",
-                alt: "欅坂46",
-                backgroundColor: "green",
-                contentsNode: <div className="saka-mark" />,
-              },
+              ...favGroupsItems,
               ...(isMe
                 ? [
                     {
-                      url: "5",
-                      alt: "推しグループを追加する",
+                      url: "/settings/fav-members/",
+                      alt: "推しグループを編集する",
                       backgroundColor: "whitesmoke",
                       contentsNode: (
                         <FontAwesomeIcon icon={faPlus} color="gray" />
@@ -63,35 +70,17 @@ const ProfileView = (props) => {
           <AvatarSequence
             direction="left"
             items={[
-              {
-                url: "1",
-                imageUrl:
-                  "http://127.0.0.1:8000/media/member_images/2_2/1000_1000_102400.jpg",
-                alt: "なっちょ",
-              },
-              {
-                url: "2",
-                imageUrl:
-                  "http://127.0.0.1:8000/media/member_images/2_3/mi_2_3.jpg",
-                alt: "めみ",
-              },
-              {
-                url: "3",
-                imageUrl:
-                  "http://127.0.0.1:8000/media/member_images/2_4/1000_1000_102400.jpg",
-                alt: "かげ",
-              },
-              {
-                url: "4",
-                imageUrl:
-                  "http://127.0.0.1:8000/media/member_images/2_6/1000_1000_102400.jpg",
-                alt: "きょん",
-              },
+              ...(Object.keys(favMemberSakuraItem).length
+                ? [favMemberSakuraItem]
+                : []),
+              ...(Object.keys(favMemberHinataItem).length
+                ? [favMemberHinataItem]
+                : []),
               ...(isMe
                 ? [
                     {
-                      url: "5",
-                      alt: "推しメンを追加する",
+                      url: "/settings/fav-members/",
+                      alt: "推しメンを編集する",
                       backgroundColor: "whitesmoke",
                       contentsNode: (
                         <FontAwesomeIcon icon={faPlus} color="gray" />

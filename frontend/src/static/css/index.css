@@ -2871,6 +2871,7 @@ SVGコード...を押下
   white-space: nowrap;
   color: white;
   background: rgb(20, 20, 20);
+  z-index: 100;
 }
 
 .tooltip-body.top {
@@ -2901,4 +2902,120 @@ SVGコード...を押下
 
   border-bottom: 10px solid white;
   border-left: 10px solid transparent;
+}
+
+.settings-menu-container {
+  border-radius: 1rem;
+}
+
+.settings-menu-item {
+  color: dimgray;
+  background: white;
+  border-radius: 0.6rem;
+}
+.settings-menu-item:hover {
+  color: dimgray;
+  background: whitesmoke;
+}
+.settings-menu-item:active {
+  background: rgb(230, 230, 230);
+}
+.settings-menu-item.active {
+  background: dimgray;
+  color: white;
+}
+
+.fav-groups-button,
+.settings-submit-button {
+  background-color: rgba(255, 255, 255, 0) !important;
+  color: inherit;
+  transition-duration: 0s !important;
+  border-width: 1px;
+  border-style: solid;
+  border-color: lightgray;
+  color: lightgray;
+  font-size: 20px;
+}
+
+.fav-groups-button.active {
+  color: white;
+}
+.fav-groups-button.active.sakura {
+  background-color: #f9c1cf !important;
+  border-color: #f9c1cf;
+}
+.fav-groups-button.active.hinata {
+  background-color: #5de7ff !important;
+  border-color: #5de7ff;
+}
+.fav-groups-button.active.keyaki {
+  background-color: #4be057 !important;
+  border-color: #4be057;
+}
+
+.settings-submit-button {
+  background-color: whitesmoke !important;
+  color: darkgray;
+  border: 0;
+}
+.settings-submit-button.active {
+  background-color: mediumorchid !important;
+  color: white;
+}
+
+.fav-groups-button:hover,
+.fav-groups-button:active,
+.fav-groups-button:focus,
+.settings-submit-button:hover,
+.settings-submit-button:active,
+.settings-submit-button:focus {
+  outline: none;
+}
+
+.settings-selector-container .btn {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.settings-selector {
+  height: 46px;
+  border-radius: 20px;
+  border-width: 2px;
+  border-color: gainsboro;
+  background-color: white !important;
+  color: inherit;
+  transition-duration: 0s !important;
+  color: dimgray;
+}
+.settings-selector:hover {
+  border-color: gainsboro !important;
+  color: inherit;
+}
+.settings-selector:active {
+  background-color: whitesmoke !important;
+  color: gray !important;
+  border-color: gainsboro !important;
+}
+.settings-selector-title {
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+}
+.settings-selector-empty-title {
+  width: 50px;
+  height: 1px;
+  background: darkgray;
+}
+.settings-selector-menu {
+  z-index: 90;
+  max-height: 34vh;
+  overflow-y: scroll !important;
+}
+/* .settings-selector-image {
+  transform: rotate(-19deg);
+  border-radius: 43% 57% 43% 57% / 57% 43% 57% 43%;
+} */
+
+.settings-submit-status {
+  font-weight: lighter;
+  font-size: 14px;
+  color: silver;
 }

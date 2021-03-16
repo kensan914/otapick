@@ -1,7 +1,14 @@
+from django.db.models import fields
 from rest_framework import serializers
 import otapick
 from image.models import Image, Favorite
-from main.models import Member, Blog
+from main.models import Group, Member, Blog
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('group_id', 'name', 'domain', 'key', 'is_active', )
 
 
 class MemberSerializer(serializers.ModelSerializer):
@@ -59,12 +66,15 @@ class BlogSerializer(serializers.ModelSerializer):
 
     def get_thumbnail(self, obj):
         return otapick.generate_thumbnail_url(blog=obj)
+
     def get_thumbnail_width(self, obj):
         w, h = otapick.get_thumbnail_wh(blog=obj)
         return w
+
     def get_thumbnail_height(self, obj):
         w, h = otapick.get_thumbnail_wh(blog=obj)
         return h
+
     def get_url(self, obj):
         return otapick.generate_url(blog=obj)
 

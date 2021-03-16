@@ -168,7 +168,11 @@ class ImageCard extends React.Component {
       if (willOpen && !this.isHover) {
         this.setState({ isOpenMenu: willOpen });
       } else if (!willOpen && this.isHover) {
-        if (!this.detailButtonRef.current.state.dropdownOpen) {
+        if (
+          this.detailButtonRef
+            .current /* preloadにより読み込まれるまでthis.detailButtonRef.current === nullなため */ &&
+          !this.detailButtonRef.current.state.dropdownOpen
+        ) {
           this.setState({ isOpenMenu: willOpen });
         }
       }

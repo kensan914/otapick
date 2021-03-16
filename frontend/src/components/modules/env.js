@@ -79,7 +79,7 @@ import bookmarkKeyakiAnimationData from "../../static/lottie/bookmark_keyaki.jso
 // groups 改名時は、ここを変更するだけでよい
 export const GROUPS = {
   1: {
-    id: "1",
+    id: 1,
     name: "櫻坂46",
     key: "sakura",
     blogUrl: "https://sakurazaka46.com/s/s46/diary/blog?ima=0000",
@@ -88,9 +88,10 @@ export const GROUPS = {
     domain: "sakurazaka46.com",
     isActive: true,
     bookmarkAnimationData: bookmarkSakuraAnimationData,
+    color: "#f9c1cf",
   },
   3: {
-    id: "3",
+    id: 3,
     name: "欅坂46",
     key: "keyaki",
     blogUrl: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
@@ -99,9 +100,10 @@ export const GROUPS = {
     domain: "keyakizaka46.com",
     isActive: false,
     bookmarkAnimationData: bookmarkKeyakiAnimationData,
+    color: "#4be057",
   },
   2: {
-    id: "2",
+    id: 2,
     name: "日向坂46",
     key: "hinata",
     blogUrl: "https://www.hinatazaka46.com/s/official/diary/member?ima=0000",
@@ -111,6 +113,7 @@ export const GROUPS = {
     domain: "hinatazaka46.com",
     isActive: true,
     bookmarkAnimationData: bookmarkHinataAnimationData,
+    color: "#5de7ff",
   },
 };
 

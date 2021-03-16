@@ -64,29 +64,33 @@ class BlogViewInfo extends React.Component {
           <hr className="info-hr" />
           <div className="row ml-2 ml-sm-3">
             <div className="row col-12 col-sm-7 col-md-8 col-lg-9 col-xl-10 info-description">
-              <TooltipComponent title="閲覧数">
-                <div
-                  className="d-flex align-items-center"
-                  id="num-of-views-icon"
-                >
-                  <FontAwesomeIcon icon={faEye} style={{ color: "gray" }} />
-                </div>
-              </TooltipComponent>
+              <div className="d-flex align-items-center">
+                <TooltipComponent title="閲覧数">
+                  <div
+                    className="d-flex align-items-center"
+                    id="num-of-views-icon"
+                  >
+                    <FontAwesomeIcon icon={faEye} style={{ color: "gray" }} />
+                  </div>
+                </TooltipComponent>
+              </div>
 
               {"\u00A0"}
               <div className="">{this.props.numOfViews}</div>
 
-              <TooltipComponent title="総ダウンロード数">
-                <div
-                  className="d-flex align-items-center ml-3"
-                  id="num-of-downloads-icon"
-                >
-                  <FontAwesomeIcon
-                    icon={faDownload}
-                    style={{ color: "gray" }}
-                  />
-                </div>
-              </TooltipComponent>
+              <div className="d-flex align-items-center">
+                <TooltipComponent title="総ダウンロード数">
+                  <div
+                    className="d-flex align-items-center ml-3"
+                    id="num-of-downloads-icon"
+                  >
+                    <FontAwesomeIcon
+                      icon={faDownload}
+                      style={{ color: "gray" }}
+                    />
+                  </div>
+                </TooltipComponent>
+              </div>
 
               {"\u00A0"}
               <div className="">{this.props.numOfDownloads}</div>

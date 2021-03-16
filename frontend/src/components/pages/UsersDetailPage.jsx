@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router-dom";
+import { useLocation, useParams, withRouter } from "react-router-dom";
 import { useProfileState } from "../contexts/ProfileContext";
 import { useAxios } from "../modules/axios";
 import { BASE_URL } from "../modules/env";
-import { checkNotCached, updateMeta, URLJoin } from "../modules/utils";
+import {
+  checkNotCached,
+  deepCvtKeyFromSnakeToCamel,
+  updateMeta,
+  URLJoin,
+} from "../modules/utils";
 import UsersDetailTemplate from "../templates/UsersDetailTemplate";
 
-const User = (props) => {
+const UserPage = (props) => {
   const profileState = useProfileState();
-  const [username] = useState(
-    checkNotCached(props) ? props.match.params.username : ""
-  );
+
+  const params = useParams();
+  const [username] = useState(checkNotCached(props) ? params.username : "");
   const isMe = profileState.profile.username === username;
 
   const [userProfile, setUserProfile] = useState({});
@@ -19,25 +24,37 @@ const User = (props) => {
     "get",
     {
       thenCallback: (res) => {
-        setUserProfile(res.data);
-        updateMeta({ title: res.data.name, description: "" });
+        const _profile = deepCvtKeyFromSnakeToCamel(res.data);
+        setUserProfile(_profile);
+        updateMeta({ title: _profile.name, description: "" });
       },
     }
   );
 
   useEffect(() => {
-    request();
+    if (isMe) {
+      setUserProfile({ ...profileState.profile });
+    } else {
+      request();
+    }
   }, [username]);
 
+  useEffect(() => {
+    if (isMe) {
+      setUserProfile({ ...profileState.profile });
+    }
+  }, [profileState.profile]);
+
+  const location = useLocation();
   return (
     <UsersDetailTemplate
       isLoading={isLoading}
       profile={userProfile}
       username={username}
       isMe={isMe}
-      accessKey={props.location?.state?.accessKey} // accessKeyが付与された遷移元の時、FavoriteListを更新
+      accessKey={location?.state?.accessKey} // accessKeyが付与された遷移元の時、FavoriteListを更新
     />
   );
 };
 
-export default withRouter(User);
+export default withRouter(UserPage);

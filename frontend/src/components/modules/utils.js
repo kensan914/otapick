@@ -18,12 +18,16 @@ export const URLJoin = (...args) => {
   args = args.filter((n) => n !== void 0 && n !== null);
   for (let i = args.length - 1; i >= 0; i--) {
     const arg = args[i];
-    if (typeof arg === "string") {
+    if (typeof arg === "string" || typeof arg === "number") {
       if (arg.toString().startsWith("?")) continue;
       if (!arg.toString().endsWith("/")) {
         args[i] += "/";
         break;
       }
+    } else {
+      console.error(
+        `"${arg}" is an unexpected argument. Perhaps you have entered a boolean or object type?`
+      );
     }
   }
   return args
@@ -373,21 +377,59 @@ export const checkCorrectKey = (
   });
 };
 
-/** スネークケースのobjのkeyをすべてキャメルケースに変換
- * */
+/**
+ * (deep Ver)スネークケースのobjのkeyをすべてキャメルケースに変換
+ **/
+export const deepCvtKeyFromSnakeToCamel = (obj) => {
+  if (Array.isArray(obj)) {
+    return obj.map((elm) => deepCvtKeyFromSnakeToCamel(elm));
+  }
+
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => {
+      let _v;
+      if (isObject(v)) {
+        // object
+        _v = deepCvtKeyFromSnakeToCamel(v);
+      } else if (Array.isArray(v)) {
+        // Array
+        _v = v.map((elm) =>
+          isObject(elm) || Array.isArray(elm)
+            ? deepCvtKeyFromSnakeToCamel(elm)
+            : elm
+        );
+      } else {
+        _v = v;
+      }
+      return [fromSnakeToCamel(k), _v];
+    })
+  );
+};
+
+/**
+ * @deprecated
+ * スネークケースのobjのkeyをすべてキャメルケースに変換
+ * @param obj
+ */
 export const cvtKeyFromSnakeToCamel = (obj) => {
   return Object.fromEntries(
     Object.entries(obj).map(([k, v]) => [fromSnakeToCamel(k), v])
   );
 };
 
-/** スネークケースのtextをキャメルケースに変換(例外: id => ID)
- * */
+/**
+ * スネークケースのtextをキャメルケースに変換(例外: id => ID)
+ * @param text
+ */
 export const fromSnakeToCamel = (text) => {
-  const textConvertedID = text.replace(/_id/g, () => "ID");
-  return textConvertedID.replace(/_./g, (s) => {
+  // const textConvertedID = text.replace(/_id/g, () => "ID");
+  return text.replace(/_./g, (s) => {
     return s.charAt(1).toUpperCase();
   });
+};
+
+export const isObject = (val) => {
+  return val !== null && typeof val === "object" && !Array.isArray(val);
 };
 
 /** そのcomponentがキャッシュされているか否か
@@ -427,4 +469,41 @@ export const generateUuid4 = () => {
     }
   }
   return chars.join("");
+};
+
+/**
+ * 配列の要素がobjectの場合等は未対応
+ * @param {*} a
+ * @param {*} b
+ * @param {*} order
+ * @returns
+ */
+export const equalsArray = (a, b, order = true /* falseの場合順不同 */) => {
+  if (!Array.isArray(a)) return false;
+  if (!Array.isArray(b)) return false;
+  if (a.length != b.length) return false;
+
+  for (var i = 0, n = a.length; i < n; ++i) {
+    if (a.length != b.length) return false;
+    if (order) {
+      if (a[i] !== b[i]) return false;
+    } else {
+      if (!b.includes(a[i])) return false;
+    }
+  }
+  return true;
+};
+
+export const sortGROUPSByFav = (favGroups) => {
+  const favGroupIds = favGroups.map((favGroup) => favGroup.groupId);
+  const _GROUPS = { ...GROUPS };
+  const _GROUPS_list = [];
+
+  // 推し
+  favGroupIds.forEach((favGroupId) => {
+    _GROUPS_list.push(_GROUPS[favGroupId]);
+    delete _GROUPS[favGroupId];
+  });
+
+  return [..._GROUPS_list, ...Object.values(_GROUPS) /* 余り */];
 };

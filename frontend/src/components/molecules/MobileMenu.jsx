@@ -8,6 +8,7 @@ import {
   unLockScreen,
   isMobile,
   documentScrollHandler,
+  sortGROUPSByFav,
 } from "../modules/utils";
 import {
   MOBILE_TOP_MENU_MT,
@@ -15,7 +16,6 @@ import {
   NAVBAR_LS_ZINDEX,
   SUB_NAVBAR_LS_ZINDEX,
   NAVBAR_BOTTOM_LS_ZINDEX,
-  GROUPS,
 } from "../modules/env";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -188,7 +188,7 @@ export class _MobileTopMenu extends MobileMenu {
           <Button
             className={
               "rounded-circle mode-select-dropdown-button fixed p-0 " +
-              this.props.group
+              this.props.groupKey
             }
             id={`mobiletopmenu-button-${this.props.id}`}
             onClick={(e) => {
@@ -240,16 +240,18 @@ export class _MobileTopMenu extends MobileMenu {
 
           <MobileMenuHr />
           <MobileMenuTitle title="公式リンク" />
-          {Object.values(GROUPS).map((groupObj) => (
-            <MobileMenuLink
-              key={groupObj.id}
-              router={false}
-              href={groupObj.blogUrl}
-              target="_blank"
-              title={`${groupObj.name}公式ブログ`}
-              icon={true}
-            />
-          ))}
+          {sortGROUPSByFav(this.props.profileState.profile.favGroups).map(
+            (groupObj) => (
+              <MobileMenuLink
+                key={groupObj.id}
+                router={false}
+                href={groupObj.blogUrl}
+                target="_blank"
+                title={`${groupObj.name}公式ブログ`}
+                icon={true}
+              />
+            )
+          )}
 
           <MobileMenuHr />
           <MobileMenuTitle title="ヲタピックについて" />
@@ -294,6 +296,38 @@ export class _MobileTopMenu extends MobileMenu {
       );
     } else if (this.props.type === "modeSelect") {
       contents = [];
+      // const favContents = [];
+      const profile = this.props.profileState.profile;
+      if (
+        (this.props.groupKey === "sakura" && profile.favMemberSakura) ||
+        (this.props.groupKey === "hinata" && profile.favMemberHinata)
+      ) {
+        const renderDropdownItem = (propertyName) => {
+          if (profile[propertyName]) {
+            return (
+              <MobileMenuLink
+                router={true}
+                href={""}
+                title={profile[propertyName].fullKanji}
+              />
+            );
+          } else {
+            return null;
+          }
+        };
+        contents.push(
+          <>
+            <MobileMenuTitle title="推しメン" />
+            <MobileMenuHr top={true} />
+            {this.props.groupKey === "sakura" &&
+              renderDropdownItem("favMemberSakura")}
+            {this.props.groupKey === "hinata" &&
+              renderDropdownItem("favMemberHinata")}
+            <MobileMenuHr top={true} />
+          </>
+        );
+      }
+
       for (const [
         index,
         membersDividedByGeneration,
@@ -318,14 +352,16 @@ export class _MobileTopMenu extends MobileMenu {
       contents = (
         <div key={0}>
           <MobileMenuTitle title="グループ選択" />
-          {Object.values(GROUPS).map((groupObj) => (
-            <MobileMenuLink
-              key={groupObj.id}
-              router={true}
-              href={`/${this.props.blogsORimages}/${groupObj.id}`}
-              title={groupObj.name}
-            />
-          ))}
+          {sortGROUPSByFav(this.props.profileState.profile.favGroups).map(
+            (groupObj) => (
+              <MobileMenuLink
+                key={groupObj.id}
+                router={true}
+                href={`/${this.props.blogsORimages}/${groupObj.id}`}
+                title={groupObj.name}
+              />
+            )
+          )}
         </div>
       );
     }

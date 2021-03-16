@@ -6,6 +6,7 @@ import { isMobile } from "./modules/utils";
 import { HorizontalLoader } from "./molecules/Loader";
 import NavigationBar from "./organisms/NavigationBar";
 import BottomNavigationBar from "./organisms/BottomNavigationBar";
+import { useDomDispatch } from "./contexts/DomContext";
 
 const Footer = React.lazy(() => import("./organisms/Footer"));
 const BlogViewTemplate = React.lazy(() =>
@@ -29,7 +30,7 @@ const BlogListTemplate = React.lazy(() =>
 const BlogSearchListTemplate = React.lazy(() =>
   import("./templates/BlogSearchListTemplate")
 );
-import { useDomDispatch } from "./contexts/DomContext";
+const SettingsPage = React.lazy(() => import("./pages/SettingsPage"));
 const UsersDetailPage = React.lazy(() => import("./pages/UsersDetailPage"));
 const LowerRightMenu = React.lazy(() => import("./organisms/LowerRightMenu"));
 
@@ -112,7 +113,6 @@ const Screens = () => {
             render={() => <BlogViewTemplate />}
           />
 
-          {/* <Route exact path="/image/:groupID/:blogCt/:order/" render={() => <ImageViewTemplate />} /> */}
           <CacheRoute
             exact
             path="/image/:groupID/:blogCt/:order/"
@@ -124,9 +124,20 @@ const Screens = () => {
             exact
             path="/users/:username/"
             render={() => <UsersDetailPage />}
-            // when="forward" // UsersDetailPageマウント後favorite imagesが更新されないため
             when="always"
             multiple={10}
+          />
+
+          <Route
+            exact
+            path="/settings/"
+            render={() => <SettingsPage type="DEFAULT" />}
+          />
+
+          <Route
+            exact
+            path="/settings/fav-members/"
+            render={() => <SettingsPage type="FAV_MEMBERS" />}
           />
 
           <Route

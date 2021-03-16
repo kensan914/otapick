@@ -7,11 +7,15 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  UncontrolledTooltip,
 } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import { URLJoin, isMobile, checkNotCached } from "../modules/utils";
+import {
+  URLJoin,
+  isMobile,
+  checkNotCached,
+  sortGROUPSByFav,
+} from "../modules/utils";
 import { BASE_URL, GROUPS } from "../modules/env";
 import { Link } from "react-router-dom";
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
@@ -26,26 +30,69 @@ import {
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
 import TooltipComponent from "../atoms/TooltipComponent";
+import {
+  ProfileStateContext,
+  useProfileState,
+} from "../contexts/ProfileContext";
 
-export const ModeSelectButtonDropdown = (props) => {
+const ModeSelectButtonDropdown = (props) => {
+  const { members, type, groupKey } = props;
+
   const [dropdownOpen, setOpen] = useState(false);
   const toggle = () => setOpen(!dropdownOpen);
 
+  const profileState = useProfileState();
   let contents = [];
-  if (typeof props.members != "undefined") {
-    for (const [index, membersDividedByGeneration] of props.members.entries()) {
+  if (typeof members !== "undefined") {
+    // 推しメン
+    const favContents = [];
+    if (
+      (groupKey === "sakura" && profileState.profile.favMemberSakura) ||
+      (groupKey === "hinata" && profileState.profile.favMemberHinata)
+    ) {
+      const renderDropdownItem = (propertyName) => {
+        if (profileState.profile[propertyName]) {
+          return (
+            <DropdownItem
+              tag={Link}
+              to={`/${type}/${
+                GROUPS[profileState.profile[propertyName].belongingGroup].id
+              }/${profileState.profile[propertyName].ct}/`}
+            >
+              {profileState.profile[propertyName].fullKanji}
+            </DropdownItem>
+          );
+        } else {
+          return null;
+        }
+      };
+      favContents.push(
+        <>
+          <DropdownItem header>
+            <div className="m-0">推しメン</div>
+          </DropdownItem>
+          <DropdownItem divider />
+          {groupKey === "sakura" && renderDropdownItem("favMemberSakura")}
+          {groupKey === "hinata" && renderDropdownItem("favMemberHinata")}
+          <DropdownItem divider />
+        </>
+      );
+    }
+
+    for (const [index, membersDividedByGeneration] of members.entries()) {
       contents.push(
         <div key={"dropdown-menu-contents-m-" + index}>
+          {favContents}
           <DropdownItem header>
             <div className="m-0">{`${index + 1}期生`}</div>
           </DropdownItem>
           <DropdownItem divider />
           {membersDividedByGeneration.map(({ url, full_kanji }, j) => (
-            <DropdownItem key={j} tag={Link} to={url[props.type]}>
+            <DropdownItem key={j} tag={Link} to={url[type]}>
               {full_kanji}
             </DropdownItem>
           ))}
-          {index != props.members.length - 1 && <DropdownItem divider />}
+          {index != members.length - 1 && <DropdownItem divider />}
         </div>
       );
     }
@@ -54,11 +101,11 @@ export const ModeSelectButtonDropdown = (props) => {
       <div key={"dropdown-menu-contents-g"}>
         <DropdownItem header>グループ選択</DropdownItem>
         <DropdownItem divider />
-        {Object.values(GROUPS).map((groupObj) => (
+        {sortGROUPSByFav(profileState.profile.favGroups).map((groupObj) => (
           <DropdownItem
             key={groupObj.id}
             tag={Link}
-            to={`/${props.type}/${groupObj.id}/`}
+            to={`/${type}/${groupObj.id}/`}
           >{`${groupObj.name}`}</DropdownItem>
         ))}
       </div>
@@ -240,50 +287,53 @@ class Headline extends React.Component {
             <b>おすすめ</b>
           </Button>
 
-          {Object.values(GROUPS).map((groupObj) => (
-            // <LinkButton
-            //   key={groupObj.id}
-            //   className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
-            //   to={`/${this.props.type}/${groupObj.id}`}
-            // >
-            //   <h5 className="m-0">{groupObj.name}</h5>
-            //   {groupObj.isActive && (fixed
-            //     ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
-            //     : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
-            //   )}
-            // </LinkButton>
-            <Button
-              key={groupObj.id}
-              className={
-                `rounded-pill mode-select-button ${groupObj.key} ` +
-                (fixed ? "fixed " : " ") +
-                (!isMobile && !fixed ? "d-flex align-items-center " : " ") +
-                (this.props.mode === groupObj.key ? "active" : "")
-              }
-              onClick={() =>
-                this.props.history.push(`/${this.props.type}/${groupObj.id}`)
-              }
-            >
-              <b>{groupObj.name}</b>
-              {groupObj.isActive &&
-                (fixed ? (
-                  <MobileTopMenu
-                    id={`modeSelect${groupObj.key}`}
-                    type="modeSelect"
-                    members={this.state.membersCollection[groupObj.id]}
-                    group={groupObj.key}
-                    blogsORimages={this.props.type}
-                  />
-                ) : (
-                  <ModeSelectButtonDropdown
-                    group={groupObj.key}
-                    members={this.state.membersCollection[groupObj.id]}
-                    type={this.props.type}
-                    fixed={fixed}
-                  />
-                ))}
-            </Button>
-          ))}
+          {sortGROUPSByFav(this.props.profileState.profile.favGroups).map(
+            (groupObj) => (
+              // <LinkButton
+              //   key={groupObj.id}
+              //   className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
+              //   to={`/${this.props.type}/${groupObj.id}`}
+              // >
+              //   <h5 className="m-0">{groupObj.name}</h5>
+              //   {groupObj.isActive && (fixed
+              //     ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
+              //     : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
+              //   )}
+              // </LinkButton>
+              <Button
+                key={groupObj.id}
+                className={
+                  `rounded-pill mode-select-button ${groupObj.key} ` +
+                  (fixed ? "fixed " : " ") +
+                  (!isMobile && !fixed ? "d-flex align-items-center " : " ") +
+                  (this.props.mode === groupObj.key ? "active" : "")
+                }
+                onClick={() =>
+                  this.props.history.push(`/${this.props.type}/${groupObj.id}/`)
+                }
+              >
+                <b>{groupObj.name}</b>
+                {groupObj.isActive &&
+                  (fixed ? (
+                    <MobileTopMenu
+                      id={`modeSelect${groupObj.key}`}
+                      type="modeSelect"
+                      members={this.state.membersCollection[groupObj.id]}
+                      groupKey={groupObj.key}
+                      blogsORimages={this.props.type}
+                      profileState={this.props.profileState}
+                    />
+                  ) : (
+                    <ModeSelectButtonDropdown
+                      groupKey={groupObj.key}
+                      members={this.state.membersCollection[groupObj.id]}
+                      type={this.props.type}
+                      fixed={fixed}
+                    />
+                  ))}
+              </Button>
+            )
+          )}
         </>
       );
 
@@ -325,22 +375,24 @@ class Headline extends React.Component {
     } else if (this.props.type === "members") {
       const contents = (
         <>
-          {Object.values(GROUPS).map((groupObj) => {
-            if (groupObj.isActive)
-              return (
-                <Button
-                  key={groupObj.id}
-                  className={
-                    `rounded-pill mode-select-button ${groupObj.key} ` +
-                    (fixed ? "fixed " : " ") +
-                    (this.props.group === groupObj.key ? "active" : "")
-                  }
-                  onClick={() => this.props.changeGroup(groupObj.key)}
-                >
-                  <b>{groupObj.name}</b>
-                </Button>
-              );
-          })}
+          {sortGROUPSByFav(this.props.profileState.profile.favGroups).map(
+            (groupObj) => {
+              if (groupObj.isActive)
+                return (
+                  <Button
+                    key={groupObj.id}
+                    className={
+                      `rounded-pill mode-select-button ${groupObj.key} ` +
+                      (fixed ? "fixed " : " ") +
+                      (this.props.group === groupObj.key ? "active" : "")
+                    }
+                    onClick={() => this.props.changeGroup(groupObj.key)}
+                  >
+                    <b>{groupObj.name}</b>
+                  </Button>
+                );
+            }
+          )}
         </>
       );
       if (isMobile || fixed) {
@@ -379,6 +431,7 @@ class Headline extends React.Component {
                 id="modeSelectVewHomeImages"
                 type="modeSelectVewHome"
                 blogsORimages="images"
+                profileState={this.props.profileState}
               />
             ) : (
               <ModeSelectButtonDropdown type="images" fixed={fixed} />
@@ -399,6 +452,7 @@ class Headline extends React.Component {
                 id="modeSelectVewHomeBlogs"
                 type="modeSelectVewHome"
                 blogsORimages="blogs"
+                profileState={this.props.profileState}
               />
             ) : (
               <ModeSelectButtonDropdown type="blogs" fixed={fixed} />
@@ -555,6 +609,16 @@ class Headline extends React.Component {
 
 export default withRouter((props) => (
   <DomDispatchContext.Consumer>
-    {(domDispatch) => <Headline {...props} domDispatch={domDispatch} />}
+    {(domDispatch) => (
+      <ProfileStateContext.Consumer>
+        {(profileState) => (
+          <Headline
+            {...props}
+            domDispatch={domDispatch}
+            profileState={profileState}
+          />
+        )}
+      </ProfileStateContext.Consumer>
+    )}
   </DomDispatchContext.Consumer>
 ));

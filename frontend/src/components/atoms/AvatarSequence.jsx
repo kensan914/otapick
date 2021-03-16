@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import TooltipComponent from "./TooltipComponent";
 
 /** アバター等のアイコンを連続に表示(ex. 推しメン一覧)
@@ -57,7 +58,7 @@ const AvatarSequence = (props) => {
             }}
           >
             <TooltipComponent title={item.alt}>
-              <a href={item.url}>
+              <Link to={item.url}>
                 <div
                   className="rounded-circle avatar-sequence-image-wrapper d-flex justify-content-center align-items-center"
                   style={{
@@ -87,7 +88,7 @@ const AvatarSequence = (props) => {
                     />
                   )}
                 </div>
-              </a>
+              </Link>
             </TooltipComponent>
           </div>
         );

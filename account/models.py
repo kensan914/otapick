@@ -3,6 +3,7 @@ from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import _user_has_perm
 from django.db import models
 from django.utils import timezone
+from main.models import Group, Member
 
 
 class AccountManager(BaseUserManager):
@@ -49,6 +50,13 @@ class Account(AbstractBaseUser):
                               max_length=255, unique=True)
     name = models.CharField(verbose_name='名前', max_length=50, blank=True)
     profile_image_uri = models.URLField(verbose_name='プロフィール画像', blank=True)
+
+    fav_groups = models.ManyToManyField(
+        Group, verbose_name='推しグループ', blank=True, null=True)
+    fav_member_sakura = models.ForeignKey(
+        Member, verbose_name='櫻坂46推しメン', on_delete=models.PROTECT, related_name='accout_fav_sakura', null=True)
+    fav_member_hinata = models.ForeignKey(
+        Member, verbose_name='日向46推しメン', on_delete=models.PROTECT, related_name='accout_fav_hinata', null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

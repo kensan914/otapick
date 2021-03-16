@@ -11,9 +11,13 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import SearchDownshift from "../molecules/SearchDownshift";
-import { isMobile, isSmp, generateUuid4 } from "../modules/utils";
+import {
+  isMobile,
+  isSmp,
+  generateUuid4,
+  sortGROUPSByFav,
+} from "../modules/utils";
 import { MobileTopMenu } from "../molecules/MobileMenu";
-import { GROUPS } from "../modules/env";
 import {
   useProfileDispatch,
   useProfileState,
@@ -118,6 +122,15 @@ const NavigationBar = () => {
                 >
                   マイページ
                 </DropdownItem>
+
+                <DropdownItem
+                  tag={Link}
+                  to={{
+                    pathname: `/settings/`,
+                  }}
+                >
+                  設定
+                </DropdownItem>
                 <DropdownItem divider />
               </>
             )}
@@ -125,7 +138,7 @@ const NavigationBar = () => {
             {quickStartItems}
 
             <DropdownItem header>公式リンク</DropdownItem>
-            {Object.values(GROUPS).map((groupObj) => (
+            {sortGROUPSByFav(profileState.profile.favGroups).map((groupObj) => (
               <DropdownItem
                 key={groupObj.id}
                 href={groupObj.blogUrl}
@@ -239,15 +252,17 @@ const NavigationBar = () => {
                 </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem header>グループから探す</DropdownItem>
-                {Object.values(GROUPS).map((groupObj) => (
-                  <DropdownItem
-                    key={groupObj.id}
-                    tag={Link}
-                    to={`/images/${groupObj.id}/`}
-                  >
-                    {groupObj.name}
-                  </DropdownItem>
-                ))}
+                {sortGROUPSByFav(profileState.profile.favGroups).map(
+                  (groupObj) => (
+                    <DropdownItem
+                      key={groupObj.id}
+                      tag={Link}
+                      to={`/images/${groupObj.id}/`}
+                    >
+                      {groupObj.name}
+                    </DropdownItem>
+                  )
+                )}
                 <DropdownItem divider />
                 <DropdownItem header>メンバーから探す</DropdownItem>
                 <DropdownItem tag={Link} to="/members/">
@@ -278,15 +293,17 @@ const NavigationBar = () => {
                 </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem header>グループから探す</DropdownItem>
-                {Object.values(GROUPS).map((groupObj) => (
-                  <DropdownItem
-                    key={groupObj.id}
-                    tag={Link}
-                    to={`/blogs/${groupObj.id}/`}
-                  >
-                    {groupObj.name}
-                  </DropdownItem>
-                ))}
+                {sortGROUPSByFav(profileState.profile.favGroups).map(
+                  (groupObj) => (
+                    <DropdownItem
+                      key={groupObj.id}
+                      tag={Link}
+                      to={`/blogs/${groupObj.id}/`}
+                    >
+                      {groupObj.name}
+                    </DropdownItem>
+                  )
+                )}
                 <DropdownItem divider />
                 <DropdownItem header>メンバーから探す</DropdownItem>
                 <DropdownItem tag={Link} to="/members/">

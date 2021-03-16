@@ -11,7 +11,7 @@ from rest_framework import views, permissions, status
 from rest_framework.response import Response
 import otapick
 from account.models import Account
-from account.serializers import MeSerializer, UserSerializer
+from account.serializers import FavMembersSerializer, MeSerializer, UserSerializer
 from urllib.parse import urljoin
 
 
@@ -104,3 +104,30 @@ class UserAPIView(views.APIView):
 
 
 userAPIView = UserAPIView.as_view()
+
+
+class FavMembersAPIView(views.APIView):
+    """
+    put data: { groups: int[], members: { group_id: int, ct: str }[], }
+    未入力の場合(例えば, 日向のメンバーを指定しなかった場合), nullがsetされ箱推しとなる.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def put(self, request, *args, **kwargs):
+        fav_members_serializer = FavMembersSerializer(data=request.data)
+        if fav_members_serializer.is_valid():
+            fav_members_data = fav_members_serializer.save()
+            me_serializer = MeSerializer(
+                request.user, data=fav_members_data, partial=True)
+            if me_serializer.is_valid():
+                print('sssss')
+                me_serializer.save()
+                print(me_serializer.data)
+                return Response(data=me_serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(data=me_serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(data=fav_members_serializer.errors, status=status.HTTP_404_NOT_FOUND)
+
+
+favMembersAPIView = FavMembersAPIView.as_view()
