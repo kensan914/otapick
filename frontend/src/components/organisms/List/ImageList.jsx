@@ -9,13 +9,23 @@ import List, { useListState } from "./List";
 import { getImageUrlComposition } from "../../templates/ImageListTemplate";
 import { useAuthState } from "../../contexts/AuthContext";
 import { NotFoundMessage } from "../../atoms/NotFound";
+import { useProfileState } from "../../contexts/ProfileContext";
 
 const ImageList = (props) => {
   const { topComponent } = props;
 
+  const profileState = useProfileState();
   return (
     <ImageListModel
       {...props}
+      additionalQParams={
+        profileState?.profile?.favGroups
+          ? [
+              "?groups=",
+              profileState.profile.favGroups.map((group) => group.groupId),
+            ]
+          : []
+      }
       render={(
         hasMore,
         status,
@@ -110,11 +120,12 @@ export default ImageList;
 
 /**
  * ↓↓↓ unrequire params ↓↓↓
+ * @param {function} render
  * @param {string} type ["RELATED_IMAGES", "FAVORITE_IMAGES", "HOME"] 通常のimage listの場合、不必要。それ以外でimage list を使う際に指定する。
- * @param {component} topComponent listの上部に表示させる
+ * @param {any[]} additionalQParams optional. 追加のクエリパラメータをリスト形式で指定. URLJoin(url, ...additionalQParams).
  */
 export const ImageListModel = withRouter((props) => {
-  const { type, render } = props;
+  const { type, render, additionalQParams } = props;
 
   const pmp = props.match?.params;
   const [groupID] = useState(pmp && pmp.groupID);
@@ -176,12 +187,14 @@ export const ImageListModel = withRouter((props) => {
   const urlExcludePage = URLJoin(
     urlExcludeQparams,
     orderFormat && `?sort=${orderFormat}`,
-    randomSeed && `?random_seed=${randomSeed}`
+    randomSeed && `?random_seed=${randomSeed}`,
+    ...(additionalQParams ? additionalQParams : [])
   );
 
   const [isShowTopComponent, setIsShowTopComponent] = useState(false);
   const authState = useAuthState();
 
+  console.log(urlExcludePage);
   const { isLoading, request } = useAxios(
     URLJoin(urlExcludePage, `?page=${pageRef.current}`),
     "get",

@@ -156,8 +156,7 @@ class BlogListAPIView(views.APIView):
         narrowing_post = self.request.GET.get('post')
         _page = self.request.GET.get('page')
         page = int(_page) if _page is not None and _page.isdecimal() else 1
-        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get(
-            'random_seed') is not None else 0
+        # + random_seed, groups 効率のためrecommend処理内でget
 
         if group_id is not None:
             if ct is None:
@@ -167,20 +166,29 @@ class BlogListAPIView(views.APIView):
                 if Group.objects.filter(is_active=True, group_id=group_id).exists():
                     blogs = Blog.objects.filter(
                         writer__belonging_group__group_id=group_id, writer__ct=ct)
-                else:  # ex) blogs/3/01/　☚メンバー絞込みでis_active=Falseのグループを指定することはできない
+                else:  # ex) blogs/3/01/ ☚メンバー絞込みでis_active=Falseのグループを指定することはできない
                     return Response({'status': 'failed'}, status.HTTP_404_NOT_FOUND)
 
             blogs = otapick.sort_blogs(blogs, order_format)
             blogs = otapick.narrowdown_blogs_keyword(blogs, narrowing_keyword)
             blogs = otapick.narrowdown_blogs_post(blogs, narrowing_post)
             # to create id_list will be faster
-            id_list = list(blogs[self.paginate_by * (page - 1)
-                           : self.paginate_by * page].values_list('id', flat=True))
+            id_list = list(blogs[self.paginate_by * (page - 1): self.paginate_by * page].values_list('id', flat=True))
             blogs = [blogs.get(id=pk) for pk in id_list]
 
         # recommend
         else:
-            blog_ids = Image.objects.filter(
+            # [random_seed, groups] q paramsはrecommendの時のみ有効
+            random_seed_str = self.request.GET.get('random_seed', '0')
+            random_seed = int(
+                random_seed_str) if random_seed_str.isdecimal() else 0
+            groups_str = self.request.GET.get('groups', '')  # ex) '1,2,   3'
+            groups = otapick.convert_querystring_to_list(
+                groups_str)  # ex) [1, 2, 3]
+
+            base_images = otapick.get_filtered_images_group_ids(groups)
+
+            blog_ids = base_images.filter(
                 order=0).values_list('publisher__id', flat=True)
             blogs = Blog.objects.filter(id__in=blog_ids)
             blogs_id_list = otapick.sort_by_recommend_score(
@@ -278,9 +286,11 @@ class ImageListAPIView(views.APIView):
             self.kwargs.get('group_id'), self.kwargs.get('ct'))
         _page = self.request.GET.get('page')
         page = int(_page) if _page is not None and _page.isdecimal() else 1
-        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get(
-            'random_seed') is not None else 0
-        order_format = self.request.GET.get('sort')
+        random_seed_str = self.request.GET.get('random_seed', '0')
+        random_seed = int(
+            random_seed_str) if random_seed_str.isdecimal() else 0
+        order_format = self.request.GET.get('sort', '')
+        # + groups 効率のためrecommend処理内でget
 
         # filter
         if group_id is not None:
@@ -291,14 +301,19 @@ class ImageListAPIView(views.APIView):
                 if Group.objects.filter(is_active=True, group_id=group_id).exists():
                     images = Image.objects.filter(
                         publisher__writer__belonging_group__group_id=group_id, publisher__writer__ct=ct)
-                else:  # ex) images/3/01/　☚メンバー絞込みでis_active=Falseのグループを指定することはできない
+                else:  # ex) images/3/01/ ☚メンバー絞込みでis_active=Falseのグループを指定することはできない
                     return Response({'status': 'failed'}, status.HTTP_404_NOT_FOUND)
             if not images.exists():
                 return Response({'status': 'image_not_found'}, status.HTTP_200_OK)
 
         # recommend
         else:
-            images = Image.objects.all()
+            # groups query parameterはrecommendの時のみ有効
+            groups_str = self.request.GET.get('groups', '')  # ex) '1,2,   3'
+            groups = otapick.convert_querystring_to_list(
+                groups_str)  # ex) [1, 2, 3]
+
+            images = otapick.get_filtered_images_group_ids(groups)
 
         # sort and slice
         result = otapick.sort_images(images, order_format)
@@ -359,12 +374,17 @@ relatedImageListAPIView = RelatedImageListAPIView.as_view()
 
 class HomeAPIView(ImageListAPIView):
     def get(self, request, *args, **kwargs):
-        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get(
-            'random_seed') is not None else 0
-        _page = self.request.GET.get('page')
-        page = int(_page) if _page is not None and _page.isdecimal() else 1
+        random_seed_str = self.request.GET.get('random_seed', '0')
+        random_seed = int(
+            random_seed_str) if random_seed_str.isdecimal() else 0
+        page_str = self.request.GET.get('page', '1')
+        page = int(page_str) if page_str.isdecimal() else 1
+        groups_str = self.request.GET.get('groups', '')  # ex) '1,2,   3'
+        groups = otapick.convert_querystring_to_list(
+            groups_str)  # ex) [1, 2, 3]
 
-        images = Image.objects.all()
+        images = otapick.get_filtered_images_group_ids(groups)
+
         images_id_list = otapick.sort_by_recommend_score(
             images, page, random_seed, self.paginate_by)
         images = [images.get(id=pk) for pk in images_id_list]
@@ -377,9 +397,15 @@ homeAPIView = HomeAPIView.as_view()
 
 class HomeAdditionalAPIView(views.APIView):
     def get(self, request, *args, **kwargs):
-        random_seed = int(self.request.GET.get('random_seed')) if self.request.GET.get(
-            'random_seed') is not None else 0
-        return Response(otapick.get_additional_data(random_seed, request), status.HTTP_200_OK)
+        random_seed_str = self.request.GET.get('random_seed', '0')
+        random_seed = int(
+            random_seed_str) if random_seed_str.isdecimal() else 0
+        groups_str = self.request.GET.get('groups', '')  # ex) '1,2,   3'
+        groups = otapick.convert_querystring_to_list(
+            groups_str)  # ex) [1, 2, 3]
+
+        return Response(otapick.get_additional_data(
+            random_seed, request, filter_group_ids=groups), status.HTTP_200_OK)
 
 
 homeAdditionalAPIView = HomeAdditionalAPIView.as_view()
@@ -504,25 +530,47 @@ class SearchSuggestionsInitAPIView(views.APIView):
     num_of_get = 5
 
     def get(self, request, *args, **kwargs):
-        group_id = self.request.GET.get('group')
-        group_id = int(
-            group_id) if group_id == '1' or group_id == '2' else None
+        groups_str = self.request.GET.get('groups', '')  # ex) '1,2,   3'
+        groups = otapick.convert_querystring_to_list(
+            groups_str)  # ex) [1, 2, 3]
 
-        blogs = Blog.objects.all() if group_id is None else Blog.objects.filter(
-            publishing_group__group_id=group_id)
-        blogs = otapick.sort_blogs(blogs, 'popularity')[:self.num_of_get]
-        blogs_data = BlogSerializerVerSS(blogs, many=True).data
-        if group_id == 1:
-            blogs_data.append(otapick.generate_watch_more('/blogs/1'))
-        elif group_id == 2:
-            blogs_data.append(otapick.generate_watch_more('/blogs/2'))
+        if groups and all([type(g) is int for g in groups]):
+            base_blogs = Blog.objects.filter(
+                publishing_group__group_id__in=groups)
+            # この時点でbase_blogsが存在しない場合(ex. groups=12,23)
+            if not base_blogs.exists():
+                base_blogs = Blog.objects.all()
+
+            # 3(欅)のみ指定の場合, 1(櫻)でfilter
+            keyaki_groups = Group.objects.filter(key="keyaki")
+            sakura_groups = Group.objects.filter(key="sakura")
+            if keyaki_groups.exists() and sakura_groups.exists():
+                keyaki_group = keyaki_groups.first()
+                sakura_group = sakura_groups.first()
+                if keyaki_group.group_id in groups:
+                    groups = [sakura_group.id if group_id ==
+                              keyaki_group.id else group_id for group_id in groups]
+                base_members = Member.objects.filter(
+                    belonging_group_id__in=groups, temporary=False)
+            else:
+                base_members = Member.objects.filter(temporary=False)
+
+            # この時点でbase_membersが存在しない場合(ex. groups=12,23)
+            if not base_members.exists():
+                base_members = Member.objects.filter(temporary=False)
         else:
-            blogs_data.append(otapick.generate_watch_more('/blogs/'))
+            base_blogs = Blog.objects.all()
+            base_members = Member.objects.filter(temporary=False)
 
-        members = Member.objects.filter(temporary=False) if group_id is None else Member.objects.filter(
-            belonging_group_id=group_id, temporary=False)
-        members = members.order_by('?')[:self.num_of_get]
-        members_data = MemberSerializerVerSS(members, many=True).data
+        # popularity_blogs
+        popularity_blogs = otapick.sort_blogs(
+            base_blogs, 'popularity')[:self.num_of_get]
+        blogs_data = BlogSerializerVerSS(popularity_blogs, many=True).data
+        blogs_data.append(otapick.generate_watch_more('/blogs/'))
+
+        # rondom members
+        rondom_members = base_members.order_by('?')[:self.num_of_get]
+        members_data = MemberSerializerVerSS(rondom_members, many=True).data
         members_data.append(otapick.generate_watch_more('/members'))
 
         return Response({'blogs': blogs_data, 'members': members_data}, status.HTTP_200_OK)

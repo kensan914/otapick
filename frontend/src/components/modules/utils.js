@@ -12,25 +12,44 @@ import {
 } from "./env";
 
 /**
- * ex)URLJoin("http://www.google.com", "a", undefined, "/b/cd", undefined, "?foo=123", "?bar=foo"); => "http://www.google.com/a/b/cd/?foo=123&bar=foo"
+ * Once a query parameter such as "?foo=123" is evaluated, all subsequent arguments will be treated as query parameters.
+ *
+ * ex) URLJoin("http://www.google.com", "a", undefined, "/b/cd", null, "?foo=123", "?bar=foo", "?list=", [1, "a"]);
+ * => "http://www.google.com/a/b/cd/?foo=123&bar=foo&list=1,a"
  */
 export const URLJoin = (...args) => {
   args = args.filter((n) => n !== void 0 && n !== null);
-  for (let i = args.length - 1; i >= 0; i--) {
-    const arg = args[i];
+
+  const newArgs = [];
+  let mode = "URL"; // "URL" | "QP"
+  args.forEach((arg, i) => {
+    if (Array.isArray(arg)) {
+      arg = arg.join(",");
+    }
+
     if (typeof arg === "string" || typeof arg === "number") {
-      if (arg.toString().startsWith("?")) continue;
-      if (!arg.toString().endsWith("/")) {
-        args[i] += "/";
-        break;
+      if (mode === "QP" && !arg.toString().startsWith("?")) {
+        newArgs[newArgs.length - 1] += arg;
+        return;
       }
+      if (mode === "QP" || arg.toString().startsWith("?")) {
+        mode = "QP";
+        newArgs.push(arg);
+        return;
+      }
+      if (mode === "URL" && !arg.toString().endsWith("/")) {
+        newArgs.push(arg + "/");
+        return;
+      }
+      newArgs.push(arg);
     } else {
       console.error(
         `"${arg}" is an unexpected argument. Perhaps you have entered a boolean or object type?`
       );
     }
-  }
-  return args
+  });
+
+  return newArgs
     .join("/")
     .replace(/[/]+/g, "/")
     .replace(/^(.+):\//, "$1://")
@@ -384,6 +403,7 @@ export const deepCvtKeyFromSnakeToCamel = (obj) => {
   if (Array.isArray(obj)) {
     return obj.map((elm) => deepCvtKeyFromSnakeToCamel(elm));
   }
+  if (!isObject(obj)) return obj; // string | number | boolean
 
   return Object.fromEntries(
     Object.entries(obj).map(([k, v]) => {
@@ -495,6 +515,9 @@ export const equalsArray = (a, b, order = true /* falseの場合順不同 */) =>
 };
 
 export const sortGROUPSByFav = (favGroups) => {
+  // 未ログイン時
+  if (!favGroups) return Object.values(GROUPS);
+
   const favGroupIds = favGroups.map((favGroup) => favGroup.groupId);
   const _GROUPS = { ...GROUPS };
   const _GROUPS_list = [];

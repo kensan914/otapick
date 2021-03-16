@@ -225,7 +225,7 @@ const FavMembersEditor = (props) => {
       const isActive = favGroupIds.includes(groupObj.id);
       // 櫻推し && 欅推しの時、欅Collapseをopenしない
       const shouldOpenCollapse =
-        groupObj.key !== "keyaki" || !favGroupIds.includes("1");
+        groupObj.key !== "keyaki" || !favGroupIds.includes(1);
 
       return (
         <div key={i} className="fav-members-editor-item">

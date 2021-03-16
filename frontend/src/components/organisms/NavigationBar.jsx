@@ -32,6 +32,7 @@ import {
   faExternalLinkAlt,
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { OTAPICK_TWITTER_URL } from "../modules/env";
 
 const NavigationBar = () => {
   const profileState = useProfileState();
@@ -55,7 +56,7 @@ const NavigationBar = () => {
           to="/"
           className="mx-0 navbar-brand-responsive"
         />
-        <SearchDownshift />
+        <SearchDownshift profileState={profileState} />
         <MobileTopMenu
           profileState={profileState}
           authState={authState}
@@ -160,7 +161,7 @@ const NavigationBar = () => {
             <DropdownItem tag={Link} to="/privacy-policy/">
               プライバシーポリシー
             </DropdownItem>
-            <DropdownItem href="https://twitter.com/otapick/" target="_blank">
+            <DropdownItem href={OTAPICK_TWITTER_URL} target="_blank">
               公式Twitter <FontAwesomeIcon icon={faTwitter} />
             </DropdownItem>
 
@@ -201,6 +202,7 @@ const NavigationBar = () => {
         <SearchDownshift
           resetNavBar={() => resetNavBar()}
           navbarToggle={() => {}}
+          profileState={profileState}
         />
 
         {/* shorter width */}

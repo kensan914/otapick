@@ -96,3 +96,20 @@ def sort_images(images, order_format):
 
     # return images
     return images
+
+
+def get_filtered_images_group_ids(group_ids):
+    """
+    推しグループでfilter
+    group_ids(ex. [1, 2])でImageを絞り込み返す.
+    group_idsに一つでもint以外が含まれた場合 Image.objects.all()
+    """
+    if group_ids and all([type(g) is int for g in group_ids]):
+        images = Image.objects.filter(
+            publisher__publishing_group__group_id__in=group_ids)
+        if not images.exists():
+            images = Image.objects.all()
+    else:
+        images = Image.objects.all()
+
+    return images

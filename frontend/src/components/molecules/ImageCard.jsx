@@ -275,24 +275,9 @@ class ImageCard extends React.Component {
                   />
                 </div>
               ) : (
-                // <div className="preload-image-card-wrapper">
-                //   <div
-                //     className="preload-image-card-wrapper-before"
-                //     style={{
-                //       paddingTop: `${(formatHeight / formatWidth) * 100}%`,
-                //     }}
-                //   />
-                //   <div
-                //     className="preload-image-card"
-                //     style={{
-                //       backgroundColor: "lightgray",
-                //     }}
-                //   />
-                // </div>
-
                 <div className="image-card-preload-img-wrapper">
                   <div
-                    className={`image-card-preload-img`} // groupKeyはnotUsed
+                    className={`image-card-preload-img`}
                     style={{
                       backgroundColor: "lightgray",
                       paddingTop: `${(formatHeight / formatWidth) * 100}%`,

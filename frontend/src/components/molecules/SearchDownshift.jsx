@@ -49,7 +49,15 @@ class SearchDownshift extends React.Component {
   }
 
   setInitSearchSuggestions() {
-    const url = URLJoin(BASE_URL, "searchSuggestions/init/");
+    const groupsQParams = this.props.profileState?.profile?.favGroups
+      ? [
+          "?groups=",
+          this.props.profileState.profile.favGroups.map(
+            (group) => group.groupId
+          ),
+        ]
+      : [];
+    const url = URLJoin(BASE_URL, "search-suggestions/init/", ...groupsQParams);
     setTimeout(() => {
       axios
         .get(url)
@@ -77,7 +85,7 @@ class SearchDownshift extends React.Component {
   }
 
   setSearchSuggestions() {
-    const url = URLJoin(BASE_URL, "searchSuggestions/");
+    const url = URLJoin(BASE_URL, "search-suggestions/");
     setTimeout(() => {
       axios
         .get(url, {

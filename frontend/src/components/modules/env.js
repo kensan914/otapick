@@ -1,14 +1,16 @@
 import { getIsSmp, isMobile } from "./utils";
 
 // eslint-disable-next-line no-undef
-export const DEBUG = NODE_ENV === "development";
-export const FQDN = window.env.fqdn;
+export const DEBUG = process.env.NODE_ENV === "development";
+export const FQDN = window?.env?.fqdn ? window.env.fqdn : "otapick.com";
 export const BASE_URL = DEBUG ? `http://${FQDN}/api/` : `https://${FQDN}/api/`;
 export const DELAY_TIME = DEBUG ? 0 : 0;
 
 export const OTAPICK_BRAND_IMG_URL = "/static/img/logotitle.png";
 export const LOAD_IMG_URL = "/static/img/otapick_logo_back.png";
 export const BACKGROUND_IMG_URL = "/static/img/background.png";
+
+export const OTAPICK_TWITTER_URL = "https://twitter.com/otapick/";
 
 //---------- URLパスによる振る舞い変更 ----------//
 // show〇〇Urls(〇〇を表示する)  or  dontShow〇〇Urls(〇〇を表示しない) <= 404ページ、つまり該当しなかった場合どうしたいかで選択。

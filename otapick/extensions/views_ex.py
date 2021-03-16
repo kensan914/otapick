@@ -1,4 +1,5 @@
 import math
+from otapick.lib.constants import OTAPICK_TWITTER_URL, TWITTER_ADS_HEIGHT, TWITTER_ADS_WIDTH
 import random
 import numpy as np
 from django.db.models import Q
@@ -209,7 +210,7 @@ def generate_resource_data(resources, max_rank, rank_type, resource_type, prefix
     return resources_data
 
 
-def get_additional_data(random_seed, request):
+def get_additional_data(random_seed, request, filter_group_ids=None):
     data = []
     data_length = 50
     max_rank = 3
@@ -218,7 +219,14 @@ def get_additional_data(random_seed, request):
                 'popularity': '人気のある', 'newer': '新しい'}
     suffix = {'image': '画像', 'blog': 'ブログ'}
 
-    for group in Group.objects.filter(is_active=True):
+    # 推しグループでfilter
+    if filter_group_ids and all([type(g) is int for g in filter_group_ids]):
+        groups = Group.objects.filter(
+            is_active=True, group_id__in=filter_group_ids)
+    else:
+        groups = Group.objects.filter(is_active=True)
+
+    for group in groups:
         # images
         images = Image.objects.filter(publisher__writer__belonging_group=group)
         most_dl_per_day_images = images.exclude(
@@ -296,10 +304,37 @@ def get_additional_data(random_seed, request):
     # twitter ads
     for TWITTER_ADS_URL in otapick.TWITTER_ADS_URLS:
         data.append({'type': 'twitter', 'message': 'ヲタピックの公式Twitter. フォローはこちらから',
-                     'src': TWITTER_ADS_URL, 'url': 'https://twitter.com/otapick'})
+                     'src': TWITTER_ADS_URL, 'url': OTAPICK_TWITTER_URL, 'width': TWITTER_ADS_WIDTH, 'height': TWITTER_ADS_HEIGHT})
 
     data += [None for _ in range(data_length - len(data))]
     np.random.seed(random_seed)
     np.random.shuffle(data)
 
     return data
+
+
+def convert_querystring_to_list(q_str):
+    """
+    ex) ',1,2,   3' ===> [1, 2, 3]
+    数値に変換できるものは数値に変換し, それ以外は文字列. 空白を除去.
+    引数が''(空文字)やundefinedの場合Noneを返す.
+    リストの要素が空であるときその要素は削除(',a' => ['a']☚本来['', 'a'])
+    """
+
+    split_kw = ','
+    if (not q_str):
+        return
+
+    not_blank_q_str = q_str.replace(' ', '')
+    q_list = not_blank_q_str.split(split_kw)
+
+    def not_empty(str):
+        return bool(str)
+    not_empty_q_list = list(filter(not_empty, q_list))
+
+    def convert_from_str_to_int(str):
+        return int(str) if str.isdecimal() else str
+
+    converted_q_list = list(map(convert_from_str_to_int, not_empty_q_list))
+
+    return converted_q_list

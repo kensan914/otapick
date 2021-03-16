@@ -45,7 +45,6 @@ const ModeSelectButtonDropdown = (props) => {
   let contents = [];
   if (typeof members !== "undefined") {
     // 推しメン
-    const favContents = [];
     if (
       (groupKey === "sakura" && profileState.profile.favMemberSakura) ||
       (groupKey === "hinata" && profileState.profile.favMemberHinata)
@@ -66,7 +65,7 @@ const ModeSelectButtonDropdown = (props) => {
           return null;
         }
       };
-      favContents.push(
+      contents.push(
         <>
           <DropdownItem header>
             <div className="m-0">推しメン</div>
@@ -82,7 +81,6 @@ const ModeSelectButtonDropdown = (props) => {
     for (const [index, membersDividedByGeneration] of members.entries()) {
       contents.push(
         <div key={"dropdown-menu-contents-m-" + index}>
-          {favContents}
           <DropdownItem header>
             <div className="m-0">{`${index + 1}期生`}</div>
           </DropdownItem>

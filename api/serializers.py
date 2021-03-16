@@ -18,6 +18,8 @@ class MemberSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     official_url = serializers.SerializerMethodField()
+    belonging_group = serializers.IntegerField(
+        source='belonging_group.group_id')
 
     def get_image(self, obj):
         return otapick.generate_memberimage_url(member=obj)

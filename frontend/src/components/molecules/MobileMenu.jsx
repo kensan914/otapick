@@ -16,6 +16,7 @@ import {
   NAVBAR_LS_ZINDEX,
   SUB_NAVBAR_LS_ZINDEX,
   NAVBAR_BOTTOM_LS_ZINDEX,
+  OTAPICK_TWITTER_URL,
 } from "../modules/env";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -268,7 +269,7 @@ export class _MobileTopMenu extends MobileMenu {
           />
           <MobileMenuLink
             router={false}
-            href="https://twitter.com/otapick"
+            href={OTAPICK_TWITTER_URL}
             target="_blank"
             title="公式Twitter"
             icon={true}

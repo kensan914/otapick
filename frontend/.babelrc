@@ -12,5 +12,22 @@
   ],
   "plugins": [
     "transform-class-properties"
-  ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        "@babel/preset-react",
+        ["@babel/preset-env", {
+          "targets": {
+            "node": "current",
+            "ie":11,
+            "safari":9
+          },
+          "useBuiltIns": "usage",
+          "corejs": 3,
+          "modules": "cjs"
+        }]
+      ]
+    }
+  }
 }

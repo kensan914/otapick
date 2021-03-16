@@ -8,6 +8,7 @@ import { useAxios } from "../../modules/axios";
 import List, { useListState } from "./List";
 import { getBlogUrlComposition } from "../../templates/BlogListTemplate";
 import { useAuthState } from "../../contexts/AuthContext";
+import { useProfileState } from "../../contexts/ProfileContext";
 
 const BlogList = withRouter((props) => {
   const [
@@ -20,6 +21,11 @@ const BlogList = withRouter((props) => {
     randomSeed,
   ] = useListState();
   const [blogUrlComposition] = useState(getBlogUrlComposition(props));
+
+  const profileState = useProfileState();
+  const groupsQParams = profileState?.profile?.favGroups
+    ? ["?groups=", profileState.profile.favGroups.map((group) => group.groupId)]
+    : [];
   const {
     groupID,
     ct,
@@ -35,7 +41,8 @@ const BlogList = withRouter((props) => {
     orderFormat && `?sort=${orderFormat}`,
     narrowingKeyword && `?keyword=${narrowingKeyword}`,
     narrowingPost && `?post=${narrowingPost}`,
-    randomSeed && `?random_seed=${randomSeed}`
+    randomSeed && `?random_seed=${randomSeed}`,
+    ...(groupsQParams ? groupsQParams : [])
   );
 
   const authState = useAuthState();
@@ -85,7 +92,7 @@ const BlogList = withRouter((props) => {
       },
       didRequestCallback: (r) => console.log(r),
       shouldRequestDidMount: true,
-      token: authState.token,
+      // token: authState.token,
     }
   );
 

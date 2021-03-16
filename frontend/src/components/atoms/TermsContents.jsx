@@ -5,6 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { OTAPICK_TWITTER_URL } from "../modules/env";
 import { isSmp } from "../modules/utils";
 
 export class ContactContent extends React.Component {
@@ -45,11 +46,7 @@ export class ContactContent extends React.Component {
           </h4>
           <p>
             Twitter公式アカウント:{isSmp && <br />}
-            <a
-              rel="noreferrer"
-              target="_blank"
-              href="https://twitter.com/otapick"
-            >
+            <a rel="noreferrer" target="_blank" href={OTAPICK_TWITTER_URL}>
               ヲタピック
             </a>
           </p>

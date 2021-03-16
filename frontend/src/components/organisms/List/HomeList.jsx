@@ -17,18 +17,28 @@ import { useAxios } from "../../modules/axios";
 import List from "./List";
 import { ImageListModel } from "./ImageList";
 import { useAuthState } from "../../contexts/AuthContext";
+import { useProfileState } from "../../contexts/ProfileContext";
 
 const HomeList = (props) => {
   const [randomSeed] = useState(generateRandomSeed());
   const [wavesVals] = useState(generateWavesVals());
 
   const authState = useAuthState();
+  const profileState = useProfileState();
 
   const [additionalItems, setAdditionalItems] = useState([]);
   const additionalItemsStartPage = useRef(-1);
 
+  const groupsQparams = profileState?.profile?.favGroups
+    ? ["?groups=", profileState.profile.favGroups.map((group) => group.groupId)]
+    : [];
   const { resData } = useAxios(
-    URLJoin(BASE_URL, "home/additional/", `?random_seed=${randomSeed}`),
+    URLJoin(
+      BASE_URL,
+      "home/additional/",
+      `?random_seed=${randomSeed}`,
+      ...groupsQparams
+    ),
     "get",
     {
       thenCallback: (res) => {
@@ -91,6 +101,8 @@ const HomeList = (props) => {
                 message: item.message,
                 src: item.src,
                 url: item.url,
+                width: item.width,
+                height: item.height,
               });
             }
           }
@@ -108,6 +120,7 @@ const HomeList = (props) => {
     <ImageListModel
       {...props}
       type="HOME"
+      additionalQParams={groupsQparams}
       render={(
         hasMore,
         status,
@@ -223,6 +236,8 @@ const HomeList = (props) => {
                         url={add.url}
                         src={add.src}
                         message={add.message}
+                        width={add.width}
+                        height={add.height}
                       />
                     );
                   }
