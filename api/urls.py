@@ -42,5 +42,7 @@ urlpatterns = [
     path('favorites/<int:group_id>/<int:blog_ct>/<int:order>/',
          views.favoriteAPIView, name='favoriteAPI'),
     path('favorites/', views.favoriteListAPIView, name='favoriteListAPI'),
+    path('favorites/info/', views.favoriteListInfoAPIView,
+         name='favoriteListInfoAPI'),
     path('fav-members/', account_views.favMembersAPIView, name='favMembersAPI')
 ]

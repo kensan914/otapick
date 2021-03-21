@@ -194,7 +194,6 @@ export const ImageListModel = withRouter((props) => {
   const [isShowTopComponent, setIsShowTopComponent] = useState(false);
   const authState = useAuthState();
 
-  console.log(urlExcludePage);
   const { isLoading, request } = useAxios(
     URLJoin(urlExcludePage, `?page=${pageRef.current}`),
     "get",

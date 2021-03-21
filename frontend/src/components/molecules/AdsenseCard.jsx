@@ -29,11 +29,10 @@ const AdSenseCard = (props) => {
                 alt="ヲタピック公式Twitter広告"
               />
             ) : (
-              <div className="image-card-preload-img-wrapper">
+              <div className="image-card-preload-img-wrapper loading-background">
                 <div
                   className={`image-card-preload-img`}
                   style={{
-                    backgroundColor: "lightgray",
                     paddingTop: `${(formatHeight / formatWidth) * 100}%`,
                   }}
                 />

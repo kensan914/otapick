@@ -79,7 +79,7 @@ class SearchDownshift extends React.Component {
           });
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     }, DELAY_TIME);
   }
@@ -115,7 +115,7 @@ class SearchDownshift extends React.Component {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         })
         .finally(() => {
           this.isCallingSetSearchSuggestions = false;
@@ -282,13 +282,15 @@ class SearchDownshift extends React.Component {
         if (!this.isCalledSetInitSearchSuggestions) {
           this.setInitSearchSuggestions();
           this.isCalledSetInitSearchSuggestions = true;
-        } else this.addEventListeners();
+        } else {
+          this.addEventListeners();
+        }
         this.resetSearchSuggestions();
       }
 
       // Downshiftがviewされたとき
       if (prevState.isOpen !== this.state.isOpen && this.state.isOpen) {
-        //
+        this.addEventListeners();
       }
 
       // InitDownshiftまたはDownshiftがviewされたとき(検索作業が開始したとき)

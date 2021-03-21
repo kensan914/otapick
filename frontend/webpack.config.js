@@ -44,4 +44,17 @@ module.exports = {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
     }),
   ],
+
+  // https://stackoverflow.com/questions/58073626/uncaught-typeerror-cannot-read-property-call-of-undefined-at-webpack-requir
+  optimization: {
+    minimize: true,
+    namedModules: true,
+    namedChunks: true,
+    removeAvailableModules: true,
+    flagIncludedChunks: true,
+    occurrenceOrder: false,
+    usedExports: true,
+    concatenateModules: true,
+    sideEffects: false, // <----- in prod defaults to true if left blank
+  },
 };

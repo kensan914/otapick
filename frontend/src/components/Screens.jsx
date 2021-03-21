@@ -160,6 +160,7 @@ const Screens = () => {
             render={() => (
               <NotFound404 footerRef={footerRef} domDispatch={domDispatch} />
             )}
+            status={404}
           />
         </CacheSwitch>
 

@@ -68,7 +68,7 @@ class ImageListInfo extends React.Component {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         })
         .finally(() => {
           gtagTo(this.props.location.pathname);

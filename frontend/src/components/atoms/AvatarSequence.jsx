@@ -9,7 +9,7 @@ import TooltipComponent from "./TooltipComponent";
  */
 const AvatarSequence = (props) => {
   const {
-    items,
+    items = [],
     diameter = 45 /* optional */,
     direction = "left" /* optional */,
   } = props;
@@ -66,6 +66,14 @@ const AvatarSequence = (props) => {
                     height: wrapperDiameter,
                   }}
                 >
+                  <div
+                    className="rounded-circle avatar-sequence-image-hover-wrapper"
+                    style={{
+                      width: diameter,
+                      height: diameter,
+                      ...(listHover[i] ? { opacity: 0.2 } : { opacity: 0 }),
+                    }}
+                  />
                   {item.contentsNode ? (
                     <div
                       className="rounded-circle avatar-sequence-image d-flex justify-content-center align-items-center"
@@ -82,6 +90,8 @@ const AvatarSequence = (props) => {
                   ) : (
                     <img
                       className="rounded-circle avatar-sequence-image"
+                      width={diameter}
+                      height={diameter}
                       style={{ width: diameter, height: diameter }}
                       src={item.imageUrl}
                       alt={item.alt}

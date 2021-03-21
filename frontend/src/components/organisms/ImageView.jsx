@@ -38,6 +38,7 @@ import {
   faPencilAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import TooltipComponent from "../atoms/TooltipComponent";
+import DownloadButton from "../atoms/DownloadButton";
 
 export const downloadImage = (
   url,
@@ -328,11 +329,9 @@ class ImageView extends ViewTemplate {
               {!isMobile && (
                 <>
                   <TooltipComponent title="この画像をダウンロード">
-                    <Button
-                      className={
-                        "rounded-circle p-0 image-view-download-button " +
-                        this.props.group
-                      }
+                    <DownloadButton
+                      className="image-view-download-button-v2"
+                      groupId={this.props.groupID}
                       onClick={() => {
                         image &&
                           downloadImage(
@@ -342,7 +341,6 @@ class ImageView extends ViewTemplate {
                             this.props.order
                           );
                       }}
-                      id="image-view-download-button"
                     />
                   </TooltipComponent>
                 </>

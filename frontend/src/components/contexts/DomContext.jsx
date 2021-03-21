@@ -1,4 +1,5 @@
-import React, { createContext, useReducer, useContext } from "react";
+import React, { createContext, useReducer, useContext, useEffect } from "react";
+import GlobalModal from "../molecules/modals/GlobalModal";
 
 const domReducer = (prevState, action) => {
   let _favoriteState;
@@ -76,12 +77,45 @@ const domReducer = (prevState, action) => {
         favoriteState: _favoriteState,
       };
 
+    case "OPEN_GLOBAL_MODAL":
+      /** open global modal
+       * @param {Object} action [type, globalModalId] */
+
+      if (!action.globalModalId || typeof action.globalModalId !== "string")
+        return { ...prevState };
+
+      return {
+        ...prevState,
+        isOpenGlobalModal: true,
+        globalModalId: action.globalModalId,
+      };
+
+    case "DISABLE_GLOBAL_MODAL":
+      /** アニメーションなしに即消しする際に. Modal open時にブラウザバックしたときなど.
+       * @param {Object} action [type] */
+
+      return {
+        ...prevState,
+        isOpenGlobalModal: false,
+        globalModalId: INIT_GLOBAL_MODAL_ID,
+      };
+
+    case "TOGGLE_GLOBAL_MODAL":
+      /** toggle global modal
+       * @param {Object} action [type] */
+
+      return {
+        ...prevState,
+        isOpenGlobalModal: !prevState.isOpenGlobalModal,
+      };
+
     default:
       console.error(`Not found "${action.type}" action.type.`);
       return;
   }
 };
 
+const INIT_GLOBAL_MODAL_ID = "Init";
 const initDomState = Object.freeze({
   accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"] （`${groupID}_${blogCt}_${location.key}`）
   accessedImages: [], // ["1_34360_0_2341234", "2_34230_3_51451345"] （`${groupID}_${blogCt}_${order}_${location.key}`）
@@ -94,6 +128,10 @@ const initDomState = Object.freeze({
   // { `${groupID}_${blogCt}_${order}`: {boolean}, }
   // ex) { 1_34360_0 : true, 2_34230_3: false, }
   favoriteState: {},
+
+  // global modal
+  isOpenGlobalModal: false,
+  globalModalId: INIT_GLOBAL_MODAL_ID,
 });
 
 export const DomStateContext = createContext({ ...initDomState });
@@ -117,6 +155,15 @@ const DomProvider = ({ children }) => {
     <DomStateContext.Provider value={domState}>
       <DomDispatchContext.Provider value={domDispatch}>
         {children}
+        <GlobalModal
+          globalModalId={domState.globalModalId}
+          isOpenGlobalModal={domState.isOpenGlobalModal}
+          toggleGlobalModal={() => domDispatch({ type: "TOGGLE_GLOBAL_MODAL" })}
+          disableGlobalModal={() =>
+            domDispatch({ type: "DISABLE_GLOBAL_MODAL" })
+          }
+          INIT_GLOBAL_MODAL_ID={INIT_GLOBAL_MODAL_ID}
+        />
       </DomDispatchContext.Provider>
     </DomStateContext.Provider>
   );

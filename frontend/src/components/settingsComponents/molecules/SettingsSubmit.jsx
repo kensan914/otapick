@@ -46,7 +46,6 @@ const SettingsSubmit = (props) => {
           canSubmit ? "active" : ""
         }`}
         onClick={() => {
-          console.log("推した");
           request();
         }}
         style={{

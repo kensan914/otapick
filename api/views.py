@@ -8,6 +8,7 @@ import otapick.db.scores.controller
 from api.serializers import *
 from image.models import Favorite
 from main.models import Member, Blog, Group
+from account.models import MAX_FAVORITE_IMAGES_NUM_UNLIMITED_SIGN
 import otapick
 
 
@@ -571,7 +572,7 @@ class SearchSuggestionsInitAPIView(views.APIView):
         # rondom members
         rondom_members = base_members.order_by('?')[:self.num_of_get]
         members_data = MemberSerializerVerSS(rondom_members, many=True).data
-        members_data.append(otapick.generate_watch_more('/members'))
+        members_data.append(otapick.generate_watch_more('/members/'))
 
         return Response({'blogs': blogs_data, 'members': members_data}, status.HTTP_200_OK)
 
@@ -604,15 +605,21 @@ class FavoriteAPIView(views.APIView):
     # 中間テーブル(favoriteテーブル)を作成しているが、べき等性があるためput
     def put(self, request, *args, **kwargs):
         image = self.get_image(self.kwargs)
-        if image is not None:
-            favorite = self.get_favorite(image, request.user)
-            if favorite is None:
-                Favorite.objects.create(
-                    image=image,
-                    user=request.user,
-                )
-            return Response({'status': 'success'}, status.HTTP_200_OK)
-        return Response({'status': 'not_found'}, status.HTTP_404_NOT_FOUND)
+        if image is None:
+            return Response({'status': 'not_found'}, status.HTTP_404_NOT_FOUND)
+
+        favorites = Favorite.objects.filter(user=request.user)
+        if request.user.max_favorite_images_num != MAX_FAVORITE_IMAGES_NUM_UNLIMITED_SIGN and request.user.max_favorite_images_num <= favorites.count():
+            # max値を超えている
+            return Response({'status': 'exceed_max_num'}, status.HTTP_409_CONFLICT)
+
+        created_favorite = self.get_favorite(image, request.user)
+        if created_favorite is None:
+            Favorite.objects.create(
+                image=image,
+                user=request.user,
+            )
+        return Response({'status': 'success'}, status.HTTP_200_OK)
 
     # 中間テーブル(favoriteテーブル)を削除しているため
     def delete(self, request, *args, **kwargs):
@@ -644,3 +651,18 @@ class FavoriteListAPIView(views.APIView):
 
 
 favoriteListAPIView = FavoriteListAPIView.as_view()
+
+
+class FavoriteListInfoAPIView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        favorites = Favorite.objects.filter(user=request.user)
+
+        return Response({
+            'favorites_num': favorites.count(),
+            'max_favorites_num': request.user.max_favorite_images_num if request.user else 0,
+        }, status.HTTP_200_OK)
+
+
+favoriteListInfoAPIView = FavoriteListInfoAPIView.as_view()

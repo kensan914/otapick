@@ -4,7 +4,6 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Button,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
@@ -23,22 +22,7 @@ import FavoriteButton from "../atoms/FavoriteButton";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCrown } from "@fortawesome/free-solid-svg-icons";
-
-class DownloadButton extends React.Component {
-  render() {
-    return (
-      <Button
-        className={
-          "rounded-circle p-0 image-card-download-button " + this.props.group
-        }
-        title="この画像をダウンロードする"
-        onClick={() =>
-          downloadImage(URLJoin(BASE_URL, this.props.url), this.props.csrftoken)
-        }
-      />
-    );
-  }
-}
+import DownloadButton from "../atoms/DownloadButton";
 
 class ToBlogButton extends React.Component {
   render() {
@@ -275,11 +259,11 @@ class ImageCard extends React.Component {
                   />
                 </div>
               ) : (
-                <div className="image-card-preload-img-wrapper">
+                <div className="image-card-preload-img-wrapper loading-background">
                   <div
                     className={`image-card-preload-img`}
                     style={{
-                      backgroundColor: "lightgray",
+                      // backgroundColor: "lightgray",
                       paddingTop: `${(formatHeight / formatWidth) * 100}%`,
                     }}
                   />
@@ -304,9 +288,14 @@ class ImageCard extends React.Component {
               />
               {isShowMenu && isEnoughHighMenu && (
                 <DownloadButton
-                  group={this.props.group}
-                  url={this.props.url}
-                  csrftoken={this.csrftoken}
+                  className={"image-card-download-button-ver2"}
+                  groupId={this.props.groupID}
+                  onClick={() => {
+                    downloadImage(
+                      URLJoin(BASE_URL, this.props.url),
+                      this.csrftoken
+                    );
+                  }}
                 />
               )}
               {isShowMenu && (

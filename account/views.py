@@ -120,9 +120,7 @@ class FavMembersAPIView(views.APIView):
             me_serializer = MeSerializer(
                 request.user, data=fav_members_data, partial=True)
             if me_serializer.is_valid():
-                print('sssss')
                 me_serializer.save()
-                print(me_serializer.data)
                 return Response(data=me_serializer.data, status=status.HTTP_200_OK)
             else:
                 return Response(data=me_serializer.errors, status=status.HTTP_404_NOT_FOUND)

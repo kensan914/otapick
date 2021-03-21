@@ -8,6 +8,7 @@ import { BASE_URL, GROUPS } from "../modules/env";
 import { useAxios } from "../modules/axios";
 import { useAuthState } from "../contexts/AuthContext";
 import { withRouter } from "react-router-dom";
+import { useDomDispatch } from "../contexts/DomContext";
 
 /**
  * propsのisShowMenu, cardHeightがundefinedの場合、image viewに切り替わる。
@@ -24,21 +25,34 @@ const FavoriteButton = withCookies((props) => {
     cardHeight,
   } = props;
 
+  const [lottieName] = useState(`favoritebutton-${groupID}-${blogCt}-${order}`);
+
   const animationContainer = useRef(null);
   const authState = useAuthState();
+  const domDispatch = useDomDispatch();
 
   const url = URLJoin(BASE_URL, "favorites/", groupID, blogCt, order);
-  const putReqFunctions = useAxios(url, "put", {
+  const { request: requestPutFavorite } = useAxios(url, "put", {
     thenCallback: () => {
       setIsFavorite(true);
     },
-    catchCallback: () => {
+    catchCallback: (err) => {
       setIsFavorite(false);
+      if (
+        err.response.status === 409 &&
+        err.response.data.status === "exceed_max_num"
+      ) {
+        goToAndStopNotFavorite(lottieName);
+        domDispatch({
+          type: "OPEN_GLOBAL_MODAL",
+          globalModalId: "ExceedMaxFavoriteModal",
+        });
+      }
     },
     token: authState.token,
     csrftoken: props.cookies.get("csrftoken"),
   });
-  const deleteReqFunctions = useAxios(url, "delete", {
+  const { request: requestDeleteFavorite } = useAxios(url, "delete", {
     thenCallback: () => {
       setIsFavorite(false);
     },
@@ -50,7 +64,6 @@ const FavoriteButton = withCookies((props) => {
   });
 
   // Init lottie
-  const [lottieName] = useState(`favoritebutton-${groupID}-${blogCt}-${order}`);
   let bookmarkAnimationData;
   Object.values(GROUPS).forEach((groupObj) => {
     if (groupObj.key === group)
@@ -67,16 +80,24 @@ const FavoriteButton = withCookies((props) => {
     lottie.setSpeed(1.8, lottieName);
   }, []);
 
+  const goToAndStopIsFavorite = (_lottieName) => {
+    lottie.goToAndStop(1000, true, _lottieName);
+  };
+
+  const goToAndStopNotFavorite = (_lottieName) => {
+    lottie.goToAndStop(0, true, _lottieName);
+  };
+
   const isAnimating = useRef(false);
   // didMount・画面遷移時、またはisFavoriteが変化した時にデザイン適用
   useEffect(() => {
     // アニメーションを中断してデザイン変更してしまうのを防ぐ
     if (isFavorite) {
       if (!isAnimating.current && checkNotCached(props)) {
-        lottie.goToAndStop(1000, true, lottieName);
+        goToAndStopIsFavorite(lottieName);
       }
     } else {
-      lottie.goToAndStop(0, true, lottieName);
+      goToAndStopNotFavorite(lottieName);
     }
   }, [isFavorite, props.location]);
 
@@ -89,11 +110,11 @@ const FavoriteButton = withCookies((props) => {
       setTimeout(() => {
         isAnimating.current = false;
       }, 1000);
-      putReqFunctions.request();
+      requestPutFavorite();
     }
     // マイフォルダから取り出す
     else {
-      deleteReqFunctions.request();
+      requestDeleteFavorite();
     }
   };
 

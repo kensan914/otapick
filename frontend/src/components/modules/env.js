@@ -1,7 +1,17 @@
 import { getIsSmp, isMobile } from "./utils";
 
-// eslint-disable-next-line no-undef
-export const DEBUG = process.env.NODE_ENV === "development";
+export let DEBUG;
+try {
+  DEBUG = NODE_ENV === "development";
+} catch (e) {
+  /* jest時にNODE_ENVが宣言されていないと怒られる */
+  DEBUG = process.env.NODE_ENV === "development";
+}
+// export const DEBUG = process.env.NODE_ENV === "development";
+// export const DEBUG = NODE_ENV
+//   ? NODE_ENV === "development"
+//   : process.env.NODE_ENV === "development";
+
 export const FQDN = window?.env?.fqdn ? window.env.fqdn : "otapick.com";
 export const BASE_URL = DEBUG ? `http://${FQDN}/api/` : `https://${FQDN}/api/`;
 export const DELAY_TIME = DEBUG ? 0 : 0;
@@ -78,6 +88,8 @@ export const ADS_INDEX = 8;
 import bookmarkSakuraAnimationData from "../../static/lottie/bookmark_sakura.json";
 import bookmarkHinataAnimationData from "../../static/lottie/bookmark_hinata.json";
 import bookmarkKeyakiAnimationData from "../../static/lottie/bookmark_keyaki.json";
+import downloadHinataAnimationData from "../../static/lottie/download_hinata.json";
+
 // groups 改名時は、ここを変更するだけでよい
 export const GROUPS = {
   1: {
@@ -91,6 +103,7 @@ export const GROUPS = {
     isActive: true,
     bookmarkAnimationData: bookmarkSakuraAnimationData,
     color: "#f9c1cf",
+    deepColor: "#FF93AE",
   },
   3: {
     id: 3,
@@ -103,6 +116,7 @@ export const GROUPS = {
     isActive: false,
     bookmarkAnimationData: bookmarkKeyakiAnimationData,
     color: "#4be057",
+    deepColor: "#46E954",
   },
   2: {
     id: 2,
@@ -115,7 +129,9 @@ export const GROUPS = {
     domain: "hinatazaka46.com",
     isActive: true,
     bookmarkAnimationData: bookmarkHinataAnimationData,
+    downloadAnimationData: downloadHinataAnimationData,
     color: "#5de7ff",
+    deepColor: "#8EEEFF",
   },
 };
 

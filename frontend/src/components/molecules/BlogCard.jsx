@@ -17,6 +17,7 @@ import {
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import TooltipComponent from "../atoms/TooltipComponent";
 
 const DetailButton = (props) => {
   return (
@@ -41,28 +42,6 @@ const DetailButton = (props) => {
         </DropdownMenu>
       </div>
     </UncontrolledDropdown>
-  );
-};
-
-const CardTooltip = (props) => {
-  const { target, title, mountedBlogCard } = props;
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => {
-    setTooltipOpen(!tooltipOpen);
-  };
-
-  return (
-    mountedBlogCard &&
-    document.getElementById(target) && (
-      <Tooltip
-        placement="top"
-        isOpen={tooltipOpen}
-        target={target}
-        toggle={toggle}
-      >
-        {title}
-      </Tooltip>
-    )
   );
 };
 
@@ -136,7 +115,7 @@ class SuperBlogCard extends React.Component {
                     )}
                   />
                 ) : (
-                  <div className="preload-image-card-wrapper">
+                  <div className="preload-image-card-wrapper loading-background">
                     <div
                       className="preload-image-card-wrapper-before"
                       style={{
@@ -160,33 +139,28 @@ class SuperBlogCard extends React.Component {
                     className="col-4 p-0 mr-2"
                     id={`to-official-page-${this.props.id}`}
                   >
-                    <a
-                      rel="noreferrer"
-                      href={this.props.officialUrl}
-                      style={{ color: "white" }}
-                      target="_blank"
-                    >
-                      <FontAwesomeIcon icon={faExternalLinkAlt} />
-                    </a>
+                    <TooltipComponent title="公式ブログで確認">
+                      <a
+                        rel="noreferrer"
+                        href={this.props.officialUrl}
+                        style={{ color: "white" }}
+                        target="_blank"
+                      >
+                        <FontAwesomeIcon icon={faExternalLinkAlt} />
+                      </a>
+                    </TooltipComponent>
                   </div>
-                  <CardTooltip
-                    target={`to-official-page-${this.props.id}`}
-                    title="公式ブログで確認"
-                    mountedBlogCard={this.state.mountedBlogCard}
-                  />
+
                   <div
                     className="col-4 p-0 ml-2"
                     id={`to-download-page-${this.props.id}`}
                   >
-                    <Link to={this.props.url} style={{ color: "white" }}>
-                      <FontAwesomeIcon icon={faDownload} />
-                    </Link>
+                    <TooltipComponent title="ダウンロードページへ">
+                      <Link to={this.props.url} style={{ color: "white" }}>
+                        <FontAwesomeIcon icon={faDownload} />
+                      </Link>
+                    </TooltipComponent>
                   </div>
-                  <CardTooltip
-                    target={`to-download-page-${this.props.id}`}
-                    title="ダウンロードページへ"
-                    mountedBlogCard={this.state.mountedBlogCard}
-                  />
                 </div>
               </span>
             )}

@@ -2053,7 +2053,8 @@ footer {
 
 .image-card-download-button,
 .image-card-favorite-button,
-.image-card-favorite-button-transparent {
+.image-card-favorite-button-transparent,
+.image-card-download-button-ver2 {
   flex-shrink: 0;
   position: absolute;
   top: 8px;
@@ -2065,12 +2066,14 @@ footer {
 }
 
 .image-card-download-button:hover,
-.image-card-favorite-button:hover {
+.image-card-favorite-button:hover,
+.image-card-download-button-ver2:hover {
   background-color: white !important;
 }
 
 .image-card-download-button:active,
-.image-card-favorite-button:active {
+.image-card-favorite-button:active,
+.image-card-download-button-ver2:active {
   background-color: white !important;
 }
 
@@ -2080,7 +2083,8 @@ footer {
   background-color: transparent !important;
 }
 
-.image-card-download-button {
+.image-card-download-button,
+.image-card-download-button-ver2 {
   right: 8px;
   background-position: center;
   background-repeat: no-repeat;
@@ -2132,6 +2136,9 @@ footer {
 
 .lottie-favorite-shadow > svg {
   filter: drop-shadow(2px 2px mediumorchid);
+}
+.download-button-shadow-svg {
+  filter: drop-shadow(2px 1.5px mediumorchid);
 }
 
 /* イラストレーターで作成したSVGを別名で保存(SVG形式)
@@ -2195,11 +2202,24 @@ SVGコード...を押下
   position: relative;
   width: 100%;
 }
+.loading-background {
+  animation: GradationMove 0.5s ease-in-out alternate infinite;
+  background: linear-gradient(90deg, whitesmoke, silver, whitesmoke);
+  background-size: 200% 200%;
+}
+@keyframes GradationMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
 .image-card-preload-img {
   content: "";
   display: block;
   padding-top: 50%;
-  background-color: whitesmoke;
+  /* background-color: whitesmoke; */
 }
 /* .image-card-preload-img.keyaki {
   opacity: 0.3;
@@ -2326,7 +2346,8 @@ SVGコード...を押下
 .image-view-detail-button,
 .image-view-download-button,
 .image-view-favorite-button,
-.image-view-to-official-button {
+.image-view-to-official-button,
+.image-view-download-button-v2 {
   transition-duration: 0s !important;
   color: dimgray;
   height: 3rem;
@@ -2336,14 +2357,16 @@ SVGコード...を押下
 
 .image-view-detail-button,
 .image-view-download-button,
-.image-view-favorite-button {
+.image-view-favorite-button,
+.image-view-download-button-v2 {
   width: 3rem;
 }
 
 .image-view-detail-button:hover,
 .image-view-download-button:hover,
 .image-view-favorite-button:hover,
-.image-view-to-official-button:hover {
+.image-view-to-official-button:hover,
+.image-view-download-button-v2:hover {
   color: dimgray !important;
   background-color: whitesmoke !important;
 }
@@ -2351,7 +2374,8 @@ SVGコード...を押下
 .image-view-detail-button:active,
 .image-view-download-button:active,
 .image-view-favorite-button:active,
-.image-view-to-official-button:active {
+.image-view-to-official-button:active,
+.image-view-download-button-v2:active {
   color: dimgray !important;
   background-color: whitesmoke !important;
 }
@@ -2824,9 +2848,19 @@ SVGコード...を押下
   z-index: auto !important;
 }
 
-.profile-mode-select-button.active {
+.profile-mode-select-button.active,
+.profile-mode-select-button-badge {
   background-color: dimgray !important;
   color: white !important;
+}
+
+.profile-mode-select-button-badge {
+  min-width: 24px;
+}
+
+.profile-mode-select-button.active .profile-mode-select-button-badge {
+  background-color: white !important;
+  color: dimgray !important;
 }
 
 .profile-mode-select-button.mobile {
@@ -2847,6 +2881,12 @@ SVGコード...を押下
   background-color: white;
 }
 
+.avatar-sequence-image-hover-wrapper {
+  position: absolute;
+  /* background-color: gray; */
+  background: rgba(51, 51, 51, 0.35);
+}
+
 .avatar-sequence-image {
 }
 
@@ -2858,10 +2898,12 @@ SVGコード...を押下
   display: flex;
 }
 .tooltip-body {
+  visibility: hidden;
+  opacity: 0;
+
   font-size: small;
   position: absolute;
   transition: all 0.15s ease 0s;
-  opacity: 0;
   left: 50%;
   transform: translateX(-50%);
   -webkit-transform: translateX(-50%);
@@ -2881,13 +2923,14 @@ SVGコード...を押下
   bottom: -26px; /*HOVERのスタート位置*/
 }
 
-.active .tooltip-body {
+.tooltip-container.active .tooltip-body {
+  visibility: visible;
   opacity: 1;
 }
-.active .tooltip-body.top {
+.tooltip-container.active .tooltip-body.top {
   top: -30px; /*HOVER位置*/
 }
-.active .tooltip-body.bottom {
+.tooltip-container.active .tooltip-body.bottom {
   bottom: -30px; /*HOVER位置*/
 }
 
@@ -2961,6 +3004,12 @@ SVGコード...を押下
 .settings-submit-button.active {
   background-color: mediumorchid !important;
   color: white;
+}
+.settings-submit-button.active:hover {
+  background-color: rgb(159, 72, 180) !important;
+}
+.settings-submit-button.active:active {
+  background-color: rgb(133, 60, 151) !important;
 }
 
 .fav-groups-button:hover,

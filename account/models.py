@@ -52,11 +52,15 @@ class Account(AbstractBaseUser):
     profile_image_uri = models.URLField(verbose_name='プロフィール画像', blank=True)
 
     fav_groups = models.ManyToManyField(
-        Group, verbose_name='推しグループ', blank=True, null=True)
+        Group, verbose_name='推しグループ', blank=True)
     fav_member_sakura = models.ForeignKey(
         Member, verbose_name='櫻坂46推しメン', on_delete=models.PROTECT, related_name='accout_fav_sakura', null=True)
     fav_member_hinata = models.ForeignKey(
         Member, verbose_name='日向46推しメン', on_delete=models.PROTECT, related_name='accout_fav_hinata', null=True)
+
+    # 無制限値: -1. 下記に定数として宣言(MAX_FAVORITE_IMAGES_NUM_UNLIMITED_SIGN)
+    max_favorite_images_num = models.IntegerField(
+        verbose_name='お気に入り画像Max', default=50)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -84,3 +88,6 @@ class Account(AbstractBaseUser):
         return self.name
 
     objects = AccountManager()
+
+
+MAX_FAVORITE_IMAGES_NUM_UNLIMITED_SIGN = -1

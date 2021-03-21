@@ -10,10 +10,10 @@ const UserTemplate = (props) => {
   const { profile, username, isMe, isLoading, accessKey } = props;
 
   // accessKeyがundefined以外で変化した時、FavoriteListを更新
-  const [favoriteListKey, setFavoriteListKey] = useState(accessKey);
+  const [userPageKey, setUserPageKey] = useState(accessKey);
   useEffect(() => {
-    if (favoriteListKey !== accessKey && typeof accessKey !== "undefined") {
-      setFavoriteListKey(accessKey);
+    if (userPageKey !== accessKey && typeof accessKey !== "undefined") {
+      setUserPageKey(accessKey);
     }
   }, [accessKey]);
 
@@ -36,11 +36,12 @@ const UserTemplate = (props) => {
           <div className="container-fluid mt-3 text-muted">
             <ProfileButtonGroup
               username={username}
-              favoriteListKey={favoriteListKey}
+              favoriteListKey={userPageKey}
+              key={userPageKey}
             />
           </div>
           <div className="container-fluid text-muted mt-3 list-container-fluid favorite-images-container">
-            <ImageList key={favoriteListKey} type="FAVORITE_IMAGES" />
+            <ImageList key={userPageKey} type="FAVORITE_IMAGES" />
           </div>
         </>
       ) : (
