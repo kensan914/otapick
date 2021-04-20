@@ -15,12 +15,14 @@ def get_request_token(scheme_host):
         consumer = oauth.Consumer(key=TWITTER_CK_AUTH, secret=TWITTER_CS_AUTH)
         client = oauth.Client(consumer)
 
+        print(urljoin(scheme_host, callback_url_path))
         # reqest_token を取得
         resp, content = client.request(
             '{}?&oauth_callback={}'.format(request_token_url, urljoin(scheme_host, callback_url_path)))
         request_token = dict(parse_qsl(content.decode('utf-8')))
         return request_token['oauth_token']
     except Exception as e:
+        print(e)
         traceback.print_stack()
         return
 
