@@ -26,23 +26,26 @@ twitterLoginAPIView = TwitterLoginAPIView.as_view()
 class TwitterLoginCallbackView(views.APIView):
     # TODO:callbackからadmin.otapick.comにアクセスすると鍵がないためtimeoutしてしまう
     def get(self, request, *args, **kwargs):
+        print('TwitterLoginCallbackView_________')
         if 'denied' in self.request.GET:
             # TODO error handle
             return redirect('indexView')
 
         oauth_token = self.request.GET.get('oauth_token')
+        print(oauth_token)
         oauth_verifier = self.request.GET.get('oauth_verifier')
-
+        print(oauth_verifier)
         result = otapick.get_access_token(oauth_token, oauth_verifier)
         q_params = otapick.parse_qsl(result.decode('utf-8'))
 
         url = urljoin(request._current_scheme_host,
                       '/accounts/rest-auth/twitter/')
+        print(url)
 
         print(result.decode('utf-8'))
         print(q_params)
         if q_params is None:
-            # TODO error handle
+            # TODO error handle (result.decode('utf-8'): '現在この機能は一時的にご利用いただけません' ☚アクセスしすぎた？)
             return redirect('indexView')
         data = {'access_token': q_params['oauth_token'],
                 'token_secret': q_params['oauth_token_secret']}
