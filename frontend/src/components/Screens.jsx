@@ -44,7 +44,8 @@ const Screens = () => {
   return (
     <>
       <NavigationBar />
-      {isMobile && <BottomAnchorAdsOnlyMobile />}
+      {/* TODO: */}
+      {/* {isMobile && <BottomAnchorAdsOnlyMobile />} */}
 
       <Suspense fallback={() => <HorizontalLoader />}>
         <CacheSwitch>

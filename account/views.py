@@ -24,6 +24,7 @@ twitterLoginAPIView = TwitterLoginAPIView.as_view()
 
 
 class TwitterLoginCallbackView(views.APIView):
+    # TODO:callbackからadmin.otapick.comにアクセスすると鍵がないためtimeoutしてしまう
     def get(self, request, *args, **kwargs):
         if 'denied' in self.request.GET:
             # TODO error handle
