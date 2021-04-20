@@ -11,8 +11,8 @@ import {
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
 import ImageCard from "../../molecules/ImageCard";
 import MemberCard from "../../molecules/MemberCard";
-import { SquareAds } from "../../atoms/AdSense";
-import AdSenseCard from "../../molecules/AdSenseCard";
+import { SquareAds } from "../../atoms/Adsense";
+import AdsenseCard from "../../molecules/AdsenseCard";
 import { useAxios } from "../../modules/axios";
 import List from "./List";
 import { ImageListModel } from "./ImageList";
@@ -110,7 +110,9 @@ const HomeList = (props) => {
           setAdditionalItems(_additionalItems);
         }
       },
-      didRequestCallback: (r) => console.log(r),
+      didRequestCallback: (r) => {
+        // console.log(r);
+      },
       shouldRequestDidMount: true,
       token: authState.token,
     }
@@ -177,18 +179,18 @@ const HomeList = (props) => {
                     additionalItem = (
                       <ImageCard
                         id={cardID}
-                        groupID={add.groupID}
-                        group={getGroup(add.groupID)}
+                        groupId={add.groupID}
+                        groupKey={getGroup(add.groupID)}
                         blogCt={add.blogCt}
                         blogTitle={add.blogTitle}
-                        src={add.src}
+                        srcCollection={add.src}
                         url={add.url}
                         blogUrl={add.blogUrl}
                         officialUrl={add.officialUrl}
                         writer={add.writer}
-                        message={add.message}
+                        footerMessage={add.message}
                         order={add.order}
-                        isFavorite={add.isFavorite}
+                        initIsFavorite={add.isFavorite}
                         width={add.width}
                         height={add.height}
                       />
@@ -232,7 +234,7 @@ const HomeList = (props) => {
                     );
                   } else if (add.type === "twitter") {
                     additionalItem = (
-                      <AdSenseCard
+                      <AdsenseCard
                         url={add.url}
                         src={add.src}
                         message={add.message}
@@ -252,17 +254,17 @@ const HomeList = (props) => {
                     <div className={gridItemClassName}>
                       <ImageCard
                         id={i}
-                        groupID={groupID}
-                        group={getGroup(groupID)}
+                        groupId={groupID}
+                        groupKey={getGroup(groupID)}
                         blogCt={blogCt}
                         blogTitle={blogTitle}
-                        src={src}
+                        srcCollection={src}
                         url={url}
                         blogUrl={blogUrl}
                         officialUrl={officialUrl}
                         writer={writer}
                         order={order}
-                        isFavorite={isFavorite}
+                        initIsFavorite={isFavorite}
                         width={width}
                         height={height}
                       />
@@ -272,13 +274,13 @@ const HomeList = (props) => {
                       <div className={gridItemClassName}>{additionalItem}</div>
                     )}
                     {/* Google AdSense */}
-                    {i % ADS_INTERVAL === ADS_INDEX && (
+                    {/* {i % ADS_INTERVAL === ADS_INDEX && (
                       <div
                         className={gridItemClassName + (isMobile ? "mb-4" : "")}
                       >
                         <SquareAds />
                       </div>
-                    )}
+                    )} */}
                   </div>
                 );
               }

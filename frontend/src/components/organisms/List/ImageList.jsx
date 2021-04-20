@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { URLJoin, getGroup, isMobile, isSmp } from "../../modules/utils";
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
 import ImageCard from "../../molecules/ImageCard";
-import { SquareAds } from "../../atoms/AdSense";
+import { SquareAds } from "../../atoms/Adsense";
 import { useAxios } from "../../modules/axios";
 import List, { useListState } from "./List";
 import { getImageUrlComposition } from "../../templates/ImageListTemplate";
@@ -82,29 +82,29 @@ const ImageList = (props) => {
                     <div className={gridItemClassName}>
                       <ImageCard
                         id={i}
-                        groupID={groupID}
-                        group={getGroup(groupID)}
+                        groupId={groupID}
+                        groupKey={getGroup(groupID)}
                         blogCt={blogCt}
                         blogTitle={blogTitle}
-                        src={src}
+                        srcCollection={src}
                         url={url}
                         blogUrl={blogUrl}
                         officialUrl={officialUrl}
                         writer={writer}
                         order={order}
-                        isFavorite={isFavorite}
+                        initIsFavorite={isFavorite}
                         width={width}
                         height={height}
                       />
                     </div>
 
-                    {!isExcludeAds && i % ADS_INTERVAL === ADS_INDEX && (
+                    {/* {!isExcludeAds && i % ADS_INTERVAL === ADS_INDEX && (
                       <div
                         className={gridItemClassName + (isMobile ? "mb-4" : "")}
                       >
                         <SquareAds />
                       </div>
-                    )}
+                    )} */}
                   </div>
                 );
               }
@@ -128,7 +128,7 @@ export const ImageListModel = withRouter((props) => {
   const { type, render, additionalQParams } = props;
 
   const pmp = props.match?.params;
-  const [groupID] = useState(pmp && pmp.groupID);
+  const [groupID] = useState((pmp && pmp.groupID) || (pmp && pmp.groupId));
   const [blogCt] = useState(pmp && pmp.blogCt);
   const [order] = useState(pmp && pmp.order);
   const [ct] = useState(pmp && pmp.ct);
@@ -240,7 +240,9 @@ export const ImageListModel = withRouter((props) => {
       finallyCallback: () => {
         pageRef.current++;
       },
-      didRequestCallback: (r) => console.info(r),
+      didRequestCallback: (r) => {
+        // console.info(r);
+      },
       shouldRequestDidMount: true,
       token: authState.token,
     }

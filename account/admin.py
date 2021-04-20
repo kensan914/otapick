@@ -19,8 +19,8 @@ class AccountAdmin(admin.ModelAdmin):
     format_image.empty_value_display = 'No image'
 
     fieldsets = (
-        (None, {'fields': ('id', 'username', 'name',
-                           'format_image', 'profile_image_uri', 'fav_groups', 'fav_member_sakura', 'fav_member_hinata', 'max_favorite_images_num')}),
+        (None, {'fields': ('id', 'username', 'name', 'format_image', 'profile_image_uri', 'profile_image_thumbnail_uri',
+                           'profile_image_large_uri', 'fav_groups', 'fav_member_sakura', 'fav_member_hinata', 'max_favorite_images_num')}),
         ('個人情報', {'fields': ('email',)}),
         ('日付', {'fields': ('date_joined', 'last_login',)}),
         ('パーミッション', {'fields': ('is_active', 'is_staff', 'is_superuser',)}),

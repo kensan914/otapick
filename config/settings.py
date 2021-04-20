@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
     'account.apps.AccountConfig',
+    'survey.apps.SurveyConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',

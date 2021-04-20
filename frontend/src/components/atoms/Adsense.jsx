@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   DATA_AD_CLIENT,
   DEBUG,
   DATA_AD_SLOT_SQUARE,
   DATA_AD_SLOT_LANDSCAPE,
+  DATA_AD_SLOT_ANCHOR,
 } from "../modules/env";
 import { withRouter } from "react-router-dom";
 
@@ -78,3 +79,28 @@ class LandscapeAds_ extends DisplayAds {
 
 export const SquareAds = withRouter(SquareAds_);
 export const LandscapeAds = withRouter(LandscapeAds_);
+
+export const AnchorAds = () => {
+  useEffect(() => {
+    if (window.adsbygoogle && !DEBUG) {
+      window.adsbygoogle.push({});
+    }
+  }, []);
+
+  return (
+    <>
+      {!DEBUG ? (
+        <ins
+          className={"adsbygoogle"}
+          style={{ display: "inline-block", width: "100%", height: "100%" }}
+          data-ad-client={DATA_AD_CLIENT}
+          data-ad-slot={DATA_AD_SLOT_ANCHOR}
+          // data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+      ) : (
+        <></>
+      )}
+    </>
+  );
+};

@@ -16,7 +16,6 @@ import {
   IMAGES_DESCRIPTION,
   HOME_TITLE,
 } from "../../modules/env";
-import { MobileBottomMenu } from "../MobileMenu";
 import { getImageUrlComposition } from "../../templates/ImageListTemplate";
 
 class ImageListInfo extends React.Component {
@@ -139,24 +138,14 @@ class ImageListInfo extends React.Component {
 
                   {this.state.status === "success" && (
                     <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
-                      {isMobile ? (
-                        <MobileBottomMenu
-                          id="sortImage"
-                          type="sortImage"
-                          sortButtonTitle={this.state.sortButtonTitle}
-                          pushHistory={this.props.pushHistory}
-                          className={isSmp ? "mx-auto" : "ml-auto"}
-                          style={isSmp ? { width: "90%" } : { width: "9rem" }}
-                        />
-                      ) : (
-                        <SortButton
-                          className={isSmp ? "mx-auto" : "ml-auto"}
-                          type="images"
-                          title={this.state.sortButtonTitle}
-                          pushHistory={this.props.pushHistory}
-                          style={isSmp ? { width: "90%" } : { width: "9rem" }}
-                        />
-                      )}
+                      <SortButton
+                        className={isSmp ? "mx-auto" : "ml-auto"}
+                        type="images"
+                        title={this.state.sortButtonTitle}
+                        pushHistory={this.props.pushHistory}
+                        style={isSmp ? { width: "90%" } : { width: "9rem" }}
+                      />
+                      {/* )} */}
                     </div>
                   )}
                 </div>

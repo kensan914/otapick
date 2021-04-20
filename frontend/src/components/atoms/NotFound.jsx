@@ -165,24 +165,18 @@ export class NotFoundImagesFailedContent extends React.Component {
   }
 }
 
-export class NotFoundFavoriteImagesContent extends React.Component {
+class NotFoundFavoriteImagesContent extends React.Component {
   render() {
     return (
       <div className={this.props.className} style={this.props.style}>
-        {!this.props.hideAlert && (
-          <div
-            className="alert alert-danger"
-            role="alert"
-            style={{ borderRadius: "1rem" }}
-          >
-            マイフォルダに追加された画像がありません。
-          </div>
-        )}
         <div className="mx-2">
-          {!isSmp && <p>マイフォルダに追加された画像がありません。</p>}
+          {/* {!isSmp && <p>マイフォルダに追加された画像がありません。</p>} */}
           <p>
-            お気に入りの画像を探して <FontAwesomeIcon icon={faBookmark} />{" "}
-            を押すことで、ここからいつでも確認できます。
+            <b>お気に入り画像を追加しましょう</b>
+          </p>
+          <p>
+            お気に入り画像を探し <FontAwesomeIcon icon={faBookmark} />{" "}
+            を押すことでマイフォルダに追加できます。お気に入り画像はここからいつでも確認できます。
           </p>
         </div>
       </div>
@@ -190,7 +184,7 @@ export class NotFoundFavoriteImagesContent extends React.Component {
   }
 }
 
-export class NotFound404Content extends React.Component {
+class NotFound404Content extends React.Component {
   render() {
     return (
       <div className={this.props.className} style={this.props.style}>

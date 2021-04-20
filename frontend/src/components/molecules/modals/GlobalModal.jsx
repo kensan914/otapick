@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ExceedMaxFavoriteModal from "./ExceedMaxFavoriteModal";
 import ImageDownloadedModal from "./ImageDownloadedModal";
+import SignUpBeforeFavoriteModal from "./SignUpBeforeFavoriteModal";
 
 /**
  * GlobalModal.
@@ -40,6 +41,13 @@ const GlobalModal = (props) => {
     case "ImageDownloadedModal":
       return (
         <ImageDownloadedModal
+          isOpen={isOpenGlobalModal}
+          toggle={toggleGlobalModal}
+        />
+      );
+    case "SignUpBeforeFavoriteModal":
+      return (
+        <SignUpBeforeFavoriteModal
           isOpen={isOpenGlobalModal}
           toggle={toggleGlobalModal}
         />

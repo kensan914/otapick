@@ -1,13 +1,6 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { CookiesProvider, withCookies } from "react-cookie";
-// import "@fortawesome/fontawesome-free/js/fontawesome";
-// import "@fortawesome/fontawesome-free/js/solid";
-// import "@fortawesome/fontawesome-free/js/regular";
-// import "@fortawesome/fontawesome-free/js/brands";
-// import { library } from "@fortawesome/fontawesome-svg-core";
-// import { faTwitter } from "@fortawesome/free-brands-svg-icons";
-// library.add(faTwitter);
 
 import { getItem, setUserAgent } from "./components/modules/utils";
 import LocationAdmin from "./components/pages/admin/LocationAdmin";
@@ -52,15 +45,15 @@ class _Provider extends React.Component {
     return (
       <BrowserRouter>
         <AuthProvider token={this.token}>
-          <DomProvider>
-            <ProfileProvider>
+          <ProfileProvider>
+            <DomProvider>
               <LocationAdmin>
                 <ScrollAdmin>
                   <Screens />
                 </ScrollAdmin>
               </LocationAdmin>
-            </ProfileProvider>
-          </DomProvider>
+            </DomProvider>
+          </ProfileProvider>
         </AuthProvider>
       </BrowserRouter>
     );

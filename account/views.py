@@ -76,7 +76,12 @@ def retrieve_social_data(request, user, **kwargs):
         # register name
         user.name = extra_data['name'] if 'name' in extra_data else None
         # register profile image uri
-        user.profile_image_uri = extra_data['profile_image_url_https'] if 'profile_image_url_https' in extra_data else None
+        profile_image_uri_collection = otapick.gene_twitter_profile_uri(
+            extra_data['profile_image_url_https'] if 'profile_image_url_https' in extra_data else '')
+        user.profile_image_uri = profile_image_uri_collection['profile_image_uri']
+        user.profile_image_thumbnail_uri = profile_image_uri_collection[
+            'profile_image_thumbnail_uri']
+        user.profile_image_large_uri = profile_image_uri_collection['profile_image_large_uri']
         user.save()
 
 

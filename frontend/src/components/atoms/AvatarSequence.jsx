@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { isMobile } from "../modules/utils";
 import TooltipComponent from "./TooltipComponent";
 
 /** アバター等のアイコンを連続に表示(ex. 推しメン一覧)
@@ -12,6 +13,8 @@ const AvatarSequence = (props) => {
     items = [],
     diameter = 45 /* optional */,
     direction = "left" /* optional */,
+    isOverlap = true /* optional */,
+    hasBorder = false /* optional */,
   } = props;
 
   const [listHover, setListHover] = useState(Array(items.length).fill(false));
@@ -26,17 +29,21 @@ const AvatarSequence = (props) => {
   };
 
   const wrapperDiameter = diameter * 1.14;
-  const coverPx = diameter * 0.27;
+  const coverPx = isOverlap ? diameter * 0.27 : 0;
   const isReverse = direction === "right";
   return (
-    <div className="d-flex">
+    <div
+      className={`d-flex align-items-center avatar-sequence-container ${
+        hasBorder ? "border-top border-light rounded-pill p-1 shadow-sm" : ""
+      }`}
+    >
       {items.map((item, i) => {
         const _id = `avatar-sequence-item-${i}`;
         return (
           <div
             key={i}
             id={_id}
-            className="avatar-sequence-item"
+            className="avatar-sequence-item d-flex justify-content-center"
             style={{
               position: "relative",
               // hover時は最大値のitems.length
@@ -57,49 +64,58 @@ const AvatarSequence = (props) => {
               setIsHover(i, false);
             }}
           >
-            <TooltipComponent title={item.alt}>
-              <Link to={item.url}>
-                <div
-                  className="rounded-circle avatar-sequence-image-wrapper d-flex justify-content-center align-items-center"
-                  style={{
-                    width: wrapperDiameter,
-                    height: wrapperDiameter,
-                  }}
-                >
+            {(() => {
+              const body = (
+                <Link to={item.url}>
                   <div
-                    className="rounded-circle avatar-sequence-image-hover-wrapper"
+                    className="rounded-circle avatar-sequence-image-wrapper d-flex justify-content-center align-items-center"
                     style={{
-                      width: diameter,
-                      height: diameter,
-                      ...(listHover[i] ? { opacity: 0.2 } : { opacity: 0 }),
+                      width: wrapperDiameter,
+                      height: wrapperDiameter,
                     }}
-                  />
-                  {item.contentsNode ? (
+                  >
                     <div
-                      className="rounded-circle avatar-sequence-image d-flex justify-content-center align-items-center"
+                      className="rounded-circle avatar-sequence-image-hover-wrapper"
                       style={{
                         width: diameter,
                         height: diameter,
-                        backgroundColor: item.backgroundColor
-                          ? item.backgroundColor
-                          : "white",
+                        ...(listHover[i] ? { opacity: 0.2 } : { opacity: 0 }),
                       }}
-                    >
-                      {item.contentsNode}
-                    </div>
-                  ) : (
-                    <img
-                      className="rounded-circle avatar-sequence-image"
-                      width={diameter}
-                      height={diameter}
-                      style={{ width: diameter, height: diameter }}
-                      src={item.imageUrl}
-                      alt={item.alt}
                     />
-                  )}
-                </div>
-              </Link>
-            </TooltipComponent>
+                    {item.contentsNode ? (
+                      <div
+                        className="rounded-circle avatar-sequence-image d-flex justify-content-center align-items-center"
+                        style={{
+                          width: diameter,
+                          height: diameter,
+                          backgroundColor: item.backgroundColor
+                            ? item.backgroundColor
+                            : "white",
+                        }}
+                      >
+                        {item.contentsNode}
+                      </div>
+                    ) : (
+                      <img
+                        className="rounded-circle avatar-sequence-image"
+                        width={diameter}
+                        height={diameter}
+                        style={{ width: diameter, height: diameter }}
+                        src={item.imageUrl}
+                        alt={item.alt}
+                      />
+                    )}
+                  </div>
+                </Link>
+              );
+              if (isMobile) {
+                return body;
+              } else {
+                return (
+                  <TooltipComponent title={item.alt}>{body}</TooltipComponent>
+                );
+              }
+            })()}
           </div>
         );
       })}

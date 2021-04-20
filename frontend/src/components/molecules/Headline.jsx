@@ -1,13 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import BackButton from "../atoms/BackButton";
-import {
-  Button,
-  ButtonGroup,
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
+import { Button, ButtonGroup } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 import {
@@ -17,9 +10,7 @@ import {
   sortGROUPSByFav,
 } from "../modules/utils";
 import { BASE_URL, GROUPS } from "../modules/env";
-import { Link } from "react-router-dom";
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
-import { MobileTopMenu } from "./MobileMenu";
 import { DomDispatchContext } from "../contexts/DomContext";
 import LinkButton from "../atoms/LinkButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,116 +21,8 @@ import {
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
 import TooltipComponent from "../atoms/TooltipComponent";
-import {
-  ProfileStateContext,
-  useProfileState,
-} from "../contexts/ProfileContext";
-
-const ModeSelectButtonDropdown = (props) => {
-  const { members, type, groupKey } = props;
-
-  const [dropdownOpen, setOpen] = useState(false);
-  const toggle = () => setOpen(!dropdownOpen);
-
-  const profileState = useProfileState();
-  let contents = [];
-  if (typeof members !== "undefined") {
-    // 推しメン
-    if (
-      (groupKey === "sakura" && profileState.profile.favMemberSakura) ||
-      (groupKey === "hinata" && profileState.profile.favMemberHinata)
-    ) {
-      const renderDropdownItem = (propertyName) => {
-        if (profileState.profile[propertyName]) {
-          return (
-            <DropdownItem
-              tag={Link}
-              to={`/${type}/${
-                GROUPS[profileState.profile[propertyName].belongingGroup].id
-              }/${profileState.profile[propertyName].ct}/`}
-            >
-              {profileState.profile[propertyName].fullKanji}
-            </DropdownItem>
-          );
-        } else {
-          return null;
-        }
-      };
-      contents.push(
-        <>
-          <DropdownItem header>
-            <div className="m-0">推しメン</div>
-          </DropdownItem>
-          <DropdownItem divider />
-          {groupKey === "sakura" && renderDropdownItem("favMemberSakura")}
-          {groupKey === "hinata" && renderDropdownItem("favMemberHinata")}
-          <DropdownItem divider />
-        </>
-      );
-    }
-
-    for (const [index, membersDividedByGeneration] of members.entries()) {
-      contents.push(
-        <div key={"dropdown-menu-contents-m-" + index}>
-          <DropdownItem header>
-            <div className="m-0">{`${index + 1}期生`}</div>
-          </DropdownItem>
-          <DropdownItem divider />
-          {membersDividedByGeneration.map(({ url, full_kanji }, j) => (
-            <DropdownItem key={j} tag={Link} to={url[type]}>
-              {full_kanji}
-            </DropdownItem>
-          ))}
-          {index != members.length - 1 && <DropdownItem divider />}
-        </div>
-      );
-    }
-  } else {
-    contents.push(
-      <div key={"dropdown-menu-contents-g"}>
-        <DropdownItem header>グループ選択</DropdownItem>
-        <DropdownItem divider />
-        {sortGROUPSByFav(profileState.profile.favGroups).map((groupObj) => (
-          <DropdownItem
-            key={groupObj.id}
-            tag={Link}
-            to={`/${type}/${groupObj.id}/`}
-          >{`${groupObj.name}`}</DropdownItem>
-        ))}
-      </div>
-    );
-  }
-
-  return (
-    <ButtonDropdown
-      direction="right"
-      isOpen={dropdownOpen}
-      toggle={toggle}
-      onClick={(e) => e.stopPropagation()}
-      className={
-        "mode-select-dropdown-button-super " + (props.fixed ? "fixed" : "")
-      }
-    >
-      <DropdownToggle
-        className={
-          "rounded-circle mode-select-dropdown-button " +
-          (props.fixed ? "fixed p-0 " : " ") +
-          props.group
-        }
-      >
-        <FontAwesomeIcon icon={faAngleDown} />
-      </DropdownToggle>
-      <DropdownMenu
-        className={
-          "bold mode-select-dropdown-menu" +
-          (typeof props.members != "undefined" ? "-members" : "")
-        }
-      >
-        {contents}
-      </DropdownMenu>
-    </ButtonDropdown>
-  );
-};
+import { ProfileStateContext } from "../contexts/ProfileContext";
+import DropdownMobileFriendly from "./DropdownMobileFriendly";
 
 export class TypeChangeButton extends React.Component {
   getChangeTypeUrl(currentType, groupID, ct) {
@@ -206,7 +89,8 @@ class Headline extends React.Component {
 
     // scrollAdminに使用。cacheされた時、裏でprops.location.keyが暗黙に変化し、全てのheadlineが同じidになってしまうため、グローバルstateで管理
     this.subNavbarRef = React.createRef();
-    this.InitUrl = props.match.url;
+    this.initUrl = props.match.url;
+    this.initSearch = props.location.search;
     props.domDispatch({
       type: "SET_SUBNAVBAR_REF",
       subNavbarRef: this.subNavbarRef,
@@ -247,7 +131,11 @@ class Headline extends React.Component {
 
   componentDidUpdate(prevProps) {
     // "/"から"/"の遷移など、route(url)が変化せずComponentがそのままの場合
-    if (checkNotCached(this.props) && this.props.match.url === this.InitUrl) {
+    if (
+      checkNotCached(this.props) &&
+      this.props.match.url === this.initUrl &&
+      this.props.location.search === this.initSearch
+    ) {
       if (this.props.location.key !== prevProps.location.key) {
         this.props.domDispatch({
           type: "SET_SUBNAVBAR_REF",
@@ -268,12 +156,6 @@ class Headline extends React.Component {
     if (this.props.type === "blogs" || this.props.type === "images") {
       const contents = (
         <>
-          {/* <LinkButton
-            className={"rounded-pill mode-select-button " + (fixed ? "fixed " : " ") + (this.props.mode === "recommend" ? "active" : "")}
-            to={`/${this.props.type}/`}
-          >
-            <h5 className="m-0">おすすめ</h5>
-          </LinkButton> */}
           <Button
             className={
               "rounded-pill mode-select-button " +
@@ -287,17 +169,6 @@ class Headline extends React.Component {
 
           {sortGROUPSByFav(this.props.profileState.profile.favGroups).map(
             (groupObj) => (
-              // <LinkButton
-              //   key={groupObj.id}
-              //   className={`rounded-pill mode-select-button ${groupObj.key} ` + (fixed ? "fixed " : " ") + ((!isMobile && !fixed) ? "d-flex align-items-center " : " ") + (this.props.mode === groupObj.key ? "active" : "")}
-              //   to={`/${this.props.type}/${groupObj.id}`}
-              // >
-              //   <h5 className="m-0">{groupObj.name}</h5>
-              //   {groupObj.isActive && (fixed
-              //     ? <MobileTopMenu id={`modeSelect${groupObj.key}`} type="modeSelect" members={this.state.membersCollection[groupObj.id]} group={groupObj.key} blogsORimages={this.props.type} />
-              //     : <ModeSelectButtonDropdown group={groupObj.key} members={this.state.membersCollection[groupObj.id]} type={this.props.type} fixed={fixed} />
-              //   )}
-              // </LinkButton>
               <Button
                 key={groupObj.id}
                 className={
@@ -311,24 +182,90 @@ class Headline extends React.Component {
                 }
               >
                 <b>{groupObj.name}</b>
-                {groupObj.isActive &&
-                  (fixed ? (
-                    <MobileTopMenu
-                      id={`modeSelect${groupObj.key}`}
-                      type="modeSelect"
-                      members={this.state.membersCollection[groupObj.id]}
-                      groupKey={groupObj.key}
-                      blogsORimages={this.props.type}
-                      profileState={this.props.profileState}
-                    />
-                  ) : (
-                    <ModeSelectButtonDropdown
-                      groupKey={groupObj.key}
-                      members={this.state.membersCollection[groupObj.id]}
-                      type={this.props.type}
-                      fixed={fixed}
-                    />
-                  ))}
+                {groupObj.isActive && (
+                  <DropdownMobileFriendly
+                    id={`mode-select-${this.props.type}-${groupObj.key}`}
+                    directionOnlyPc="down"
+                    buttonClass={`rounded-circle mode-select-dropdown-button ${
+                      fixed ? "fixed p-0" : ""
+                    } ${groupObj.key}`}
+                    buttonContainerClass={`mode-select-dropdown-button-super ${
+                      fixed ? "fixed" : ""
+                    } btn-group`}
+                    dropdownMenuClassOnlyPc={`mode-select-dropdown-menu-members`}
+                    menuSettings={[
+                      ...((groupObj.key === "sakura" &&
+                        this.props.profileState.profile.favMemberSakura) ||
+                      (groupObj.key === "hinata" &&
+                        this.props.profileState.profile.favMemberHinata)
+                        ? (() => {
+                            let favMembersMenuSettings = [
+                              { type: "TITLE", label: "推しメン" },
+                            ];
+                            ["favMemberSakura", "favMemberHinata"].forEach(
+                              (propertyName) => {
+                                if (
+                                  this.props.profileState.profile[propertyName]
+                                ) {
+                                  favMembersMenuSettings = [
+                                    ...favMembersMenuSettings,
+                                    {
+                                      type: "LINK",
+                                      pathname: `/${this.props.type}/${
+                                        GROUPS[
+                                          this.props.profileState.profile[
+                                            propertyName
+                                          ].belongingGroup
+                                        ].id
+                                      }/${
+                                        this.props.profileState.profile[
+                                          propertyName
+                                        ].ct
+                                      }/`,
+                                      label: this.props.profileState.profile[
+                                        propertyName
+                                      ].fullKanji,
+                                    },
+                                  ];
+                                }
+                              }
+                            );
+                            return favMembersMenuSettings;
+                          })()
+                        : []),
+                      ...(() => {
+                        let membersMenuSettings = [];
+                        for (const [
+                          index,
+                          membersDividedByGeneration,
+                        ] of this.state.membersCollection[
+                          groupObj.id
+                        ].entries()) {
+                          membersMenuSettings = [
+                            ...membersMenuSettings,
+                            {
+                              type: "TITLE",
+                              label: `${index + 1}期生`,
+                            },
+                          ];
+                          membersMenuSettings = [
+                            ...membersMenuSettings,
+                            ...membersDividedByGeneration.map(
+                              ({ url, full_kanji }) => ({
+                                type: "LINK",
+                                pathname: url[this.props.type],
+                                label: full_kanji,
+                              })
+                            ),
+                          ];
+                        }
+                        return membersMenuSettings;
+                      })(),
+                    ]}
+                  >
+                    <FontAwesomeIcon icon={faAngleDown} />
+                  </DropdownMobileFriendly>
+                )}
               </Button>
             )
           )}
@@ -423,17 +360,29 @@ class Headline extends React.Component {
             onClick={() => this.props.history.push("/images/")}
           >
             <b>画像一覧</b>
-
-            {fixed ? (
-              <MobileTopMenu
-                id="modeSelectVewHomeImages"
-                type="modeSelectVewHome"
-                blogsORimages="images"
-                profileState={this.props.profileState}
-              />
-            ) : (
-              <ModeSelectButtonDropdown type="images" fixed={fixed} />
-            )}
+            <DropdownMobileFriendly
+              id={`mode-select-images-home`}
+              directionOnlyPc="down"
+              buttonClass={`rounded-circle mode-select-dropdown-button ${
+                fixed ? "fixed p-0" : ""
+              }`}
+              buttonContainerClass={`mode-select-dropdown-button-super ${
+                fixed ? "fixed" : ""
+              } btn-group`}
+              dropdownMenuClassOnlyPc={`mode-select-dropdown-menu`}
+              menuSettings={[
+                { type: "TITLE", label: "グループ選択" },
+                ...sortGROUPSByFav(
+                  this.props.profileState.profile.favGroups
+                ).map((groupObj) => ({
+                  type: "LINK",
+                  pathname: `/images/${groupObj.id}/`,
+                  label: `${groupObj.name}`,
+                })),
+              ]}
+            >
+              <FontAwesomeIcon icon={faAngleDown} />
+            </DropdownMobileFriendly>
           </Button>
           <Button
             className={
@@ -444,17 +393,29 @@ class Headline extends React.Component {
             onClick={() => this.props.history.push("/blogs/")}
           >
             <b>ブログ一覧</b>
-
-            {fixed ? (
-              <MobileTopMenu
-                id="modeSelectVewHomeBlogs"
-                type="modeSelectVewHome"
-                blogsORimages="blogs"
-                profileState={this.props.profileState}
-              />
-            ) : (
-              <ModeSelectButtonDropdown type="blogs" fixed={fixed} />
-            )}
+            <DropdownMobileFriendly
+              id={`mode-select-images-home`}
+              directionOnlyPc="down"
+              buttonClass={`rounded-circle mode-select-dropdown-button ${
+                fixed ? "fixed p-0" : ""
+              }`}
+              buttonContainerClass={`mode-select-dropdown-button-super ${
+                fixed ? "fixed" : ""
+              } btn-group`}
+              dropdownMenuClassOnlyPc={`mode-select-dropdown-menu`}
+              menuSettings={[
+                { type: "TITLE", label: "グループ選択" },
+                ...sortGROUPSByFav(
+                  this.props.profileState.profile.favGroups
+                ).map((groupObj) => ({
+                  type: "LINK",
+                  pathname: `/blogs/${groupObj.id}/`,
+                  label: `${groupObj.name}`,
+                })),
+              ]}
+            >
+              <FontAwesomeIcon icon={faAngleDown} />
+            </DropdownMobileFriendly>
           </Button>
         </>
       );
@@ -570,7 +531,10 @@ class Headline extends React.Component {
 
           <div
             className="fixed-headline-contents-wrapper"
-            style={{ height: SUB_NAVBAR_HEIGHT }}
+            style={{
+              height: SUB_NAVBAR_HEIGHT,
+              ...(isMobile ? {} : { overflow: "visible" }), // dropdown menuの表示崩れ対策
+            }}
           >
             <div
               className="fixed-headline-contents-wrapper2"

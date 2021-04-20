@@ -247,6 +247,7 @@ const FavMembersEditor = (props) => {
                   <div>
                     <h6>推しメン</h6>
                     <SettingsSelector
+                      settingsSelectorId={`settings-selector-fav-members-${groupObj.key}`}
                       items={geneSettingsSelectorItems(members, groupObj.key)}
                       setKey={(key) => {
                         handleSetFavMembers(key, groupObj.id);

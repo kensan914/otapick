@@ -49,7 +49,12 @@ class Account(AbstractBaseUser):
     email = models.EmailField(verbose_name='メールアドレス',
                               max_length=255, unique=True)
     name = models.CharField(verbose_name='名前', max_length=50, blank=True)
-    profile_image_uri = models.URLField(verbose_name='プロフィール画像', blank=True)
+    profile_image_uri = models.URLField(
+        verbose_name='プロフィール画像(200*200)', blank=True)
+    profile_image_thumbnail_uri = models.URLField(
+        verbose_name='プロフィール画像(48*48)', blank=True)
+    profile_image_large_uri = models.URLField(
+        verbose_name='プロフィール画像(400*400)', blank=True)
 
     fav_groups = models.ManyToManyField(
         Group, verbose_name='推しグループ', blank=True)

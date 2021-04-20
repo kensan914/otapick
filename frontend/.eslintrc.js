@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    "jest/globals": true,
+    // "jest/globals": true, // code formatが機能しなくなったためコメントアウト
   },
   extends: [
     "eslint:recommended",

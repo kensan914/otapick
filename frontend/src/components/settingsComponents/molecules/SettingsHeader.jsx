@@ -5,7 +5,7 @@ const SettingsHeader = (props) => {
 
   return (
     <div className={`settings-header ${className}`}>
-      <h1 style={{ fontSize: "2rem" }}>{title}</h1>
+      <h2 style={{ fontSize: "2rem" }}>{title}</h2>
       <p>{description}</p>
     </div>
   );

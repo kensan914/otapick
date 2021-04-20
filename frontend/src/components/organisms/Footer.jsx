@@ -5,9 +5,11 @@ import {
   GROUPS,
   dontShowFooterUrls,
   OTAPICK_TWITTER_URL,
+  BOTTOM_ANCHOR_ADS_HEIGHT,
 } from "../modules/env";
 import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { isMobile } from "../modules/utils";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -79,7 +81,11 @@ class Footer extends React.Component {
     if (this.state.show) {
       return (
         <>
-          <footer className={"footer bg-light text-muted " + this.props.class}>
+          <footer
+            className={`footer bg-light text-muted ${
+              this.props.class ? this.props.class : ""
+            }`}
+          >
             <div className="container">
               <div className="row">
                 <div className="col-xl-3 col-lg-12 col-xs-12 text-center mb-5">
@@ -169,7 +175,11 @@ class Footer extends React.Component {
               </div>
             </div>
           </footer>
-          <div className="col-12 text-center py-4 text-muted" id="copyright">
+          <div
+            className="col-12 text-center py-4 text-muted"
+            id="copyright"
+            style={{ marginBottom: isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0 }}
+          >
             <p className="small m-0">
               Copyright &copy; otapick 2021 All rights reserved.
             </p>

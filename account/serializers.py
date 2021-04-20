@@ -14,10 +14,13 @@ class AuthSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('id', 'username', 'name', 'image',
+        fields = ('id', 'username', 'name', 'image', 'image_thumbnail', 'image_large',
                   'fav_groups', 'fav_member_sakura', 'fav_member_hinata')
 
     image = serializers.URLField(source='profile_image_uri')
+    image_thumbnail = serializers.URLField(
+        source='profile_image_thumbnail_uri')
+    image_large = serializers.URLField(source='profile_image_large_uri')
     fav_groups = GroupSerializer(many=True, read_only=True)
     fav_member_sakura = MemberSerializer(read_only=True)
     fav_member_hinata = MemberSerializer(read_only=True)
@@ -26,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 class MeSerializer(UserSerializer):
     class Meta:
         model = Account
-        fields = ('id', 'username', 'email', 'name', 'image', 'me', 'fav_groups', 'fav_member_sakura',
+        fields = ('id', 'username', 'email', 'name', 'image', 'image_thumbnail', 'image_large', 'me', 'fav_groups', 'fav_member_sakura',
                   'fav_member_hinata', 'fav_groups_pks', 'fav_member_sakura_pk', 'fav_member_hinata_pk',)
 
     # fav_members導入後, serializers.BooleanField(default=True)が動かなくなったので対処

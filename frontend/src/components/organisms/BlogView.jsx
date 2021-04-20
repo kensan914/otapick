@@ -148,18 +148,18 @@ const BlogView = (props) => {
               className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2"
             >
               <ImageCard
-                groupID={groupID}
-                group={group}
+                groupId={groupID}
+                groupKey={group}
                 blogCt={blogCt}
                 blogTitle={blogTitle}
-                src={src}
+                srcCollection={src}
                 url={url}
                 blogUrl={blogUrl}
                 officialUrl={officialUrl}
                 writer={writer}
-                imgID={geneImageID(order)}
+                priorityImageId={geneImageID(order)}
                 order={order}
-                isFavorite={isFavorite}
+                initIsFavorite={isFavorite}
                 width={width}
                 height={height}
                 shouldLoadOriginal={true}

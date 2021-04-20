@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isMobile, watchCurrentPosition } from "../../modules/utils";
 import {
   SUB_NAVBAR_HEIGHT,
   NAVBAR_HEIGHT,
   BOTTOM_NAVBAR_HEIGHT,
   TOTOP_BUTTON_M,
+  BOTTOM_ANCHOR_ADS_HEIGHT,
 } from "../../modules/env";
-import { withRouter } from "react-router-dom";
 import { useDomState } from "../../contexts/DomContext";
+import { useLocation } from "react-router-dom";
 
 /**
  * scrollState(isShowNBShadow, isShowNB, isShowSubNB, isTop)の管理。
@@ -20,6 +21,11 @@ import { useDomState } from "../../contexts/DomContext";
  * したがって、「特定の場合に限りscrollStateに反して非表示にする」などをするべきではない。（現状そのような分岐はutils.js/watchCurrentPositionに記述）
  */
 const ScrollAdmin = (props) => {
+  const { children } = props;
+
+  const existsBottomNavbar = false; // bottom navbarの廃止
+
+  const location = useLocation();
   const [isShowNBShadow, setIsShowNBShadow] = useState(false);
   const [isShowNB, setIsShowNB] = useState(true);
   const [isShowSubNB, setIsShowSubNB] = useState(false);
@@ -74,7 +80,7 @@ const ScrollAdmin = (props) => {
     } else {
       exeRemoveShadow();
     }
-  }, [isShowNBShadow, props.location]);
+  }, [isShowNBShadow, location]);
 
   useEffect(() => {
     if (isShowNB) {
@@ -82,7 +88,7 @@ const ScrollAdmin = (props) => {
     } else {
       exeHide();
     }
-  }, [isShowNB, props.location]);
+  }, [isShowNB, location]);
 
   useEffect(() => {
     if (!isMobile) {
@@ -92,7 +98,7 @@ const ScrollAdmin = (props) => {
         exeHideSub();
       }
     }
-  }, [isShowSubNB, props.location, Object.keys(domState.subNavbarRefs).length]);
+  }, [isShowSubNB, location, Object.keys(domState.subNavbarRefs).length]);
 
   useEffect(() => {
     if (isTop) {
@@ -100,15 +106,15 @@ const ScrollAdmin = (props) => {
     } else {
       exeShowToTop();
     }
-  }, [isTop, props.location]);
+  }, [isTop, location]);
 
   useEffect(() => {
     scrollHandler();
-  }, [props.location]);
+  }, [location]);
 
   const exeSuper = (subNavbarExistFunc, subNavbarNullFunc) => {
     // cache導入によりotapick-sub-navbarが複数存在しうるため、domStateにsubNavbarRefのコレクションで管理
-    const subNavbarRef = domState.subNavbarRefs[props.location.key];
+    const subNavbarRef = domState.subNavbarRefs[location.key];
     const subNavbar = subNavbarRef ? subNavbarRef.current : null;
 
     const navbar = document.getElementById("otapick-navbar");
@@ -167,7 +173,7 @@ const ScrollAdmin = (props) => {
       totop.style.transitionTimingFunction = "ease-out";
       totop.style.transition = "0.3s";
       totop.style.bottom = isMobile
-        ? TOTOP_BUTTON_M + BOTTOM_NAVBAR_HEIGHT
+        ? TOTOP_BUTTON_M + BOTTOM_ANCHOR_ADS_HEIGHT + "px"
         : TOTOP_BUTTON_M + "px";
     }
   };
@@ -176,12 +182,14 @@ const ScrollAdmin = (props) => {
     if (btm !== null) {
       btm.style.transitionTimingFunction = "ease-out";
       btm.style.transition = "0.3s";
-      btm.style.bottom = "-" + BOTTOM_NAVBAR_HEIGHT + "px";
+      btm.style.bottom = "-" + isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0 + "px";
     }
     if (totop !== null) {
       totop.style.transitionTimingFunction = "ease-out";
       totop.style.transition = "0.3s";
-      totop.style.bottom = TOTOP_BUTTON_M + "px";
+      totop.style.bottom = isMobile
+        ? TOTOP_BUTTON_M + BOTTOM_ANCHOR_ADS_HEIGHT + "px"
+        : TOTOP_BUTTON_M + "px";
     }
   };
 
@@ -299,8 +307,8 @@ const ScrollAdmin = (props) => {
     );
   };
 
-  return props.children;
+  return children;
 };
 
 // export default withRouter(ScrollAdmin);
-export default withRouter((props) => <ScrollAdmin {...props} />);
+export default ScrollAdmin;

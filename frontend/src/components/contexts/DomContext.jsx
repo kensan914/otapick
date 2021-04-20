@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect } from "react";
+import React, { createContext, useReducer, useContext } from "react";
 import GlobalModal from "../molecules/modals/GlobalModal";
 
 const domReducer = (prevState, action) => {
@@ -16,11 +16,11 @@ const domReducer = (prevState, action) => {
 
     case "ACCESS_TO_IMAGE":
       /** accessedImagesにimageIDを追加
-       * @param {Object} action [type, imageID] */
+       * @param {Object} action [type, imageId] */
 
       return {
         ...prevState,
-        accessedImages: [...prevState.accessedImages, action.imageID],
+        accessedImages: [...prevState.accessedImages, action.imageId],
       };
 
     case "SET_FOOTER_REF":
@@ -66,11 +66,11 @@ const domReducer = (prevState, action) => {
       };
 
     case "SET_FAVORITE":
-      /** set subNavbarRef
-       * @param {Object} action [type, imageID, isFavorite] */
+      /** set favorite
+       * @param {Object} action [type, imageId, isFavorite] */
 
       _favoriteState = prevState.favoriteState;
-      _favoriteState[action.imageID] = action.isFavorite;
+      _favoriteState[action.imageId] = action.isFavorite;
 
       return {
         ...prevState,
@@ -115,18 +115,18 @@ const domReducer = (prevState, action) => {
   }
 };
 
-const INIT_GLOBAL_MODAL_ID = "Init";
+const INIT_GLOBAL_MODAL_ID = "INIT";
 const initDomState = Object.freeze({
-  accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"] （`${groupID}_${blogCt}_${location.key}`）
-  accessedImages: [], // ["1_34360_0_2341234", "2_34230_3_51451345"] （`${groupID}_${blogCt}_${order}_${location.key}`）
+  accessedBlogs: [], // ["1_34360_2341234", "2_34230_51451345"] （`${groupId}_${blogCt}_${location.key}`）
+  accessedImages: [], // ["3-33452-3.452875...", "2-34339-1.b1a66..."] （`${groupId}-${blogCt}-${order}.${mountごとのuuid4}`）
   footerRef: null,
 
   // ↓scrollAdmin用。cache導入によりsubNavbarが複数存在しうる。
   // また、id(`otapick-sub-navbar-${location.key}`)で管理していたが、遷移してからid反映にラグがあるためrefで管理
   subNavbarRefs: {},
 
-  // { `${groupID}_${blogCt}_${order}`: {boolean}, }
-  // ex) { 1_34360_0 : true, 2_34230_3: false, }
+  // { `${groupID}-${blogCt}-${order}`: {boolean}, }
+  // ex) { "1-34360-0" : true, "2-34230-3": false, }
   favoriteState: {},
 
   // global modal

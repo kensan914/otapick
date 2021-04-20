@@ -1,49 +1,19 @@
-import React, { useState } from "react";
-import {
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Tooltip,
-} from "reactstrap";
+import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { shortenNum, generateAlt, isMobile, isSmp } from "../modules/utils";
-import { MobileBottomMenu } from "./MobileMenu";
 import {
   faBars,
+  faChevronCircleRight,
   faCrown,
   faDownload,
   faExternalLinkAlt,
   faEye,
+  faImages,
+  faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TooltipComponent from "../atoms/TooltipComponent";
-
-const DetailButton = (props) => {
-  return (
-    <UncontrolledDropdown
-      className="col-4 text-center"
-      style={{ overflowY: "visible" }}
-    >
-      <div className="card-detail-button-super">
-        <DropdownToggle
-          color="light"
-          className="p-0 card-detail-button rounded-circle"
-        >
-          <FontAwesomeIcon icon={faBars} style={{ color: "gray" }} />
-        </DropdownToggle>
-        <DropdownMenu className="bold">
-          <DropdownItem tag={Link} to={props.url}>
-            ダウンロードページへ
-          </DropdownItem>
-          <DropdownItem href={props.officialUrl} target="_blank">
-            公式ブログで確認
-          </DropdownItem>
-        </DropdownMenu>
-      </div>
-    </UncontrolledDropdown>
-  );
-};
+import DropdownMobileFriendly from "./DropdownMobileFriendly";
 
 class SuperBlogCard extends React.Component {
   constructor(props) {
@@ -205,22 +175,51 @@ class SuperBlogCard extends React.Component {
                   </div>
                 </div>
 
-                {isMobile ? (
-                  <MobileBottomMenu
-                    id={this.props.id}
-                    type="blogCard"
-                    title={`${this.props.title}（${this.props.writer.name}）`}
-                    url={this.props.url}
-                    officialUrl={this.props.officialUrl}
-                    writer={this.props.writer}
-                    className="col-4"
-                  />
-                ) : (
-                  <DetailButton
-                    url={this.props.url}
-                    officialUrl={this.props.officialUrl}
-                  />
-                )}
+                <div className="col-4 card-detail-button-super">
+                  <DropdownMobileFriendly
+                    id={`blog-card-detail-button-${this.props.id}`}
+                    buttonClass="p-0 card-detail-button rounded-circle"
+                    buttonContainerClass=""
+                    buttonContainerStyle={{ overflowY: "visible" }}
+                    menuSettings={[
+                      ...(isMobile
+                        ? [
+                            {
+                              type: "TITLE",
+                              label: `${this.props.title}（${this.props.writer.name}）`,
+                            },
+                          ]
+                        : []),
+                      {
+                        type: "LINK",
+                        pathname: this.props.url,
+                        label: "詳細ページへ",
+                        icon: faChevronCircleRight,
+                      },
+                      {
+                        type: "ANCHOR",
+                        href: this.props.officialUrl,
+                        targetBlank: true,
+                        label: "公式ブログで確認",
+                        icon: faExternalLinkAlt,
+                      },
+                      {
+                        type: "LINK",
+                        pathname: this.props.writer.url["images"],
+                        label: `「${this.props.writer.name}」の画像を探す`,
+                        icon: faImages,
+                      },
+                      {
+                        type: "LINK",
+                        pathname: this.props.writer.url["blogs"],
+                        label: `「${this.props.writer.name}」のブログを探す`,
+                        icon: faNewspaper,
+                      },
+                    ]}
+                  >
+                    <FontAwesomeIcon icon={faBars} style={{ color: "gray" }} />
+                  </DropdownMobileFriendly>
+                </div>
 
                 <div className="col-4 card-parameter d-flex justify-content-center align-items-center">
                   <div className="row justify-content-around">

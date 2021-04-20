@@ -462,12 +462,12 @@ export const checkNotCached = (props) =>
 export const geneIsFavoriteGetterSetter = (
   favoriteState,
   domDispatch,
-  imageID
+  imageId
 ) => {
-  const getIsFavorite = () => favoriteState[imageID];
+  const getIsFavorite = () => favoriteState[imageId];
 
   const setIsFavorite = (val) => {
-    domDispatch({ type: "SET_FAVORITE", imageID: imageID, isFavorite: val });
+    domDispatch({ type: "SET_FAVORITE", imageId: imageId, isFavorite: val });
   };
 
   return { getIsFavorite, setIsFavorite };

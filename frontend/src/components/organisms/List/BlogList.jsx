@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import BlogCard from "../../molecules/BlogCard";
 import { URLJoin, getGroup } from "../../modules/utils";
 import { BASE_URL, ADS_INTERVAL, ADS_INDEX } from "../../modules/env";
-import { SquareAds } from "../../atoms/AdSense";
+import { SquareAds } from "../../atoms/Adsense";
 import { useAxios } from "../../modules/axios";
 import List, { useListState } from "./List";
 import { getBlogUrlComposition } from "../../templates/BlogListTemplate";
@@ -90,7 +90,9 @@ const BlogList = withRouter((props) => {
       finallyCallback: () => {
         pageRef.current++;
       },
-      didRequestCallback: (r) => console.log(r),
+      didRequestCallback: (r) => {
+        // console.log(r);
+      },
       shouldRequestDidMount: true,
       // token: authState.token,
     }
@@ -142,11 +144,11 @@ const BlogList = withRouter((props) => {
                 height={thumbnailHeight}
               />
             </div>
-            {i % ADS_INTERVAL === ADS_INDEX && (
+            {/* {i % ADS_INTERVAL === ADS_INDEX && (
               <div className="grid-item col-6 col-md-4 col-lg-3 my-2 px-2 px-sm-3">
                 <SquareAds />
               </div>
-            )}
+            )} */}
           </div>
         )
       )}

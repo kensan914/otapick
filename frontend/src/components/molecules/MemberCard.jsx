@@ -1,59 +1,21 @@
 import React from "react";
-import {
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
 import { Link, withRouter } from "react-router-dom";
 import { generateAlt, isMobile } from "../modules/utils";
-import { MobileBottomMenu } from "./MobileMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCrown } from "@fortawesome/free-solid-svg-icons";
-
-const DetailButton = (props) => {
-  return (
-    <UncontrolledDropdown
-      className="text-center mx-auto py-3"
-      style={{ overflowY: "visible" }}
-    >
-      <div className="card-detail-button-super">
-        <DropdownToggle
-          color="light"
-          className="p-0 card-detail-button rounded-circle"
-        >
-          <FontAwesomeIcon icon={faBars} style={{ color: "gray" }} />
-        </DropdownToggle>
-        <DropdownMenu className="bold">
-          <DropdownItem tag={Link} to={props.url["images"]}>
-            画像一覧へ
-          </DropdownItem>
-          <DropdownItem tag={Link} to={props.url["blogs"]}>
-            ブログ一覧へ
-          </DropdownItem>
-          <DropdownItem href={props.officialUrl} target="_blank">
-            公式サイトで確認
-          </DropdownItem>
-        </DropdownMenu>
-      </div>
-    </UncontrolledDropdown>
-  );
-};
+import {
+  faBars,
+  faCrown,
+  faExternalLinkAlt,
+  faImages,
+  faNewspaper,
+} from "@fortawesome/free-solid-svg-icons";
+import DropdownMobileFriendly from "./DropdownMobileFriendly";
 
 class MemberCard extends React.Component {
   render() {
     return (
       <>
         <div className={"member-card mx-auto " + this.props.belongingGroup}>
-          {/* <div className={"member-card-header " + (!isMobile ? "pc" : "")} onClick={() => { this.props.history.push(this.props.url["images"]); }}>
-            <div className="member-card-overlay"
-              style={{ backgroundImage: `url(${this.props.image})` }}>
-            </div>
-            <img src={this.props.image} className="mb-3 mb-sm-4" alt={generateAlt(this.props.belongingGroup, (this.props.lastKanji + this.props.firstKanji), "member")} />
-            <h4 className="m-0">{this.props.lastKanji} {this.props.firstKanji}</h4>
-            <p style={{ color: "whitesmoke" }}>{this.props.lastKana} {this.props.firstKana}</p>
-          </div> */}
-
           <Link
             to={this.props.url["images"]}
             style={{ textDecoration: "none" }}
@@ -122,21 +84,47 @@ class MemberCard extends React.Component {
           </svg>
 
           <div className="member-card-body">
-            {isMobile ? (
-              <MobileBottomMenu
-                id={this.props.id}
-                type="memberCard"
-                title={`${this.props.lastKanji} ${this.props.firstKanji}`}
-                url={this.props.url}
-                officialUrl={this.props.officialUrl}
-                className="mx-auto py-3"
-              />
-            ) : (
-              <DetailButton
-                url={this.props.url}
-                officialUrl={this.props.officialUrl}
-              />
-            )}
+            <div className="card-detail-button-super">
+              <DropdownMobileFriendly
+                id={`member-card-detail-button-${this.props.id}`}
+                buttonClass="p-0 card-detail-button rounded-circle"
+                buttonContainerClass="text-center mx-auto py-3"
+                buttonContainerStyle={{ overflowY: "visible" }}
+                menuSettings={[
+                  ...(isMobile
+                    ? [
+                        {
+                          type: "TITLE",
+                          label: `${this.props.lastKanji} ${this.props.firstKanji}`,
+                        },
+                      ]
+                    : []),
+                  {
+                    type: "LINK",
+                    pathname: this.props.url["images"],
+                    label: "画像一覧へ",
+                    icon: faImages,
+                  },
+                  {
+                    type: "LINK",
+                    pathname: this.props.url["blogs"],
+                    label: "ブログ一覧へ",
+                    icon: faNewspaper,
+                  },
+                  !this.props.graduate
+                    ? {
+                        type: "ANCHOR",
+                        href: this.props.officialUrl,
+                        targetBlank: true,
+                        label: "公式ブログで確認",
+                        icon: faExternalLinkAlt,
+                      }
+                    : {},
+                ]}
+              >
+                <FontAwesomeIcon icon={faBars} style={{ color: "gray" }} />
+              </DropdownMobileFriendly>
+            </div>
           </div>
         </div>
         {this.props.message && (

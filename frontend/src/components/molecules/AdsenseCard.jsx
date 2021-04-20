@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { isMobile } from "../modules/utils";
 
-const AdSenseCard = (props) => {
+const AdsenseCard = (props) => {
   const { url, src, message, width, height } = props;
 
   const [isLoadImage, setIsLoadImage] = useState(false);
@@ -73,4 +73,4 @@ const AdSenseCard = (props) => {
   );
 };
 
-export default AdSenseCard;
+export default AdsenseCard;

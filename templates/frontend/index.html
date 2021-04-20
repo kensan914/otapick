@@ -14,9 +14,9 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" as="style">
 
   <!-- favicon -->
-  <link rel="shortcut icon" href="{% static 'favicon.ico' %}{{ static_update }}" type="image/x-icon" />
-  <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}{{ static_update }}" sizes="180x180">
-  <link rel="icon" type="image/png" href="{% static 'android-touch-icon.png' %}{{ static_update }}" sizes="192x192">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}{{ version_query_string }}" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}{{ version_query_string }}" sizes="180x180">
+  <link rel="icon" type="image/png" href="{% static 'android-touch-icon.png' %}{{ version_query_string }}" sizes="192x192">
 
   {% if not debug %}
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -41,7 +41,13 @@
           fqdn: "{{ fqdn }}",
       };
   </script>
-  <script src="{% static "frontend/main.js" %}{{ static_update }}"></script>
+
+  {% if debug %}
+  {% comment %} <script src="{% with "frontend/"|add:version|add:"/main.bundle.js" as bundle_js_path %}{% static bundle_js_path %}{% endwith %}"></script> {% endcomment %}
+  <script src="{% static "frontend-dev/main.bundle.js" %}{{ version_query_string }}"></script>
+  {% else %}
+  <script src="{% static "frontend/main.bundle.js" %}{{ version_query_string }}"></script>
+  {% endif %}
 </body>
 
 </html>

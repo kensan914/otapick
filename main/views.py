@@ -8,7 +8,7 @@ from django.views import View
 
 class BaseView(View):
     html_path = 'frontend/index.html'
-    context = {'static_update': '?{}'.format(
+    context = {'version': otapick.VERSION, 'version_query_string': '?{}'.format(
         otapick.VERSION), 'debug': settings.env.bool('DEBUG')}
 
 
@@ -23,7 +23,8 @@ indexView = IndexView.as_view()
 
 
 class IndexAdminView(IndexView):
-    index_context = dict(**BaseView.context, **{'fqdn': 'admin.otapick.com'})
+    index_context = dict(**BaseView.context, **
+                         {'fqdn': 'admin.{}'.format(otapick.OTAPICK_FQDN)})
 
 
 indexAdminView = IndexAdminView.as_view()

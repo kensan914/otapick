@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams, withRouter } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useProfileState } from "../contexts/ProfileContext";
 import { useAxios } from "../modules/axios";
 import { BASE_URL } from "../modules/env";
 import {
-  checkNotCached,
   deepCvtKeyFromSnakeToCamel,
+  gtagTo,
   updateMeta,
   URLJoin,
 } from "../modules/utils";
 import UsersDetailTemplate from "../templates/UsersDetailTemplate";
 
-const UserPage = (props) => {
+const UserPage = () => {
   const profileState = useProfileState();
+  const location = useLocation();
 
   const params = useParams();
-  const [username] = useState(checkNotCached(props) ? params.username : "");
+  const [username] = useState(params?.username);
   const isMe = profileState.profile.username === username;
+  const [isReadyProfile, setIsReadyProfile] = useState(false);
 
-  const [userProfile, setUserProfile] = useState({});
+  const [userProfile, setUserProfile] = useState();
   const { isLoading, request } = useAxios(
     URLJoin(BASE_URL, "users/", username),
     "get",
@@ -26,7 +28,10 @@ const UserPage = (props) => {
       thenCallback: (res) => {
         const _profile = deepCvtKeyFromSnakeToCamel(res.data);
         setUserProfile(_profile);
-        updateMeta({ title: _profile.name, description: "" });
+        updateMeta({
+          title: `${_profile.name}(@${_profile.username})`,
+          description: "",
+        });
       },
     }
   );
@@ -42,10 +47,19 @@ const UserPage = (props) => {
   useEffect(() => {
     if (isMe) {
       setUserProfile({ ...profileState.profile });
+      updateMeta({
+        title: `${profileState.profile.name}(@${profileState.profile.username})`,
+        description: "",
+      });
     }
   }, [profileState.profile]);
 
-  const location = useLocation();
+  useEffect(() => {
+    if (typeof userProfile !== "undefined" && !isReadyProfile) {
+      setIsReadyProfile(true);
+    }
+  }, [userProfile]);
+
   return (
     <UsersDetailTemplate
       isLoading={isLoading}
@@ -53,8 +67,9 @@ const UserPage = (props) => {
       username={username}
       isMe={isMe}
       accessKey={location?.state?.accessKey} // accessKeyが付与された遷移元の時、FavoriteListを更新
+      isReadyProfile={isReadyProfile}
     />
   );
 };
 
-export default withRouter(UserPage);
+export default UserPage;

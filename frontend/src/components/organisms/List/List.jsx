@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { HorizontalLoader } from "../../molecules/Loader";
 import Masonry from "react-masonry-component";
 import InfiniteScroll from "react-infinite-scroller";
-import { URLJoin, generateRandomSeed } from "../../modules/utils";
+import { URLJoin, generateRandomSeed, isMobile } from "../../modules/utils";
 import { withRouter } from "react-router-dom";
 import { NotFoundMessage } from "../../atoms/NotFound";
 import { useDomDispatch } from "../../contexts/DomContext";
+import { BOTTOM_ANCHOR_ADS_HEIGHT } from "../../modules/env";
 
 const List = withRouter((props) => {
   const {
@@ -55,7 +56,13 @@ const List = withRouter((props) => {
         hasMore={hasMore}
         loadMore={requestGetItems}
         initialLoad={false}
-        loader={<HorizontalLoader key={0} />}
+        loader={
+          <div
+            style={{ paddingBottom: isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0 }}
+          >
+            <HorizontalLoader key={0} />
+          </div>
+        }
         className="mb-5"
         threshold={500}
       >

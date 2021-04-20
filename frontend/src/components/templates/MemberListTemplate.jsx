@@ -53,6 +53,7 @@ class MemberListByGeneration extends React.Component {
                   lastKana,
                   firstKana,
                   belongingGroup,
+                  graduate,
                 },
                 i
               ) => (
@@ -73,6 +74,7 @@ class MemberListByGeneration extends React.Component {
                     firstKana={firstKana}
                     belongingGroup={belongingGroup}
                     wavesVals={this.props.wavesVals}
+                    graduate={graduate}
                   />
                 </div>
               )
@@ -138,6 +140,7 @@ class MemberListTemplate extends React.Component {
                       lastKana: member.last_kana,
                       firstKana: member.first_kana,
                       belongingGroup: getGroup(member.belonging_group),
+                      graduate: member.graduate,
                     }))
                   );
                 }

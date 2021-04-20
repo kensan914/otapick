@@ -147,7 +147,7 @@ cron/
 
 registerer_ex.py
 
-static/text/
+static/frontend-dev/
 
 *.code-workspace
 

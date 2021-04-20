@@ -3,7 +3,7 @@ import { isSmp } from "../modules/utils";
 
 const ProfileIcon = (props) => {
   const { imageUrl, size } = props;
-  const imageSize = size ? size : isSmp ? 49 : 60;
+  const imageSize = size ? size : isSmp ? 80 : 120;
   const imageWrapperSize = imageSize + imageSize / 9;
 
   return (

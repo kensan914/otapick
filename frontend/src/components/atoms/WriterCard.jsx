@@ -1,56 +1,14 @@
 import React from "react";
-import {
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
-import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
-import { isMobile } from "../modules/utils";
-import { MobileBottomMenu } from "../molecules/MobileMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-
-class DetailButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dropdownOpen: false,
-    };
-    this.toggle = this.toggle.bind(this);
-  }
-
-  toggle() {
-    this.setState((prevState) => ({ dropdownOpen: !prevState.dropdownOpen }));
-  }
-
-  render() {
-    return (
-      <ButtonDropdown
-        direction="right"
-        isOpen={this.state.dropdownOpen}
-        toggle={this.toggle}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DropdownToggle
-          color="light"
-          className="p-0 writer-card-detail-button rounded-circle"
-        >
-          <FontAwesomeIcon icon={faAngleDown} />
-        </DropdownToggle>
-        <DropdownMenu className="bold">
-          <DropdownItem tag={Link} to={this.props.writer.url["images"]}>
-            画像一覧へ
-          </DropdownItem>
-          <DropdownItem tag={Link} to={this.props.writer.url["blogs"]}>
-            ブログ一覧へ
-          </DropdownItem>
-        </DropdownMenu>
-      </ButtonDropdown>
-    );
-  }
-}
+import {
+  faAngleDown,
+  faExternalLinkAlt,
+  faImages,
+  faNewspaper,
+} from "@fortawesome/free-solid-svg-icons";
+import DropdownMobileFriendly from "../molecules/DropdownMobileFriendly";
+import { isMobile } from "../modules/utils";
 
 class WriterCard extends React.Component {
   render() {
@@ -65,17 +23,44 @@ class WriterCard extends React.Component {
           alt={this.props.writer.name}
         />
         <h6 className="mx-2 mb-0">{this.props.writer.name}</h6>
-        {isMobile ? (
-          <MobileBottomMenu
-            id="writer-card-menu"
-            type="writerCard"
-            title={this.props.writer.name}
-            url={this.props.writer.url}
-            officialUrl={this.props.writer.official_url}
-          />
-        ) : (
-          <DetailButton writer={this.props.writer} />
-        )}
+
+        <DropdownMobileFriendly
+          id="writer-card-menu"
+          buttonClass="p-0 writer-card-detail-button rounded-circle"
+          menuSettings={[
+            ...(isMobile
+              ? [
+                  {
+                    type: "TITLE",
+                    label: this.props.writer.name,
+                  },
+                ]
+              : []),
+            {
+              type: "LINK",
+              pathname: this.props.writer.url["images"],
+              label: "画像一覧へ",
+              icon: faImages,
+            },
+            {
+              type: "LINK",
+              pathname: this.props.writer.url["blogs"],
+              label: "ブログ一覧へ",
+              icon: faNewspaper,
+            },
+            !this.props.writer.graduate
+              ? {
+                  type: "ANCHOR",
+                  href: this.props.writer.officialUrl,
+                  targetBlank: true,
+                  label: "公式ブログで確認",
+                  icon: faExternalLinkAlt,
+                }
+              : {},
+          ]}
+        >
+          <FontAwesomeIcon icon={faAngleDown} />
+        </DropdownMobileFriendly>
       </div>
     );
   }

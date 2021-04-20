@@ -12,7 +12,6 @@ import {
 } from "../../modules/utils";
 import { withRouter } from "react-router-dom";
 import { BASE_URL, DELAY_TIME, BLOGS_DESCRIPTION } from "../../modules/env";
-import { MobileBottomMenu } from "../MobileMenu";
 import { getBlogUrlComposition } from "../../templates/BlogListTemplate";
 
 class BlogListInfo extends React.Component {
@@ -161,22 +160,13 @@ class BlogListInfo extends React.Component {
                     <div className="col-12 col-md-6 col-lg-5 col-xl-4 mt-2 mt-md-0">
                       <div className="row justify-content-around">
                         <NarrowButton />
-                        {isMobile ? (
-                          <MobileBottomMenu
-                            id="sortBlog"
-                            type="sortBlog"
-                            sortButtonTitle={this.state.sortButtonTitle}
-                            pushHistory={this.props.pushHistory}
-                            className="col-5"
-                          />
-                        ) : (
-                          <SortButton
-                            className="col-5"
-                            type="blogs"
-                            title={this.state.sortButtonTitle}
-                            pushHistory={this.props.pushHistory}
-                          />
-                        )}
+
+                        <SortButton
+                          className="col-5"
+                          type="blogs"
+                          title={this.state.sortButtonTitle}
+                          pushHistory={this.props.pushHistory}
+                        />
                       </div>
                     </div>
                   )}

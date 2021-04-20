@@ -1,3 +1,4 @@
+from otapick.lib.constants import IMAGE_NOT_FOUND_HEIGHT, IMAGE_NOT_FOUND_WIDTH
 import otapick
 from image.models import Image
 from main.models import Member, Group
@@ -46,13 +47,14 @@ def generate_memberimage_url(member):
             return member.image.url
     return otapick.OTAPICK_LOGO
 
+
 def get_thumbnail_wh(blog):
     thumbnails = Image.objects.filter(publisher=blog, order=0)
     if thumbnails.exists():
         thumbnail = thumbnails.first()
         return thumbnail.width, thumbnail.height
     else:
-        return 0, 0
+        return IMAGE_NOT_FOUND_WIDTH, IMAGE_NOT_FOUND_HEIGHT
 
 
 def generate_thumbnail_url(blog):

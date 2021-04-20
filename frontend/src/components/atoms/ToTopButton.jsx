@@ -1,8 +1,8 @@
 import React from "react";
 import {
+  BOTTOM_ANCHOR_ADS_HEIGHT,
   TOTOP_BUTTON_DIAMETER,
   TOTOP_BUTTON_M,
-  BOTTOM_NAVBAR_HEIGHT,
 } from "../modules/env";
 import { isMobile } from "../modules/utils";
 
@@ -27,13 +27,9 @@ class ToTopButton extends React.Component {
       height: TOTOP_BUTTON_DIAMETER,
       right: TOTOP_BUTTON_M,
     };
-    if (isMobile) {
-      Object.assign(totopButtonStyle, {
-        bottom: TOTOP_BUTTON_M + BOTTOM_NAVBAR_HEIGHT,
-      });
-    } else {
-      Object.assign(totopButtonStyle, { bottom: TOTOP_BUTTON_M });
-    }
+    Object.assign(totopButtonStyle, {
+      bottom: TOTOP_BUTTON_M + (isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0),
+    });
 
     return (
       <button

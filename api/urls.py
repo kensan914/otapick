@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from account import views as account_views
-
+from survey import views as survey_views
 
 app_name = 'api'
 urlpatterns = [
@@ -44,5 +44,7 @@ urlpatterns = [
     path('favorites/', views.favoriteListAPIView, name='favoriteListAPI'),
     path('favorites/info/', views.favoriteListInfoAPIView,
          name='favoriteListInfoAPI'),
-    path('fav-members/', account_views.favMembersAPIView, name='favMembersAPI')
+    path('fav-members/', account_views.favMembersAPIView, name='favMembersAPI'),
+    path('survey/pro-plan/', survey_views.proPlanSurveyAPIView,
+         name='proPlanSurveyAPI'),
 ]

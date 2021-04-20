@@ -2,11 +2,12 @@ import React, { useEffect, useRef, Suspense } from "react";
 import { Route, withRouter } from "react-router-dom";
 import CacheRoute, { CacheSwitch } from "react-router-cache-route";
 
-import { isMobile } from "./modules/utils";
 import { HorizontalLoader } from "./molecules/Loader";
 import NavigationBar from "./organisms/NavigationBar";
-import BottomNavigationBar from "./organisms/BottomNavigationBar";
 import { useDomDispatch } from "./contexts/DomContext";
+import PortalContainer from "./atoms/PortalContainer";
+import BottomAnchorAdsOnlyMobile from "./molecules/BottomAnchorAdsOnlyMobile";
+import { isMobile } from "./modules/utils";
 
 const Footer = React.lazy(() => import("./organisms/Footer"));
 const BlogViewTemplate = React.lazy(() =>
@@ -18,9 +19,7 @@ const MemberListTemplate = React.lazy(() =>
 const ImageListTemplate = React.lazy(() =>
   import("./templates/ImageListTemplate")
 );
-const ImageViewTemplate = React.lazy(() =>
-  import("./templates/ImageViewTemplate")
-);
+const ImageViewPage = React.lazy(() => import("./pages/ImageViewPage"));
 const HomeTemplate = React.lazy(() => import("./templates/HomeTemplate"));
 const NotFound404 = React.lazy(() => import("./pages/NotFound404"));
 const TermsTemplate = React.lazy(() => import("./templates/TermsTemplate"));
@@ -45,7 +44,8 @@ const Screens = () => {
   return (
     <>
       <NavigationBar />
-      {isMobile && <BottomNavigationBar />}
+      {isMobile && <BottomAnchorAdsOnlyMobile />}
+
       <Suspense fallback={() => <HorizontalLoader />}>
         <CacheSwitch>
           <CacheRoute
@@ -115,8 +115,9 @@ const Screens = () => {
 
           <CacheRoute
             exact
-            path="/image/:groupID/:blogCt/:order/"
-            render={() => <ImageViewTemplate />}
+            path="/image/:groupId/:blogCt/:order/"
+            // render={() => <ImageViewTemplate />}
+            render={() => <ImageViewPage />}
             when="always"
             multiple={10}
           />
@@ -167,6 +168,8 @@ const Screens = () => {
         <Footer ref={footerRef} />
         <LowerRightMenu />
       </Suspense>
+
+      <PortalContainer />
     </>
   );
 };

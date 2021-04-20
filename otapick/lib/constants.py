@@ -4,11 +4,14 @@ from config import settings
 VERSION = '4.3.0'
 
 ### URL ###
-OTAPICK_FQDN = '192.168.11.3:8000' if settings.DEBUG else 'otapick.com'
+OTAPICK_FQDN = '192.168.11.46:8000' if settings.DEBUG else 'otapick.com'
 OTAPICK_URL = 'http://{}/'.format(
     OTAPICK_FQDN) if settings.DEBUG else 'https://{}/'.format(OTAPICK_FQDN)
 
 IMAGE_NOT_FOUND_URL = '/static/img/logo_rectangle_margin.png'  # image not found
+IMAGE_NOT_FOUND_WIDTH = 1000
+IMAGE_NOT_FOUND_HEIGHT = 666
+
 # image not found ver orderly
 IMAGE_NOT_FOUND_ORDERLY_URL = '/static/img/logo_square_margin.png'
 OTAPICK_LOGO = '/static/img/logo_square_margin.png'  # otapick logo (square)

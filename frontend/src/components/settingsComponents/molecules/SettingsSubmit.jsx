@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuthState } from "../../contexts/AuthContext";
 import { useAxios } from "../../modules/axios";
+import { isMobile } from "../../modules/utils";
 
 const SettingsSubmit = (props) => {
   const {
@@ -20,7 +21,7 @@ const SettingsSubmit = (props) => {
       thenCallback && thenCallback(res);
       setIsSuccessSubmit(true);
     },
-    catchCallback: (err) => {
+    catchCallback: () => {
       setIsSuccessSubmit(false);
     },
     token: authState.token,
@@ -43,8 +44,8 @@ const SettingsSubmit = (props) => {
       <button
         disabled={!canSubmit || isLoading}
         className={`settings-submit-button rounded-pill px-4 py-2 ${
-          canSubmit ? "active" : ""
-        }`}
+          isMobile ? "mr-3" : ""
+        } ${canSubmit ? "active" : ""}`}
         onClick={() => {
           request();
         }}

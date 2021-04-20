@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -17,7 +17,6 @@ import {
   generateUuid4,
   sortGROUPSByFav,
 } from "../modules/utils";
-import { MobileTopMenu } from "../molecules/MobileMenu";
 import {
   useProfileDispatch,
   useProfileState,
@@ -29,16 +28,166 @@ import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
   faBars,
   faCaretDown,
+  faCog,
+  faEnvelope,
   faExternalLinkAlt,
+  faHouseUser,
+  faImages,
+  faNewspaper,
   faSignOutAlt,
+  faUsers,
+  faUserShield,
 } from "@fortawesome/free-solid-svg-icons";
-import { OTAPICK_TWITTER_URL } from "../modules/env";
+import { NAVBAR_LS_ZINDEX, OTAPICK_TWITTER_URL } from "../modules/env";
+import DropdownMobileFriendly from "../molecules/DropdownMobileFriendly";
+import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 
-const NavigationBar = () => {
+const NavbarMenu = (props) => {
+  const { children, isLongerWidthOnlyPc = false } = props;
   const profileState = useProfileState();
   const profileDispatch = useProfileDispatch();
   const authState = useAuthState();
   const authDispatch = useAuthDispatch();
+
+  return (
+    <DropdownMobileFriendly
+      id="navbar-menu"
+      isLocatedNavbarOnlyMobile
+      lockScreenZIndex={NAVBAR_LS_ZINDEX}
+      directionOnlyPc="down"
+      isSmallerTitle
+      buttonClass={
+        isMobile
+          ? authState.status === "Authenticated"
+            ? "navbar-profile-icon-mobile-button"
+            : "rounded-circle transparent-button-mobile"
+          : "rounded-pill navbar-dropdown-button"
+      }
+      dropdownMenuClassOnlyPc="navbar-dropdown-menu"
+      menuSettings={[
+        ...(authState.status === "Authenticated"
+          ? [
+              { type: "TITLE", label: profileState.profile.name },
+              {
+                type: "LINK",
+                pathname: `/users/${profileState.profile.username}/`,
+                state: { accessKey: generateUuid4() },
+                label: "マイページ",
+                icon: faHouseUser,
+              },
+              {
+                type: "LINK",
+                pathname: `/settings/`,
+                label: "設定",
+                icon: faCog,
+              },
+            ]
+          : isMobile
+          ? [
+              { type: "TITLE", label: "Twitterアカウントで簡単ログイン" },
+              {
+                type: "CUSTOM_ONLY_MOBILE",
+                menuComponent: (
+                  <Button
+                    href="/accounts/login/"
+                    className="login-button mt-1 mb-2"
+                  >
+                    <div style={{ color: "white" }}>
+                      <FontAwesomeIcon icon={faTwitter} /> ログイン
+                    </div>
+                  </Button>
+                ),
+              },
+            ]
+          : []),
+
+        ...(!isLongerWidthOnlyPc
+          ? [
+              { type: "TITLE", label: "クイックアクセス" },
+
+              {
+                type: "LINK",
+                pathname: `/images/`,
+                label: "画像一覧",
+                icon: faImages,
+              },
+              {
+                type: "LINK",
+                pathname: `/blogs/`,
+                label: "ブログ一覧",
+                icon: faNewspaper,
+              },
+              {
+                type: "LINK",
+                pathname: `/members/`,
+                label: "メンバーリスト",
+                icon: faUsers,
+              },
+            ]
+          : []),
+
+        { type: "TITLE", label: "公式リンク" },
+        ...sortGROUPSByFav(profileState.profile.favGroups).map((groupObj) => ({
+          type: "ANCHOR",
+          href: groupObj.blogUrl,
+          targetBlank: true,
+          label: `${groupObj.name}公式ブログ`,
+          icon: faExternalLinkAlt,
+        })),
+
+        { type: "TITLE", label: "ヲタピックについて" },
+        {
+          type: "LINK",
+          pathname: `/contact/`,
+          label: "お問い合わせ",
+          icon: faEnvelope,
+        },
+        {
+          type: "LINK",
+          pathname: `/terms-of-service/`,
+          label: "利用規約",
+          icon: faFileAlt,
+        },
+        {
+          type: "LINK",
+          pathname: `/privacy-policy/`,
+          label: "プライバシーポリシー",
+          icon: faUserShield,
+        },
+        {
+          type: "ANCHOR",
+          href: OTAPICK_TWITTER_URL,
+          targetBlank: true,
+          label: "公式Twitter",
+          icon: faTwitter,
+        },
+        ...(authState.status === "Authenticated"
+          ? [
+              { type: "HR" },
+              {
+                type: "ONCLICK",
+                label: "ログアウト",
+                onClick: () => {
+                  authDispatch({
+                    type: "COMPLETE_LOGOUT",
+                    profileDispatch: profileDispatch,
+                  });
+                  window.location.href = "/";
+                },
+                icon: faSignOutAlt,
+              },
+            ]
+          : []),
+      ]}
+    >
+      {children}
+    </DropdownMobileFriendly>
+  );
+};
+
+const NavigationBar = () => {
+  const profileState = useProfileState();
+  const authState = useAuthState();
 
   // mobile
   if (isMobile) {
@@ -57,13 +206,17 @@ const NavigationBar = () => {
           className="mx-0 navbar-brand-responsive"
         />
         <SearchDownshift profileState={profileState} />
-        <MobileTopMenu
-          profileState={profileState}
-          authState={authState}
-          authDispatch={authDispatch}
-          profileDispatch={profileDispatch}
-          type="navbarMenu"
-        />
+
+        <NavbarMenu>
+          {authState.status === "Authenticated" ? (
+            <img
+              src={profileState.profile.image}
+              className="navbar-profile-icon-mobile"
+            />
+          ) : (
+            <FontAwesomeIcon icon={faBars} />
+          )}
+        </NavbarMenu>
       </Navbar>
     );
   }
@@ -71,120 +224,31 @@ const NavigationBar = () => {
   else {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownToggle = () => setDropdownOpen((prevState) => !prevState);
-    const [dropdownOpen3, setDropdownOpen3] = useState(false);
-    const dropdownToggle3 = () => setDropdownOpen3((prevState) => !prevState);
     const [dropdownOpen4, setDropdownOpen4] = useState(false);
     const dropdownToggle4 = () => setDropdownOpen4((prevState) => !prevState);
 
     const resetNavBar = () => {
       setDropdownOpen(false);
-      setDropdownOpen3(false);
       setDropdownOpen4(false);
     };
 
-    const getMainDropdown = (quickStartItems) => {
-      return (
-        <ButtonDropdown
-          direction="down"
-          isOpen={dropdownOpen3}
-          toggle={dropdownToggle3}
-        >
-          <DropdownToggle className="rounded-pill navbar-dropdown-button">
-            {authState.status === "Authenticated" ? (
-              <div className="navbar-profile-icon-wrapper rounded-pill">
-                <img
-                  src={profileState.profile.image}
-                  className="navbar-profile-icon"
-                />
-                <FontAwesomeIcon
-                  className="navbar-profile-icon-arrow"
-                  icon={faCaretDown}
-                />
-              </div>
-            ) : (
-              <div className="navbar-hamburger-wrapper">
-                <FontAwesomeIcon className="navbar-hamburger" icon={faBars} />
-              </div>
-            )}
-          </DropdownToggle>
-          <DropdownMenu className={"navbar-dropdown-menu bold"}>
-            {authState.status === "Authenticated" && (
-              <>
-                <DropdownItem header className="omit-title">
-                  {profileState.profile.name}
-                </DropdownItem>
-                <DropdownItem
-                  tag={Link}
-                  // to={`/users/${profileState.profile.username}/`}
-                  to={{
-                    pathname: `/users/${profileState.profile.username}/`,
-                    state: { accessKey: generateUuid4() },
-                  }}
-                >
-                  マイページ
-                </DropdownItem>
-
-                <DropdownItem
-                  tag={Link}
-                  to={{
-                    pathname: `/settings/`,
-                  }}
-                >
-                  設定
-                </DropdownItem>
-                <DropdownItem divider />
-              </>
-            )}
-
-            {quickStartItems}
-
-            <DropdownItem header>公式リンク</DropdownItem>
-            {sortGROUPSByFav(profileState.profile.favGroups).map((groupObj) => (
-              <DropdownItem
-                key={groupObj.id}
-                href={groupObj.blogUrl}
-                target="_blank"
-              >
-                {groupObj.name}公式ブログ{" "}
-                <FontAwesomeIcon icon={faExternalLinkAlt} />
-              </DropdownItem>
-            ))}
-            <DropdownItem divider />
-
-            <DropdownItem header>ヲタピックについて</DropdownItem>
-            <DropdownItem tag={Link} to="/contact/">
-              お問い合わせ
-            </DropdownItem>
-            <DropdownItem tag={Link} to="/terms-of-service/">
-              利用規約
-            </DropdownItem>
-            <DropdownItem tag={Link} to="/privacy-policy/">
-              プライバシーポリシー
-            </DropdownItem>
-            <DropdownItem href={OTAPICK_TWITTER_URL} target="_blank">
-              公式Twitter <FontAwesomeIcon icon={faTwitter} />
-            </DropdownItem>
-
-            {authState.status === "Authenticated" && (
-              <>
-                <DropdownItem divider />
-                <DropdownItem
-                  onClick={() => {
-                    authDispatch({
-                      type: "COMPLETE_LOGOUT",
-                      profileDispatch: profileDispatch,
-                    });
-                    window.location.href = "/";
-                  }}
-                >
-                  ログアウト <FontAwesomeIcon icon={faSignOutAlt} />
-                </DropdownItem>
-              </>
-            )}
-          </DropdownMenu>
-        </ButtonDropdown>
+    const navbarMenuChildren =
+      authState.status === "Authenticated" ? (
+        <div className="navbar-profile-icon-wrapper rounded-pill">
+          <img
+            src={profileState.profile.imageThumbnail}
+            className="navbar-profile-icon"
+          />
+          <FontAwesomeIcon
+            className="navbar-profile-icon-arrow"
+            icon={faCaretDown}
+          />
+        </div>
+      ) : (
+        <div className="navbar-hamburger-wrapper">
+          <FontAwesomeIcon className="navbar-hamburger" icon={faBars} />
+        </div>
       );
-    };
 
     return (
       <Navbar
@@ -212,21 +276,7 @@ const NavigationBar = () => {
               <FontAwesomeIcon icon={faTwitter} /> ログイン
             </Button>
           )}
-          {getMainDropdown(
-            <>
-              <DropdownItem header>クイックスタート</DropdownItem>
-              <DropdownItem tag={Link} to="/images/">
-                画像一覧
-              </DropdownItem>
-              <DropdownItem tag={Link} to="/blogs/">
-                ブログ一覧
-              </DropdownItem>
-              <DropdownItem tag={Link} to="/members/">
-                メンバーリスト
-              </DropdownItem>
-              <DropdownItem divider />
-            </>
-          )}
+          <NavbarMenu>{navbarMenuChildren}</NavbarMenu>
         </MediaQuery>
 
         {/* longer width */}
@@ -320,7 +370,7 @@ const NavigationBar = () => {
               </Button>
             )}
 
-            {getMainDropdown()}
+            <NavbarMenu isLongerWidthOnlyPc>{navbarMenuChildren}</NavbarMenu>
           </Nav>
         </MediaQuery>
       </Navbar>

@@ -7,10 +7,6 @@ try {
   /* jest時にNODE_ENVが宣言されていないと怒られる */
   DEBUG = process.env.NODE_ENV === "development";
 }
-// export const DEBUG = process.env.NODE_ENV === "development";
-// export const DEBUG = NODE_ENV
-//   ? NODE_ENV === "development"
-//   : process.env.NODE_ENV === "development";
 
 export const FQDN = window?.env?.fqdn ? window.env.fqdn : "otapick.com";
 export const BASE_URL = DEBUG ? `http://${FQDN}/api/` : `https://${FQDN}/api/`;
@@ -81,9 +77,11 @@ export const GA_TRACKING_ID = "UA-134426000-2";
 export const DATA_AD_CLIENT = "ca-pub-3712313672767903";
 export const DATA_AD_SLOT_SQUARE = "3963767991";
 export const DATA_AD_SLOT_LANDSCAPE = "8177403224";
+export const DATA_AD_SLOT_ANCHOR = "6762893244";
 export const ADS_INTERVAL = 50;
 export const ADS_INTERVAL_MORE = 100;
 export const ADS_INDEX = 8;
+export const BOTTOM_ANCHOR_ADS_HEIGHT = 48;
 
 import bookmarkSakuraAnimationData from "../../static/lottie/bookmark_sakura.json";
 import bookmarkHinataAnimationData from "../../static/lottie/bookmark_hinata.json";

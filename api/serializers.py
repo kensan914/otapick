@@ -34,7 +34,7 @@ class MemberSerializer(serializers.ModelSerializer):
 class MemberSerializerMin(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['name', 'ct', 'url', 'official_url', 'image']
+        fields = ['name', 'ct', 'url', 'official_url', 'image', 'graduate']
     name = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     official_url = serializers.SerializerMethodField()
@@ -82,22 +82,6 @@ class BlogSerializer(serializers.ModelSerializer):
 
     def get_official_url(self, obj):
         return otapick.generate_official_url(blog=obj)
-
-    def get_thumbnail_width(self, obj):
-        thumbnails = Image.objects.filter(publisher=obj, order=0)
-        if thumbnails.exists():
-            thumbnail = thumbnails.first()
-            return thumbnail.width
-        else:
-            return 0
-
-    def get_thumbnail_height(self, obj):
-        thumbnails = Image.objects.filter(publisher=obj, order=0)
-        if thumbnails.exists():
-            thumbnail = thumbnails.first()
-            return thumbnail.height
-        else:
-            return 0
 
 
 class BlogSerializerVerDetail(BlogSerializer):

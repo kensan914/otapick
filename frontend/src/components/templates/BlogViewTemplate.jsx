@@ -15,7 +15,7 @@ import { LOAD_IMG_URL, BASE_URL } from "../modules/env";
 import { withRouter } from "react-router-dom";
 import { NotFoundMessage } from "../atoms/NotFound";
 import BlogSearchListInfo from "../molecules/info/BlogSearchListInfo";
-import { SquareAds, LandscapeAds } from "../atoms/AdSense";
+import { SquareAds, LandscapeAds } from "../atoms/Adsense";
 import ViewTemplate from "./ViewTemplate";
 import { withCookies } from "react-cookie";
 import { DomDispatchContext, DomStateContext } from "../contexts/DomContext";
@@ -224,9 +224,9 @@ class BlogViewTemplate extends ViewTemplate {
             )}
 
             {/* Google AdSense */}
-            <div className="container mt-4">
+            {/* <div className="container mt-4">
               {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
-            </div>
+            </div> */}
 
             {contents}
           </div>
