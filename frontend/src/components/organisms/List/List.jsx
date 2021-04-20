@@ -58,9 +58,10 @@ const List = withRouter((props) => {
         initialLoad={false}
         loader={
           <div
+            key={0}
             style={{ paddingBottom: isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0 }}
           >
-            <HorizontalLoader key={0} />
+            <HorizontalLoader />
           </div>
         }
         className="mb-5"

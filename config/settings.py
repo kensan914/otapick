@@ -227,7 +227,6 @@ ADMIN_SHORTCUTS = [
 ####################
 ## Authentication ##
 ####################
-# AUTH_USER_MODEL = 'custom_account.Account'
 AUTH_USER_MODEL = 'custom_account.Account'
 # https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
 REST_USE_JWT = True
