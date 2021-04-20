@@ -3,6 +3,7 @@ import shutil
 from django.core.management.base import BaseCommand
 import otapick
 from image.models import Image
+from PIL import Image as PilImage
 from tqdm import tqdm
 
 
@@ -50,7 +51,7 @@ class Command(BaseCommand):
 
             # 不完全な画像ファイルの場合、そのブログの画像をDLしなおし圧縮も合わせて行う。
             try:
-                pil_image = Image.open(image.picture.path)
+                pil_image = PilImage.open(image.picture.path)
                 pil_image.verify()
                 bar.update(1)
             except:
