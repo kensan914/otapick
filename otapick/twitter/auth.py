@@ -47,6 +47,8 @@ def get_access_token(oauth_token, oauth_verifier):
 
 
 def get_authorize_uri(scheme_host):
+    print('xxxx')
+    print(scheme_host)
     # request tokenを取得
     request_token = get_request_token(scheme_host)
     if request_token is None:
