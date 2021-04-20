@@ -39,8 +39,11 @@ class TwitterLoginCallbackView(views.APIView):
         url = urljoin(request._current_scheme_host,
                       '/accounts/rest-auth/twitter/')
 
-        print(result)
+        print(result.decode('utf-8'))
         print(q_params)
+        if q_params is None:
+            # TODO error handle
+            return redirect('indexView')
         data = {'access_token': q_params['oauth_token'],
                 'token_secret': q_params['oauth_token_secret']}
         res_twitterLoginAPI = requests.post(url, json=data)
