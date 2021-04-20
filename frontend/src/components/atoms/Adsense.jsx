@@ -94,7 +94,8 @@ export const AnchorAds = () => {
       {!DEBUG && (
         <ins
           className={"adsbygoogle"}
-          style={{ display: "inline-block", width: "100%", height: "100%" }}
+          // style={{ display: "inline-block", width: "100%", height: "100%" }}
+          style={{ display: "block" }}
           data-ad-client={DATA_AD_CLIENT}
           data-ad-slot={DATA_AD_SLOT_ANCHOR}
           data-ad-format="auto"
