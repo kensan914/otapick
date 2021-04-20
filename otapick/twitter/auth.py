@@ -19,7 +19,9 @@ def get_request_token(scheme_host):
         # reqest_token を取得
         resp, content = client.request(
             '{}?&oauth_callback={}'.format(request_token_url, urljoin(scheme_host, callback_url_path)))
+        print('content', content)
         request_token = dict(parse_qsl(content.decode('utf-8')))
+        print('request_token', request_token)
         return request_token['oauth_token']
     except Exception as e:
         print(e)
