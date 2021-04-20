@@ -56,7 +56,8 @@ twitterLoginCallbackView = TwitterLoginCallbackView.as_view()
 
 class LoginView(View):
     def get(self, request, *args, **kwargs):
-        authorize_uri = otapick.get_authorize_uri()
+        authorize_uri = otapick.get_authorize_uri(
+            scheme_host=request._current_scheme_host)
         if authorize_uri is None:
             return redirect('indexView')
         return redirect(authorize_uri)

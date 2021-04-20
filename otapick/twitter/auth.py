@@ -1,5 +1,5 @@
 import oauth2 as oauth
-from otapick.lib.constants import OTAPICK_URL, TWITTER_CK_AUTH, TWITTER_CS_AUTH
+from otapick.lib.constants import TWITTER_CK_AUTH, TWITTER_CS_AUTH
 from urllib.parse import urljoin
 from urllib.parse import urlparse
 import traceback
@@ -7,17 +7,17 @@ import traceback
 request_token_url = 'https://twitter.com/oauth/request_token'
 access_token_url = 'https://twitter.com/oauth/access_token'
 authenticate_url = 'https://twitter.com/oauth/authorize'
-callback_url = urljoin(OTAPICK_URL, '/accounts/twitter/login/callback/')
+callback_url_path = '/accounts/twitter/login/callback/'
 
 
-def get_request_token():
+def get_request_token(scheme_host):
     try:
         consumer = oauth.Consumer(key=TWITTER_CK_AUTH, secret=TWITTER_CS_AUTH)
         client = oauth.Client(consumer)
 
         # reqest_token を取得
         resp, content = client.request(
-            '{}?&oauth_callback={}'.format(request_token_url, callback_url))
+            '{}?&oauth_callback={}'.format(request_token_url, urljoin(scheme_host, callback_url_path)))
         request_token = dict(parse_qsl(content.decode('utf-8')))
         return request_token['oauth_token']
     except Exception as e:
@@ -46,9 +46,9 @@ def get_access_token(oauth_token, oauth_verifier):
     return content
 
 
-def get_authorize_uri():
+def get_authorize_uri(scheme_host):
     # request tokenを取得
-    request_token = get_request_token()
+    request_token = get_request_token(scheme_host)
     if request_token is None:
         return
 
