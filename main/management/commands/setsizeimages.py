@@ -12,7 +12,7 @@ class Command(BaseCommand):
         add_images = []
 
         images = Image.objects.filter(Q(width=0) | Q(height=0))
-        bar = tqdm(total = images.count())
+        bar = tqdm(total=images.count())
 
         for image in images:
             w, h = otapick.get_image_w_h(image)
@@ -22,5 +22,9 @@ class Command(BaseCommand):
             bar.update(1)
 
             if len(add_images) > 100:
-                Image.objects.bulk_update(add_images, fields=['width', 'height'], batch_size=10000)
+                Image.objects.bulk_update(
+                    add_images, fields=['width', 'height'], batch_size=10000)
                 add_images = []
+
+        Image.objects.bulk_update(
+            add_images, fields=['width', 'height'], batch_size=10000)
