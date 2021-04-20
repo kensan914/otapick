@@ -35,7 +35,8 @@ class TwitterLoginCallbackView(views.APIView):
         result = otapick.get_access_token(oauth_token, oauth_verifier)
         q_params = otapick.parse_qsl(result.decode('utf-8'))
 
-        url = urljoin(otapick.OTAPICK_URL, '/accounts/rest-auth/twitter/')
+        url = urljoin(request._current_scheme_host,
+                      '/accounts/rest-auth/twitter/')
 
         data = {'access_token': q_params['oauth_token'],
                 'token_secret': q_params['oauth_token_secret']}
