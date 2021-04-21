@@ -29,7 +29,7 @@ class TwitterLoginCallbackView(views.APIView):
         print('TwitterLoginCallbackView_________')
         if 'denied' in self.request.GET:
             # TODO error handle
-            return redirect('indexView')
+            return redirect('/')
 
         oauth_token = self.request.GET.get('oauth_token')
         print(oauth_token)
@@ -46,18 +46,18 @@ class TwitterLoginCallbackView(views.APIView):
         print(q_params)
         if q_params is None:
             # TODO error handle (result.decode('utf-8'): '現在この機能は一時的にご利用いただけません' ☚アクセスしすぎた？)
-            return redirect('indexView')
+            return redirect('/')
         data = {'access_token': q_params['oauth_token'],
                 'token_secret': q_params['oauth_token_secret']}
         res_twitterLoginAPI = requests.post(url, json=data)
 
         if res_twitterLoginAPI.status_code == 200:
-            response = redirect('indexView')
+            response = redirect('/')
             response.set_cookie('token', res_twitterLoginAPI.json()['token'])
             return response
         else:
             # TODO error handle
-            return redirect('indexView')
+            return redirect('/')
 
 
 twitterLoginCallbackView = TwitterLoginCallbackView.as_view()
@@ -68,7 +68,7 @@ class LoginView(View):
         authorize_uri = otapick.get_authorize_uri(
             scheme_host=request._current_scheme_host)
         if authorize_uri is None:
-            return redirect('indexView')
+            return redirect('/')
         return redirect(authorize_uri)
 
 
