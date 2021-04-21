@@ -247,3 +247,8 @@ ACCOUNT_EMAIL_REQUIRED = True  # signup時、email必須
 ACCOUNT_USERNAME_REQUIRED = False  # signup時、username不要
 # 使用するログイン方法を指定（='username'|'email'|'username_email'） emailの場合、ACCOUNT_EMAIL_REQUIRED==Trueの必要がある
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+# クライアント認証(Djangoからadmin.otapick.comにアクセス)
+CLIENT_SSL_CERT_PATH = env.bool('CLIENT_SSL_CERT_PATH')
+CLIENT_SSL_KEY_PATH = env.bool('CLIENT_SSL_KEY_PATH')
+CLIENT_SSL_PASSWORD = env.bool('CLIENT_SSL_PASSWORD')

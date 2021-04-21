@@ -13,6 +13,10 @@ import otapick
 from account.models import Account
 from account.serializers import FavMembersSerializer, MeSerializer, UserSerializer
 from urllib.parse import urljoin
+import urllib.request
+import json
+import ssl
+from config.settings import CLIENT_SSL_CERT_PATH, CLIENT_SSL_KEY_PATH, CLIENT_SSL_PASSWORD
 
 
 class TwitterLoginAPIView(SocialLoginView):
@@ -49,16 +53,40 @@ class TwitterLoginCallbackView(views.APIView):
             return redirect('/')
         data = {'access_token': q_params['oauth_token'],
                 'token_secret': q_params['oauth_token_secret']}
-        res_twitterLoginAPI = requests.post(url, json=data)
 
-        print(res_twitterLoginAPI)
-        if res_twitterLoginAPI.status_code == 200:
-            response = redirect('/')
-            response.set_cookie('token', res_twitterLoginAPI.json()['token'])
-            return response
-        else:
-            # TODO error handle
+        # admin.otapick.com用にクライアント認証
+        is_exist_ssl = CLIENT_SSL_CERT_PATH and CLIENT_SSL_KEY_PATH and CLIENT_SSL_PASSWORD
+        print('CLIENT_SSL_CERT_PATH')
+        print(CLIENT_SSL_CERT_PATH)
+        ssl_ctx = ssl.create_default_context()
+        if is_exist_ssl:
+            ssl_ctx.load_cert_chain(CLIENT_SSL_CERT_PATH,
+                                    CLIENT_SSL_KEY_PATH, password=CLIENT_SSL_PASSWORD)
+        req = urllib.request.Request(url, json.dumps(data).encode(), {
+            'Content-Type': 'application/json',
+        })
+        try:
+            with urllib.request.urlopen(req, context=ssl_ctx if is_exist_ssl else None) as res:
+                res_json = json.loads(res.read())
+                status_code = res.getcode()
+                if status_code == 200:
+                    response = redirect('/')
+                    response.set_cookie('token', res_json['token'])
+                    return response
+        except:
             return redirect('/')
+
+        return redirect('/')
+        # res_twitterLoginAPI = requests.post(url, json=data)
+
+        # print(res_twitterLoginAPI)
+        # if res_twitterLoginAPI.status_code == 200:
+        #     response = redirect('/')
+        #     response.set_cookie('token', res_twitterLoginAPI.json()['token'])
+        #     return response
+        # else:
+        #     # TODO error handle
+        #     return redirect('/')
 
 
 twitterLoginCallbackView = TwitterLoginCallbackView.as_view()
