@@ -51,6 +51,7 @@ class TwitterLoginCallbackView(views.APIView):
                 'token_secret': q_params['oauth_token_secret']}
         res_twitterLoginAPI = requests.post(url, json=data)
 
+        print(res_twitterLoginAPI)
         if res_twitterLoginAPI.status_code == 200:
             response = redirect('/')
             response.set_cookie('token', res_twitterLoginAPI.json()['token'])
