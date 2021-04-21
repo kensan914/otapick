@@ -95,7 +95,7 @@ twitterLoginCallbackView = TwitterLoginCallbackView.as_view()
 class LoginView(View):
     def get(self, request, *args, **kwargs):
         print('loginnnnnnnnnnnnnnnnn')
-        print(request.META.get("HTTP_X_FORWARDED_PROTO"))
+        print(request.META.get("HTTP_HOST"))
         authorize_uri = otapick.get_authorize_uri(
             scheme_host=request._current_scheme_host)
         if authorize_uri is None:
