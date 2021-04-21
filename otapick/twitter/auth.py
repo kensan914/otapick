@@ -20,7 +20,10 @@ def get_request_token(scheme_host):
         resp, content = client.request(
             '{}?&oauth_callback={}'.format(request_token_url, urljoin(scheme_host, callback_url_path)))
         print('content', content)
-        request_token = dict(parse_qsl(content.decode('utf-8')))
+        qsl = parse_qsl(content.decode('utf-8'))
+        if qsl is None:
+            return
+        request_token = dict(qsl)
         print('request_token', request_token)
         return request_token['oauth_token']
     except Exception as e:
@@ -45,8 +48,8 @@ def get_access_token(oauth_token, oauth_verifier):
     token = oauth.Token(oauth_token, oauth_verifier)
 
     client = oauth.Client(consumer, token)
-    resp, content = client.request("https://api.twitter.com/oauth/access_token",
-                                   "POST", body="oauth_verifier={0}".format(oauth_verifier))
+    resp, content = client.request('https://api.twitter.com/oauth/access_token',
+                                   'POST', body='oauth_verifier={0}'.format(oauth_verifier))
     return content
 
 
@@ -64,8 +67,8 @@ def get_authorize_uri(scheme_host):
 
 
 def gene_twitter_profile_uri(original_uri=''):
-    """
-    """
+    '''
+    '''
     original_kw = 'normal'
     medium_kw = '200x200'
     large_kw = '400x400'

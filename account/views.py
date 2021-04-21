@@ -94,6 +94,8 @@ twitterLoginCallbackView = TwitterLoginCallbackView.as_view()
 
 class LoginView(View):
     def get(self, request, *args, **kwargs):
+        print('loginnnnnnnnnnnnnnnnn')
+        print(request.path)
         authorize_uri = otapick.get_authorize_uri(
             scheme_host=request._current_scheme_host)
         if authorize_uri is None:
@@ -107,7 +109,7 @@ loginView = LoginView.as_view()
 @receiver(user_logged_in)
 @receiver(user_signed_up)
 def retrieve_social_data(request, user, **kwargs):
-    """Signal, that gets extra data from social login and put it to profile."""
+    '''Signal, that gets extra data from social login and put it to profile.'''
     social_accounts = SocialAccount.objects.filter(
         user=user, provider='twitter')
     if social_accounts.exists():
@@ -152,10 +154,10 @@ userAPIView = UserAPIView.as_view()
 
 
 class FavMembersAPIView(views.APIView):
-    """
+    '''
     put data: { groups: int[], members: { group_id: int, ct: str }[], }
     未入力の場合(例えば, 日向のメンバーを指定しなかった場合), nullがsetされ箱推しとなる.
-    """
+    '''
     permission_classes = (permissions.IsAuthenticated,)
 
     def put(self, request, *args, **kwargs):
