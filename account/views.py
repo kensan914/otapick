@@ -42,7 +42,7 @@ class TwitterLoginCallbackView(views.APIView):
         result = otapick.get_access_token(oauth_token, oauth_verifier)
         q_params = otapick.parse_qsl(result.decode('utf-8'))
 
-        url = urljoin(request._current_scheme_host,
+        url = urljoin(otapick.genes_scheme_host_from_host(request.META.get("HTTP_HOST")),
                       '/accounts/rest-auth/twitter/')
         print(url)
 
@@ -97,7 +97,7 @@ class LoginView(View):
         print('loginnnnnnnnnnnnnnnnn')
         print(request.META.get("HTTP_HOST"))
         authorize_uri = otapick.get_authorize_uri(
-            scheme_host=request._current_scheme_host)
+            scheme_host=otapick.genes_scheme_host_from_host(request.META.get("HTTP_HOST")))
         if authorize_uri is None:
             return redirect('/')
         return redirect(authorize_uri)

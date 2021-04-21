@@ -1,3 +1,4 @@
+from otapick.lib.constants import OTAPICK_COM
 from urllib.parse import urlparse
 import os
 from datetime import datetime
@@ -73,3 +74,14 @@ def checkIsMaintaining(BASE_DIR):
     mode_state = otapick.clean_text(f.read())
     f.close()
     return mode_state == '1'
+
+
+def genes_scheme_host_from_host(host):
+    '''
+    constants/OTAPICK_URLはadmin.otapick.comに非対応なため
+    '''
+    # otapick.com or admin.otapick.com
+    if host.endswith(OTAPICK_COM):
+        return 'https://{host}/'.format()
+    else:
+        return 'http://{host}/'.format()

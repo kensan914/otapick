@@ -4,7 +4,8 @@ from config import settings
 VERSION = '4.3.0'
 
 ### URL ###
-OTAPICK_FQDN = '192.168.11.46:8000' if settings.DEBUG else 'otapick.com'
+OTAPICK_COM = 'otapick.com'
+OTAPICK_FQDN = '192.168.11.46:8000' if settings.DEBUG else OTAPICK_COM
 # admin.otapick.comは非対応
 OTAPICK_URL = 'http://{}/'.format(
     OTAPICK_FQDN) if settings.DEBUG else 'https://{}/'.format(OTAPICK_FQDN)
