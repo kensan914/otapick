@@ -82,6 +82,6 @@ def genes_scheme_host_from_host(host):
     '''
     # otapick.com or admin.otapick.com
     if host.endswith(OTAPICK_COM):
-        return 'https://{host}/'.format()
+        return 'https://{}/'.format(host)
     else:
-        return 'http://{host}/'.format()
+        return 'http://{}/'.format(host)
