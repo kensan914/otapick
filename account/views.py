@@ -28,26 +28,19 @@ twitterLoginAPIView = TwitterLoginAPIView.as_view()
 
 
 class TwitterLoginCallbackView(views.APIView):
-    # TODO:callbackからadmin.otapick.comにアクセスすると鍵がないためtimeoutしてしまう
     def get(self, request, *args, **kwargs):
-        print('TwitterLoginCallbackView_________')
         if 'denied' in self.request.GET:
             # TODO error handle
             return redirect('/')
 
         oauth_token = self.request.GET.get('oauth_token')
-        print(oauth_token)
         oauth_verifier = self.request.GET.get('oauth_verifier')
-        print(oauth_verifier)
         result = otapick.get_access_token(oauth_token, oauth_verifier)
         q_params = otapick.parse_qsl(result.decode('utf-8'))
 
-        url = urljoin(otapick.genes_scheme_host_from_host(request.META.get("HTTP_HOST")),
+        url = urljoin(request._current_scheme_host,
                       '/accounts/rest-auth/twitter/')
-        print(url)
 
-        print(result.decode('utf-8'))
-        print(q_params)
         if q_params is None:
             # TODO error handle (result.decode('utf-8'): '現在この機能は一時的にご利用いただけません' ☚アクセスしすぎた？)
             return redirect('/')
@@ -56,8 +49,6 @@ class TwitterLoginCallbackView(views.APIView):
 
         # admin.otapick.com用にクライアント認証
         is_exist_ssl = CLIENT_SSL_CERT_PATH and CLIENT_SSL_KEY_PATH and CLIENT_SSL_PASSWORD
-        print('CLIENT_SSL_CERT_PATH')
-        print(CLIENT_SSL_CERT_PATH)
         ssl_ctx = ssl.create_default_context()
         if is_exist_ssl:
             ssl_ctx.load_cert_chain(CLIENT_SSL_CERT_PATH,
@@ -66,6 +57,7 @@ class TwitterLoginCallbackView(views.APIView):
             'Content-Type': 'application/json',
         })
         try:
+            # TODO:admin.otapick.comでアクセスするとなぜか503(メンテ)エラーになる。↓
             with urllib.request.urlopen(req, context=ssl_ctx if is_exist_ssl else None) as res:
                 res_json = json.loads(res.read())
                 status_code = res.getcode()
@@ -77,16 +69,6 @@ class TwitterLoginCallbackView(views.APIView):
             return redirect('/')
 
         return redirect('/')
-        # res_twitterLoginAPI = requests.post(url, json=data)
-
-        # print(res_twitterLoginAPI)
-        # if res_twitterLoginAPI.status_code == 200:
-        #     response = redirect('/')
-        #     response.set_cookie('token', res_twitterLoginAPI.json()['token'])
-        #     return response
-        # else:
-        #     # TODO error handle
-        #     return redirect('/')
 
 
 twitterLoginCallbackView = TwitterLoginCallbackView.as_view()
@@ -94,8 +76,6 @@ twitterLoginCallbackView = TwitterLoginCallbackView.as_view()
 
 class LoginView(View):
     def get(self, request, *args, **kwargs):
-        print('loginnnnnnnnnnnnnnnnn')
-        print(request.META.get("HTTP_HOST"))
         authorize_uri = otapick.get_authorize_uri(
             scheme_host=otapick.genes_scheme_host_from_host(request.META.get("HTTP_HOST")))
         if authorize_uri is None:

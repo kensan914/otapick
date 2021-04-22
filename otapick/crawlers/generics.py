@@ -13,7 +13,8 @@ class ImageCrawler(Crawler, ABC):
     def crawl(self, **kwargs):
         self.set_image_base_url(**kwargs)
         img_tag = super().crawl(**kwargs)
-        if img_tag is None: return
+        if img_tag is None:
+            return
         img_url = img_tag.get('src')
         if img_url == '' or img_url is None:
             return
@@ -49,24 +50,28 @@ class BlogCrawler(Crawler, ABC):
         ### get blog_ct ###
         if blog_ct is None:
             blog_url = parsers.get_blog_url(group_key, blog_tag)
-            if blog_url is None: return
+            if blog_url is None:
+                return
             blog_ct = otapick.extract_blog_ct(blog_url)
         blog_info['blog_ct'] = blog_ct
 
         ### get title ###
         title_tag = parsers.get_blog_title_tag(group_key, blog_tag)
-        if title_tag is None: return
+        if title_tag is None:
+            return
         title = otapick.clean_text(title_tag.text)
         blog_info['title'] = title
 
         ### get post_date ###
         postdate_tag = parsers.get_blog_postdate_tag(group_key, blog_tag)
-        if postdate_tag is None: return
+        if postdate_tag is None:
+            return
         new_datetime_text = ' '.join(postdate_tag.text.split())
         # 公式のMの桁数が誤っていたため対処
         new_datetime_text_split_colon = new_datetime_text.split(':')
         if len(new_datetime_text_split_colon[-1]) > 2:
-            new_datetime_text = new_datetime_text_split_colon[0] + ':' + new_datetime_text_split_colon[1][:2]
+            new_datetime_text = new_datetime_text_split_colon[0] + \
+                ':' + new_datetime_text_split_colon[1][:2]
 
         if group_key == 'keyaki' or group_key == 'sakura':
             dt = datetime.strptime(new_datetime_text, '%Y/%m/%d %H:%M')
@@ -80,7 +85,8 @@ class BlogCrawler(Crawler, ABC):
 
         ### get member ###
         writer_name = parsers.get_blog_writer_name(group_key, blog_tag)
-        if writer_name is None: return
+        if writer_name is None:
+            return
         writer_name = otapick.clean_text(writer_name)
 
         # 改名前グループを指定したらMemberがマッチしないため対処
@@ -88,7 +94,8 @@ class BlogCrawler(Crawler, ABC):
             _group_key = self.renamed_groups[group_key]
         else:
             _group_key = group_key
-        member = Member.objects.filter(belonging_group__key=_group_key, full_kanji=writer_name).first()
+        member = Member.objects.filter(
+            belonging_group__key=_group_key, full_kanji=writer_name).first()
         blog_info['member'] = member
 
         ### get image_url ###
@@ -106,7 +113,8 @@ class BlogCrawler(Crawler, ABC):
         """
         ### get blog_ct ###
         blog_url = parsers.get_blog_url(group_key, blog_tag)
-        if blog_url is None: return
+        if blog_url is None:
+            return
         blog_ct = otapick.extract_blog_ct(blog_url)
 
         blog_info = blog_detail_crawler.crawl(group_key, blog_ct)

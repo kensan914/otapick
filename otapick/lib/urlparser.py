@@ -25,33 +25,36 @@ result = {
 }
 '''
 
-def parse_q(text):
+
+def parse_q(text, is_mobile):
     result = {'text': text}
     parsed_url = urlparse(text)
     if len(parsed_url.scheme) > 0:
         result['type'] = 'url'
         result['parsed_url'] = parsed_url
-        return parse_url(result)
+        return parse_url(result, is_mobile)
     else:
         result['type'] = 'member'
         return parse_text(result)
 
 
-def parse_url(result):
+def parse_url(result, is_mobile):
     o = result['parsed_url']
     splitO = [i for i in o.path.split('/') if i != '']
     query_set = parse_qs(o.query)
     for group in Group.objects.all():
         if o.netloc == group.domain:
             result['group_id'] = group.group_id
-            result['blog_list_paginate_by'] = group.blog_list_paginate_by
+
+            # ↓searchByLatestであれば後に変更される
+            result['blog_list_paginate_by'] = group.blog_list_paginate_by_mobile if is_mobile else group.blog_list_paginate_by
             if len(splitO) > 3:
-                return classify_url(result, splitO, query_set)
+                return classify_url(result, splitO, query_set, group, is_mobile)
     result['class'] = 'unjust'
     return result
 
 
-def classify_url(result, splitO, query_set):
+def classify_url(result, splitO, query_set, group, is_mobile):
     result['page'] = 1
 
     if splitO[3] == 'detail':
@@ -60,6 +63,7 @@ def classify_url(result, splitO, query_set):
         return result
     elif len(splitO) == 4 and (splitO[3] == 'member' or (result['group_id'] == 1 and splitO[3] == 'blog')):
         result['class'] = 'searchByLatest'
+        result['blog_list_paginate_by'] = group.latest_list_paginate_by_mobile if is_mobile else group.latest_list_paginate_by
         return result
     elif len(splitO) == 5 and splitO[4] == 'list' and (splitO[3] == 'member' or (result['group_id'] == 1 and splitO[3] == 'blog')):
         if 'page' in query_set:
@@ -79,6 +83,8 @@ def classify_url(result, splitO, query_set):
         return result
 
 # 時間指定されているときの"dy"パラメータを解析し、year, month, day をkeyとして持つdictionaryを作成。
+
+
 def get_dy(dy_text):
     dy = {}
     try:
@@ -92,7 +98,6 @@ def get_dy(dy_text):
     else:
         dy['day'] = None
     return dy
-
 
 
 def parse_text(result):

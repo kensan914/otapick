@@ -4,7 +4,7 @@ from main.models import Group
 
 
 class Command(BaseCommand):
-    help = 'keep up latest blog information by scrayping.'
+    help = 'keep up latest blog information by scraping.'
 
     def add_arguments(self, parser):
         parser.add_argument('-g', '--group', type=int, help='set groupID(1 or 2 or None). default:both')
@@ -12,10 +12,15 @@ class Command(BaseCommand):
         parser.add_argument('-a', '--all', action='store_true', help='execute all_check. default:False')
         parser.add_argument('-u', '--unregister', type=int, help='set unregister_num. default:1')
         parser.add_argument('-t', '--tweet', action='store_true', help='tweet update info. default:False')
+        parser.add_argument('-e', '--external', type=str, help='set graduated member ct.') # 非推奨
 
     def handle(self, *args, **options):
         up_limit = 100
         unregister_num = 1
+
+        if options['external'] and options['group']:
+            otapick.register_external(options['group'], options['external'])
+            return()
 
         if not Group.objects.filter(group_id=options['group']).exists() and options['group'] is not None:
             print('groupID', options['group'], 'is not supported.')
