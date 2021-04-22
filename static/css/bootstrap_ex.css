@@ -940,9 +940,8 @@ a.hinata {
 }
 
 a.sakura {
-    color: lightpink	;
+    color: lightpink;
 }
-
 
 /* gradient-button */
 
@@ -1014,6 +1013,7 @@ a.sakura {
 }
 
 /* https://products.ls.graphics/mesh-gradients/ */
+
 .gradient-btn.keyaki {
     background-image: url('/static/img/button_keyaki.jpeg');
     background-size: cover;
@@ -1206,7 +1206,7 @@ a.sakura {
     width: 170px;
 }
 
-@media (max-width: 991.99px) {
+@media (max-width: 992px) {
     .navbar-brand.navbar-brand-responsive {
         margin-left: 2px;
         width: 33px;
@@ -1250,7 +1250,7 @@ a.sakura {
 }
 
 .search-suggestions-box.smp {
-    max-height: 73vh;
+    max-height: 80vh;
 }
 
 #search-suggestions-box {
@@ -1259,18 +1259,6 @@ a.sakura {
 
 #search-suggestions-box.smp {
     max-height: 80vh;
-}
-
-.search-suggestions-box.mobile {
-    -ms-overflow-style: none;
-    /* IE, Edge 対応 */
-    scrollbar-width: none;
-    /* Firefox 対応 */
-}
-
-.search-suggestions-box.mobile::-webkit-scrollbar {
-    /* Chrome, Safari 対応 */
-    display: none;
 }
 
 #downshift-box, #mobile-top-menu {
@@ -1382,8 +1370,16 @@ a.sakura {
     text-decoration: none;
 }
 
+.mobile-menu-a {
+    border-radius: 10px;
+}
+
 .mobile-menu-a:hover {
-    background-color: whitesmoke;
+    background-color: rgb(241, 241, 241)!important;
+}
+
+.mobile-menu-a:active {
+    background-color: rgb(230, 230, 230)!important;
 }
 
 .mobile-menu p {
@@ -1711,8 +1707,12 @@ footer {
 
 /* dropdown-item's active color */
 
+.dropdown-item:hover {
+    background-color: rgb(241, 241, 241)!important;
+}
+
 .dropdown-item:active {
-    background-color: silver!important;
+    background-color: rgb(230, 230, 230)!important;
 }
 
 .dropdown-item:focus {
@@ -1860,6 +1860,7 @@ footer {
 /* イラストレーターで作成したSVGを別名で保存(SVG形式)
 SVGコード...を押下
 取得したコードをhttps://blog.s0014.com/posts/2017-01-19-il-to-svg/にコピペし、変換 */
+
 .image-card-download-button.keyaki, .image-view-download-button.keyaki {
     background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23EE82EE%3B%7D%20.st1%7Bfill%3A%23DA70D6%3B%7D%20.st2%7Bfill%3A%234BE057%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2227.65%22%20y%3D%2231.91%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6026%2036.0994)%22%20class%3D%22st0%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st1%22%20d%3D%22M34.54%2C33.24c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.24z%22%2F%3E%3Cpath%20class%3D%22st2%22%20d%3D%22M32.71%2C37.56c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.67l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.17%2C32.99%2C39.35%2C32.71%2C37.56z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.51%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.7201%20-5.8951)%22%20class%3D%22st2%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st2%22%20points%3D%2229.47%2C40.27%2032.46%2C43.25%2035.3%2C40.42%2032.31%2C37.45%20%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.76%22%20class%3D%22st0%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.87%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.3611%2080.1808)%22%20class%3D%22st1%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.25%22%20class%3D%22st2%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E');
 }
@@ -1869,7 +1870,8 @@ SVGコード...を押下
 }
 
 .image-card-download-button.sakura, .image-view-download-button.sakura {
-    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23EE82EE%3B%7D%20.st1%7Bfill%3A%23DA70D6%3B%7D%20.st2%7Bfill%3A%23F9C1CF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2227.65%22%20y%3D%2231.91%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6026%2036.0994)%22%20class%3D%22st0%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st1%22%20d%3D%22M34.54%2C33.24c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.24z%22%2F%3E%3Cpath%20class%3D%22st2%22%20d%3D%22M32.71%2C37.56c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.67l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.17%2C32.99%2C39.35%2C32.71%2C37.56z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.51%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.7201%20-5.8951)%22%20class%3D%22st2%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st2%22%20points%3D%2229.47%2C40.27%2032.46%2C43.25%2035.3%2C40.42%2032.31%2C37.45%20%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.76%22%20class%3D%22st0%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.87%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.3611%2080.1808)%22%20class%3D%22st1%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.25%22%20class%3D%22st2%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E')}
+    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23EE82EE%3B%7D%20.st1%7Bfill%3A%23DA70D6%3B%7D%20.st2%7Bfill%3A%23F9C1CF%3B%7D%3C%2Fstyle%3E%3Crect%20x%3D%2227.65%22%20y%3D%2231.91%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6026%2036.0994)%22%20class%3D%22st0%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st1%22%20d%3D%22M34.54%2C33.24c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.24z%22%2F%3E%3Cpath%20class%3D%22st2%22%20d%3D%22M32.71%2C37.56c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.67l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.17%2C32.99%2C39.35%2C32.71%2C37.56z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.51%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.7201%20-5.8951)%22%20class%3D%22st2%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st2%22%20points%3D%2229.47%2C40.27%2032.46%2C43.25%2035.3%2C40.42%2032.31%2C37.45%20%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.76%22%20class%3D%22st0%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.87%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.3611%2080.1808)%22%20class%3D%22st1%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.25%22%20class%3D%22st2%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E')
+}
 
 .image-card-download-button.keyaki:hover {
     background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%234BE057%3B%7D%20.st5%7Bfill%3A%23D7D7D7%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M58.66%2C46.79c-1.74%2C0.7-3.92%2C0.37-5.77%2C0.37c-3.87%2C0-7.76%2C0.02-11.61-0.37c-3.91-0.39-7.74-1.3-11.64-1.76%20c-2.82-0.33-6.58-0.74-9.62-0.13l-4.08%2C4.08l31.5%2C31.5L69.9%2C58.03L58.66%2C46.79z%22%2F%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M34.9%2C12.5l-1.74%2C1.74c0.07%2C0.38%2C0.08%2C0.8%2C0.03%2C1.27c-0.67%2C5.55-1.15%2C12.11-0.09%2C17.62%20c0.2%2C1.13-0.02%2C2.12-0.49%2C2.93l30.42%2C30.42l12.92-12.92L34.9%2C12.5z%22%2F%3E%3Crect%20x%3D%2241.59%22%20y%3D%2226.18%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-19.4125%2050.0333)%22%20class%3D%22st1%22%20width%3D%2218.19%22%20height%3D%2244.55%22%2F%3E%3Crect%20x%3D%2227.65%22%20y%3D%2232%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6689%2036.1269)%22%20class%3D%22st2%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st3%22%20d%3D%22M34.54%2C33.33c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.33z%22%2F%3E%3Cpath%20class%3D%22st4%22%20d%3D%22M32.71%2C37.65c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.76l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.26%2C32.99%2C39.44%2C32.71%2C37.65z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.61%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.8138%20-5.8013)%22%20class%3D%22st4%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st4%22%20points%3D%2229.47%2C40.36%2032.46%2C43.34%2035.3%2C40.52%2032.31%2C37.54%20%22%2F%3E%3Cpath%20class%3D%22st5%22%20d%3D%22M48.06%2C43.91c0.15%2C0.7%2C0.02%2C1.38-0.52%2C1.9c-1.42%2C1.38-2.45%2C2.41-4.92%2C2.24c-0.23-0.02-0.46-0.05-0.7-0.09%20c-0.38%2C0.43-0.97%2C0.67-1.82%2C0.57c-0.86-0.1-1.72-0.4-2.58-0.64c-0.1%2C0.01-0.2%2C0.01-0.3%2C0.01L62.6%2C73.43l7.39-7.47L48.06%2C43.91z%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.86%22%20class%3D%22st2%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.96%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.4548%2080.2745)%22%20class%3D%22st3%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.34%22%20class%3D%22st4%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E');
@@ -1880,7 +1882,8 @@ SVGコード...を押下
 }
 
 .image-card-download-button.sakura:hover {
-background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%23F9C1CF%3B%7D%20.st5%7Bfill%3A%23D7D7D7%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M58.66%2C46.79c-1.74%2C0.7-3.92%2C0.37-5.77%2C0.37c-3.87%2C0-7.76%2C0.02-11.61-0.37c-3.91-0.39-7.74-1.3-11.64-1.76%20c-2.82-0.33-6.58-0.74-9.62-0.13l-4.08%2C4.08l31.5%2C31.5L69.9%2C58.03L58.66%2C46.79z%22%2F%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M34.9%2C12.5l-1.74%2C1.74c0.07%2C0.38%2C0.08%2C0.8%2C0.03%2C1.27c-0.67%2C5.55-1.15%2C12.11-0.09%2C17.62%20c0.2%2C1.13-0.02%2C2.12-0.49%2C2.93l30.42%2C30.42l12.92-12.92L34.9%2C12.5z%22%2F%3E%3Crect%20x%3D%2241.59%22%20y%3D%2226.18%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-19.4125%2050.0333)%22%20class%3D%22st1%22%20width%3D%2218.19%22%20height%3D%2244.55%22%2F%3E%3Crect%20x%3D%2227.65%22%20y%3D%2232%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6689%2036.1269)%22%20class%3D%22st2%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st3%22%20d%3D%22M34.54%2C33.33c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.33z%22%2F%3E%3Cpath%20class%3D%22st4%22%20d%3D%22M32.71%2C37.65c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.76l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.26%2C32.99%2C39.44%2C32.71%2C37.65z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.61%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.8138%20-5.8013)%22%20class%3D%22st4%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st4%22%20points%3D%2229.47%2C40.36%2032.46%2C43.34%2035.3%2C40.52%2032.31%2C37.54%20%22%2F%3E%3Cpath%20class%3D%22st5%22%20d%3D%22M48.06%2C43.91c0.15%2C0.7%2C0.02%2C1.38-0.52%2C1.9c-1.42%2C1.38-2.45%2C2.41-4.92%2C2.24c-0.23-0.02-0.46-0.05-0.7-0.09%20c-0.38%2C0.43-0.97%2C0.67-1.82%2C0.57c-0.86-0.1-1.72-0.4-2.58-0.64c-0.1%2C0.01-0.2%2C0.01-0.3%2C0.01L62.6%2C73.43l7.39-7.47L48.06%2C43.91z%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.86%22%20class%3D%22st2%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.96%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.4548%2080.2745)%22%20class%3D%22st3%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.34%22%20class%3D%22st4%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E')}
+    background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3Csvg%20version%3D%221.1%22%20id%3D%22%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2064%2064%22%20style%3D%22enable-background%3Anew%200%200%2064%2064%3B%22%20xml%3Aspace%3D%22preserve%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%20.st0%7Bfill%3A%23F2F2F2%3B%7D%20.st1%7Bfill%3A%23E6E6E6%3B%7D%20.st2%7Bfill%3A%23EE82EE%3B%7D%20.st3%7Bfill%3A%23DA70D6%3B%7D%20.st4%7Bfill%3A%23F9C1CF%3B%7D%20.st5%7Bfill%3A%23D7D7D7%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M58.66%2C46.79c-1.74%2C0.7-3.92%2C0.37-5.77%2C0.37c-3.87%2C0-7.76%2C0.02-11.61-0.37c-3.91-0.39-7.74-1.3-11.64-1.76%20c-2.82-0.33-6.58-0.74-9.62-0.13l-4.08%2C4.08l31.5%2C31.5L69.9%2C58.03L58.66%2C46.79z%22%2F%3E%3Cpath%20class%3D%22st0%22%20d%3D%22M34.9%2C12.5l-1.74%2C1.74c0.07%2C0.38%2C0.08%2C0.8%2C0.03%2C1.27c-0.67%2C5.55-1.15%2C12.11-0.09%2C17.62%20c0.2%2C1.13-0.02%2C2.12-0.49%2C2.93l30.42%2C30.42l12.92-12.92L34.9%2C12.5z%22%2F%3E%3Crect%20x%3D%2241.59%22%20y%3D%2226.18%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-19.4125%2050.0333)%22%20class%3D%22st1%22%20width%3D%2218.19%22%20height%3D%2244.55%22%2F%3E%3Crect%20x%3D%2227.65%22%20y%3D%2232%22%20transform%3D%22matrix(0.7071%20-0.7071%200.7071%200.7071%20-13.6689%2036.1269)%22%20class%3D%22st2%22%20width%3D%2218.25%22%20height%3D%225.13%22%2F%3E%3Cpath%20class%3D%22st3%22%20d%3D%22M34.54%2C33.33c0.46%2C2.31%2C0.24%2C4.66%2C0.03%2C7.04l2.74-2.84l0.01-7.08L34.54%2C33.33z%22%2F%3E%3Cpath%20class%3D%22st4%22%20d%3D%22M32.71%2C37.65c-0.07-0.47-0.08-0.94-0.04-1.39L22.12%2C25.76l-3.71%2C3.69l13.84%2C13.78l0.16-0.16%20C32.39%2C41.26%2C32.99%2C39.44%2C32.71%2C37.65z%22%2F%3E%3Crect%20x%3D%2218.3%22%20y%3D%2223.61%22%20transform%3D%22matrix(-1.836970e-16%201%20-1%20-1.836970e-16%2058.8138%20-5.8013)%22%20class%3D%22st4%22%20width%3D%2228.02%22%20height%3D%225.8%22%2F%3E%3Cpolygon%20class%3D%22st4%22%20points%3D%2229.47%2C40.36%2032.46%2C43.34%2035.3%2C40.52%2032.31%2C37.54%20%22%2F%3E%3Cpath%20class%3D%22st5%22%20d%3D%22M48.06%2C43.91c0.15%2C0.7%2C0.02%2C1.38-0.52%2C1.9c-1.42%2C1.38-2.45%2C2.41-4.92%2C2.24c-0.23-0.02-0.46-0.05-0.7-0.09%20c-0.38%2C0.43-0.97%2C0.67-1.82%2C0.57c-0.86-0.1-1.72-0.4-2.58-0.64c-0.1%2C0.01-0.2%2C0.01-0.3%2C0.01L62.6%2C73.43l7.39-7.47L48.06%2C43.91z%22%2F%3E%3Crect%20x%3D%2232.01%22%20y%3D%2243.86%22%20class%3D%22st2%22%20width%3D%2216.06%22%20height%3D%225.02%22%2F%3E%3Crect%20x%3D%2231.4%22%20y%3D%2242.96%22%20transform%3D%22matrix(6.123234e-17%20-1%201%206.123234e-17%20-12.4548%2080.2745)%22%20class%3D%22st3%22%20width%3D%225.02%22%20height%3D%226.8%22%2F%3E%3Crect%20x%3D%2216.37%22%20y%3D%2243.34%22%20class%3D%22st4%22%20width%3D%2218.47%22%20height%3D%226.05%22%2F%3E%3C%2Fsvg%3E')
+}
 
 .image-card-download-button:hover {
     background-color: white;
@@ -1919,6 +1922,12 @@ background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%22
 .dropdown-item {
     font-size: 1rem;
     color: rgb(80, 80, 80);
+    border-radius: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    padding-right: 14px;
+    padding-left: 14px;
+    width: calc(100% - 20px);
 }
 
 .dropdown-item:hover {
@@ -1971,7 +1980,7 @@ background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%22
 
 /* image view */
 
-@media (max-width: 992px) {
+@media (max-width: 991px) {
     .image-view {
         max-width: 550px;
     }
@@ -2314,6 +2323,7 @@ background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%22
 }
 
 /* Google adsense */
+
 #ad_iframe {
     left: 50%;
 }
@@ -2334,3 +2344,111 @@ background-image: url('data:image/svg+xml;charset=utf8,%3C%3Fxml%20version%3D%22
 .badge.sakura {
     background-color: #ffa4bb;
 }
+
+.navbar-dropdown-button {
+    border: 0;
+    background-color: rgba(255, 255, 255, 0)!important;
+    color: inherit;
+    transition-duration: 0s!important;
+    height: 40px;
+    padding: 0;
+}
+
+.navbar-profile-icon-wrapper, .navbar-hamburger-wrapper, .navbar-dropdownToggle-wrapper {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-profile-icon-wrapper:hover, .navbar-hamburger-wrapper:hover, .navbar-dropdownToggle-wrapper:hover {
+    background-color: rgb(236, 236, 236);
+}
+
+.navbar-profile-icon-wrapper:active, .navbar-hamburger-wrapper:active, .navbar-dropdownToggle-wrapper:active {
+    background-color: rgb(226, 226, 226);
+}
+
+.navbar-hamburger-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.navbar-hamburger {
+    color: rgba(0, 0, 0, .5);
+}
+
+.navbar-dropdownToggle-wrapper {
+    padding-left: 17px;
+    padding-right: 10px;
+}
+
+.navbar-profile-icon {
+    height: 32px;
+    width: 32px;
+    border-radius: 16px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+}
+
+.navbar-dropdownToggle-title {
+    height: 32px;
+    color: rgba(0, 0, 0, .5);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.navbar-profile-icon-arrow {
+    color: rgba(0, 0, 0, .5);
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.navbar-dropdown-menu {
+    z-index: 90;
+    max-width: 30vh;
+}
+
+.navbar-dropdown-header {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.login-button {
+    height: 40px;
+    border-radius: 20px;
+    border: 0;
+    background-color: deepskyblue!important;
+    vertical-align: middle;
+    line-height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition-duration: 0s!important;
+    font-weight: 600;
+}
+
+.login-button:hover {
+    background-color: rgb(0, 166, 221)!important;
+}
+
+.navbar-profile-icon-mobile {
+    height: 38px;
+    width: 38px;
+    border-radius: 19px;
+}
+
+.navbar-profile-icon-mobile-button {
+    height: 38px;
+    width: 38px;
+    border-radius: 19px;
+    padding: 0;
+    border: 0;
+    transition-duration: 0s!important;
+}
+

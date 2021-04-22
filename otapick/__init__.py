@@ -30,3 +30,4 @@ from .downloaders.modules import *
 
 # twitter
 from .twitter.implements import *
+from .twitter.auth import *

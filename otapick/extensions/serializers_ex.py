@@ -1,3 +1,4 @@
+from otapick.lib.constants import IMAGE_NOT_FOUND_HEIGHT, IMAGE_NOT_FOUND_WIDTH
 import otapick
 from image.models import Image
 from main.models import Member, Group
@@ -5,18 +6,26 @@ from main.models import Member, Group
 
 def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
     if blog is not None:
-        return '/blog/{}/{}'.format(blog.publishing_group.group_id, blog.blog_ct)
+        return '/blog/{}/{}/'.format(blog.publishing_group.group_id, blog.blog_ct)
     elif member is not None:
         ct = ''
-        if member.independence: ct = member.ct
-        elif member.belonging_group.group_id == 1: ct = Member.objects.get(belonging_group__group_id=1, temporary=True).ct
-        elif member.belonging_group.group_id == 2: ct = Member.objects.get(belonging_group__group_id=2, temporary=True).ct
+        if member.independence:
+            ct = member.ct
+        elif member.belonging_group.group_id == 1:
+            ct = Member.objects.get(
+                belonging_group__group_id=1, temporary=True).ct
+        elif member.belonging_group.group_id == 2:
+            ct = Member.objects.get(
+                belonging_group__group_id=2, temporary=True).ct
 
-        blogs_url = '/blogs/{}/{}'.format(member.belonging_group.group_id, ct)
-        images_url = '/images/{}/{}'.format(member.belonging_group.group_id, ct)
+        blogs_url = '/blogs/{}/{}/'.format(member.belonging_group.group_id, ct)
+        images_url = '/images/{}/{}/'.format(
+            member.belonging_group.group_id, ct)
         if needBlogs ^ needImages:
-            if needBlogs: return blogs_url
-            if needImages: return images_url
+            if needBlogs:
+                return blogs_url
+            if needImages:
+                return images_url
         return {'blogs': blogs_url, 'images': images_url}
 
 
@@ -37,6 +46,15 @@ def generate_memberimage_url(member):
         if member.image:
             return member.image.url
     return otapick.OTAPICK_LOGO
+
+
+def get_thumbnail_wh(blog):
+    thumbnails = Image.objects.filter(publisher=blog, order=0)
+    if thumbnails.exists():
+        thumbnail = thumbnails.first()
+        return thumbnail.width, thumbnail.height
+    else:
+        return IMAGE_NOT_FOUND_WIDTH, IMAGE_NOT_FOUND_HEIGHT
 
 
 def generate_thumbnail_url(blog):
@@ -74,7 +92,7 @@ def generate_image_src(image):
         if bool(image.picture):
             if bool(image.picture_250x) and bool(image.picture_500x):
                 return dict(zip(keys, [image.picture.url, image.picture_250x.url, image.picture_500x.url]))
-            else: # originalは存在するが圧縮されていない場合
+            else:  # originalは存在するが圧縮されていない場合
                 otapick.compress_blog_image(image)
                 if bool(image.picture_250x) and bool(image.picture_500x):
                     return dict(zip(keys, [image.picture.url, image.picture_250x.url, image.picture_500x.url]))

@@ -5,6 +5,7 @@ from django.views import View
 ### Redirect past URL to new URL ###
 class RedirectView(View):
     location = ''
+
     def get(self, request, *args, **kwargs):
         self.setLocation()
         response = HttpResponse(status=301)
