@@ -15,19 +15,15 @@ def get_request_token(scheme_host):
         consumer = oauth.Consumer(key=TWITTER_CK_AUTH, secret=TWITTER_CS_AUTH)
         client = oauth.Client(consumer)
 
-        print(urljoin(scheme_host, callback_url_path))
         # reqest_token を取得
         resp, content = client.request(
             '{}?&oauth_callback={}'.format(request_token_url, urljoin(scheme_host, callback_url_path)))
-        print('content', content)
         qsl = parse_qsl(content.decode('utf-8'))
         if qsl is None:
             return
         request_token = dict(qsl)
-        print('request_token', request_token)
         return request_token['oauth_token']
     except Exception as e:
-        print(e)
         traceback.print_stack()
         return
 
@@ -54,8 +50,6 @@ def get_access_token(oauth_token, oauth_verifier):
 
 
 def get_authorize_uri(scheme_host):
-    print('xxxx')
-    print(scheme_host)
     # request tokenを取得
     request_token = get_request_token(scheme_host)
     if request_token is None:
