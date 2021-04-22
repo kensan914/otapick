@@ -26,6 +26,11 @@ urlpatterns = [
     path('admin/', admin.site.urls if settings.DEBUG else main.views.maintenanceView),
 ]
 
+if settings.DEBUG:
+    urlpatterns += [
+        path('maintenance-mode/', include('maintenance_mode.urls')),
+    ]
+
 # catch all other URL
 urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
 urlpatterns += [path('', main.views.indexView, name='indexView')]

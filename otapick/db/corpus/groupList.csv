@@ -1,0 +1,4 @@
+name,group_id,domain,key,is_active,blog_list_paginate_by,blog_list_paginate_by_mobile,latest_list_paginate_by,latest_list_paginate_by_mobile,blog_url_format,member_url_format
+櫻坂46,1,sakurazaka46.com,sakura,true,12,10,12,10,https://sakurazaka46.com/s/s46/diary/detail/{}?ima=0000&cd=blog,https://sakurazaka46.com/s/s46/artist/{}?ima=0000
+日向坂46,2,www.hinatazaka46.com,hinata,true,20,20,12,12,https://www.hinatazaka46.com/s/official/diary/detail/{}?ima=0000&cd=member,https://www.hinatazaka46.com/s/official/artist/{}?ima=0000
+欅坂46,3,www.keyakizaka46.com,keyaki,false,20,20,10,10,https://www.keyakizaka46.com/s/k46o/diary/detail/{}?ima=0000&cd=member,https://www.keyakizaka46.com/s/k46o/artist/{}?ima=0000
