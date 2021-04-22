@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, withRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { CookiesProvider, withCookies } from "react-cookie";
 
 import { getItem, setUserAgent } from "./components/modules/utils";
@@ -12,7 +12,6 @@ import DomProvider from "./components/contexts/DomContext";
 import ProfileProvider from "./components/contexts/ProfileContext";
 import ScrollAdmin from "./components/pages/admin/ScrollAdmin";
 
-
 class App extends React.Component {
   render() {
     return (
@@ -23,9 +22,7 @@ class App extends React.Component {
   }
 }
 
-
 export default App;
-
 
 class _Provider extends React.Component {
   constructor(props) {
@@ -35,7 +32,10 @@ class _Provider extends React.Component {
 
     // localstorage(優先), cookiesからtokenを取得
     this.token = getItem("token");
-    if (!this.token && Object.keys(props.cookies.cookies).indexOf("token") !== -1) {
+    if (
+      !this.token &&
+      Object.keys(props.cookies.cookies).indexOf("token") !== -1
+    ) {
       this.token = props.cookies.get("token");
       props.cookies.remove("token");
     }
@@ -45,15 +45,15 @@ class _Provider extends React.Component {
     return (
       <BrowserRouter>
         <AuthProvider token={this.token}>
-          <DomProvider>
-            <ProfileProvider>
+          <ProfileProvider>
+            <DomProvider>
               <LocationAdmin>
                 <ScrollAdmin>
                   <Screens />
                 </ScrollAdmin>
               </LocationAdmin>
-            </ProfileProvider>
-          </DomProvider>
+            </DomProvider>
+          </ProfileProvider>
         </AuthProvider>
       </BrowserRouter>
     );

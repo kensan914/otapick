@@ -21,7 +21,6 @@ class Crawler(metaclass=ABCMeta):
     other_url = []
     image_base_url = ''
 
-
     def set_image_base_url(self, **kwargs):
         if kwargs['group_key'] == 'keyaki':
             self.image_base_url = 'https://cdn.keyakizaka46.com/'
@@ -40,13 +39,15 @@ class Crawler(metaclass=ABCMeta):
             elif kwargs['group_key'] == 'sakura':
                 url_structure = self.sakura_url
             ### Edit ###
-            else: return
+            else:
+                return
         else:
             url_structure = self.other_url
-        url_structure = [url_part if type(url_part) is str else str(kwargs[str(url_part)]) for url_part in url_structure]
+        url_structure = [url_part if type(url_part) is str else str(
+            kwargs[str(url_part)]) for url_part in url_structure]
         url = ''
         for url_part in url_structure:
-            if url.endswith('='): # query parameter
+            if url.endswith('='):  # query parameter
                 url += url_part
             else:
                 url = urljoin(url, url_part)
@@ -55,13 +56,15 @@ class Crawler(metaclass=ABCMeta):
     def get(self, **kwargs):
         try:
             url = self.get_url(**kwargs)
-            if url is None: return
+            if url is None:
+                return
             urllib3.disable_warnings(InsecureRequestWarning)
             http = urllib3.PoolManager(
                 cert_reqs='CERT_REQUIRED',
                 ca_certs=certifi.where())
             if 'as_mobile' in kwargs and kwargs['as_mobile']:
-                headers = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) > > AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",}
+                headers = {
+                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) > > AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1", }
             else:
                 headers = {}
             return http.request('GET', url, headers=headers)
@@ -79,7 +82,8 @@ class Crawler(metaclass=ABCMeta):
     def crawl(self, **kwargs):
         self.set_image_base_url(**kwargs)
         response = self.get(**kwargs)
-        if response is None: return
+        if response is None:
+            return
         soup = self.parse(response)
         tag = self.get_tag(soup, **kwargs)
         return tag

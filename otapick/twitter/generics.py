@@ -5,6 +5,7 @@ from config import settings
 from main.models import Group
 from otapick.lib.constants import OTAPICK_URL
 from otapick.twitter.abstracts import TwitterBot
+from urllib.parse import urljoin
 
 
 class RankBot(TwitterBot, ABC):
@@ -19,9 +20,12 @@ class RankBot(TwitterBot, ABC):
         text = ''
 
         # headline
-        text += '{}{}{}\n'.format(self.rank_type_emoji, self.group_emoji, self.rank_type_emoji)
-        text += '{}(#{} )\n'.format(self.headline_title, Group.objects.get(group_id=self.group_id).name)
-        text += '{}{}{}\n'.format(self.rank_type_emoji, self.group_emoji, self.rank_type_emoji)
+        text += '{}{}{}\n'.format(self.rank_type_emoji,
+                                  self.group_emoji, self.rank_type_emoji)
+        text += '{}(#{} )\n'.format(self.headline_title,
+                                    Group.objects.get(group_id=self.group_id).name)
+        text += '{}{}{}\n'.format(self.rank_type_emoji,
+                                  self.group_emoji, self.rank_type_emoji)
         text += '\n'
 
         # ranking
@@ -29,15 +33,19 @@ class RankBot(TwitterBot, ABC):
         if len(self.blogs) > 0:
             for i, blog in enumerate(self.blogs):
                 text += self.generate_medal_emoji(rank=i+1)
-                text += '「{}」#{}\n'.format(self.shorten_text(blog.title, max_length=10), self.shorten_text(blog.writer.full_kanji, max_length=10))
+                text += '「{}」#{}\n'.format(self.shorten_text(blog.title, max_length=10),
+                                           self.shorten_text(blog.writer.full_kanji, max_length=10))
                 if self.otapick_link == '':
-                    text += '{}保存{}{}\n\n'.format(fast_forward, fast_forward, '{}/blog/{}/{}'.format(OTAPICK_URL, self.group_id, blog.blog_ct))
+                    text += '{}保存{}{}\n\n'.format(fast_forward, fast_forward, urljoin(
+                        OTAPICK_URL, 'blog/{}/{}/'.format(self.group_id, blog.blog_ct)))
         elif len(self.images) > 0:
             for i, image in enumerate(self.images):
                 text += self.generate_medal_emoji(rank=i+1)
-                text += '「{}」#{}\n'.format(self.shorten_text(image.publisher.title, max_length=10), self.shorten_text(image.publisher.writer.full_kanji, max_length=10))
+                text += '「{}」#{}\n'.format(self.shorten_text(image.publisher.title, max_length=10),
+                                           self.shorten_text(image.publisher.writer.full_kanji, max_length=10))
                 if self.otapick_link == '':
-                    text += '{}保存{}{}\n\n'.format(fast_forward, fast_forward, '{}/image/{}/{}/{}'.format(OTAPICK_URL, self.group_id, image.publisher.blog_ct, image.order))
+                    text += '{}保存{}{}\n\n'.format(fast_forward, fast_forward, urljoin(
+                        OTAPICK_URL, 'image/{}/{}/{}/'.format(self.group_id, image.publisher.blog_ct, image.order)))
         text += '\n'
 
         # otapick link

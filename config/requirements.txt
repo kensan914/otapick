@@ -37,5 +37,10 @@ zipp==0.6.0
 numpy==1.19.0
 djangorestframework==3.11.0
 django-maintenance-mode==0.15.0
+django-rest-auth==0.9.5
+django-allauth==0.43.0
+djangorestframework-jwt==1.11.0
+oauth2==1.9.0.post1
 django-hosts==4.0
 django-admin-shortcuts==2.0.0
+tqdm==4.59.0

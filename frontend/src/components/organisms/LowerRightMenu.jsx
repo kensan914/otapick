@@ -3,11 +3,14 @@ import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import ToTopButton from "../atoms/ToTopButton";
 import { showToTopButtonUrls } from "../modules/env";
 
-
 const LowerRightMenu = withRouterInnerRef((props) => {
   const [isShowToTop, setIsShowToTop] = useState(false);
 
-  const checkShowableButtons = (setIsShow, showUrls = [], dontShowUrls = []) => {
+  const checkShowableButtons = (
+    setIsShow,
+    showUrls = [],
+    dontShowUrls = []
+  ) => {
     const isShowable = showUrls.length > 0;
     const urls = isShowable ? showUrls : dontShowUrls;
 
@@ -16,8 +19,7 @@ const LowerRightMenu = withRouterInnerRef((props) => {
         if (props.location.pathname === "/") {
           return true;
         }
-      }
-      else if (location.pathname.startsWith(url)) {
+      } else if (location.pathname.startsWith(url)) {
         return true;
       }
     });
@@ -25,20 +27,13 @@ const LowerRightMenu = withRouterInnerRef((props) => {
     // isMatch: Urlsにマッチした, isShowable: 表示していいUrlsか
     // これらの排他的論理和の否定: 同じ真偽値=>true, 違う真偽値=>false
     setIsShow(!(isMatch ^ isShowable));
-  }
+  };
 
   useEffect(() => {
     checkShowableButtons(setIsShowToTop, showToTopButtonUrls, []);
   }, [props.location]);
 
-  return (
-    <>
-      {isShowToTop &&
-        <ToTopButton />
-      }
-    </>
-  );
+  return <>{isShowToTop && <ToTopButton />}</>;
 });
-
 
 export default withRouterInnerRef(LowerRightMenu);

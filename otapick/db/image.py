@@ -18,8 +18,10 @@ def download_blog_images(group_id, group_key, blog_ct, writer_ct):
     :return:
     """
     try:
-        blog = Blog.objects.get(publishing_group__group_id=group_id, blog_ct=blog_ct)
-        img_urls = otapick.BlogImageCrawler().crawl(group_key=group_key, blog_ct=blog_ct)
+        blog = Blog.objects.get(
+            publishing_group__group_id=group_id, blog_ct=blog_ct)
+        img_urls = otapick.BlogImageCrawler().crawl(
+            group_key=group_key, blog_ct=blog_ct)
 
         # crawl error
         if img_urls is None:
@@ -28,11 +30,13 @@ def download_blog_images(group_id, group_key, blog_ct, writer_ct):
         elif len(img_urls) == 0:
             pass
         else:
-            Image.objects.filter(publisher=blog).delete() # clear halfway remaining images
+            # clear halfway remaining images
+            Image.objects.filter(publisher=blog).delete()
             order = 0
             for i, img_url in enumerate(img_urls):
-                media = otapick.BlogImageDownloader().download(img_url, group_id, blog_ct, writer_ct)
-                if media == 'not_image': # exclude gif
+                media = otapick.BlogImageDownloader().download(
+                    img_url, group_id, blog_ct, writer_ct)
+                if media == 'not_image':  # exclude gif
                     pass
                 elif media is not None:
                     if not Image.objects.filter(order=i, publisher=blog).exists():
@@ -49,7 +53,7 @@ def download_blog_images(group_id, group_key, blog_ct, writer_ct):
                     import traceback
                     traceback.print_exc()
 
-    #timeout(60s)後の処理
+    # timeout(60s)後の処理
     except SoftTimeLimitExceeded:
         pass
 
@@ -62,7 +66,7 @@ def delete_image(target_image):
     """
     blog = target_image.publisher
     target_image.delete()
-    os.remove(str(target_image.picture.path)) # remove file
+    os.remove(str(target_image.picture.path))  # remove file
     images = Image.objects.filter(publisher=blog).order_by('order')
     for i, image in enumerate(images):
         image.order = i
@@ -79,7 +83,8 @@ def sort_images(images, order_format):
         if order_format == 'newer_post':
             pass
         elif order_format == 'older_post':
-            images = images.order_by('publisher__post_date', '-publisher__order_for_simul', '-order')
+            images = images.order_by(
+                'publisher__post_date', '-publisher__order_for_simul', '-order')
         elif order_format == 'dl':
             images = images.order_by('-num_of_downloads', '-recommend_score')
         elif order_format == 'popularity':
@@ -90,4 +95,21 @@ def sort_images(images, order_format):
         return
 
     # return images
+    return images
+
+
+def get_filtered_images_group_ids(group_ids):
+    """
+    推しグループでfilter
+    group_ids(ex. [1, 2])でImageを絞り込み返す.
+    group_idsに一つでもint以外が含まれた場合 Image.objects.all()
+    """
+    if group_ids and all([type(g) is int for g in group_ids]):
+        images = Image.objects.filter(
+            publisher__publishing_group__group_id__in=group_ids)
+        if not images.exists():
+            images = Image.objects.all()
+    else:
+        images = Image.objects.all()
+
     return images

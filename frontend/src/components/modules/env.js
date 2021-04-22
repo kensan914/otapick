@@ -1,14 +1,22 @@
 import { getIsSmp, isMobile } from "./utils";
 
-export const DEBUG = NODE_ENV === "development";
-export const FQDN = window.env.fqdn;
+export let DEBUG;
+try {
+  DEBUG = NODE_ENV === "development";
+} catch (e) {
+  /* jest時にNODE_ENVが宣言されていないと怒られる */
+  DEBUG = process.env.NODE_ENV === "development";
+}
+
+export const FQDN = window?.env?.fqdn ? window.env.fqdn : "otapick.com";
 export const BASE_URL = DEBUG ? `http://${FQDN}/api/` : `https://${FQDN}/api/`;
 export const DELAY_TIME = DEBUG ? 0 : 0;
 
-export const OTAPICK_BRAND_IMG_URL = "/static/img/otapick.png";
+export const OTAPICK_BRAND_IMG_URL = "/static/img/logotitle.png";
 export const LOAD_IMG_URL = "/static/img/otapick_logo_back.png";
 export const BACKGROUND_IMG_URL = "/static/img/background.png";
 
+export const OTAPICK_TWITTER_URL = "https://twitter.com/otapick/";
 
 //---------- URLパスによる振る舞い変更 ----------//
 // show〇〇Urls(〇〇を表示する)  or  dontShow〇〇Urls(〇〇を表示しない) <= 404ページ、つまり該当しなかった場合どうしたいかで選択。
@@ -16,9 +24,7 @@ export const BACKGROUND_IMG_URL = "/static/img/background.png";
 // パフォーマンス向上のため、頻繁にアクセスするページ順に。
 //---------------------------------------------//
 // mobileのサブNavbarを表示しないページのurl.
-export const dontShowSubNavbarUrls = [
-  "/users",
-];
+export const dontShowSubNavbarUrls = ["/users"];
 // toTopボタンを表示するページのurl
 export const showToTopButtonUrls = [
   "/",
@@ -53,9 +59,9 @@ export const setEnvConstant = () => {
   MOBILE_TOP_MENU_MT = isSmp ? 48.5 : 52;
   NAVBAR_HEIGHT = isSmp ? 61 : 67;
   SUB_NAVBAR_HEIGHT = isSmp ? 55 : 60;
-  TOTOP_BUTTON_M = isSmp ? 16 : (isMobile ? 32 : 48);
+  TOTOP_BUTTON_M = isSmp ? 16 : isMobile ? 32 : 48;
   TOTOP_BUTTON_DIAMETER = isSmp ? 48 : 64;
-}
+};
 
 export const NAVBAR_LS_ZINDEX = 998;
 export const SUB_NAVBAR_LS_ZINDEX = 997;
@@ -71,17 +77,21 @@ export const GA_TRACKING_ID = "UA-134426000-2";
 export const DATA_AD_CLIENT = "ca-pub-3712313672767903";
 export const DATA_AD_SLOT_SQUARE = "3963767991";
 export const DATA_AD_SLOT_LANDSCAPE = "8177403224";
+export const DATA_AD_SLOT_ANCHOR = "6762893244";
 export const ADS_INTERVAL = 50;
 export const ADS_INTERVAL_MORE = 100;
 export const ADS_INDEX = 8;
+export const BOTTOM_ANCHOR_ADS_HEIGHT = 48;
 
 import bookmarkSakuraAnimationData from "../../static/lottie/bookmark_sakura.json";
 import bookmarkHinataAnimationData from "../../static/lottie/bookmark_hinata.json";
 import bookmarkKeyakiAnimationData from "../../static/lottie/bookmark_keyaki.json";
+import downloadHinataAnimationData from "../../static/lottie/download_hinata.json";
+
 // groups 改名時は、ここを変更するだけでよい
 export const GROUPS = {
-  "1": {
-    id: "1",
+  1: {
+    id: 1,
     name: "櫻坂46",
     key: "sakura",
     blogUrl: "https://sakurazaka46.com/s/s46/diary/blog?ima=0000",
@@ -90,9 +100,11 @@ export const GROUPS = {
     domain: "sakurazaka46.com",
     isActive: true,
     bookmarkAnimationData: bookmarkSakuraAnimationData,
+    color: "#f9c1cf",
+    deepColor: "#FF93AE",
   },
-  "3": {
-    id: "3",
+  3: {
+    id: 3,
     name: "欅坂46",
     key: "keyaki",
     blogUrl: "https://www.keyakizaka46.com/s/k46o/diary/member?ima=0000",
@@ -101,17 +113,23 @@ export const GROUPS = {
     domain: "keyakizaka46.com",
     isActive: false,
     bookmarkAnimationData: bookmarkKeyakiAnimationData,
+    color: "#4be057",
+    deepColor: "#46E954",
   },
-  "2": {
-    id: "2",
+  2: {
+    id: 2,
     name: "日向坂46",
     key: "hinata",
     blogUrl: "https://www.hinatazaka46.com/s/official/diary/member?ima=0000",
-    blogUrlExample: "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000",
+    blogUrlExample:
+      "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000",
     topUrl: "https://www.hinatazaka46.com/s/official/?ima=0000",
     domain: "hinatazaka46.com",
     isActive: true,
     bookmarkAnimationData: bookmarkHinataAnimationData,
+    downloadAnimationData: downloadHinataAnimationData,
+    color: "#5de7ff",
+    deepColor: "#8EEEFF",
   },
 };
 

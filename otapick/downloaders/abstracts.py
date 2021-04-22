@@ -16,7 +16,8 @@ class Downloader(metaclass=ABCMeta):
     def generate_filename(self, **kwargs):
         file_name = os.path.basename(kwargs['url'])
         # ファイル名が無いドットファイルにファイル名を与える。(.jpg⇒_.jpg)
-        if file_name.startswith('.'): file_name = '_' + file_name
+        if file_name.startswith('.'):
+            file_name = '_' + file_name
         return file_name
 
     def generate_filepath(self, **kwargs):
@@ -45,7 +46,8 @@ class Downloader(metaclass=ABCMeta):
                 data = response.content
                 file.write(data)
                 result = True
-            else: return
+            else:
+                return
             file.close()
             return result
         except:
@@ -58,9 +60,11 @@ class Downloader(metaclass=ABCMeta):
     def download(self, **kwargs):
         self.set_media_dir_path_list(**kwargs)
         success, path, media = self.generate_filepath(**kwargs)
-        if not success: return
+        if not success:
+            return
         download_result = self.exe_download(kwargs['url'], path)
-        if not download_result: return
+        if not download_result:
+            return
         elif download_result == 'not_image':
             return 'not_image'
         else:

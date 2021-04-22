@@ -1,9 +1,14 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
 import { useAxios } from "../modules/axios";
 import { BASE_URL } from "../modules/env";
-import { getJson, removeItem, storeJson, URLJoin } from "../modules/utils";
+import {
+  deepCvtKeyFromSnakeToCamel,
+  getJson,
+  removeItem,
+  storeJson,
+  URLJoin,
+} from "../modules/utils";
 import { useAuthState } from "./AuthContext";
-
 
 const initProfile = Object.freeze({
   id: "",
@@ -22,7 +27,7 @@ const ProfileReducer = (prevState, action) => {
        * @param {Object} action [type, profile] */
 
       removeItem("loggedoutProfile");
-      _profile = Object.assign(prevState.profile, action.profile);
+      _profile = { ...prevState.profile, ...action.profile };
       storeJson("profile", _profile);
 
       return {
@@ -47,10 +52,10 @@ const ProfileReducer = (prevState, action) => {
   }
 };
 
-const ProfileStateContext = createContext({
+export const ProfileStateContext = createContext({
   profile: { ...initProfile },
 });
-const ProfileDispatchContext = createContext(undefined);
+export const ProfileDispatchContext = createContext(undefined);
 
 export const useProfileState = () => {
   const context = useContext(ProfileStateContext);
@@ -64,12 +69,18 @@ export const useProfileDispatch = () => {
 const ProfileProvider = ({ children }) => {
   const _profile = getJson("profile");
   const [profileState, profileDispatch] = useReducer(ProfileReducer, {
-    profile: _profile ? _profile : { ...initProfile },
+    profile: _profile
+      ? deepCvtKeyFromSnakeToCamel(_profile)
+      : { ...initProfile },
   });
 
   const authState = useAuthState();
-  const { isLoading, resData, request } = useAxios(URLJoin(BASE_URL, "me/"), "get", {
-    thenCallback: res => profileDispatch({ type: "SET_PROFILE", profile: res.data }),
+  const { request } = useAxios(URLJoin(BASE_URL, "me/"), "get", {
+    thenCallback: (res) =>
+      profileDispatch({
+        type: "SET_PROFILE",
+        profile: deepCvtKeyFromSnakeToCamel(res.data),
+      }),
     token: authState.token,
   });
 
@@ -87,6 +98,5 @@ const ProfileProvider = ({ children }) => {
     </ProfileStateContext.Provider>
   );
 };
-
 
 export default ProfileProvider;

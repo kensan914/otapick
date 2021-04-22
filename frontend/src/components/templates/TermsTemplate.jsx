@@ -2,16 +2,27 @@ import React from "react";
 import Headline from "../molecules/Headline";
 import { withRouter } from "react-router-dom";
 import { BACKGROUND_IMG_URL } from "../modules/env";
-import { ContactContent, TermsOfServiceContent, PrivacyPolicyContent } from "../atoms/TermsContents";
+import {
+  ContactContent,
+  TermsOfServiceContent,
+  PrivacyPolicyContent,
+} from "../atoms/TermsContents";
 import { updateMeta, gtagTo } from "../modules/utils";
-
 
 class TermsTemplate extends React.Component {
   constructor(props) {
     super(props);
-    this.titleHash = { contact: "お問い合わせ", termsOfService: "利用規約", privacyPolicy: "プライバシーポリシー" };
-    this.accessedMode = { contact: false, termsOfService: false, privacyPolicy: false };
-  };
+    this.titleHash = {
+      contact: "お問い合わせ",
+      termsOfService: "利用規約",
+      privacyPolicy: "プライバシーポリシー",
+    };
+    this.accessedMode = {
+      contact: false,
+      termsOfService: false,
+      privacyPolicy: false,
+    };
+  }
 
   componentDidMount() {
     updateMeta({ title: this.titleHash[this.props.mode], description: "" });
@@ -41,18 +52,25 @@ class TermsTemplate extends React.Component {
 
     return (
       <div className="container mt-3 text-muted">
-        <Headline type="terms" mode={this.props.mode} titleHash={this.titleHash} />
+        <Headline
+          type="terms"
+          mode={this.props.mode}
+          titleHash={this.titleHash}
+        />
 
         <div className="container p-0 p-sm-4">
-          <div className={"shadow-sm text-muted article article-margin-bottom py-2 px-2"} style={{ backgroundImage: `url(${BACKGROUND_IMG_URL})` }}>
-            <div className="article-body p-4">
-              {content}
-            </div>
+          <div
+            className={
+              "shadow-sm text-muted article article-margin-bottom py-2 px-2"
+            }
+            style={{ backgroundImage: `url(${BACKGROUND_IMG_URL})` }}
+          >
+            <div className="article-body p-4">{content}</div>
           </div>
         </div>
       </div>
     );
-  };
-};
+  }
+}
 
 export default withRouter(TermsTemplate);

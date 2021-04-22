@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'image.apps.ImageConfig',
     'account.apps.AccountConfig',
+    'survey.apps.SurveyConfig',
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'rest_framework',
@@ -172,7 +173,8 @@ BROKER_URL = env('REDIS_URL')
 # rest_framework
 DEFAULT_RENDERER_CLASSES_val = ['rest_framework.renderers.JSONRenderer']
 if DEBUG:
-    DEFAULT_RENDERER_CLASSES_val.append('rest_framework.renderers.BrowsableAPIRenderer')
+    DEFAULT_RENDERER_CLASSES_val.append(
+        'rest_framework.renderers.BrowsableAPIRenderer')
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES_val,
     'DEFAULT_PARSER_CLASSES': [
@@ -182,7 +184,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework.authentication.TokenAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
 }
 
 # django-maintenance-mode
@@ -222,9 +227,9 @@ ADMIN_SHORTCUTS = [
 ####################
 ## Authentication ##
 ####################
-# AUTH_USER_MODEL = 'custom_account.Account'
 AUTH_USER_MODEL = 'custom_account.Account'
-REST_USE_JWT = True  # https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
+# https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
+REST_USE_JWT = True
 
 REST_SESSION_LOGIN = False
 CORS_ORIGIN_ALLOW_ALL = True
@@ -240,4 +245,10 @@ REST_AUTH_SERIALIZERS = {
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'  # メール検証
 ACCOUNT_EMAIL_REQUIRED = True  # signup時、email必須
 ACCOUNT_USERNAME_REQUIRED = False  # signup時、username不要
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # 使用するログイン方法を指定（='username'|'email'|'username_email'） emailの場合、ACCOUNT_EMAIL_REQUIRED==Trueの必要がある
+# 使用するログイン方法を指定（='username'|'email'|'username_email'） emailの場合、ACCOUNT_EMAIL_REQUIRED==Trueの必要がある
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+# クライアント認証(Djangoからadmin.otapick.comにアクセス)
+CLIENT_SSL_CERT_PATH = env('CLIENT_SSL_CERT_PATH')
+CLIENT_SSL_KEY_PATH = env('CLIENT_SSL_KEY_PATH')
+CLIENT_SSL_PASSWORD = env('CLIENT_SSL_PASSWORD')

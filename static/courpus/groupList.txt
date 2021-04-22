@@ -1,3 +1,0 @@
-櫻坂46 1 sakurazaka46.com sakura true 10 https://sakurazaka46.com/s/s46/diary/detail/{}?ima=0000&cd=blog https://sakurazaka46.com/s/s46/artist/{}?ima=0000
-日向坂46 2 www.hinatazaka46.com hinata true 20 https://www.hinatazaka46.com/s/official/diary/detail/{}?ima=0000&cd=member https://www.hinatazaka46.com/s/official/artist/{}?ima=0000
-欅坂46 3 www.keyakizaka46.com keyaki false 20 https://www.keyakizaka46.com/s/k46o/diary/detail/{}?ima=0000&cd=member https://www.keyakizaka46.com/s/k46o/artist/{}?ima=0000

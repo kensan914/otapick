@@ -1,18 +1,19 @@
+import otapick
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from config import settings
 from django.views import View
-import otapick
 
 
 class BaseView(View):
     html_path = 'frontend/index.html'
-    context = {'static_update': '?{}'.format(otapick.VERSION), 'debug': settings.env.bool('DEBUG')}
+    context = {'version': otapick.VERSION, 'version_query_string': '?{}'.format(
+        otapick.VERSION), 'debug': settings.env.bool('DEBUG')}
 
 
 class IndexView(BaseView):
-    index_context = dict(**BaseView.context, **{'fqdn': '127.0.0.1:8000' if settings.DEBUG else 'otapick.com'})
+    index_context = dict(**BaseView.context, **{'fqdn': otapick.OTAPICK_FQDN})
 
     def get(self, request, *args, **kwargs):
         return render(request, self.html_path, self.index_context)
@@ -22,7 +23,8 @@ indexView = IndexView.as_view()
 
 
 class IndexAdminView(IndexView):
-    index_context = dict(**BaseView.context, **{'fqdn': 'admin.otapick.com'})
+    index_context = dict(**BaseView.context, **
+                         {'fqdn': 'admin.{}'.format(otapick.OTAPICK_FQDN)})
 
 
 indexAdminView = IndexAdminView.as_view()

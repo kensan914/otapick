@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+
+{% block branding %}
+<a href="{% url 'admin:index' %}">
+  <div style="display: flex; flex-direction: row; align-items: center; justify-content: center">
+    <div style="
+      background: url(/static/img/logotitle.png);
+      background-repeat: no-repeat!important;
+      background-position: left center!important;
+      background-size: contain!important;
+      height: 50px;
+      width: 170px;
+     "></div>
+      <h1 style="margin-left: 10px; color: gray;"><strong>管理サイト</strong></h1>
+  </div>
+</a>
+{% endblock %}

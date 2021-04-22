@@ -1,8 +1,15 @@
 import { useEffect } from "react";
 import { withRouter } from "react-router-dom";
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT, dontShowSubNavbarUrls } from "../../modules/env";
-import { isMobile, setBodyPadding, setInitLocationKey } from "../../modules/utils";
-
+import {
+  NAVBAR_HEIGHT,
+  SUB_NAVBAR_HEIGHT,
+  dontShowSubNavbarUrls,
+} from "../../modules/env";
+import {
+  isMobile,
+  setBodyPadding,
+  setInitLocationKey,
+} from "../../modules/utils";
 
 const LocationAdmin = (props) => {
   const { location, children } = props;
@@ -21,12 +28,13 @@ const LocationAdmin = (props) => {
         setBodyPadding(NAVBAR_HEIGHT);
         return true;
       } else {
-        if (index === array.length - 1) setBodyPadding(NAVBAR_HEIGHT + SUB_NAVBAR_HEIGHT);
+        if (index === array.length - 1)
+          setBodyPadding(NAVBAR_HEIGHT + SUB_NAVBAR_HEIGHT);
       }
     });
   }, [location]);
 
   return children;
-}
+};
 
 export default withRouter(LocationAdmin);
