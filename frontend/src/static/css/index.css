@@ -2012,7 +2012,7 @@ footer {
 
 .mode-select-dropdown-menu-members {
   z-index: 90;
-  max-height: 50vh;
+  max-height: 50vh !important;
   overflow-y: scroll !important;
 }
 
@@ -2812,7 +2812,6 @@ SVGコード...を押下
 
 .navbar-dropdown-menu {
   z-index: 90;
-  max-width: 30vh;
 }
 
 .navbar-dropdown-header {
@@ -3107,7 +3106,7 @@ SVGコード...を押下
 }
 .settings-selector-menu {
   z-index: 90;
-  max-height: 34vh;
+  max-height: 34vh !important;
   overflow-y: scroll !important;
 }
 /* .settings-selector-image {
@@ -3198,4 +3197,10 @@ SVGコード...を押下
 .dropdown-menu-container-safe-aria {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom) ;
+}
+
+.dropdown-mobile-friendly-menu-pc {
+  max-height: 90vh;
+  height: auto;
+  overflow-y: auto;
 }
