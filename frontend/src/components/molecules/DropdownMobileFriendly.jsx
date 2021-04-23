@@ -79,6 +79,7 @@ const DropdownMobileFriendly = (props, ref) => {
     dropdownMenuClassOnlyPc = "",
     caretOnlyPc = false,
     directionOnlyPc = "right",
+    directionFixedOnlyPc = false,
     menuSettings = [],
     lockScreenZIndex = NAVBAR_BOTTOM_LS_ZINDEX + 1,
     isLocatedNavbarOnlyMobile = false,
@@ -327,7 +328,11 @@ const DropdownMobileFriendly = (props, ref) => {
                 return (
                   <React.Fragment key={i}>
                     {i !== 0 && <DropdownItem divider />}
-                    <DropdownItem header className="omit-title">
+                    <DropdownItem
+                      style={{ maxWidth: "15rem" }}
+                      header
+                      className="omit-title"
+                    >
                       {menuSetting.label}
                     </DropdownItem>
                     {i !== menuSettings.length && !isSmallerTitle && (
@@ -486,6 +491,7 @@ const DropdownMobileFriendly = (props, ref) => {
     return (
       <ButtonDropdown
         direction={directionOnlyPc}
+        positionFixed={directionFixedOnlyPc}
         className={buttonContainerClass}
         style={buttonContainerStyle}
         isOpen={isOpen}
@@ -503,7 +509,7 @@ const DropdownMobileFriendly = (props, ref) => {
           {children}
         </DropdownToggle>
         <DropdownMenu
-          className={`bold ${dropdownMenuClassOnlyPc}`}
+          className={`bold dropdown-mobile-friendly-menu-pc ${dropdownMenuClassOnlyPc}`}
           // style={{}} // styleをいじるとDropdownMenuの動的位置決定がされなくなるためstyleの指定禁止
         >
           {generateMenu()}
