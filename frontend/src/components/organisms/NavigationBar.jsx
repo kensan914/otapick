@@ -55,6 +55,7 @@ const NavbarMenu = (props) => {
       isLocatedNavbarOnlyMobile
       lockScreenZIndex={NAVBAR_LS_ZINDEX}
       directionOnlyPc="down"
+      directionFixedOnlyPc
       isSmallerTitle
       buttonClass={
         isMobile
