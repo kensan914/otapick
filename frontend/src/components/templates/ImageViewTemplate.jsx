@@ -43,9 +43,9 @@ const ImageViewTemplate = (props) => {
       />
 
       {/* Google AdSense */}
-      <div className="container mt-4">
+      {/* <div className="container mt-4">
         {isSmp ? <SquareAds /> : <LandscapeAds height="100px" />}
-      </div>
+      </div> */}
 
       <div className="container-fluid text-muted mt-3 list-container-fluid">
         <ImageList
