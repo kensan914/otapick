@@ -57,7 +57,7 @@ class UpdateBot(TwitterBot):
         media_urls = []
 
         if Image.objects.filter(publisher=blog).exists():
-            for image in Image.objects.filter(publisher=blog).order_by('order'):
+            for image in Image.objects.filter(publisher=blog).order_by('order')[:4]:
                 try:
                     media_path = str(image.picture)
                     media_url = os.path.join(settings.MEDIA_ROOT, media_path)

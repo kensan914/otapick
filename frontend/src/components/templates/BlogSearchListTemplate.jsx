@@ -250,7 +250,7 @@ class BlogSearchListTemplate extends React.Component {
 
     return (
       <div className="container mt-3 text-muted">
-        <Headline title="検索" />
+        <Headline title="検索" key={this.props.location.key} />
         <BlogSearchListInfo
           group={this.state.group}
           title={this.state.title}
