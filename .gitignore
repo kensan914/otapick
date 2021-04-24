@@ -144,6 +144,7 @@ cron/
 *migrations/
 !*migrations/__init__.py
 # End of https://www.gitignore.io/api/django
+*__migrations__/
 
 registerer_ex.py
 
@@ -153,3 +154,6 @@ static/frontend-dev/
 
 .vscode/
 .idea/
+
+config/maintenance_mode_state.txt
+*.swp
