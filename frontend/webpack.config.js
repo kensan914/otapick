@@ -3,7 +3,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const DEBUG = process.env.NODE_ENV === "development";
 const OUTPUT_PUBLIC_PATH = `/static/${DEBUG ? "frontend-dev/" : "frontend/"}`;
-const OUTPUT_PATH = `${__dirname}/../static/${DEBUG ? "frontend-dev" : "frontend"}`;
+// const OUTPUT_PATH = `${__dirname}/../static/${DEBUG ? "frontend-dev" : "frontend"}`;
+const OUTPUT_PATH = `/var/www/otapick/static/${DEBUG ? "frontend-dev" : "frontend"}`;
 
 module.exports = {
   entry: "./src/index.jsx",
