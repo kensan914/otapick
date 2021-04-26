@@ -1,7 +1,7 @@
 import { Collapse } from "reactstrap";
 import React, { useEffect, useState } from "react";
 import { BASE_URL, GROUPS } from "../../modules/env";
-import SettingsHeader from "../molecules/settingsHeader";
+import SettingsHeader from "../molecules/SettingsHeader";
 import SettingsSelector from "../molecules/SettingsSelector";
 import { useAxios } from "../../modules/axios";
 import {
