@@ -5,7 +5,6 @@ import { useAxios } from "../modules/axios";
 import { BASE_URL } from "../modules/env";
 import {
   deepCvtKeyFromSnakeToCamel,
-  gtagTo,
   updateMeta,
   URLJoin,
 } from "../modules/utils";
@@ -14,6 +13,7 @@ import UsersDetailTemplate from "../templates/UsersDetailTemplate";
 const UserPage = () => {
   const profileState = useProfileState();
   const location = useLocation();
+  const accessKey = location?.state?.accessKey;
 
   const params = useParams();
   const [username] = useState(params?.username);
@@ -60,13 +60,23 @@ const UserPage = () => {
     }
   }, [userProfile]);
 
+  useEffect(() => {
+    // 2回目以降レンダリング時にupdateMeta
+    if (isReadyProfile) {
+      updateMeta({
+        title: `${profileState.profile.name}(@${profileState.profile.username})`,
+        description: "",
+      });
+    }
+  }, [accessKey]);
+
   return (
     <UsersDetailTemplate
       isLoading={isLoading}
       profile={userProfile}
       username={username}
       isMe={isMe}
-      accessKey={location?.state?.accessKey} // accessKeyが付与された遷移元の時、FavoriteListを更新
+      accessKey={accessKey} // accessKeyが付与された遷移元の時、FavoriteListを更新
       isReadyProfile={isReadyProfile}
     />
   );
