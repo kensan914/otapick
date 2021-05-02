@@ -87,7 +87,7 @@ const ImageList = (props) => {
                         blogCt={blogCt}
                         blogTitle={blogTitle}
                         srcCollection={src}
-                        url={url}
+                        urlPath={url}
                         blogUrl={blogUrl}
                         officialUrl={officialUrl}
                         writer={writer}

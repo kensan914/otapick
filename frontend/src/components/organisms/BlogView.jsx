@@ -4,7 +4,7 @@ import { saveAs } from "file-saver";
 import { DELAY_TIME } from "../modules/env";
 import Masonry from "react-masonry-component";
 import ImageCard from "../molecules/ImageCard";
-import { addLongPressEventListeners, isMobile, isSmp } from "../modules/utils";
+import { addLongPressEventListeners, isMobile } from "../modules/utils";
 import { withCookies } from "react-cookie";
 import { useDomDispatch } from "../contexts/DomContext";
 import { useLocation } from "react-router-dom";
@@ -13,16 +13,16 @@ const BlogView = (props) => {
   const {
     group,
     images,
-    blogViewURL,
+    blogApiUrl,
     incrementNumOfDownloads,
     putDownload,
     mode,
-    blogUrl,
+    blogUrlPath,
     officialUrl,
     writer,
     blogCt,
     blogTitle,
-    groupID,
+    groupId,
     cookies,
   } = props;
 
@@ -41,7 +41,7 @@ const BlogView = (props) => {
         if (val) orderList.push(index);
       }
       axios
-        .post(blogViewURL, orderList, {
+        .post(blogApiUrl, orderList, {
           headers: {
             "X-CSRFToken": cookies.get("csrftoken"),
           },
@@ -96,9 +96,9 @@ const BlogView = (props) => {
   const loadOriginalImage = () => {
     let imageObjects = [];
     for (const [index, image] of images.entries()) {
-      if (mode === "view") {
+      if (mode === "VIEW") {
         // view
-      } else if (mode === "download") {
+      } else if (mode === "DL") {
         imageObjects.push(new Image());
         imageObjects[index].onload = setTimeout(() => {
           const blogImageID = geneImageID(image.order);
@@ -121,9 +121,9 @@ const BlogView = (props) => {
 
   // cache導入でimageIDが複数存在しうるため（今のところBlogViewはcache対象外であるが）
   const geneImageID = (order) =>
-    `blog-image-${groupID}_${blogCt}_${order}_${location.key}`;
+    `blog-image-${groupId}_${blogCt}_${order}_${location.key}`;
 
-  if (mode === "view") {
+  if (mode === "VIEW") {
     const options = {
       itemSelector: ".grid-item",
       transitionDuration: 0,
@@ -142,19 +142,19 @@ const BlogView = (props) => {
           </div>
         )}
         <Masonry options={options} className="mt-3 image-list-in-blog-view">
-          {images.map(({ src, url, order, isFavorite, width, height }, i) => (
+          {images.map(({ src, url, order, isFavorite, width, height }) => (
             <div
               key={order}
               className="grid-item col-12 col-sm-6 my-2 my-sm-3 px-0 px-sm-2"
             >
               <ImageCard
-                groupId={groupID}
+                groupId={groupId}
                 groupKey={group}
                 blogCt={blogCt}
                 blogTitle={blogTitle}
                 srcCollection={src}
-                url={url}
-                blogUrl={blogUrl}
+                urlPath={url}
+                blogUrl={blogUrlPath}
                 officialUrl={officialUrl}
                 writer={writer}
                 priorityImageId={geneImageID(order)}
@@ -176,7 +176,7 @@ const BlogView = (props) => {
         </Masonry>
       </div>
     );
-  } else if (mode === "download") {
+  } else if (mode === "DL") {
     return (
       <>
         <form onSubmit={(e) => handleSubmit(e)}>

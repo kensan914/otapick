@@ -4,7 +4,6 @@ import ImageView from "../organisms/ImageView";
 import ImageList from "../organisms/List/ImageList";
 import BackButton from "../atoms/BackButton";
 import Headline from "../molecules/Headline";
-import { SquareAds, LandscapeAds } from "../atoms/Adsense";
 
 const ImageViewTemplate = (props) => {
   const {

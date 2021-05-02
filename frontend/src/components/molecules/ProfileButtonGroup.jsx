@@ -20,10 +20,9 @@ const ProfileButtonGroup = (props) => {
   const [maxFavoritesNum, setMaxFavoritesNum] = useState(0);
 
   useAxios(URLJoin(BASE_URL, "favorites/info/"), "get", {
-    thenCallback: (res) => {
-      const _resData = deepCvtKeyFromSnakeToCamel(res.data);
-      setFavoritesNum(_resData.favoritesNum);
-      setMaxFavoritesNum(_resData.maxFavoritesNum);
+    thenCallback: (res, resData) => {
+      setFavoritesNum(resData.favoritesNum);
+      setMaxFavoritesNum(resData.maxFavoritesNum);
     },
     token: authState.token,
     shouldRequestDidMount: true,

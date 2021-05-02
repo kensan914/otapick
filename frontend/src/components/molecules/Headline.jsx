@@ -284,9 +284,9 @@ class Headline extends React.Component {
             className={
               "rounded-pill mode-select-button " +
               (fixed ? "fixed " : " ") +
-              (this.props.mode === "view" ? "active" : "")
+              (this.props.mode === "VIEW" ? "active" : "")
             }
-            onClick={() => this.props.changeMode("view")}
+            onClick={() => this.props.changeMode("VIEW")}
           >
             <b>閲覧する</b>
           </Button>
@@ -294,9 +294,9 @@ class Headline extends React.Component {
             className={
               "rounded-pill mode-select-button " +
               (fixed ? "fixed " : " ") +
-              (this.props.mode === "download" ? "active" : "")
+              (this.props.mode === "DL" ? "active" : "")
             }
-            onClick={() => this.props.changeMode("download")}
+            onClick={() => this.props.changeMode("DL")}
           >
             <b>保存する</b>
           </Button>

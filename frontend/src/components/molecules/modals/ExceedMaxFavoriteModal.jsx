@@ -47,13 +47,13 @@ const ExceedMaxFavoriteModal = (props) => {
     "post",
     {
       data: { q1: val },
-      thenCallback: (res) => {
+      thenCallback: () => {
         setSuccessMessage(
           "ご回答いただきありがとうございます！貴重なご意見は、今後のヲタピックの開発に役立てて参ります。"
         );
         setErrorMessage("");
       },
-      catchCallback: (err) => {
+      catchCallback: () => {
         setSuccessMessage("");
         setErrorMessage("申し訳ございません。アンケートの送信に失敗しました。");
       },

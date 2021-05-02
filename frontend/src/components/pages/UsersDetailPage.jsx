@@ -25,8 +25,8 @@ const UserPage = () => {
     URLJoin(BASE_URL, "users/", username),
     "get",
     {
-      thenCallback: (res) => {
-        const _profile = deepCvtKeyFromSnakeToCamel(res.data);
+      thenCallback: (res, resData) => {
+        const _profile = resData;
         setUserProfile(_profile);
         updateMeta({
           title: `${_profile.name}(@${_profile.username})`,

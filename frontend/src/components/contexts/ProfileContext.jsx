@@ -76,10 +76,10 @@ const ProfileProvider = ({ children }) => {
 
   const authState = useAuthState();
   const { request } = useAxios(URLJoin(BASE_URL, "me/"), "get", {
-    thenCallback: (res) =>
+    thenCallback: (res, resData) =>
       profileDispatch({
         type: "SET_PROFILE",
-        profile: deepCvtKeyFromSnakeToCamel(res.data),
+        profile: resData,
       }),
     token: authState.token,
   });

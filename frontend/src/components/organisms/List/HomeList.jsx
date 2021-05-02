@@ -184,7 +184,7 @@ const HomeList = (props) => {
                         blogCt={add.blogCt}
                         blogTitle={add.blogTitle}
                         srcCollection={add.src}
-                        url={add.url}
+                        urlPath={add.url}
                         blogUrl={add.blogUrl}
                         officialUrl={add.officialUrl}
                         writer={add.writer}
@@ -259,7 +259,7 @@ const HomeList = (props) => {
                         blogCt={blogCt}
                         blogTitle={blogTitle}
                         srcCollection={src}
-                        url={url}
+                        urlPath={url}
                         blogUrl={blogUrl}
                         officialUrl={officialUrl}
                         writer={writer}

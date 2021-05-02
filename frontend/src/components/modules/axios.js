@@ -1,35 +1,93 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { checkCorrectKey } from "./utils";
+import axios from "axios";
+import { checkCorrectKey, deepCvtKeyFromSnakeToCamel } from "./utils";
 
-const authAxios = (token) => {
-  const _authAxios = axios.create({
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `JWT ${token}`,
-    },
-  });
+/**
+ * カスタムHooks ver, Function verの共通init処理
+ * token, dataをsetしたAxiosSettings・actionKeys・axiosInstanceを返す
+ * @param url
+ * @param method
+ * @param action
+ */
+const initAxios = (url, method, action) => {
+  const actionKeys = Object.keys(action);
 
-  _authAxios.interceptors.request.use((request) => {
-    return request;
-  });
+  const axiosSettings = {
+    url,
+    method,
+  };
 
-  return _authAxios;
+  // set token & set additional headers
+  const authHeaders =
+    actionKeys.indexOf("token") !== -1 && action.token
+      ? {
+          Authorization: `JWT ${action.token}`,
+        }
+      : {};
+  const csrftokenHeaders =
+    "csrftoken" in action
+      ? {
+          "X-CSRFToken": action.csrftoken,
+        }
+      : {};
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    ...authHeaders,
+    ...csrftokenHeaders,
+    ...("headers" in action ? action.headers : {}),
+  };
+  axiosSettings["headers"] = headers;
+
+  // set data
+  if (actionKeys.indexOf("data") !== -1) axiosSettings["data"] = action.data;
+
+  // generate axios instance
+  const axiosInstance = axios.create();
+
+  return [axiosInstance, axiosSettings, actionKeys];
 };
 
-export default authAxios;
+/**
+ * カスタムHooks ver, Function verの共通タスク(then)処理
+ */
+const useCommonThen = (res, action, setResData) => {
+  const formattedResData = deepCvtKeyFromSnakeToCamel(res.data);
 
-/** axiosを使用したリクエストのカスタムフック
+  if (action.thenCallback !== void 0) {
+    action.thenCallback(res, formattedResData);
+  }
+  setResData && setResData(formattedResData);
+};
+
+/**
+ * カスタムHooks ver, Function verの共通タスク(catch)処理
+ */
+const useCommonCatch = (err, action) => {
+  if (err.response) {
+    console.error(err.response);
+  } else {
+    console.error(err);
+  }
+  if (action.catchCallback !== void 0) action.catchCallback(err);
+};
+/**
+ * カスタムHooks ver, Function verの共通タスク(finally)処理
+ */
+const useCommonFinally = (action) => {
+  if (action.finallyCallback !== void 0) action.finallyCallback();
+};
+
+/** axiosを使用したリクエストのカスタムHooks
  * @param {string} url
  * @param {string} method [get, post, delete, put, patch]
- * @param {Object} action [data, thenCallback, catchCallback, finallyCallback, didRequestCallback, token, shouldRequestDidMount, limitRequest, csrftoken]
- * @return {Object} { isLoading, resData, request }
+ * @param {object} action [data, thenCallback, catchCallback, finallyCallback, didRequestCallback, token, shouldRequestDidMount, limitRequest, csrftoken, headers]
+ * @return {object} { isLoading, resData, request }
  * @example
   // デフォルトではdidMount時にリクエストは走らない。didMount時の自動リクエストはaction.shouldRequestDidMountにtrueをsetし設定。
   const { isLoading, resData, request } = useAxios(URLJoin(BASE_URL, ".../"), "post", {
     data: {},
-    thenCallback: res => { },
+    thenCallback: (res, resData) => { }, // resDataは, 整形済みであり型安全が保証されているためasしても構わない
     catchCallback: err => { },
     token: authState.token,
     shouldRequestDidMount: true,
@@ -51,55 +109,30 @@ export const useAxios = (url, method, action) => {
     "shouldRequestDidMount",
     "limitRequest",
     "csrftoken",
+    "headers",
   ];
   const correctRequestActionKeys = ["url", "data"];
   //---------- constants ----------//
 
-  const methodText = method.toLowerCase(); // httpメソッドの整形
-  const actionKeys = Object.keys(action);
-
-  const axiosSettings = {
-    url: url,
-    method: methodText,
-  };
-
-  // set token & set additional headers
-  const authHeaders =
-    actionKeys.indexOf("token") !== -1 && action.token
-      ? {
-          Authorization: `JWT ${action.token}`,
-        }
-      : {};
-  const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    ...authHeaders,
-    ...(actionKeys.indexOf("csrftoken") !== -1
-      ? {
-          "X-CSRFToken": action.csrftoken,
-        }
-      : {}),
-  };
-  axiosSettings["headers"] = headers;
-
-  // set data
-  if (actionKeys.indexOf("data") !== -1) axiosSettings["data"] = action.data;
-
-  // generate axios instance
-  const axiosInstance = axios.create();
+  // init axios
+  const [axiosInstance, axiosSettings, actionKeys] = initAxios(
+    url,
+    method,
+    action
+  );
 
   // set didRequestCallback
-  if (actionKeys.indexOf("didRequestCallback") !== -1) {
-    axiosInstance.interceptors.request.use((request) => {
-      action.didRequestCallback(request);
-      return request;
-    });
-  }
+  axiosInstance.interceptors.request.use((request) => {
+    if (action.didRequestCallback !== void 0) {
+      action.didRequestCallback();
+    }
+    return request;
+  });
 
   const [resData, setResData] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [limitRequest] = useState(
-    actionKeys.indexOf("limitRequest") !== -1 && !isNaN(action.limitRequest)
+    action.limitRequest !== void 0 && !isNaN(action.limitRequest)
       ? Number(action.limitRequest) // limitRequestが指定されている、かつ数値変換可能である
       : -1 // それ以外は-1(リクエスト無制限)
   );
@@ -115,7 +148,7 @@ export const useAxios = (url, method, action) => {
       console.warn(
         `The request limit set to ${limitRequest} has been exceeded. Abort the request.`
       );
-      if (actionKeys.indexOf("catchCallback") !== -1) action.catchCallback();
+      if (action.catchCallback !== void 0) action.catchCallback();
       return;
     }
 
@@ -123,45 +156,33 @@ export const useAxios = (url, method, action) => {
 
     const _axiosSettings = { ...axiosSettings };
     if (reAction !== null) {
-      const reActionKeys = Object.keys(reAction);
       // actionのエラーハンドリング
       checkCorrectKey(correctRequestActionKeys, reAction, (incorrectkey) => {
         console.error(`"${incorrectkey}" action key is not supported.`);
       });
-      if (reActionKeys.indexOf("url") !== -1)
-        _axiosSettings["url"] = reAction.url;
-      if (reActionKeys.indexOf("data") !== -1)
-        _axiosSettings["data"] = reAction.data;
+      if (reAction.url) _axiosSettings["url"] = reAction.url;
+      if (reAction.data) _axiosSettings["data"] = reAction.data;
     }
 
     axiosInstance
       .request(_axiosSettings)
       .then((res) => {
-        if (actionKeys.indexOf("thenCallback") !== -1) action.thenCallback(res);
-        setResData(res.data);
+        useCommonThen(res, action, setResData);
       })
       .catch((err) => {
         requestNum.current--; // リクエスト無効
-
-        if (err.response) {
-          console.error(err.response);
-        } else {
-          console.error(err);
-        }
-        if (actionKeys.indexOf("catchCallback") !== -1)
-          action.catchCallback(err);
+        useCommonCatch(err, action);
       })
       .finally(() => {
-        if (actionKeys.indexOf("finallyCallback") !== -1)
-          action.finallyCallback();
+        useCommonFinally(action);
         setIsLoading(false);
       });
   };
 
   useEffect(() => {
     // http methodのエラーハンドリング
-    if (!axiosRequestMethods.includes(methodText))
-      console.error(`"${methodText}" HTTP method is not supported.`);
+    if (!axiosRequestMethods.includes(method))
+      console.error(`"${method}" HTTP method is not supported.`);
 
     // actionのエラーハンドリング
     checkCorrectKey(correctActionKeys, action, (incorrectkey) => {
@@ -178,3 +199,29 @@ export const useAxios = (url, method, action) => {
 
   return { isLoading, resData, request };
 };
+
+/**
+ * axiosを使用したリクエスト(Function ver)
+ * @param url
+ * @param method
+ * @param action
+ */
+const requestAxios = (url, method, action) => {
+  // init axios
+  const [axiosInstance, axiosSettings] = initAxios(url, method, action);
+  const _axiosSettings = { ...axiosSettings };
+
+  axiosInstance
+    .request(_axiosSettings)
+    .then((res) => {
+      useCommonThen(res, action);
+    })
+    .catch((err) => {
+      useCommonCatch(err, action);
+    })
+    .finally(() => {
+      useCommonFinally(action);
+    });
+};
+
+export default requestAxios;

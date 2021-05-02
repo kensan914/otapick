@@ -7,11 +7,11 @@ const domReducer = (prevState, action) => {
   switch (action.type) {
     case "ACCESS_TO_BLOG":
       /** accessedBlogsにblogIDを追加
-       * @param {Object} action [type, blogID] */
+       * @param {Object} action [type, blogId] */
 
       return {
         ...prevState,
-        accessedBlogs: [...prevState.accessedBlogs, action.blogID],
+        accessedBlogs: [...prevState.accessedBlogs, action.blogId],
       };
 
     case "ACCESS_TO_IMAGE":

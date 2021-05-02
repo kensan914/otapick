@@ -124,8 +124,8 @@ const FavMembersSettingsTemplate = () => {
 
   const [members, setMembers] = useState(); // {hinata: [Array(11), Array(9), Array(4)], sakura: [Array(21), Array(15)]}
   useAxios(URLJoin(BASE_URL, "members/"), "get", {
-    thenCallback: (res) => {
-      const _members = deepCvtKeyFromSnakeToCamel(res.data);
+    thenCallback: (res, resData) => {
+      const _members = resData;
       setMembers(_members);
     },
     shouldRequestDidMount: true,

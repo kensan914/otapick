@@ -49,7 +49,7 @@ const ToBlogButton = (props) => {
 
 const ImageCard = (props) => {
   const {
-    url,
+    urlPath,
     srcCollection,
     imageId,
     initIsFavorite,
@@ -190,7 +190,7 @@ const ImageCard = (props) => {
       >
         <Link
           to={{
-            pathname: url,
+            pathname: urlPath,
             state: { prevSrc: srcCollection },
           }}
         >
@@ -242,7 +242,7 @@ const ImageCard = (props) => {
                 className={"image-card-download-button-ver2"}
                 groupId={groupId}
                 onClick={() => {
-                  downloadImage(URLJoin(url), csrftoken);
+                  downloadImage(URLJoin(BASE_URL, urlPath), csrftoken);
                 }}
               />
             )}
@@ -264,7 +264,7 @@ const ImageCard = (props) => {
                       type: "ONCLICK",
                       label: "この画像をダウンロードする",
                       onClick: () => {
-                        downloadImage(URLJoin(BASE_URL, url), csrftoken);
+                        downloadImage(URLJoin(BASE_URL, urlPath), csrftoken);
                       },
                       icon: faDownload,
                     },
@@ -303,7 +303,7 @@ const ImageCard = (props) => {
             {footerMessage && (
               <Link
                 to={{
-                  pathname: url,
+                  pathname: urlPath,
                   state: { prevSrc: srcCollection },
                 }}
                 onMouseEnter={() => {
@@ -349,7 +349,7 @@ const ImageCard = (props) => {
                 },
                 {
                   type: "LINK",
-                  pathname: url,
+                  pathname: urlPath,
                   state: { prevSrc: srcCollection },
                   label: "詳細ページへ",
                   icon: faChevronCircleRight,

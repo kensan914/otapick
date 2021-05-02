@@ -45,8 +45,6 @@ const BlogList = withRouter((props) => {
     ...(groupsQParams ? groupsQParams : [])
   );
 
-  const authState = useAuthState();
-
   const { isLoading, request } = useAxios(
     URLJoin(urlExcludePage, `?page=${pageRef.current}`),
     "get",

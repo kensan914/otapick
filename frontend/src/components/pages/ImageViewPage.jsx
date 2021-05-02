@@ -11,7 +11,7 @@ import {
   useViewMatchParams,
   useViewNum,
   useViewUrl,
-} from "../templates/ViewTemplate";
+} from "../../hooks/useView";
 
 const ImageViewPage = (props) => {
   const { cookies } = props;
@@ -23,7 +23,7 @@ const ImageViewPage = (props) => {
   const location = useLocation();
 
   const { groupId, blogCt, order, groupKey } = useViewMatchParams();
-  const { imageViewUrl, blogViewUrl } = useViewUrl(groupId, blogCt, order);
+  const { imageApiUrl, blogApiUrl } = useViewUrl(groupId, blogCt, order);
   const [imageId] = useState(`${groupId}-${blogCt}-${order}`);
   const [accessedImageId] = useState(`${imageId}.${generateUuid4()}`);
   const prevSrcCollection =
@@ -48,13 +48,13 @@ const ImageViewPage = (props) => {
     viewKey,
     downloadKey,
     isReadyView,
-  ] = useView(blogViewUrl, order, updateMetaVerView);
+  ] = useView(blogApiUrl, updateMetaVerView, order);
   const { incrementNumOfViews, incrementNumOfDownloads } = useViewNum(
     images,
     setImages
   );
 
-  const { request: requestPutView } = useAxios(imageViewUrl, "put", {
+  const { request: requestPutView } = useAxios(imageApiUrl, "put", {
     data: { action: "view", key: viewKey },
     csrftoken: csrftoken,
     thenCallback: (res) => {
@@ -66,7 +66,7 @@ const ImageViewPage = (props) => {
   });
 
   const { request: requestPutDownloadOnlyMobile } = useAxios(
-    imageViewUrl,
+    imageApiUrl,
     "put",
     {
       data: { action: "download", key: downloadKey },

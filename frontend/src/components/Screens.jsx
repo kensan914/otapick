@@ -8,6 +8,7 @@ import { useDomDispatch } from "./contexts/DomContext";
 import PortalContainer from "./atoms/PortalContainer";
 import BottomAnchorAdsOnlyMobile from "./molecules/BottomAnchorAdsOnlyMobile";
 import { isMobile } from "./modules/utils";
+import BlogViewPage from "./pages/BlogViewPage";
 
 const Footer = React.lazy(() => import("./organisms/Footer"));
 const BlogViewTemplate = React.lazy(() =>
@@ -109,14 +110,13 @@ const Screens = () => {
           <Route exact path="/members/" render={() => <MemberListTemplate />} />
           <Route
             exact
-            path="/blog/:groupID/:blogCt/"
-            render={() => <BlogViewTemplate />}
+            path="/blog/:groupId/:blogCt/"
+            render={() => <BlogViewPage />}
           />
 
           <CacheRoute
             exact
             path="/image/:groupId/:blogCt/:order/"
-            // render={() => <ImageViewTemplate />}
             render={() => <ImageViewPage />}
             when="always"
             multiple={10}
