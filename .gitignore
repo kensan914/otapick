@@ -152,8 +152,8 @@ static/frontend-dev/
 
 *.code-workspace
 
-.vscode/
-.idea/
+.vscode
+.idea
 
 config/maintenance_mode_state.txt
 *.swp
