@@ -1,12 +1,12 @@
+import React from "react";
 import {
   faBookmark,
   faHandPointRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { Link } from "react-router-dom";
-import { BACKGROUND_IMG_URL, GROUPS } from "../modules/env";
-import { isSmp } from "../modules/utils";
+
+import { BACKGROUND_IMG_URL, GROUPS } from "~/constants/env";
 
 export class NotFoundBlogsContent extends React.Component {
   render() {

@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "reactstrap";
-
-import { GROUPS } from "../modules/env";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+
+import { GROUPS } from "~/constants/env";
 
 const DownloadButton = (props) => {
   const { onClick, groupId, className } = props;

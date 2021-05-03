@@ -7,13 +7,14 @@ import {
   faUsersCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AvatarSequence from "../atoms/AvatarSequence";
-import ProfileIcon from "../atoms/ProfileIcon";
-import TooltipComponent from "../atoms/TooltipComponent";
-import { GROUPS } from "../modules/env";
-import { isMobile, isSmp } from "../modules/utils";
-import DropdownMobileFriendly from "../molecules/DropdownMobileFriendly";
-import LinkButton from "../atoms/LinkButton";
+
+import AvatarSequence from "~/components/atoms/AvatarSequence";
+import ProfileIcon from "~/components/atoms/ProfileIcon";
+import TooltipComponent from "~/components/atoms/TooltipComponent";
+import { GROUPS } from "~/constants/env";
+import { isMobile, isSmp } from "~/utils";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
+import LinkButton from "~/components/atoms/LinkButton";
 
 const ProfileView = (props) => {
   const { profile = {}, isMe } = props;

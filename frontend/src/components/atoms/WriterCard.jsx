@@ -7,8 +7,9 @@ import {
   faImages,
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
-import DropdownMobileFriendly from "../molecules/DropdownMobileFriendly";
-import { isMobile } from "../modules/utils";
+
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
+import { isMobile } from "~/utils";
 
 class WriterCard extends React.Component {
   render() {

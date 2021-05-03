@@ -1,5 +1,4 @@
 import React from "react";
-import { BOTTOM_NAVBAR_HEIGHT } from "../modules/env";
 import { Button } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import {
@@ -9,6 +8,8 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { BOTTOM_NAVBAR_HEIGHT } from "~/constants/env";
 
 class BottomNavigationBar extends React.Component {
   constructor(props) {

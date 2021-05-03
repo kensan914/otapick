@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { generateAlt, isMobile } from "../modules/utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -9,7 +8,9 @@ import {
   faImages,
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
-import DropdownMobileFriendly from "./DropdownMobileFriendly";
+
+import { generateAlt, isMobile } from "~/utils";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 
 class MemberCard extends React.Component {
   render() {

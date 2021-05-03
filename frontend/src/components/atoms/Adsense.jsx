@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
+import { withRouter } from "react-router-dom";
+
 import {
   DATA_AD_CLIENT,
   DEBUG,
   DATA_AD_SLOT_SQUARE,
   DATA_AD_SLOT_LANDSCAPE,
   DATA_AD_SLOT_ANCHOR,
-} from "../modules/env";
-import { withRouter } from "react-router-dom";
+} from "~/constants/env";
 
 class DisplayAds extends React.Component {
   constructor(props) {

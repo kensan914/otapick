@@ -10,16 +10,17 @@ import {
   DropdownMenu,
   DropdownToggle,
 } from "reactstrap";
-import { MOBILE_TOP_MENU_MT, NAVBAR_BOTTOM_LS_ZINDEX } from "../modules/env";
+
+import { MOBILE_TOP_MENU_MT, NAVBAR_BOTTOM_LS_ZINDEX } from "~/constants/env";
 import {
   documentScrollHandler,
   isMobile,
   isSmp,
   lockScreen,
   unLockScreen,
-} from "../modules/utils";
-import { DROPDOWN_MENU_PORTAL_CONTAINER_ID } from "../atoms/PortalContainer";
-import useCacheRoute from "../modules/cacheRoute";
+} from "~/utils";
+import { DROPDOWN_MENU_PORTAL_CONTAINER_ID } from "~/components/atoms/PortalContainer";
+import useCacheRoute from "~/components/modules/cacheRoute";
 
 /**
  * mobile or PCを意識せずdropdownを記述.

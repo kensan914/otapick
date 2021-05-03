@@ -1,5 +1,5 @@
 import React from "react";
-import { isSmp } from "../modules/utils";
+import { isSmp } from "~/utils";
 
 const ProfileIcon = (props) => {
   const { imageUrl, size } = props;

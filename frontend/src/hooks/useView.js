@@ -1,14 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useRouteMatch } from "react-router";
 
-import {
-  deepCvtKeyFromSnakeToCamel,
-  getGroup,
-  gtagTo,
-} from "../components/modules/utils";
-import { URLJoin } from "../components/modules/utils";
-import { BASE_URL } from "../components/modules/env";
-import { useAxios } from "../components/modules/axios";
+import { URLJoin, deepCvtKeyFromSnakeToCamel, getGroup, gtagTo } from "~/utils";
+import { BASE_URL } from "~/constants/env";
+import { useAxios } from "~/hooks/useAxios";
 
 /**
  * blog・image兼用のhooks. URL(match.params)から各値を取得し返却.
@@ -64,7 +59,6 @@ export const useView = (blogApiUrl, updateMetaVerView, order) => {
       if (!status && res.data["status"] !== "blog_not_found") {
         blogData = deepCvtKeyFromSnakeToCamel({ ...res.data });
       }
-      console.log(blogData);
       if (res.data["status"] === "success") {
         // order error(orderが渡されるimageのみ有効. blogはそのままパスされる)
         if (

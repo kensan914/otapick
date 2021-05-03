@@ -1,18 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-
-import {
-  geneIsFavoriteGetterSetter,
-  generateAlt,
-  isMobile,
-  isSmp,
-} from "../modules/utils";
-import { URLJoin } from "../modules/utils";
-import { downloadImage } from "../organisms/ImageView";
-import { withCookies } from "react-cookie";
-import { BASE_URL } from "../modules/env";
-import FavoriteButton, { useFavoriteButton } from "../atoms/FavoriteButton";
-import { useDomDispatch, useDomState } from "../contexts/DomContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -24,8 +11,23 @@ import {
   faImages,
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
-import DownloadButton from "../atoms/DownloadButton";
-import DropdownMobileFriendly from "./DropdownMobileFriendly";
+import { withCookies } from "react-cookie";
+
+import {
+  geneIsFavoriteGetterSetter,
+  generateAlt,
+  isMobile,
+  isSmp,
+  URLJoin,
+} from "~/utils";
+import { downloadImage } from "~/components/organisms/ImageView";
+import { BASE_URL } from "~/constants/env";
+import FavoriteButton, {
+  useFavoriteButton,
+} from "~/components/atoms/FavoriteButton";
+import { useDomDispatch, useDomState } from "~/contexts/DomContext";
+import DownloadButton from "~/components/atoms/DownloadButton";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 
 const ToBlogButton = (props) => {
   const { title, url } = props;

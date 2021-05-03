@@ -1,5 +1,5 @@
 import React from "react";
-import { GROUPS } from "../modules/env";
+import { GROUPS } from "~/constants/env";
 
 class OtapickButton extends React.Component {
   render() {

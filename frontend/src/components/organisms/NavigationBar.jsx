@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -10,19 +10,7 @@ import {
   Button,
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import SearchDownshift from "../molecules/SearchDownshift";
-import {
-  isMobile,
-  isSmp,
-  generateUuid4,
-  sortGROUPSByFav,
-} from "../modules/utils";
-import {
-  useProfileDispatch,
-  useProfileState,
-} from "../contexts/ProfileContext";
 import MediaQuery from "react-responsive";
-import { useAuthDispatch, useAuthState } from "../contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -38,9 +26,14 @@ import {
   faUsers,
   faUserShield,
 } from "@fortawesome/free-solid-svg-icons";
-import { NAVBAR_LS_ZINDEX, OTAPICK_TWITTER_URL } from "../modules/env";
-import DropdownMobileFriendly from "../molecules/DropdownMobileFriendly";
 import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
+
+import SearchDownshift from "~/components/molecules/SearchDownshift";
+import { isMobile, isSmp, generateUuid4, sortGROUPSByFav } from "~/utils";
+import { useProfileDispatch, useProfileState } from "~/contexts/ProfileContext";
+import { useAuthDispatch, useAuthState } from "~/contexts/AuthContext";
+import { NAVBAR_LS_ZINDEX, OTAPICK_TWITTER_URL } from "~/constants/env";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 
 const NavbarMenu = (props) => {
   const { children, isLongerWidthOnlyPc = false } = props;

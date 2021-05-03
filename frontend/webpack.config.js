@@ -5,6 +5,7 @@ const DEBUG = process.env.NODE_ENV === "development";
 const OUTPUT_PUBLIC_PATH = `/static/${DEBUG ? "frontend-dev/" : "frontend/"}`;
 const OUTPUT_PATH = `${__dirname}/../static/${DEBUG ? "frontend-dev" : "frontend"}`;
 
+const path = require("path");
 module.exports = {
   entry: "./src/index.jsx",
   output: {
@@ -15,6 +16,9 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx"],
+    alias: {
+      "~": path.resolve(__dirname, 'src/'),
+    }
   },
   module: {
     rules: [

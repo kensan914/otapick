@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { shortenNum, generateAlt, isMobile, isSmp } from "../modules/utils";
 import {
   faBars,
   faChevronCircleRight,
@@ -12,8 +11,10 @@ import {
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import TooltipComponent from "../atoms/TooltipComponent";
-import DropdownMobileFriendly from "./DropdownMobileFriendly";
+
+import { shortenNum, generateAlt, isMobile, isSmp } from "~/utils";
+import TooltipComponent from "~/components/atoms/TooltipComponent";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 
 class SuperBlogCard extends React.Component {
   constructor(props) {

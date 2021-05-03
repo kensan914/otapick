@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { withRouterInnerRef } from "../modules/withRouterInnerRef";
-import ToTopButton from "../atoms/ToTopButton";
-import { showToTopButtonUrls } from "../modules/env";
+
+import { withRouterInnerRef } from "~/components/modules/withRouterInnerRef";
+import ToTopButton from "~/components/atoms/ToTopButton";
+import { showToTopButtonUrls } from "~/constants/env";
 
 const LowerRightMenu = withRouterInnerRef((props) => {
   const [isShowToTop, setIsShowToTop] = useState(false);

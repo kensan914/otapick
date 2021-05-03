@@ -1,10 +1,11 @@
 import React from "react";
+
 import {
   BOTTOM_ANCHOR_ADS_HEIGHT,
   TOTOP_BUTTON_DIAMETER,
   TOTOP_BUTTON_M,
-} from "../modules/env";
-import { isMobile } from "../modules/utils";
+} from "~/constants/env";
+import { isMobile } from "~/utils";
 
 class ToTopButton extends React.Component {
   getScrolled = () => {

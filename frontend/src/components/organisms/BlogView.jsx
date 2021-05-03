@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { DELAY_TIME } from "../modules/env";
-import Masonry from "react-masonry-component";
-import ImageCard from "../molecules/ImageCard";
-import { addLongPressEventListeners, isMobile } from "../modules/utils";
-import { withCookies } from "react-cookie";
-import { useDomDispatch } from "../contexts/DomContext";
 import { useLocation } from "react-router-dom";
+import Masonry from "react-masonry-component";
+import { withCookies } from "react-cookie";
+
+import { DELAY_TIME } from "~/constants/env";
+import ImageCard from "~/components/molecules/ImageCard";
+import { addLongPressEventListeners, isMobile } from "~/utils";
+import { useDomDispatch } from "~/contexts/DomContext";
 
 const BlogView = (props) => {
   const {

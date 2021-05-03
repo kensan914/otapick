@@ -1,8 +1,9 @@
+import React from "react";
 import { faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { isMobile } from "../modules/utils";
-import DropdownMobileFriendly from "../molecules/DropdownMobileFriendly";
+
+import { isMobile } from "~/utils";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 
 class SortButton extends React.Component {
   render() {

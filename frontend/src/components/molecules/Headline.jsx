@@ -1,18 +1,7 @@
 import React from "react";
-import BackButton from "../atoms/BackButton";
 import { Button, ButtonGroup } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import {
-  URLJoin,
-  isMobile,
-  checkNotCached,
-  sortGROUPSByFav,
-} from "../modules/utils";
-import { BASE_URL, GROUPS } from "../modules/env";
-import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "../modules/env";
-import { DomDispatchContext } from "../contexts/DomContext";
-import LinkButton from "../atoms/LinkButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
@@ -20,9 +9,20 @@ import {
   faImages,
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
-import TooltipComponent from "../atoms/TooltipComponent";
-import { ProfileStateContext } from "../contexts/ProfileContext";
-import DropdownMobileFriendly from "./DropdownMobileFriendly";
+
+import BackButton from "~/components/atoms/BackButton";
+import { URLJoin, isMobile, checkNotCached, sortGROUPSByFav } from "~/utils";
+import {
+  BASE_URL,
+  GROUPS,
+  NAVBAR_HEIGHT,
+  SUB_NAVBAR_HEIGHT,
+} from "~/constants/env";
+import { DomDispatchContext } from "~/contexts/DomContext";
+import LinkButton from "~/components/atoms/LinkButton";
+import TooltipComponent from "~/components/atoms/TooltipComponent";
+import { ProfileStateContext } from "~/contexts/ProfileContext";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 
 export class TypeChangeButton extends React.Component {
   getChangeTypeUrl(currentType, groupID, ct) {
