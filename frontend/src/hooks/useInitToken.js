@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { getItem } from "~/utils";
+import { useConstructor } from "~/hooks/useConstructor";
 
 /**
  * App.jsxで用いるアプリ起動時のtokenの初期化
@@ -8,14 +9,17 @@ import { getItem } from "~/utils";
  * @returns
  */
 export const useInitToken = (cookies) => {
-  const [token, setToken] = useState(getItem("token"));
+  const token = useRef(getItem("token"));
 
-  useEffect(() => {
-    if (!token && Object.keys(cookies.cookies).indexOf("token") !== -1) {
-      setToken(cookies.get("token"));
+  useConstructor(() => {
+    if (
+      !token.current &&
+      Object.keys(cookies.cookies).indexOf("token") !== -1
+    ) {
+      token.current = cookies.get("token");
       cookies.remove("token");
     }
-  }, []);
+  });
 
-  return token;
+  return token.current;
 };
