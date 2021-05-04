@@ -4,7 +4,8 @@ import { useLocation } from "react-router";
 import { BASE_URL, BLOGS_DESCRIPTION } from "~/constants/env";
 import { useAxios } from "~/hooks/useAxios";
 import { useListMatchParams, useListQueryString } from "~/hooks/useList";
-import { gtagTo, updateMeta, URLJoin } from "~/utils";
+import { URLJoin } from "~/utils";
+import { useMeta } from "~/hooks/useMeta";
 
 export const useBlogListInfo = () => {
   const { groupId, ct } = useListMatchParams();
@@ -16,10 +17,10 @@ export const useBlogListInfo = () => {
   const [infoStatus, setInfoStatus] = useState("");
   const [numOfHit, setNumOfHit] = useState(0);
   const [sortButtonTitle, setSortButtonTitle] = useState("");
-  const [metaTitle, setMetaTitle] = useState("");
 
   const location = useLocation();
   const queryParams = location.search;
+  const { setMeta } = useMeta();
   const { request: requestGetBlogsInfo } = useAxios(
     URLJoin(BASE_URL, "blogs/info/", groupId, ct, queryParams),
     "get",
@@ -29,24 +30,13 @@ export const useBlogListInfo = () => {
           setInfoTitle("ブログが見つかりませんでした。");
           setNumOfHit(0);
           setInfoStatus("not_found");
-          setMetaTitle("Not Found Blog");
-          updateMeta({
-            title: "Not Found Blog",
-            description: BLOGS_DESCRIPTION,
-          });
+          setMeta("Not Found Blog", BLOGS_DESCRIPTION);
         } else {
           setInfoTitle(resData.title);
           setNumOfHit(resData.numOfHit);
           setInfoStatus("success");
-          setMetaTitle(resData.metaTitle);
-          updateMeta({
-            title: `${resData.metaTitle}のブログ一覧`,
-            description: BLOGS_DESCRIPTION,
-          });
+          setMeta(`${resData.metaTitle}のブログ一覧`, BLOGS_DESCRIPTION);
         }
-      },
-      finallyCallback: () => {
-        gtagTo(location.pathname);
       },
     }
   );
@@ -73,10 +63,6 @@ export const useBlogListInfo = () => {
   useEffect(() => {
     setSortButtonTitle(convertSortButtonTitle(orderFormat));
     requestGetBlogsInfo();
-    updateMeta({
-      title: `${metaTitle}のブログ一覧`,
-      description: BLOGS_DESCRIPTION,
-    });
   }, [groupId, ct, orderFormat, narrowingKeyword, narrowingPost]);
 
   return { infoTitle, infoStatus, numOfHit, sortButtonTitle };

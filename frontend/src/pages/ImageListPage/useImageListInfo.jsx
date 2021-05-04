@@ -4,7 +4,8 @@ import { useLocation } from "react-router";
 import { BASE_URL, HOME_TITLE, IMAGES_DESCRIPTION } from "~/constants/env";
 import { useAxios } from "~/hooks/useAxios";
 import { useListMatchParams, useListQueryString } from "~/hooks/useList";
-import { gtagTo, updateMeta, URLJoin } from "~/utils";
+import { URLJoin } from "~/utils";
+import { useMeta } from "~/hooks/useMeta";
 
 export const useImageListInfo = (isHome) => {
   const { groupId, ct } = useListMatchParams();
@@ -14,10 +15,10 @@ export const useImageListInfo = (isHome) => {
   const [infoStatus, setInfoStatus] = useState("");
   const [numOfHit, setNumOfHit] = useState(0);
   const [sortButtonTitle, setSortButtonTitle] = useState("");
-  const [metaTitle, setMetaTitle] = useState("");
 
   const location = useLocation();
   const queryParams = location.search;
+  const { setMeta } = useMeta();
   const { request: requestGetImagesInfo } = useAxios(
     URLJoin(BASE_URL, "images/info/", groupId, ct, queryParams),
     "get",
@@ -27,28 +28,21 @@ export const useImageListInfo = (isHome) => {
           setInfoTitle("画像が見つかりませんでした。");
           setNumOfHit(0);
           setInfoStatus("not_found");
-          setMetaTitle(isHome ? HOME_TITLE : "Not Found Image");
-          if (!isHome)
-            updateMeta({
-              title: "Not Found Image",
-              description: IMAGES_DESCRIPTION,
-            });
-          else updateMeta({ title: HOME_TITLE, description: "" });
+          if (!isHome) {
+            setMeta("Not Found Image", IMAGES_DESCRIPTION);
+          } else {
+            setMeta(HOME_TITLE, "");
+          }
         } else {
           setInfoTitle(resData.title);
           setNumOfHit(resData.numOfHit);
           setInfoStatus("success");
-          setMetaTitle(isHome ? HOME_TITLE : resData.metaTitle);
-          if (!isHome)
-            updateMeta({
-              title: `${resData.metaTitle}の画像・写真一覧`,
-              description: IMAGES_DESCRIPTION,
-            });
-          else updateMeta({ title: HOME_TITLE, description: "" });
+          if (!isHome) {
+            setMeta(`${resData.metaTitle}の画像・写真一覧`, IMAGES_DESCRIPTION);
+          } else {
+            setMeta(HOME_TITLE, "");
+          }
         }
-      },
-      finallyCallback: () => {
-        gtagTo(location.pathname);
       },
     }
   );
@@ -75,12 +69,6 @@ export const useImageListInfo = (isHome) => {
   useEffect(() => {
     setSortButtonTitle(convertSortButtonTitle(orderFormat));
     requestGetImagesInfo();
-    if (!isHome)
-      updateMeta({
-        title: `${metaTitle}の画像・写真一覧`,
-        description: IMAGES_DESCRIPTION,
-      });
-    else updateMeta({ title: metaTitle, description: "" });
   }, [groupId, ct, orderFormat]);
 
   return { infoTitle, infoStatus, numOfHit, sortButtonTitle };

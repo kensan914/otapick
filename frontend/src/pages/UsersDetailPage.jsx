@@ -4,13 +4,15 @@ import { useLocation, useParams } from "react-router-dom";
 import { useProfileState } from "~/contexts/ProfileContext";
 import { useAxios } from "~/hooks/useAxios";
 import { BASE_URL } from "~/constants/env";
-import { updateMeta, URLJoin } from "~/utils";
+import { URLJoin } from "~/utils";
 import UsersDetailTemplate from "~/components/templates/UsersDetailTemplate";
+import { useMeta } from "~/hooks/useMeta";
 
 const UserPage = () => {
   const profileState = useProfileState();
   const location = useLocation();
   const accessKey = location?.state?.accessKey;
+  const { setMeta } = useMeta();
 
   const params = useParams();
   const [username] = useState(params?.username);
@@ -25,10 +27,7 @@ const UserPage = () => {
       thenCallback: (res, resData) => {
         const _profile = resData;
         setUserProfile(_profile);
-        updateMeta({
-          title: `${_profile.name}(@${_profile.username})`,
-          description: "",
-        });
+        setMeta(`${_profile.name}(@${_profile.username})`, "");
       },
     }
   );
@@ -44,10 +43,10 @@ const UserPage = () => {
   useEffect(() => {
     if (isMe) {
       setUserProfile({ ...profileState.profile });
-      updateMeta({
-        title: `${profileState.profile.name}(@${profileState.profile.username})`,
-        description: "",
-      });
+      setMeta(
+        `${profileState.profile.name}(@${profileState.profile.username})`,
+        ""
+      );
     }
   }, [profileState.profile]);
 
@@ -57,15 +56,12 @@ const UserPage = () => {
     }
   }, [userProfile]);
 
-  useEffect(() => {
-    // 2回目以降レンダリング時にupdateMeta
-    if (isReadyProfile) {
-      updateMeta({
-        title: `${profileState.profile.name}(@${profileState.profile.username})`,
-        description: "",
-      });
-    }
-  }, [accessKey]);
+  // useEffect(() => {
+  //   // 2回目以降レンダリング時にupdate Meta
+  //   if (isReadyProfile) {
+  //     setMeta(`${profileState.profile.name}(@${profileState.profile.username})`, "")
+  //   }
+  // }, [accessKey]);
 
   return (
     <UsersDetailTemplate

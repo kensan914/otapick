@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useRouteMatch } from "react-router";
 
-import { URLJoin, deepCvtKeyFromSnakeToCamel, getGroup, gtagTo } from "~/utils";
+import { URLJoin, deepCvtKeyFromSnakeToCamel, getGroup } from "~/utils";
 import { BASE_URL } from "~/constants/env";
 import { useAxios } from "~/hooks/useAxios";
 
@@ -41,7 +41,7 @@ export const useViewUrl = (groupId, blogCt, order) => {
   return { imageApiUrl, blogApiUrl, blogUrlPath, geneImageApiUrl };
 };
 
-export const useView = (blogApiUrl, updateMetaVerView, order) => {
+export const useView = (blogApiUrl, setMetaVerView, order) => {
   const location = useLocation();
 
   const [images, setImages] = useState();
@@ -67,7 +67,7 @@ export const useView = (blogApiUrl, updateMetaVerView, order) => {
         ) {
           setStatus("get_image_failed");
           setBlog(blogData);
-          updateMetaVerView && updateMetaVerView("get_image_failed");
+          setMetaVerView && setMetaVerView("get_image_failed");
         } else {
           setBlog(blogData);
           setImages(
@@ -77,16 +77,13 @@ export const useView = (blogApiUrl, updateMetaVerView, order) => {
           setViewKey(res.data["VIEW_KEY"]);
           setDownloadKey(res.data["DOWNLOAD_KEY"]);
 
-          updateMetaVerView &&
-            updateMetaVerView("success", blogData.title, blogData.writer.name);
+          setMetaVerView &&
+            setMetaVerView("success", blogData.title, blogData.writer.name);
         }
       } else if (res.data["status"] === "blog_not_found") {
         setStatus("blog_not_found");
-        updateMetaVerView && updateMetaVerView("blog_not_found");
+        setMetaVerView && setMetaVerView("blog_not_found");
       }
-    },
-    finallyCallback: () => {
-      gtagTo(location.pathname);
     },
     shouldRequestDidMount: true,
   });

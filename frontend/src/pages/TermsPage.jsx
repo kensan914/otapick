@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
 import { TermsTemplate } from "~/components/templates/TermsTemplate";
-import { gtagTo, updateMeta } from "~/utils/index";
+import { useMeta } from "~/hooks/useMeta";
 
 const TermsPage = (props) => {
   const { mode } = props;
@@ -20,16 +20,15 @@ const TermsPage = (props) => {
     privacyPolicy: false,
   });
 
+  const { setMeta } = useMeta();
   useEffect(() => {
-    updateMeta({ title: titleHash[mode], description: "" });
-    gtagTo(location.pathname);
+    setMeta(titleHash[mode], "");
     accessedModeRef.current[mode] = true;
   }, []);
 
   useEffect(() => {
-    updateMeta({ title: titleHash[mode], description: "" });
+    setMeta(titleHash[mode], "");
     if (!accessedModeRef.current[mode]) {
-      gtagTo(location.pathname);
       accessedModeRef.current[mode] = true;
     }
   }, [location]);

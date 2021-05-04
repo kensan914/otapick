@@ -20,7 +20,7 @@ import {
   unLockScreen,
 } from "~/utils";
 import { DROPDOWN_MENU_PORTAL_CONTAINER_ID } from "~/components/atoms/PortalContainer";
-import useCacheRoute from "~/components/modules/cacheRoute";
+import { useCacheRoute } from "~/hooks/useCacheRoute";
 
 /**
  * mobile or PCを意識せずdropdownを記述.

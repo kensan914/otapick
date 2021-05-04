@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
 
 import { useAuthState } from "~/contexts/AuthContext";
-import { gtagTo, updateMeta } from "~/utils";
 import FavMembersSettingsTemplate from "~/components/templates/SettingsTemplate/FavMembersSettingsTemplate";
 import SettingsTemplate from "~/components/templates/SettingsTemplate";
+import { useMeta } from "~/hooks/useMeta";
 
 const SettingsPage = (props) => {
   const { type } = props;
-
-  const location = useLocation();
 
   const authState = useAuthState();
   if (authState.status !== "Authenticated") {
@@ -30,18 +27,15 @@ const SettingsPage = (props) => {
     //   url: "/settings/example/",
     // },
   });
-  useEffect(() => {
-    updateMeta({
-      title:
-        SETTINGS_COLLECTION[type in SETTINGS_COLLECTION ? type : DEFAULT_TYPE]
-          .title,
-      description: "",
-    });
-  }, [type]);
 
+  const { setMeta } = useMeta();
   useEffect(() => {
-    gtagTo(location.pathname);
-  }, []);
+    setMeta(
+      SETTINGS_COLLECTION[type in SETTINGS_COLLECTION ? type : DEFAULT_TYPE]
+        .title,
+      ""
+    );
+  }, [type]);
 
   if (type in SETTINGS_COLLECTION) {
     return (

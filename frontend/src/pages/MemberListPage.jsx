@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router";
 
-import { URLJoin, updateMeta, getGroup, generateWavesVals } from "~/utils";
+import { URLJoin, getGroup, generateWavesVals } from "~/utils";
 import { BASE_URL, GROUPS, MEMBERS_DESCRIPTION } from "~/constants/env";
 import { useConstructor } from "~/hooks/useConstructor";
 import { useAxios } from "~/hooks/useAxios";
 import { MemberListTemplate } from "~/components/templates/MemberListTemplate/index";
-import { gtagTo } from "~/utils/index";
+import { useMeta } from "~/hooks/useMeta";
 
 const MemberListPage = () => {
-  const location = useLocation();
-
   const [initMembers] = useState({});
   const [initTogglerMemory] = useState({});
   useConstructor(() => {
@@ -33,6 +30,7 @@ const MemberListPage = () => {
     setTogglerMemory(newToggleMemory);
   };
 
+  const { setMeta } = useMeta();
   useAxios(URLJoin(BASE_URL, "members/"), "get", {
     thenCallback: (res) => {
       const _membersCollection = { ...initMembers };
@@ -68,13 +66,10 @@ const MemberListPage = () => {
       setWavesVals(generateWavesVals());
       setTogglerMemory(_togglerMemory);
 
-      updateMeta({
-        title: `メンバーリスト｜${GROUPS["1"].name}・${GROUPS["2"].name}`,
-        description: MEMBERS_DESCRIPTION,
-      });
-    },
-    finallyCallback: () => {
-      gtagTo(location.pathname);
+      setMeta(
+        `メンバーリスト｜${GROUPS["1"].name}・${GROUPS["2"].name}`,
+        MEMBERS_DESCRIPTION
+      );
     },
     shouldRequestDidMount: true,
   });

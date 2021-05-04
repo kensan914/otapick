@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-import { withRouterInnerRef } from "~/components/modules/withRouterInnerRef";
 import ToTopButton from "~/components/atoms/ToTopButton";
 import { showToTopButtonUrls } from "~/constants/env";
+import { useLocation } from "react-router";
 
-const LowerRightMenu = withRouterInnerRef((props) => {
+export const LowerRightMenu = () => {
+  const location = useLocation();
+
   const [isShowToTop, setIsShowToTop] = useState(false);
 
   const checkShowableButtons = (
@@ -17,7 +19,7 @@ const LowerRightMenu = withRouterInnerRef((props) => {
 
     const isMatch = urls.some((url) => {
       if (url === "/") {
-        if (props.location.pathname === "/") {
+        if (location.pathname === "/") {
           return true;
         }
       } else if (location.pathname.startsWith(url)) {
@@ -32,9 +34,7 @@ const LowerRightMenu = withRouterInnerRef((props) => {
 
   useEffect(() => {
     checkShowableButtons(setIsShowToTop, showToTopButtonUrls, []);
-  }, [props.location]);
+  }, [location]);
 
   return <>{isShowToTop && <ToTopButton />}</>;
-});
-
-export default withRouterInnerRef(LowerRightMenu);
+};

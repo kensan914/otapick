@@ -2,15 +2,17 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import { NotFoundMessage } from "~/components/atoms/NotFound";
-import { setBodyPadding, isMobile, updateMeta, gtagTo } from "~/utils";
+import { setBodyPadding, isMobile } from "~/utils";
 import { NAVBAR_HEIGHT, SUB_NAVBAR_HEIGHT } from "~/constants/env";
 import { useDomDispatch } from "~/contexts/DomContext";
+import { useMeta } from "~/hooks/useMeta";
 
 const NotFound404Page = (props) => {
   const { footerRef } = props;
 
   const location = useLocation();
   const domDispatch = useDomDispatch();
+  const { setMeta } = useMeta();
 
   useEffect(() => {
     if (footerRef !== null) {
@@ -22,8 +24,7 @@ const NotFound404Page = (props) => {
     if (isMobile) {
       setBodyPadding(NAVBAR_HEIGHT);
     }
-    updateMeta({ title: "404 Page Not Found", description: "" });
-    gtagTo(location.pathname);
+    setMeta("404 Page Not Found", "");
 
     return () => {
       if (isMobile) {

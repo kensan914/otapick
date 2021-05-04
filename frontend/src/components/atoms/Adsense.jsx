@@ -83,11 +83,10 @@ export const LandscapeAds = withRouter(LandscapeAds_);
 
 export const AnchorAds = () => {
   useEffect(() => {
-    if (window.adsbygoogle && !DEBUG) {
-      console.error("adsbygoogle.push");
+    if (!DEBUG) {
+      window.adsbygoogle = window.adsbygoogle || [];
       window.adsbygoogle.push({});
     }
-    console.error("mounted AnchorAds");
   }, []);
 
   return (

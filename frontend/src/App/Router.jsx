@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, Suspense } from "react";
-import { Route, withRouter } from "react-router-dom";
+import { Route } from "react-router-dom";
 import CacheRoute, { CacheSwitch } from "react-router-cache-route";
 
 import { HorizontalLoader } from "~/components/molecules/Loader";
@@ -7,7 +7,7 @@ import NavigationBar from "~/components/organisms/NavigationBar";
 import { useDomDispatch } from "~/contexts/DomContext";
 import PortalContainer from "~/components/atoms/PortalContainer";
 import BottomAnchorAdsOnlyMobile from "~/components/molecules/BottomAnchorAdsOnlyMobile";
-import LowerRightMenu from "~/components/organisms/LowerRightMenu";
+import { LowerRightMenu } from "~/components/organisms/LowerRightMenu";
 import { isMobile } from "~/utils";
 
 const Footer = React.lazy(() => import("~/components/organisms/Footer"));
@@ -25,7 +25,7 @@ const BlogSearchListPage = React.lazy(() =>
 const SettingsPage = React.lazy(() => import("~/pages/SettingsPage"));
 const UsersDetailPage = React.lazy(() => import("~/pages/UsersDetailPage"));
 
-const Screens = () => {
+export const Router = () => {
   const domDispatch = useDomDispatch();
   const footerRef = useRef(0);
 
@@ -52,21 +52,21 @@ const Screens = () => {
           <CacheRoute
             exact
             path="/blogs/"
-            render={() => <BlogListPage />}
+            render={() => <BlogListPage key={1} />}
             when="always"
             multiple={10}
           />
           <CacheRoute
             exact
             path="/blogs/:groupId/"
-            render={() => <BlogListPage />}
+            render={() => <BlogListPage key={2} />}
             when="always"
             multiple={10}
           />
           <CacheRoute
             exact
             path="/blogs/:groupId/:ct/"
-            render={() => <BlogListPage />}
+            render={() => <BlogListPage key={3} />}
             when="always"
             multiple={10}
           />
@@ -158,5 +158,3 @@ const Screens = () => {
     </>
   );
 };
-
-export default withRouter(Screens);

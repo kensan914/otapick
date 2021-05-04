@@ -29,14 +29,6 @@ const List = withRouter((props) => {
     }
   }, [hasMore]);
 
-  useEffect(() => {
-    for (const elm of document.getElementsByClassName("adsbygoogle")) {
-      if (!elm.classList.contains(props.location.key)) {
-        elm.remove();
-      }
-    }
-  }, [props.location]);
-
   const requestGetItems = () => {
     if (hasMore && !isLoading) {
       request({ url: URLJoin(urlExcludePage, `?page=${page}`) });

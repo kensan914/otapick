@@ -35,7 +35,7 @@ import TooltipComponent from "~/components/atoms/TooltipComponent";
 import DownloadButton from "~/components/atoms/DownloadButton";
 import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 import { useDomDispatch, useDomState } from "~/contexts/DomContext";
-import useCacheRoute from "~/components/modules/cacheRoute";
+import { useCacheRoute } from "~/hooks/useCacheRoute";
 
 export const downloadImage = (
   url,

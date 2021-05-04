@@ -3,8 +3,7 @@ import { withCookies } from "react-cookie";
 
 import { useDomDispatch, useDomState } from "~/contexts/DomContext";
 import requestAxios, { useAxios } from "~/hooks/useAxios";
-import useCacheRoute from "~/components/modules/cacheRoute";
-import { updateMeta } from "~/utils";
+import { useCacheRoute } from "~/hooks/useCacheRoute";
 import BlogViewTemplate from "~/components/templates/BlogViewTemplate";
 import {
   useView,
@@ -12,6 +11,7 @@ import {
   useViewNum,
   useViewUrl,
 } from "~/hooks/useView";
+import { useMeta } from "~/hooks/useMeta";
 
 const BlogViewPage = (props) => {
   const { cookies } = props;
@@ -31,22 +31,23 @@ const BlogViewPage = (props) => {
   // const [blogId] = useState(`${groupId}_${blogCt}_${location.key}`);
   const [accessedBlogId] = useState(`${groupId}_${blogCt}`);
 
-  const updateMetaVerView = (status, blogTitle, blogWriter) => {
+  const { setMeta } = useMeta();
+  const setMetaVerView = (status, blogTitle, blogWriter) => {
     switch (status) {
       case "success":
-        updateMeta({
-          title: `${blogTitle}(${blogWriter})｜ブログ詳細`,
-          description: `${blogWriter}のブログ「${blogTitle}」です。`,
-        });
+        setMeta(
+          `${blogTitle}(${blogWriter})｜ブログ詳細`,
+          `${blogWriter}のブログ「${blogTitle}」です。`
+        );
         break;
       case "get_image_failed":
-        updateMeta({ title: "Not Found Image", description: "" });
+        setMeta("Not Found Image", "");
         break;
       case "blog_not_found":
-        updateMeta({ title: "Not Found Blog", description: "" });
+        setMeta("Not Found Blog", "");
         break;
       case "accepted":
-        updateMeta({ title: "画像取得中", description: "" });
+        setMeta("画像取得中", "");
         break;
       default:
         throw new Error(`the status "${status} is unexpected."`);
@@ -61,7 +62,7 @@ const BlogViewPage = (props) => {
     viewKey,
     downloadKey,
     isReadyView,
-  ] = useView(blogApiUrl, updateMetaVerView);
+  ] = useView(blogApiUrl, setMetaVerView);
   const {
     addedNumOfViewsOnlyBlog,
     incrementNumOfViews,
@@ -117,7 +118,7 @@ const BlogViewPage = (props) => {
 
       if (blog?.writer?.name) {
         // update meta
-        updateMetaVerView(status, blog.title, blog.writer.name);
+        setMetaVerView(status, blog.title, blog.writer.name);
       }
     }
   }, [isCachedRoute, isReadyView]);

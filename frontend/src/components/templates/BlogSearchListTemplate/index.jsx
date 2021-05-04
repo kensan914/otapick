@@ -7,6 +7,7 @@ import { OrderlyBlogCard } from "~/components/molecules/BlogCard";
 import MemberCard from "~/components/molecules/MemberCard";
 import { NotFoundMessage } from "~/components/atoms/NotFound";
 import { LoaderScreen } from "~/components/molecules/Loader";
+import { useLocation } from "react-router-dom";
 
 export const BlogSearchListTemplate = (props) => {
   const {
@@ -114,6 +115,7 @@ export const BlogSearchListTemplate = (props) => {
     contents = <LoaderScreen type="horizontal" />;
   }
 
+  const location = useLocation();
   return (
     <div className="container mt-3 text-muted">
       <Headline title="検索" key={location.key} />

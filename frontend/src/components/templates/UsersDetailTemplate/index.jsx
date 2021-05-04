@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 
-import { gtagTo, isSmp } from "~/utils";
+import { isSmp } from "~/utils";
 import { HorizontalLoader } from "~/components/molecules/Loader";
 import ProfileButtonGroup from "~/components/templates/UsersDetailTemplate/organisms/ProfileButtonGroup";
 import ImageList from "~/components/templates/ImageListTemplate/organisms/ImageList";
@@ -17,8 +16,6 @@ const UserTemplate = (props) => {
     isReadyProfile,
   } = props;
 
-  const location = useLocation();
-
   // accessKeyがundefined以外で変化した時、FavoriteListを更新
   const [userPageKey, setUserPageKey] = useState(accessKey);
   useEffect(() => {
@@ -26,12 +23,6 @@ const UserTemplate = (props) => {
       setUserPageKey(accessKey);
     }
   }, [accessKey]);
-
-  useEffect(() => {
-    if (isReadyProfile) {
-      gtagTo(location.pathname);
-    }
-  }, [userPageKey, isReadyProfile]);
 
   return (
     <>

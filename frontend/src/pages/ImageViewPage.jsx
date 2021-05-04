@@ -4,8 +4,8 @@ import { useLocation } from "react-router";
 
 import { useDomDispatch, useDomState } from "~/contexts/DomContext";
 import { useAxios } from "~/hooks/useAxios";
-import useCacheRoute from "~/components/modules/cacheRoute";
-import { generateUuid4, updateMeta } from "~/utils";
+import { useCacheRoute } from "~/hooks/useCacheRoute";
+import { generateUuid4 } from "~/utils";
 import ImageViewTemplate from "~/components/templates/ImageViewTemplate";
 import {
   useView,
@@ -13,6 +13,7 @@ import {
   useViewNum,
   useViewUrl,
 } from "~/hooks/useView";
+import { useMeta } from "~/hooks/useMeta";
 
 const ImageViewPage = (props) => {
   const { cookies } = props;
@@ -30,14 +31,15 @@ const ImageViewPage = (props) => {
   const prevSrcCollection =
     typeof location.state !== "undefined" ? location.state.prevSrc : null;
 
-  const updateMetaVerView = (status, blogTitle, blogWriter) => {
+  const { setMeta } = useMeta();
+  const setMetaVerView = (status, blogTitle, blogWriter) => {
     if (status === "success") {
-      updateMeta({
-        title: `${blogTitle}(${blogWriter})｜画像詳細`,
-        description: `${blogWriter}のブログ「${blogTitle}」の画像です。`,
-      });
+      setMeta(
+        `${blogTitle}(${blogWriter})｜画像詳細`,
+        `${blogWriter}のブログ「${blogTitle}」の画像です。`
+      );
     } else if (status === "blog_not_found") {
-      updateMeta({ title: "Not Found Blog", description: "" });
+      setMeta("Not Found Blog", "");
     }
   };
 
@@ -49,7 +51,7 @@ const ImageViewPage = (props) => {
     viewKey,
     downloadKey,
     isReadyView,
-  ] = useView(blogApiUrl, updateMetaVerView, order);
+  ] = useView(blogApiUrl, setMetaVerView, order);
   const { incrementNumOfViews, incrementNumOfDownloads } = useViewNum(
     images,
     setImages
@@ -93,7 +95,7 @@ const ImageViewPage = (props) => {
 
       if (blog?.writer?.name) {
         // update meta
-        updateMetaVerView(status, blog.title, blog.writer.name);
+        setMetaVerView(status, blog.title, blog.writer.name);
       }
     }
   }, [isCachedRoute, isReadyView]);

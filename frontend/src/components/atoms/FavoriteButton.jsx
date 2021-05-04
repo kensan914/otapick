@@ -7,7 +7,7 @@ import { BASE_URL, GROUPS } from "~/constants/env";
 import { useAxios } from "~/hooks/useAxios";
 import { useAuthState } from "~/contexts/AuthContext";
 import { useDomDispatch } from "~/contexts/DomContext";
-import useCacheRoute from "~/components/modules/cacheRoute";
+import { useCacheRoute } from "~/hooks/useCacheRoute";
 
 export const useFavoriteButton = (
   groupId,

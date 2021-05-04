@@ -132,7 +132,8 @@ class Headline extends React.Component {
   componentDidUpdate(prevProps) {
     // "/"から"/"の遷移など、route(url)が変化せずComponentがそのままの場合
     if (
-      checkNotCached(this.props) &&
+      // HACK: Headlineをfunctionalに変更し、useCacheRouteを使用する
+      checkNotCached(this.props.match) &&
       this.props.match.url === this.initUrl &&
       this.props.location.search === this.initSearch
     ) {

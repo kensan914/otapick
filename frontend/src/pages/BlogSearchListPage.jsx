@@ -2,17 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 
-import {
-  getGroup,
-  generateWavesVals,
-  updateMeta,
-  gtagTo,
-  isMobile,
-  URLJoin,
-} from "~/utils";
+import { getGroup, generateWavesVals, isMobile, URLJoin } from "~/utils";
 import { BASE_URL } from "~/constants/env";
 import { useAxios } from "~/hooks/useAxios";
 import { BlogSearchListTemplate } from "~/components/templates/BlogSearchListTemplate";
+import { useMeta } from "~/hooks/useMeta";
 
 const BlogSearchListPage = () => {
   const location = useLocation();
@@ -29,6 +23,7 @@ const BlogSearchListPage = () => {
   const [searchType, setSearchType] = useState("");
   const [wavesVals, setWavesVals] = useState([]);
 
+  const { setMeta } = useMeta();
   const { request: requestGetSearch } = useAxios(
     URLJoin(
       BASE_URL,
@@ -55,10 +50,7 @@ const BlogSearchListPage = () => {
           setSearchStatus(resData["status"]);
           setSearchType(resData["type"]);
 
-          updateMeta({
-            title: `${resData["title"]}｜ブログ検索結果`,
-            description: "",
-          });
+          setMeta(`${resData["title"]}｜ブログ検索結果`, "");
         } else if (
           resData["status"] === "success" &&
           resData["type"] === "member"
@@ -74,10 +66,7 @@ const BlogSearchListPage = () => {
           setSearchType(resData["type"]);
           setWavesVals(generateWavesVals());
 
-          updateMeta({
-            title: `"${qs.q}"｜メンバー検索結果`,
-            description: "",
-          });
+          setMeta(`"${qs.q}"｜メンバー検索結果`, "");
         } else {
           let title;
           if (resData["type"] === "url")
@@ -94,15 +83,14 @@ const BlogSearchListPage = () => {
           setSearchStatus(resData["status"]);
           setSearchType(resData["type"]);
 
-          if (resData["type"] === "url")
-            updateMeta({ title: "Not Found Blog", description: "" });
-          else if (resData["type"] === "member")
-            updateMeta({ title: "Not Found Member", description: "" });
-          else updateMeta({ title: "Not Found", description: "" });
+          if (resData["type"] === "url") {
+            setMeta("Not Found Blog", "");
+          } else if (resData["type"] === "member") {
+            setMeta("Not Found Member", "");
+          } else {
+            setMeta("Not Found", "");
+          }
         }
-      },
-      finallyCallback: () => {
-        gtagTo(location.pathname);
       },
     }
   );

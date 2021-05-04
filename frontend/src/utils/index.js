@@ -3,9 +3,6 @@ import {
   SHOW_NAVBAR_POS,
   SHOW_SUB_NAVBAR_POS,
   LONG_PRESS_TIME,
-  DESCRIPTION,
-  SITE_NAME,
-  HOME_TITLE,
   GA_TRACKING_ID,
   DEBUG,
   GROUPS,
@@ -304,38 +301,6 @@ export const addLongPressEventListeners = (elm, longPressedFunc) => {
   });
 };
 
-// metaタグ更新
-// metaData: metaデータを保持したオブジェクト ex) {title: "メンバーリスト", description: "...",}
-export const updateMeta = (metaData) => {
-  // update title
-  if ("title" in metaData && metaData.title !== HOME_TITLE) {
-    document.title = `${metaData.title}｜${SITE_NAME}`;
-  } else {
-    document.title = `${SITE_NAME}｜${HOME_TITLE}`;
-  }
-
-  // update meta
-  const headMetaList = document.head.children;
-  for (const headMeta of headMetaList) {
-    const metaName = headMeta.getAttribute("name");
-    if (metaName !== null) {
-      if (metaName.indexOf("description") !== -1) {
-        headMeta.setAttribute("content", metaData.description + DESCRIPTION);
-      }
-    }
-  }
-};
-
-// Global site tag (gtag.js) - Google Analytics
-export const gtagTo = (pathname) => {
-  if (!DEBUG) {
-    // eslint-disable-next-line no-undef
-    gtag("config", GA_TRACKING_ID, {
-      page_path: pathname,
-    });
-  }
-};
-
 export const storeItem = (key, value) => {
   try {
     localStorage.setItem(key, value);
@@ -452,10 +417,12 @@ export const isObject = (val) => {
   return val !== null && typeof val === "object" && !Array.isArray(val);
 };
 
-/** そのcomponentがキャッシュされているか否か
- * */
-export const checkNotCached = (props) =>
-  props.match && Object.keys(props.match).indexOf("__isComputedUnmatch") === -1;
+/**
+ * @deprecated
+ * そのcomponentがキャッシュされているか否か. 現在非推奨で代わりにuseCacheRouteを使用する
+ **/
+export const checkNotCached = (match) =>
+  match && Object.keys(match).indexOf("__isComputedUnmatch") === -1;
 
 /** isFavoriteのGetter・Setterを作成
  * */
