@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
 import {
   Form,
   FormGroup,
@@ -10,12 +9,13 @@ import {
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import RoundButton from "../../atoms/RoundButton";
-import { useAuthState } from "../../contexts/AuthContext";
-import { useProfileState } from "../../contexts/ProfileContext";
-import { useAxios } from "../../modules/axios";
-import { BASE_URL } from "../../modules/env";
-import { generateUuid4, isMobile, URLJoin } from "../../modules/utils";
+
+import RoundButton from "~/components/atoms/RoundButton";
+import { useAuthState } from "~/contexts/AuthContext";
+import { useProfileState } from "~/contexts/ProfileContext";
+import { useAxios } from "~/hooks/useAxios";
+import { BASE_URL } from "~/constants/env";
+import { generateUuid4, isMobile, URLJoin } from "~/utils";
 
 const ExceedMaxFavoriteModal = (props) => {
   const { isOpen, toggle } = props;
@@ -47,13 +47,13 @@ const ExceedMaxFavoriteModal = (props) => {
     "post",
     {
       data: { q1: val },
-      thenCallback: (res) => {
+      thenCallback: () => {
         setSuccessMessage(
           "ご回答いただきありがとうございます！貴重なご意見は、今後のヲタピックの開発に役立てて参ります。"
         );
         setErrorMessage("");
       },
-      catchCallback: (err) => {
+      catchCallback: () => {
         setSuccessMessage("");
         setErrorMessage("申し訳ございません。アンケートの送信に失敗しました。");
       },

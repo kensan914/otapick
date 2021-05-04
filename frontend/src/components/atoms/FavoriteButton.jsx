@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button } from "reactstrap";
 import lottie from "lottie-web";
 
-import { generateUuid4, isMobile, isSmp, URLJoin } from "../modules/utils";
-import { BASE_URL, GROUPS } from "../modules/env";
-import { useAxios } from "../modules/axios";
-import { useAuthState } from "../contexts/AuthContext";
-import { useDomDispatch } from "../contexts/DomContext";
-import useCacheRoute from "../modules/cacheRoute";
+import { generateUuid4, isMobile, isSmp, URLJoin } from "~/utils";
+import { BASE_URL, GROUPS } from "~/constants/env";
+import { useAxios } from "~/hooks/useAxios";
+import { useAuthState } from "~/contexts/AuthContext";
+import { useDomDispatch } from "~/contexts/DomContext";
+import { useCacheRoute } from "~/hooks/useCacheRoute";
 
 export const useFavoriteButton = (
   groupId,

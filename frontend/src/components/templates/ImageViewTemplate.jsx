@@ -1,10 +1,10 @@
 import React from "react";
-import { isMobile, isSmp } from "../modules/utils";
-import ImageView from "../organisms/ImageView";
-import ImageList from "../organisms/List/ImageList";
-import BackButton from "../atoms/BackButton";
-import Headline from "../molecules/Headline";
-import { SquareAds, LandscapeAds } from "../atoms/Adsense";
+
+import { isMobile, isSmp } from "~/utils";
+import ImageView from "~/components/organisms/ImageView";
+import ImageList from "~/components/templates/ImageListTemplate/organisms/ImageList";
+import BackButton from "~/components/atoms/BackButton";
+import Headline from "~/components/molecules/Headline";
 
 const ImageViewTemplate = (props) => {
   const {

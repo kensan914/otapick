@@ -1,15 +1,16 @@
 import React from "react";
-import { withRouterInnerRef } from "../modules/withRouterInnerRef";
 import { Link } from "react-router-dom";
+import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { withRouterInnerRef } from "~/components/modules/withRouterInnerRef";
 import {
   GROUPS,
   dontShowFooterUrls,
   OTAPICK_TWITTER_URL,
   BOTTOM_ANCHOR_ADS_HEIGHT,
-} from "../modules/env";
-import { faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { isMobile } from "../modules/utils";
+} from "~/constants/env";
+import { isMobile } from "~/utils";
 
 class Footer extends React.Component {
   constructor(props) {

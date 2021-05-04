@@ -1,7 +1,8 @@
+import React, { useEffect, useState } from "react";
 import { faHashtag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { isMobile } from "../modules/utils";
+
+import { isMobile } from "~/utils";
 
 const AdsenseCard = (props) => {
   const { url, src, message, width, height } = props;

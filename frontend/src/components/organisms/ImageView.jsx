@@ -1,22 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { BASE_URL } from "../modules/env";
-import {
-  URLJoin,
-  generateAlt,
-  isSmp,
-  isMobile,
-  addLongPressEventListeners,
-  geneIsFavoriteGetterSetter,
-} from "../modules/utils";
-import { Link, useLocation } from "react-router-dom";
-import WriterCard from "../atoms/WriterCard";
-import { HorizontalLoader } from "../molecules/Loader";
-import { NotFoundMessage } from "../atoms/NotFound";
 import { withRouter } from "react-router-dom";
 import { withCookies } from "react-cookie";
-import FavoriteButton, { useFavoriteButton } from "../atoms/FavoriteButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -28,11 +15,27 @@ import {
   faNewspaper,
   faPencilAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import TooltipComponent from "../atoms/TooltipComponent";
-import DownloadButton from "../atoms/DownloadButton";
-import DropdownMobileFriendly from "../molecules/DropdownMobileFriendly";
-import { useDomDispatch, useDomState } from "../contexts/DomContext";
-import useCacheRoute from "../modules/cacheRoute";
+
+import { BASE_URL } from "~/constants/env";
+import {
+  URLJoin,
+  generateAlt,
+  isSmp,
+  isMobile,
+  addLongPressEventListeners,
+  geneIsFavoriteGetterSetter,
+} from "~/utils";
+import WriterCard from "~/components/atoms/WriterCard";
+import { HorizontalLoader } from "~/components/molecules/Loader";
+import { NotFoundMessage } from "~/components/atoms/NotFound";
+import FavoriteButton, {
+  useFavoriteButton,
+} from "~/components/atoms/FavoriteButton";
+import TooltipComponent from "~/components/atoms/TooltipComponent";
+import DownloadButton from "~/components/atoms/DownloadButton";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
+import { useDomDispatch, useDomState } from "~/contexts/DomContext";
+import { useCacheRoute } from "~/hooks/useCacheRoute";
 
 export const downloadImage = (
   url,

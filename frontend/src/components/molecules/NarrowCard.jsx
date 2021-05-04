@@ -1,8 +1,9 @@
 import React from "react";
 import { UncontrolledCollapse, Button } from "reactstrap";
-import OtapickButton from "../atoms/OtapickButton";
 import Picker from "react-month-picker";
-import "../../static/css/month-picker.css";
+
+import OtapickButton from "~/components/atoms/OtapickButton";
+import "~/static/css/month-picker.css";
 
 class MonthBox extends React.Component {
   constructor(props) {

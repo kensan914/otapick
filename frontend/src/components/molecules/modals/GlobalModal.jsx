@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import ExceedMaxFavoriteModal from "./ExceedMaxFavoriteModal";
-import ImageDownloadedModal from "./ImageDownloadedModal";
-import SignUpBeforeFavoriteModal from "./SignUpBeforeFavoriteModal";
+
+import ExceedMaxFavoriteModal from "~/components/molecules/modals/ExceedMaxFavoriteModal";
+import ImageDownloadedModal from "~/components/molecules/modals/ImageDownloadedModal";
+import SignUpBeforeFavoriteModal from "~/components/molecules/modals/SignUpBeforeFavoriteModal";
 
 /**
  * GlobalModal.

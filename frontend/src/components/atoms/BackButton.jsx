@@ -1,9 +1,10 @@
 import React from "react";
 import { withRouter } from "react-router";
-import { initLocationKey, isMobile } from "../modules/utils";
 import { Button } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+
+import { initLocationKey, isMobile } from "~/utils";
 
 class BackButton extends React.Component {
   goBack = () => {
