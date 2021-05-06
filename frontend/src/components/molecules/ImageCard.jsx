@@ -1,18 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-
-import {
-  geneIsFavoriteGetterSetter,
-  generateAlt,
-  isMobile,
-  isSmp,
-} from "../modules/utils";
-import { URLJoin } from "../modules/utils";
-import { downloadImage } from "../organisms/ImageView";
-import { withCookies } from "react-cookie";
-import { BASE_URL } from "../modules/env";
-import FavoriteButton, { useFavoriteButton } from "../atoms/FavoriteButton";
-import { useDomDispatch, useDomState } from "../contexts/DomContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -24,8 +11,23 @@ import {
   faImages,
   faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
-import DownloadButton from "../atoms/DownloadButton";
-import DropdownMobileFriendly from "./DropdownMobileFriendly";
+import { withCookies } from "react-cookie";
+
+import {
+  geneIsFavoriteGetterSetter,
+  generateAlt,
+  isMobile,
+  isSmp,
+  URLJoin,
+} from "~/utils";
+import { downloadImage } from "~/components/organisms/ImageView";
+import { BASE_URL } from "~/constants/env";
+import FavoriteButton, {
+  useFavoriteButton,
+} from "~/components/atoms/FavoriteButton";
+import { useDomDispatch, useDomState } from "~/contexts/DomContext";
+import DownloadButton from "~/components/atoms/DownloadButton";
+import DropdownMobileFriendly from "~/components/molecules/DropdownMobileFriendly";
 
 const ToBlogButton = (props) => {
   const { title, url } = props;
@@ -49,7 +51,7 @@ const ToBlogButton = (props) => {
 
 const ImageCard = (props) => {
   const {
-    url,
+    urlPath,
     srcCollection,
     imageId,
     initIsFavorite,
@@ -190,7 +192,7 @@ const ImageCard = (props) => {
       >
         <Link
           to={{
-            pathname: url,
+            pathname: urlPath,
             state: { prevSrc: srcCollection },
           }}
         >
@@ -242,7 +244,7 @@ const ImageCard = (props) => {
                 className={"image-card-download-button-ver2"}
                 groupId={groupId}
                 onClick={() => {
-                  downloadImage(URLJoin(url), csrftoken);
+                  downloadImage(URLJoin(BASE_URL, urlPath), csrftoken);
                 }}
               />
             )}
@@ -264,7 +266,7 @@ const ImageCard = (props) => {
                       type: "ONCLICK",
                       label: "この画像をダウンロードする",
                       onClick: () => {
-                        downloadImage(URLJoin(BASE_URL, url), csrftoken);
+                        downloadImage(URLJoin(BASE_URL, urlPath), csrftoken);
                       },
                       icon: faDownload,
                     },
@@ -303,7 +305,7 @@ const ImageCard = (props) => {
             {footerMessage && (
               <Link
                 to={{
-                  pathname: url,
+                  pathname: urlPath,
                   state: { prevSrc: srcCollection },
                 }}
                 onMouseEnter={() => {
@@ -349,7 +351,7 @@ const ImageCard = (props) => {
                 },
                 {
                   type: "LINK",
-                  pathname: url,
+                  pathname: urlPath,
                   state: { prevSrc: srcCollection },
                   label: "詳細ページへ",
                   icon: faChevronCircleRight,

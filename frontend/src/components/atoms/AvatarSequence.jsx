@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { isMobile } from "../modules/utils";
-import TooltipComponent from "./TooltipComponent";
+
+import { isMobile } from "~/utils";
+import TooltipComponent from "~/components/atoms/TooltipComponent";
 
 /** アバター等のアイコンを連続に表示(ex. 推しメン一覧)
  *  要素同士が少し重なり合い, カーソルを合わせると最前面に表示される.

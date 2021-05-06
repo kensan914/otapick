@@ -87,17 +87,17 @@ class BlogSerializer(serializers.ModelSerializer):
 class BlogSerializerVerDetail(BlogSerializer):
     class Meta:
         model = Blog
-        fields = ['blog_ct', 'title', 'post_date', 'writer', 'num_of_views',
-                  'num_of_downloads', 'official_url', 'url', 'images', 'VIEW_KEY', 'DOWNLOAD_KEY']
+        fields = ['group_id', 'blog_ct', 'title', 'post_date', 'writer', 'num_of_views',
+                  'num_of_downloads', 'url', 'official_url', 'images', 'VIEW_KEY', 'DOWNLOAD_KEY']
 
     post_date = serializers.DateTimeField(format='%Y/%m/%d %H:%M')
-    url = serializers.SerializerMethodField()
+    # url = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
     VIEW_KEY = serializers.SerializerMethodField()
     DOWNLOAD_KEY = serializers.SerializerMethodField()
 
-    def get_url(self, obj):
-        return otapick.generate_url(blog=obj)
+    # def get_url(self, obj):
+    #     return otapick.generate_url(blog=obj)
 
     def get_images(self, obj):
         images = Image.objects.filter(publisher=obj).order_by('order')

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
-import { generateRandomSeed } from "../modules/utils";
+import { generateRandomSeed } from "~/utils";
 
 /**
  * buttonタグとLinkコンポーネントを併用したい際に

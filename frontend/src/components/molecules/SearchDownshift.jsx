@@ -1,6 +1,11 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
+import { Button } from "reactstrap";
 import Downshift from "downshift";
 import axios from "axios";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   URLJoin,
   isMobile,
@@ -8,22 +13,18 @@ import {
   lockScreen,
   unLockScreen,
   documentScrollHandler,
-} from "../modules/utils";
+} from "~/utils";
 import {
   NotFoundBlogsContent,
   NotFoundMembersContent,
-} from "../atoms/NotFound";
-import { withRouter } from "react-router-dom";
+} from "~/components/atoms/NotFound";
 import {
   BASE_URL,
   DELAY_TIME,
   MOBILE_TOP_MENU_MT,
   NAVBAR_LS_ZINDEX,
-} from "../modules/env";
-import { Button } from "reactstrap";
-import { HorizontalLoader } from "./Loader";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from "~/constants/env";
+import { HorizontalLoader } from "~/components/molecules/Loader";
 
 class SearchDownshift extends React.Component {
   constructor(props) {

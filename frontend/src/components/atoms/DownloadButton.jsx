@@ -1,18 +1,12 @@
 import React from "react";
 import { Button } from "reactstrap";
-
-import { BASE_URL, GROUPS } from "../modules/env";
-import { URLJoin } from "../modules/utils";
-import { downloadImage } from "../organisms/ImageView";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
+import { GROUPS } from "~/constants/env";
+
 const DownloadButton = (props) => {
   const { onClick, groupId, className } = props;
-
-  const onClickDownloadButton = () => {
-    downloadImage(URLJoin(BASE_URL, url), csrftoken);
-  };
 
   return (
     <Button
@@ -27,8 +21,6 @@ const DownloadButton = (props) => {
         className="download-button-shadow-svg"
       />
     </Button>
-
-    // <></>
   );
 };
 

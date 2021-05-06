@@ -1,7 +1,8 @@
 import React from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import RoundButton from "../../atoms/RoundButton";
-import { useDomDispatch } from "../../contexts/DomContext";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+
+import RoundButton from "~/components/atoms/RoundButton";
+import { useDomDispatch } from "~/contexts/DomContext";
 
 const ImageDownloadedModal = (props) => {
   const { isOpen, toggle } = props;

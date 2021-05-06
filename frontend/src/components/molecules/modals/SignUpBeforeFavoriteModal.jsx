@@ -1,11 +1,11 @@
+import React, { useRef, useState } from "react";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
 import lottie from "lottie-web";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
-import RoundButton from "../../atoms/RoundButton";
-import { GROUPS } from "../../modules/env";
+import RoundButton from "~/components/atoms/RoundButton";
+import { GROUPS } from "~/constants/env";
 
 const SignUpBeforeFavoriteModal = (props) => {
   const { isOpen, toggle } = props;
