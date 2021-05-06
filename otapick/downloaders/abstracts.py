@@ -13,6 +13,7 @@ class Downloader(metaclass=ABCMeta):
     def set_media_dir_path_list(self, **kwargs):
         pass
 
+    # デフォルトではそのままのファイル名(ドットファイルは対処有)
     def generate_filename(self, **kwargs):
         file_name = os.path.basename(kwargs['url'])
         # ファイル名が無いドットファイルにファイル名を与える。(.jpg⇒_.jpg)
