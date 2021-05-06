@@ -1,4 +1,6 @@
 import os
+
+from environ.environ import VERSION
 from otapick.downloaders.abstracts import Downloader
 from otapick.image.implements import ImageCompressor, ImageTrimmer
 
@@ -7,6 +9,17 @@ class MemberImageDownloader(Downloader):
     def set_media_dir_path_list(self, **kwargs):
         self.media_dir_path_list = ['member_images', str(
             kwargs['group_id']) + '_' + kwargs['ct']]
+
+    # ファイル名をバージョンに依存(メンバー画像を変更した時にキャッシュで更新されない問題の解決)
+    def generate_filename(self, **kwargs):
+        _, ext = os.path.splitext(kwargs['url'])  # ext: '.jpg'
+        filename = '{}_{}_{}{}'.format(  # ex) '1_01_4.7.3.jpg'
+            str(kwargs['group_id']),
+            kwargs['ct'],
+            VERSION,
+            ext
+        )
+        return filename
 
     def exe_edit(self, path):
         ImageTrimmer().edit(path)
