@@ -1,3 +1,4 @@
+from django.http.response import HttpResponseServerError
 import otapick
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -40,3 +41,22 @@ class MaintenanceView(BaseView):
 
 
 maintenanceView = MaintenanceView.as_view()
+
+
+def server_error(request, template_name='500.html'):
+    import requests
+    import json
+    import traceback
+    requests.post(
+        otapick.SLACK_WEBHOOKS_OTAPICK_BOT_URL,
+        data=json.dumps({
+            'text': '\n'.join([
+                f'=============================',
+                f'500 error alert!!\n',
+                f'Request uri: {request.build_absolute_uri()}',
+                traceback.format_exc(),
+                f'=============================',
+            ]),
+        })
+    )
+    return HttpResponseServerError('<h1>申し訳ございません。只今不具合が発生しております。復旧まで今しばらくお待ちください。</h1>')

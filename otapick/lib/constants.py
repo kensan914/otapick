@@ -46,3 +46,6 @@ TWITTER_AS = 'ulqsDBaJG8eeb7kRZ4DOWpsG6XXVOJvi5YXHF64uC4RaV'
 ### twitter auth ###
 TWITTER_CK_AUTH = '0QJ2ntQSMJmevPXnSHhu2mtEp'
 TWITTER_CS_AUTH = 'TIYFPcNM9YiBN18bPVeFP7lItP6Kd3jlGyM0igs2YbKEhuKtJG'
+
+### slack webhooks ###
+SLACK_WEBHOOKS_OTAPICK_BOT_URL = 'https://hooks.slack.com/services/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'
