@@ -20,6 +20,8 @@ import main.redirect
 from config import settings
 from config.urls import default_urls
 
+# カスタム500エラー・slackへの通知
+handler500 = main.views.server_error
 
 urlpatterns = [
     path('', include(default_urls)),
