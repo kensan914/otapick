@@ -17,6 +17,7 @@ class IndexView(BaseView):
     index_context = dict(**BaseView.context, **{'fqdn': otapick.OTAPICK_FQDN})
 
     def get(self, request, *args, **kwargs):
+        raise
         return render(request, self.html_path, self.index_context)
 
 
@@ -51,11 +52,9 @@ def server_error(request, template_name='500.html'):
         otapick.SLACK_WEBHOOKS_OTAPICK_BOT_URL,
         data=json.dumps({
             'text': '\n'.join([
-                f'=============================',
-                f'500 error alert!!\n',
-                f'Request uri: {request.build_absolute_uri()}',
-                traceback.format_exc(),
-                f'=============================',
+                f':x: *500 ERROR ALERT* :x:',
+                f'Request URL: {request.build_absolute_uri()}',
+                f'```{traceback.format_exc()}```',
             ]),
         })
     )
