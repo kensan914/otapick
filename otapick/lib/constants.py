@@ -22,12 +22,12 @@ WATCH_MORE_IMG_URL = '/static/img/watch_more.png'  # watch more button's backgro
 ### ADS FROM OTAPICK ###
 OTAPICK_TWITTER_URL = 'https://twitter.com/otapick/'
 TWITTER_ADS_URLS = [
-    '/static/img/twitter_ads/1_01.png',
-    '/static/img/twitter_ads/1_02.png',
-    '/static/img/twitter_ads/1_03.png',
-    '/static/img/twitter_ads/1_04.png',
-    '/static/img/twitter_ads/1_05.png',
-    '/static/img/twitter_ads/1_06.png',
+    '/static/img/twitter_ads/v2/01.png',
+    '/static/img/twitter_ads/v2/02.png',
+    '/static/img/twitter_ads/v2/03.png',
+    '/static/img/twitter_ads/v2/04.png',
+    '/static/img/twitter_ads/v2/05.png',
+    '/static/img/twitter_ads/v2/06.png',
 ]
 TWITTER_ADS_WIDTH = 700
 TWITTER_ADS_HEIGHT = 1000
