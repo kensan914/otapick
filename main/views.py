@@ -52,7 +52,8 @@ def server_error(request, template_name='500.html'):
         data=json.dumps({
             'text': '\n'.join([
                 f':x: *500 ERROR ALERT* :x:',
-                f'Request URL: {request.build_absolute_uri()}\n',
+                f'Request URL: {request.build_absolute_uri()}',
+                f'↓↓↓',
                 f'```{traceback.format_exc()}```',
             ]),
         })
