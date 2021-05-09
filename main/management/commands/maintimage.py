@@ -51,6 +51,11 @@ class Command(BaseCommand):
 
             # 不完全な画像ファイルの場合、そのブログの画像をDLしなおし圧縮も合わせて行う。
             try:
+                # 250x・500xがどちらか1つでも欠陥であったら
+                if not(bool(image.picture_250x) and bool(image.picture_500x)):
+                    raise Exception("250x・500x error")
+
+                # PilImageによりopenできるか検査
                 pil_image = PilImage.open(image.picture.path)
                 pil_image.verify()
                 bar.update(1)
