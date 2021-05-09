@@ -303,7 +303,7 @@ def get_additional_data(random_seed, request, filter_group_ids=None):
 
     # twitter ads
     for TWITTER_ADS_URL in otapick.TWITTER_ADS_URLS:
-        data.append({'type': 'twitter', 'message': 'ヲタピックの公式Twitter. フォローはこちらから',
+        data.append({'type': 'twitter', 'message': 'ヲタピックの公式Twitterはこちらから！',
                      'src': TWITTER_ADS_URL, 'url': OTAPICK_TWITTER_URL, 'width': TWITTER_ADS_WIDTH, 'height': TWITTER_ADS_HEIGHT})
 
     data += [None for _ in range(data_length - len(data))]
