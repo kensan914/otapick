@@ -22,12 +22,12 @@ WATCH_MORE_IMG_URL = '/static/img/watch_more.png'  # watch more button's backgro
 ### ADS FROM OTAPICK ###
 OTAPICK_TWITTER_URL = 'https://twitter.com/otapick/'
 TWITTER_ADS_URLS = [
-    '/static/img/twitter_ads/1_01.png',
-    '/static/img/twitter_ads/1_02.png',
-    '/static/img/twitter_ads/1_03.png',
-    '/static/img/twitter_ads/1_04.png',
-    '/static/img/twitter_ads/1_05.png',
-    '/static/img/twitter_ads/1_06.png',
+    '/static/img/twitter_ads/v2/01.png',
+    '/static/img/twitter_ads/v2/02.png',
+    '/static/img/twitter_ads/v2/03.png',
+    '/static/img/twitter_ads/v2/04.png',
+    '/static/img/twitter_ads/v2/05.png',
+    '/static/img/twitter_ads/v2/06.png',
 ]
 TWITTER_ADS_WIDTH = 700
 TWITTER_ADS_HEIGHT = 1000
@@ -48,4 +48,4 @@ TWITTER_CK_AUTH = '0QJ2ntQSMJmevPXnSHhu2mtEp'
 TWITTER_CS_AUTH = 'TIYFPcNM9YiBN18bPVeFP7lItP6Kd3jlGyM0igs2YbKEhuKtJG'
 
 ### slack webhooks ###
-SLACK_WEBHOOKS_OTAPICK_BOT_URL = 'https://hooks.slack.com/services/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'
+SLACK_WEBHOOKS_OTAPICK_BOT_URL = settings.SLACK_WEBHOOKS_OTAPICK_BOT_URL
