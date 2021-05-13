@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from image.models import Image
-from .models import Member, Blog, Group
+from .models import Member, Blog, Group, MemberKeyword
 
 
 @admin.register(Group)
@@ -39,6 +39,18 @@ class MemberAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('format_image',)
 
+@admin.register(MemberKeyword)
+class MemberKeywordAdmin(admin.ModelAdmin):
+    list_display = ('keyword', 'member', 'format_image',)
+    list_display_links = ('keyword',)
+    search_fields = ('keyword',)
+    list_filter = ('member__belonging_group', 'member',)
+
+    def format_image(self, obj):
+        if obj.member.image:
+            return format_html('<a href={} target="_blank"><img src="{}" width="100" style="border-radius: 8px" /></a>', obj.member.image.url, obj.member.image.url)
+    format_image.short_description = 'メンバー画像'
+    format_image.empty_value_display = 'No image'
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):

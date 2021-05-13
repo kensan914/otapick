@@ -445,7 +445,8 @@ class SearchDownshift extends React.Component {
                   <div className={"mt-3 " + (isSmp ? "mb-2" : "mb-4")}>
                     <h5 className="search-suggestions-title">検索方法</h5>
                     <p className="mx-2 search-suggestions-description">
-                      <b>メンバーの名前</b>、または<b>公式ブログのURL</b>
+                      <b>メンバーの名前・あだ名</b>、または
+                      <b>公式ブログのURL</b>
                       を入力してください。
                     </p>
                     <hr className="mb-0" />

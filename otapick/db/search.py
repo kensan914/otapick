@@ -1,6 +1,8 @@
 import re
 from django.db.models import Q
-from main.models import Member, Blog
+from main.models import Member, Blog, MemberKeyword
+import jaconv
+import otapick
 
 '''
 search_blogs() search_members()
@@ -48,17 +50,29 @@ def search_blogs_by_dy(origin_blogs, dy):
 
 
 def search_members(q_info):
-    # 全角⇒半角
-    cleaned_text = q_info['text'].translate(str.maketrans(
-        {chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
+    _text = q_info['text']
 
-    # 最後だけアルファベットの場合、最後を除外(日本語で入力途中の場合 ex. かげやm)
-    if len(cleaned_text) > 1:
-        last_char = cleaned_text[-1]
-        char_other_than_last = cleaned_text[:-1]
-        p_eng = re.compile('[a-z]+')
-        if not p_eng.fullmatch(char_other_than_last) and p_eng.fullmatch(last_char):
-            cleaned_text = char_other_than_last
+    # 全角 ⇒ 半角 & ノーマライズ. ex) 'ｋAげヤmay' => 'kAげヤmay'
+    cleaned_text = jaconv.normalize(_text, 'NFKC')
+    print(1, cleaned_text)
+
+    # カタカナ => ひらがな. ex) 'kAげヤmay' => 'kAげやmay'
+    cleaned_text = jaconv.kata2hira(cleaned_text)
+    print(2, cleaned_text)
+
+    # 大文字 => 小文字. ex) 'kAげやmay' => 'kaげやmay'
+    cleaned_text = cleaned_text.lower()
+    print(3, cleaned_text)
+
+    # 英語 => ひらがな. ex) 'kaげやmay' => {'is_success': False, 'text': 'かげやま'}
+    result = otapick.alphabet2kana(cleaned_text)
+    if result['is_success']:
+        # 全てひらがなの状態
+        cleaned_text = result['text']
+    else:
+        # ひらがな変換が失敗し、
+        cleaned_text = result['text']
+    print(4, cleaned_text)
 
     # メタ文字(* \ | ? +)をエスケープ
     meta_char_tuple = ('\\', '*', '+', '.', '?',
@@ -68,12 +82,26 @@ def search_members(q_info):
             cleaned_text = cleaned_text.replace(
                 meta_char, '\\{}'.format(meta_char))
 
-    members = Member.objects.filter(
+    matched_members = Member.objects.filter(
         Q(full_kana__iregex=r'^%s' % cleaned_text) | Q(first_kana__iregex=r'^%s' % cleaned_text) |
         Q(full_kanji__iregex=r'^%s' % cleaned_text) | Q(first_kanji__iregex=r'^%s' % cleaned_text) |
         Q(full_eng__iregex=r'^%s' % cleaned_text) | Q(
             first_eng__iregex=r'^%s' % cleaned_text)
     )
+
+    matched_member_keywords = MemberKeyword.objects.filter(
+        keyword__iregex=r'^%s' % cleaned_text
+    )
+
+    # keywordもマッチした場合
+    if matched_member_keywords.count() > 0:
+        matched_member_pk_list = [matched_member.pk for matched_member in matched_members]
+        matched_keyword_member_pk_list = [matched_member_keyword.member.pk for matched_member_keyword in matched_member_keywords]
+        member_pk_list = list(set(matched_member_pk_list + matched_keyword_member_pk_list)) # 重複を削除
+        members = Member.objects.filter(pk__in=member_pk_list)
+    else:
+        members = matched_members
+
     if members.exists():
         return members
     else:

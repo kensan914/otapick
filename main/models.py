@@ -65,6 +65,16 @@ class Member(models.Model):
         return self.full_kanji
 
 
+class MemberKeyword(models.Model):
+    class Meta:
+        db_table = 'member_keyword'
+        verbose_name = verbose_name_plural = 'メンバーキーワード'
+        ordering = ['keyword']
+
+    keyword = models.CharField(verbose_name='キーワード (ひらがな・漢字のみ使用)', max_length=100, default='')
+    member = models.ForeignKey(Member, verbose_name='メンバー', on_delete=models.CASCADE)
+
+
 class Blog(models.Model):
     class Meta:
         db_table = 'blog'
