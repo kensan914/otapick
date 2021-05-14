@@ -9,3 +9,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         otapick.init_group()
         otapick.init_member()
+        otapick.init_member_keyword()

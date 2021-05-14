@@ -1,4 +1,4 @@
-from main.models import Group, Member
+from main.models import Group, Member, MemberKeyword
 from otapick.lib.utils import print_console
 import csv
 
@@ -40,6 +40,16 @@ keys_with_int_as_value = [
     'latest_list_paginate_by',
     'latest_list_paginate_by_mobile',
 ]
+member_keyword_key_list = [
+    'group_id',
+    'ct',
+    'full_kanji',
+    'keywords',
+]
+
+# ex) いまゆい.imayui/ずーみん.zu-min/ゆいふる.yuihuru
+MEMBER_KEYWORD_SPLIT_SIGN = '/'
+MEMBER_KEYWORD_SET_SPLIT_SIGN = '.'
 
 
 def init_group():
@@ -130,6 +140,32 @@ def init_member():
                 target_member.save()
     fin.close()
 
+
+def init_member_keyword():
+    '''
+    memberのDB情報をセットしている前提
+    '''
+    fin = open('otapick/db/corpus/memberKeywordList.csv', 'rt', encoding='utf-8')
+    member_keyword_csv_list = csv.DictReader(
+        fin, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
+
+    for member_keyword_csv in member_keyword_csv_list:
+        member_keyword_csv = format_dict_csv(member_keyword_csv, member_keyword_key_list)
+
+        members = Member.objects.filter(
+            ct=member_keyword_csv['ct'], belonging_group__group_id=member_keyword_csv['group_id'])
+        if not members.exists():
+            print_console('{}のメンバー情報は登録されていません。'.format(member_keyword_csv['full_kanji']))
+        else:
+            target_member = members.first()
+            for kw in member_keyword_csv['keywords'].split(MEMBER_KEYWORD_SPLIT_SIGN):
+                if type(kw) == str and len(kw) > 0 and not MemberKeyword.objects.filter(keyword=kw, member=target_member).exists():
+                    MemberKeyword.objects.create(
+                        keyword=kw,
+                        member=target_member
+                    )
+                    print_console('「{}」を{}のキーワードとして登録しました。'.format(kw, target_member.full_kanji))
+    fin.close()
 
 def format_dict_csv(dict_csv, key_list):
     new_dict_csv = {}
