@@ -9,8 +9,8 @@ from main.models import Blog
 class RecommendScoreEvaluator:
     """
     blog, imageのrecommend_scoreの評価。引数にblogまたはimageを受け取り、recommend_scoreを設定したblogまたはimageレコードを返す。
-    評価指標：　スコア、上位メンバーバイアス、ダウンロード数、閲覧数
-    ボーナス：　投稿1年以内ボーナス、　当日ボーナス
+    評価指標： スコア、上位メンバーバイアス、ダウンロード数、閲覧数
+    ボーナス：投稿1年以内ボーナス、当日ボーナス
     """
 
     def __init__(self, high_score_members, mode):
