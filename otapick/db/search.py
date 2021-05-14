@@ -54,15 +54,12 @@ def search_members(q_info):
 
     # 全角 ⇒ 半角 & ノーマライズ. ex) 'ｋAげヤmay' => 'kAげヤmay'
     cleaned_text = jaconv.normalize(_text, 'NFKC')
-    print(1, cleaned_text)
 
     # カタカナ => ひらがな. ex) 'kAげヤmay' => 'kAげやmay'
     cleaned_text = jaconv.kata2hira(cleaned_text)
-    print(2, cleaned_text)
 
     # 大文字 => 小文字. ex) 'kAげやmay' => 'kaげやmay'
     cleaned_text = cleaned_text.lower()
-    print(3, cleaned_text)
 
     # 英語 => ひらがな. ex) 'kaげやmay' => {'is_success': False, 'text': 'かげやま'}
     result = otapick.alphabet2kana(cleaned_text)
@@ -72,7 +69,6 @@ def search_members(q_info):
     else:
         # ひらがな変換が失敗し、
         cleaned_text = result['text']
-    print(4, cleaned_text)
 
     # メタ文字(* \ | ? +)をエスケープ
     meta_char_tuple = ('\\', '*', '+', '.', '?',
