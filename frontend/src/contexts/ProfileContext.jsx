@@ -10,6 +10,7 @@ import {
   URLJoin,
 } from "~/utils";
 import { useAuthState } from "~/contexts/AuthContext";
+import { useAuthDispatch } from "~/contexts/AuthContext";
 
 const initProfile = Object.freeze({
   id: "",
@@ -76,12 +77,24 @@ const ProfileProvider = ({ children }) => {
   });
 
   const authState = useAuthState();
+  const authDispatch = useAuthDispatch();
+
   const { request } = useAxios(URLJoin(BASE_URL, "me/"), "get", {
     thenCallback: (res, resData) =>
       profileDispatch({
         type: "SET_PROFILE",
         profile: resData,
       }),
+    catchCallback: (err) => {
+      if (err?.response?.status === 401) {
+        // ログアウト (認証エラー時)
+        authDispatch({
+          type: "COMPLETE_LOGOUT",
+          profileDispatch: profileDispatch,
+        });
+        window.location.href = "/";
+      }
+    },
     token: authState.token,
   });
 

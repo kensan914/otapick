@@ -15,6 +15,7 @@ export const DELAY_TIME = DEBUG ? 0 : 0;
 export const OTAPICK_BRAND_IMG_URL = "/static/img/logotitle.png";
 export const LOAD_IMG_URL = "/static/img/otapick_logo_back.png";
 export const BACKGROUND_IMG_URL = "/static/img/background.png";
+export const MEMBER_NOTFOUND_IMG_URL = "/static/img/member_notfound.png";
 
 export const OTAPICK_TWITTER_URL = "https://twitter.com/otapick/";
 
