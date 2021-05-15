@@ -137,16 +137,18 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
 
     ### new blogs and images ###
     # (全てのブログまたは画像を評価)
-    update_record = []
+    
+    # メモリリークが起こりMySQLがダウンするため対処 (チャンク分割)
     # https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset
-    paginator = Paginator(divided_records[2], 1000)
-    for page_idx in range(1, paginator.num_pages + 1):
-        for record in paginator.page(page_idx).object_list:
-            update_record.append(recommend_score_evaluator.evaluate(record))
-
-    print('before execute bulk_update', 1, len(update_record))
-    Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=1000)
-    print('after execute bulk_update', 1)
+    # paginator = Paginator(divided_records[2], 1000)
+    # for page_idx in range(1, paginator.num_pages + 1):
+    #     update_record = []
+    #     for record in paginator.page(page_idx).object_list:
+    #         update_record.append(recommend_score_evaluator.evaluate(record))
+    #     print('before execute bulk_update', 1, len(update_record))
+    #     Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=1000)
+    
+    # print('after execute bulk_update', 1)
 
     random_upper_limit = divided_records[2].aggregate(
         Max('recommend_score'))['recommend_score__max']
@@ -176,14 +178,14 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
     print('after execute bulk_update', 3)
 
     # (score > 0のblogまたはimageを評価)
-    update_record = []
     paginator = Paginator(divided_records[1].exclude(score=0), 1000)
     for page_idx in range(1, paginator.num_pages + 1):
+        update_record = []
         for record in paginator.page(page_idx).object_list:
             update_record.append(recommend_score_evaluator.evaluate(record))
+        print('before execute bulk_update', 4, len(update_record))
+        Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=1000)
 
-    print('before execute bulk_update', 4, len(update_record))
-    Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=1000)
     print('after execute bulk_update', 4)
 
     # (上位メンバーのブログまたは画像各5件)

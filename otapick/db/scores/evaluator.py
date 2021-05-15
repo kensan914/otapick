@@ -81,7 +81,7 @@ class RecommendScoreEvaluator:
 
         # post_dateを月だけで表現 ex) 2019年9月 => 2019*12 + 9 = 24237
         post_month_score = record_post_date.year * 12 + record_post_date.month
-        current_month_score = self.current.year * 12 + self.current.month  # 　同様
+        current_month_score = self.current.year * 12 + self.current.month  # 同様
         if self.current.day < 15:  # 上旬は先月として考える
             current_month_score -= 1
         diff_month_score = current_month_score - post_month_score
