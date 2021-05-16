@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<head>
+<head{% if is_ogp %} prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {{ og_type }}: http://ogp.me/ns/{{ og_type }}#"{% endif %}>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,8 +30,26 @@
   </script>
   {% endif %}
 
-  <!-- Global Adsense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- OGP -->
+  {% if is_ogp %}
+  <meta property="og:url" content="{{ og_url }}" />
+  <meta property="og:type" content="{{ og_type }}" />
+  <meta property="og:title" content="{{ og_title }}" />
+  <meta property="og:description" content="{{ og_description }}" />
+  <meta property="og:site_name" content="{{ og_site_name }}" />
+  <meta property="og:image" content="{{ og_image }}" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@otapick" />
+  {% endif %}
+
+  <meta http-equiv='x-dns-prefetch-control' content='on'>
+  <link rel="preconnect dns-prefetch" href="https://www.doubleclickbygoogle.com/">
+  <link rel="preconnect dns-prefetch" href="https://www.google.com/analytics/analytics/">
+  <link rel="preconnect dns-prefetch" href="https://fonts.google.com/">
+  <link rel="preconnect dns-prefetch" href="https://marketingplatform.google.com/about/tag-manager/">
+  <link rel="preconnect dns-prefetch" href="https://www.bootstrapcdn.com/">
+  <link rel="preconnect dns-prefetch" href="https://developers.google.com/speed/libraries/">
 </head>
 
 <body>
