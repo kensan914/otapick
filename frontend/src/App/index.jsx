@@ -12,6 +12,7 @@ import ProfileProvider from "~/contexts/ProfileContext";
 import { useInitToken } from "~/hooks/useInitToken";
 import { useConstructor } from "~/hooks/useConstructor";
 import { Administrator } from "~/App/Administrator";
+import { initAdsense } from "~/utils/adsense";
 
 const App = (props) => {
   const { cookies } = props;
@@ -19,6 +20,7 @@ const App = (props) => {
   useConstructor(() => {
     setUserAgent();
     setEnvConstant();
+    initAdsense(window, document);
   }, []);
   const token = useInitToken(cookies);
 
