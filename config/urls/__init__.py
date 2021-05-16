@@ -34,5 +34,9 @@ if settings.DEBUG:
     ]
 
 # catch all other URL
+urlpatterns += [ # for OGP
+    path('blog/<int:group_id>/<int:blog_ct>/', main.views.indexBlogDetailView, name='indexBlogDetailAPI'),
+    path('image/<int:group_id>/<int:blog_ct>/<int:order>/', main.views.indexImageDetailView, name='indexImageDetaillAPI'),
+]
 urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
 urlpatterns += [path('', main.views.indexView, name='indexView')]

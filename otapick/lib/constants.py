@@ -49,3 +49,9 @@ TWITTER_CS_AUTH = 'TIYFPcNM9YiBN18bPVeFP7lItP6Kd3jlGyM0igs2YbKEhuKtJG'
 
 ### slack webhooks ###
 SLACK_WEBHOOKS_OTAPICK_BOT_URL = settings.SLACK_WEBHOOKS_OTAPICK_BOT_URL
+
+
+### OGP ###
+SITE_NAME = 'ヲタピック'
+HOME_TITLE = '櫻坂46・日向坂46のブログ画像を保存するなら'
+DESCRIPTION = f'『{SITE_NAME}』は、櫻坂46・日向坂46の画像や写真を効率よく閲覧・保存ができるサービスです。公式ブログやメンバーリストから推しメンの高画質な画像や写真を探して保存しましょう(PC・スマホ対応)。かっこいい画像も、かわいい画像も、保存しよう、いくらでも。#櫻坂46 #日向坂46'
