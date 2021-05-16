@@ -29,7 +29,7 @@ class OgpView(View):
     og_title = otapick.HOME_TITLE
     og_description = otapick.DESCRIPTION
     og_site_name = otapick.SITE_NAME
-    og_image = f'{otapick.OTAPICK_URL}{otapick.IMAGE_NOT_FOUND_ORDERLY_URL}'
+    og_image = f'{otapick.OTAPICK_URL}{otapick.OGP_IMG_URL}'
 
     def set_ogp_context(self, og_url=None, og_type=None, og_title=None, og_description=None, og_site_name=None, og_image=None):
         self.og_url = og_url if og_url else self.og_url

@@ -18,6 +18,7 @@ IMAGE_NOT_FOUND_HEIGHT = 666
 IMAGE_NOT_FOUND_ORDERLY_URL = '/static/img/logo_square_margin.png'
 OTAPICK_LOGO = '/static/img/logo_square_margin.png'  # otapick logo (square)
 WATCH_MORE_IMG_URL = '/static/img/watch_more.png'  # watch more button's background
+OGP_IMG_URL = '/static/img/ogp.png'  # for ogp
 
 ### ADS FROM OTAPICK ###
 OTAPICK_TWITTER_URL = 'https://twitter.com/otapick/'
