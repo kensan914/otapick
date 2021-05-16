@@ -1,3 +1,7 @@
+/**
+ * PageSpeed改善のため、Adsense遅延ロード
+ * ref: https://www.bugbugnow.net/2019/05/GoogleAdSense-lazy-loading.html
+ */
 export const initAdsense = (window, document) => {
   const loadAdsense = () => {
     const ad = document.createElement("script");
@@ -7,7 +11,6 @@ export const initAdsense = (window, document) => {
     ad.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
     const sc = document.getElementsByTagName("script")[0];
     sc.parentNode.insertBefore(ad, sc);
-    console.log("loaded!!");
   };
 
   // 遅延読込み
