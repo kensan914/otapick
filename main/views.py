@@ -54,14 +54,18 @@ class OgpView(View):
 class IndexView(BaseView, OgpView):
     index_context = dict(
         **BaseView.context,
-        **{'fqdn': otapick.OTAPICK_FQDN},
+        **{'fqdn': ''},
     )
 
     @abstractmethod
     def set_other_ogp_context(self, request):
         pass
 
+    def set_fqdn(self, request):
+        self.index_context['fqdn'] = request.get_host()
+
     def get(self, request, *args, **kwargs):
+        self.set_fqdn(request)
         self.set_ogp_context(og_url=request.build_absolute_uri())
         self.set_other_ogp_context(request)
         return render(

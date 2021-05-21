@@ -15,6 +15,6 @@ urlpatterns = [
 ]
 
 # catch all other URL
-urlpatterns += [re_path(r'^.*/$', main.views.indexAdminView,
+urlpatterns += [re_path(r'^.*/$', main.views.indexView,
                         name='indexAdminView')]
-urlpatterns += [path('', main.views.indexAdminView, name='indexAdminView')]
+urlpatterns += [path('', main.views.indexView, name='indexAdminView')]
