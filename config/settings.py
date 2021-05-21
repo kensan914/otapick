@@ -30,6 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG')
+DEMO = env.bool('DEMO', default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
@@ -122,6 +123,8 @@ DATABASES = {
         },
     }
 }
+if DEMO:
+    DATABASES['default']['OPTIONS']['init_command'] = 'SET foreign_key_checks = 0;'
 
 
 # Password validation
@@ -249,9 +252,9 @@ ACCOUNT_USERNAME_REQUIRED = False  # signup時、username不要
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 # クライアント認証(Djangoからadmin.otapick.comにアクセス)
-CLIENT_SSL_CERT_PATH = env('CLIENT_SSL_CERT_PATH')
-CLIENT_SSL_KEY_PATH = env('CLIENT_SSL_KEY_PATH')
-CLIENT_SSL_PASSWORD = env('CLIENT_SSL_PASSWORD')
+CLIENT_SSL_CERT_PATH = env('CLIENT_SSL_CERT_PATH', default='')
+CLIENT_SSL_KEY_PATH = env('CLIENT_SSL_KEY_PATH', default='')
+CLIENT_SSL_PASSWORD = env('CLIENT_SSL_PASSWORD', default='')
 
 # Slack webhooks URL (git管理するとリジェクトされて使用禁止になるため.envで管理)
-SLACK_WEBHOOKS_OTAPICK_BOT_URL = env('SLACK_WEBHOOKS_OTAPICK_BOT_URL')
+SLACK_WEBHOOKS_OTAPICK_BOT_URL = env('SLACK_WEBHOOKS_OTAPICK_BOT_URL', default='')
