@@ -32,7 +32,7 @@ class MemberAdmin(admin.ModelAdmin):
     format_image.empty_value_display = 'No image'
 
     fieldsets = (
-        (None, {'fields': ('ct', 'belonging_group', 'format_image', 'graduate', 'independence', 'temporary', 'generation')}),
+        (None, {'fields': ('ct', 'belonging_group', 'format_image', 'image', 'graduate', 'independence', 'temporary', 'generation')}),
         ('名前', {'fields': (
         'last_kanji', 'first_kanji', 'full_kanji', 'last_kana', 'first_kana', 'full_kana', 'last_eng', 'first_eng',
         'full_eng')}),

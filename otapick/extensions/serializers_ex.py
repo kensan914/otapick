@@ -12,11 +12,11 @@ def generate_url(blog=None, member=None, needBlogs=True, needImages=True):
         if member.independence:
             ct = member.ct
         elif member.belonging_group.group_id == 1:
-            ct = Member.objects.get(
-                belonging_group__group_id=1, temporary=True).ct
+            ct = Member.objects.filter(
+                belonging_group__group_id=1, temporary=True).first().ct
         elif member.belonging_group.group_id == 2:
-            ct = Member.objects.get(
-                belonging_group__group_id=2, temporary=True).ct
+            ct = Member.objects.filter(
+                belonging_group__group_id=2, temporary=True).first().ct
 
         blogs_url = '/blogs/{}/{}/'.format(member.belonging_group.group_id, ct)
         images_url = '/images/{}/{}/'.format(

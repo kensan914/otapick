@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import os
 from datetime import datetime
 import otapick
+import json
 
 
 def clean_text(text):
@@ -52,7 +53,10 @@ def shape_ct(group_id, ct):
             return group_id, '0' + str(intCt)
         return group_id, str(intCt)
     elif group_id == 2:
-        return group_id, str(intCt)
+        if intCt == 0: # ポカ
+            return group_id, ct
+        else:
+            return group_id, str(intCt)
 
     return group_id, ct
 
@@ -85,3 +89,15 @@ def genes_scheme_host_from_host(host):
         return 'https://{}/'.format(host)
     else:
         return 'http://{}/'.format(host)
+
+
+def parse_json(json_s):
+    """
+    受け取ったJSON文字列をパースし, dictionaryで返す.
+    パース不可能な場合, Noneを返却
+    """
+    try:
+        json_dict = json.loads(json_s)
+        return json_dict
+    except:
+        return None

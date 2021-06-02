@@ -11,7 +11,7 @@ import { DEBUG } from "~/constants/env";
  * @param method
  * @param action
  */
-const initAxios = (url, method, action) => {
+export const initAxios = (url, method, action) => {
   const actionKeys = Object.keys(action);
 
   const axiosSettings = {
@@ -53,7 +53,7 @@ const initAxios = (url, method, action) => {
 /**
  * カスタムHooks ver, Function verの共通タスク(then)処理
  */
-const useCommonThen = (res, action, setResData) => {
+export const useCommonThen = (res, action, setResData) => {
   const formattedResData = deepCvtKeyFromSnakeToCamel(res.data);
 
   if (action.thenCallback !== void 0) {
@@ -61,12 +61,14 @@ const useCommonThen = (res, action, setResData) => {
     DEBUG && console.log(res, formattedResData);
   }
   setResData && setResData(formattedResData);
+
+  return formattedResData;
 };
 
 /**
  * カスタムHooks ver, Function verの共通タスク(catch)処理
  */
-const useCommonCatch = (err, action) => {
+export const useCommonCatch = (err, action) => {
   if (err.response) {
     console.error(err.response);
   } else {
@@ -77,11 +79,13 @@ const useCommonCatch = (err, action) => {
 /**
  * カスタムHooks ver, Function verの共通タスク(finally)処理
  */
-const useCommonFinally = (action) => {
+export const useCommonFinally = (action) => {
   if (action.finallyCallback !== void 0) action.finallyCallback();
 };
 
 /** axiosを使用したリクエストのカスタムHooks
+ * 
+ * requestAxios()と異なり、状態を保持することができるため、limitRequestによるリクエスト回数制限等が可能.
  * @param {string} url
  * @param {string} method [get, post, delete, put, patch]
  * @param {object} action [data, thenCallback, catchCallback, finallyCallback, didRequestCallback, token, shouldRequestDidMount, limitRequest, csrftoken, headers]
@@ -205,16 +209,34 @@ export const useAxios = (url, method, action) => {
 
 /**
  * axiosを使用したリクエスト(Function ver)
- * @param url
- * @param method
- * @param action
+ * 
+ * useAxiosが使えない場面(コンポーネント外)で用いる.
+ * @param {string} url
+ * @param {string} method [get, post, delete, put, patch]
+ * @param {object} action [data, thenCallback, catchCallback, finallyCallback, didRequestCallback, token, csrftoken, headers]
+ * @example
+  requestAxios(URLJoin(BASE_URL, ".../"), "post", {
+    data: {},
+    thenCallback: (res, resData) => { }, // resDataは, 整形済みであり型安全が保証されているためasしても構わない
+    catchCallback: err => { },
+    token: authState.token,
+  });
+ *
  */
-const requestAxios = (url, method, action) => {
+export const requestAxios = (url, method, action) => {
   // init axios
   const [axiosInstance, axiosSettings] = initAxios(url, method, action);
   const _axiosSettings = { ...axiosSettings };
 
-  axiosInstance
+  // set didRequestCallback
+  axiosInstance.interceptors.request.use((request) => {
+    if ("didRequestCallback" in action) {
+      action.didRequestCallback();
+    }
+    return request;
+  });
+
+  return axiosInstance
     .request(_axiosSettings)
     .then((res) => {
       useCommonThen(res, action);
@@ -226,5 +248,3 @@ const requestAxios = (url, method, action) => {
       useCommonFinally(action);
     });
 };
-
-export default requestAxios;

@@ -5,7 +5,6 @@ import { BASE_URL, GROUPS } from "~/constants/env";
 import SettingsHeader from "~/components/templates/SettingsTemplate/molecules/SettingsHeader";
 import SettingsSelector from "~/components/templates/SettingsTemplate/molecules/SettingsSelector";
 import SettingsSubmit from "~/components/templates/SettingsTemplate/molecules/SettingsSubmit";
-import { useAxios } from "~/hooks/useAxios";
 import {
   deepCvtKeyFromSnakeToCamel,
   equalsArray,
@@ -14,6 +13,7 @@ import {
 } from "~/utils";
 import { HorizontalLoader } from "~/components/molecules/Loader";
 import { useProfileDispatch, useProfileState } from "~/contexts/ProfileContext";
+import { useAxiosQuery } from "~/hooks/useAxiosQuery";
 
 const FavMembersSettingsTemplate = () => {
   const [favGroupIds, setFavGroupIds] = useState();
@@ -121,12 +121,10 @@ const FavMembersSettingsTemplate = () => {
   }, [favMembers, favGroupIds?.length]);
 
   const [members, setMembers] = useState(); // {hinata: [Array(11), Array(9), Array(4)], sakura: [Array(21), Array(15)]}
-  useAxios(URLJoin(BASE_URL, "members/"), "get", {
-    thenCallback: (res, resData) => {
-      const _members = resData;
-      setMembers(_members);
+  useAxiosQuery(URLJoin(BASE_URL, "members/"), {
+    thenCallback: (resData) => {
+      setMembers(resData);
     },
-    shouldRequestDidMount: true,
   });
 
   return (
@@ -196,10 +194,19 @@ const FavMembersEditor = (props) => {
   };
 
   const geneSettingsSelectorItems = (members, groupKey) => {
-    const memberListByG = members[groupKey]; // ex) [Array(11), Array(9), Array(4)]
+    const memberCollectionByG = members[groupKey]; // ex) { "1": Array(11), "2": Array(9), "3": Array(4) }
     let items = [{ key: resetKey, label: "リセット" }];
-    memberListByG.forEach((memberListByGeneration, i) /* Array(11) */ => {
-      const generation = i + 1;
+
+    Object.keys(memberCollectionByG).forEach((generation) /* "1" */ => {
+      // other(ex. ポカ)は除外
+      const groupObject = Object.values(GROUPS).find(
+        (groupObject) => groupObject.key === groupKey
+      );
+      if (groupObject.otherMemberGeneration == generation) {
+        return;
+      }
+
+      const memberListByGeneration = memberCollectionByG[generation];
       const headerItem = { label: `${generation}期生` };
       items.push(headerItem);
 

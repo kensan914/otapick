@@ -7,7 +7,8 @@ import MemberCard from "~/components/molecules/MemberCard";
 
 export const MemberListByGeneration = (props) => {
   const {
-    generation,
+    generation, // ?: number
+    title, // ?: string
     members,
     wavesVals,
     group,
@@ -18,7 +19,16 @@ export const MemberListByGeneration = (props) => {
   return (
     <>
       <div className="row justify-content-between mx-2">
-        <h3 className="my-auto d-flex align-items-center">{generation}期生</h3>
+        {typeof generation !== "undefined" ? (
+          <h3 className="my-auto d-flex align-items-center">
+            {generation}期生
+          </h3>
+        ) : (
+          typeof title !== "undefined" && (
+            <h3 className="my-auto d-flex align-items-center">{title}</h3>
+          )
+        )}
+
         <button
           onClick={() => setTogglerMemory(group, index)}
           className="btn rounded-circle p-0 otapick-hidden-button my-auto"
@@ -46,6 +56,7 @@ export const MemberListByGeneration = (props) => {
                 firstKana,
                 belongingGroup,
                 graduate,
+                isOther,
               },
               i
             ) => (
@@ -67,6 +78,7 @@ export const MemberListByGeneration = (props) => {
                   belongingGroup={belongingGroup}
                   wavesVals={wavesVals}
                   graduate={graduate}
+                  isOther={isOther}
                 />
               </div>
             )

@@ -104,18 +104,20 @@ class Headline extends React.Component {
       axios
         .get(url)
         .then((res) => {
-          const _membersCollection = this.initMembers;
+          const _membersCollection = { ...this.initMembers };
           Object.values(GROUPS).forEach((groupObj) => {
             if (groupObj.isActive) {
-              _membersCollection[groupObj.id] = [];
-              for (const membersByGene of res.data[groupObj.key]) {
-                _membersCollection[groupObj.id].push(
-                  membersByGene.map((member) => ({
-                    url: member.url,
-                    full_kanji: member.full_kanji,
-                  }))
-                );
-              }
+              // _membersCollection[groupObj.id] = [];
+              // for (const membersByGene of res.data[groupObj.key]) {
+              //   _membersCollection[groupObj.id].push(
+              //     Object.values(membersByGene).map((member) => ({
+              //       url: member.url,
+              //       full_kanji: member.full_kanji,
+              //     }))
+              //   );
+              // }
+              const memberCollectionByGroup = { ...res.data[groupObj.key] };
+              _membersCollection[groupObj.id] = memberCollectionByGroup;
             }
           });
           this.setState({
@@ -236,30 +238,57 @@ class Headline extends React.Component {
                         : []),
                       ...(() => {
                         let membersMenuSettings = [];
-                        for (const [
-                          index,
-                          membersDividedByGeneration,
-                        ] of this.state.membersCollection[
-                          groupObj.id
-                        ].entries()) {
-                          membersMenuSettings = [
-                            ...membersMenuSettings,
+                        let hasOtherMemberGeneration = false;
+
+                        const appendMembersGeneration = (
+                          _membersMenuSettings,
+                          _generation,
+                          isOther
+                        ) => {
+                          _membersMenuSettings = [
+                            ..._membersMenuSettings,
                             {
                               type: "TITLE",
-                              label: `${index + 1}期生`,
+                              label: isOther ? "その他" : `${_generation}期生`,
                             },
                           ];
-                          membersMenuSettings = [
-                            ...membersMenuSettings,
-                            ...membersDividedByGeneration.map(
-                              ({ url, full_kanji }) => ({
-                                type: "LINK",
-                                pathname: url[this.props.type],
-                                label: full_kanji,
-                              })
-                            ),
+                          _membersMenuSettings = [
+                            ..._membersMenuSettings,
+                            ...this.state.membersCollection[groupObj.id][
+                              _generation
+                            ].map(({ url, full_kanji }) => ({
+                              type: "LINK",
+                              pathname: url[this.props.type],
+                              label: full_kanji,
+                            })),
                           ];
+
+                          return _membersMenuSettings;
+                        };
+
+                        Object.keys(
+                          this.state.membersCollection[groupObj.id]
+                        ).forEach((generation) => {
+                          if (generation == groupObj.otherMemberGeneration) {
+                            hasOtherMemberGeneration = true;
+                            return;
+                          }
+
+                          membersMenuSettings = appendMembersGeneration(
+                            membersMenuSettings,
+                            generation
+                          );
+                        });
+
+                        // その他メンバー追加
+                        if (hasOtherMemberGeneration) {
+                          membersMenuSettings = appendMembersGeneration(
+                            membersMenuSettings,
+                            groupObj.otherMemberGeneration,
+                            true
+                          );
                         }
+
                         return membersMenuSettings;
                       })(),
                     ]}

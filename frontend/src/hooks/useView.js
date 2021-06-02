@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useRouteMatch } from "react-router";
+import { useRouteMatch } from "react-router";
 
-import { URLJoin, deepCvtKeyFromSnakeToCamel, getGroup } from "~/utils";
+import { URLJoin, getGroup } from "~/utils";
 import { BASE_URL } from "~/constants/env";
-import { useAxios } from "~/hooks/useAxios";
+import { useAxiosQuery } from "~/hooks/useAxiosQuery";
 
 /**
  * blog・image兼用のhooks. URL(match.params)から各値を取得し返却.
@@ -42,8 +42,6 @@ export const useViewUrl = (groupId, blogCt, order) => {
 };
 
 export const useView = (blogApiUrl, setMetaVerView, order) => {
-  const location = useLocation();
-
   const [images, setImages] = useState();
   const [blog, setBlog] = useState();
 
@@ -53,39 +51,30 @@ export const useView = (blogApiUrl, setMetaVerView, order) => {
 
   const [isReadyView, setIsReadyView] = useState(false);
 
-  useAxios(blogApiUrl, "get", {
-    thenCallback: (res) => {
-      let blogData = {};
-      if (!status && res.data["status"] !== "blog_not_found") {
-        blogData = deepCvtKeyFromSnakeToCamel({ ...res.data });
-      }
-      if (res.data["status"] === "success") {
+  useAxiosQuery(blogApiUrl, {
+    thenCallback: (resData) => {
+      const blogData = resData;
+      if (resData["status"] === "success") {
         // order error(orderが渡されるimageのみ有効. blogはそのままパスされる)
-        if (
-          typeof order !== "undefined" &&
-          res.data["images"].length <= order
-        ) {
+        if (typeof order !== "undefined" && resData.images.length <= order) {
           setStatus("get_image_failed");
           setBlog(blogData);
           setMetaVerView && setMetaVerView("get_image_failed");
         } else {
           setBlog(blogData);
-          setImages(
-            res.data["images"].map((image) => deepCvtKeyFromSnakeToCamel(image))
-          );
+          setImages(resData.images);
           setStatus("success");
-          setViewKey(res.data["VIEW_KEY"]);
-          setDownloadKey(res.data["DOWNLOAD_KEY"]);
+          setViewKey(resData.viewKey);
+          setDownloadKey(resData.downloadKey);
 
           setMetaVerView &&
             setMetaVerView("success", blogData.title, blogData.writer.name);
         }
-      } else if (res.data["status"] === "blog_not_found") {
+      } else if (resData["status"] === "blog_not_found") {
         setStatus("blog_not_found");
         setMetaVerView && setMetaVerView("blog_not_found");
       }
     },
-    shouldRequestDidMount: true,
   });
 
   useEffect(() => {

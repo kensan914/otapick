@@ -40,8 +40,7 @@ class Downloader(metaclass=ABCMeta):
             file = open(path, 'wb')
             urllib3.disable_warnings(InsecureRequestWarning)
             response = requests.get(url, verify=False)
-            # exclude gif
-            if response.headers['Content-Type'] == 'image/gif':
+            if response.headers['Content-Type'] == 'image/gif' and response.headers['Content-Length'].isdecimal() and int(response.headers['Content-Length']) < 10000:
                 return 'not_image'
             if response.status_code == 200:
                 data = response.content
@@ -52,6 +51,8 @@ class Downloader(metaclass=ABCMeta):
             file.close()
             return result
         except:
+            import traceback
+            traceback.print_exc()
             return
 
     def exe_edit(self, path):

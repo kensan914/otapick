@@ -20,23 +20,53 @@ export const MemberListTemplate = (props) => {
   let numOfHit = 0;
   Object.values(GROUPS).forEach((groupObj) => {
     if (groupObj.key === groupKey) {
-      for (const [index, members] of membersCollection[groupObj.id].entries()) {
-        membersComponent.push(
-          <MemberListByGeneration
-            key={`${groupKey}-${index + 1}`}
-            generation={index + 1}
-            members={members}
-            wavesVals={wavesVals}
-            group={groupKey}
-            isOpen={togglerMemory[groupObj.key][index]}
-            index={index}
-            setTogglerMemory={(groupKey, index) =>
-              storeTogglerMemory(groupKey, index)
-            }
-          />
-        );
+      for (const [generate, members] of Object.entries(
+        membersCollection[groupObj.id]
+      )) {
+        if (generate != groupObj.otherMemberGeneration) {
+          membersComponent.push(
+            <MemberListByGeneration
+              key={`${groupKey}-${generate}`}
+              generation={generate}
+              members={members}
+              wavesVals={wavesVals}
+              group={groupKey}
+              isOpen={togglerMemory[groupObj.key][generate]}
+              index={generate}
+              setTogglerMemory={(groupKey, index) =>
+                storeTogglerMemory(groupKey, index)
+              }
+            />
+          );
+        }
+
         numOfHit += members.length;
       }
+    }
+  });
+
+  // その他メンバーの追加
+  Object.values(GROUPS).forEach((groupObj) => {
+    if (
+      groupObj.key === groupKey &&
+      groupObj.otherMemberGeneration in membersCollection[groupObj.id]
+    ) {
+      membersComponent.push(
+        <MemberListByGeneration
+          key={`${groupKey}-other-members`}
+          title={"その他"}
+          members={
+            membersCollection[groupObj.id][groupObj.otherMemberGeneration]
+          }
+          wavesVals={wavesVals}
+          group={groupKey}
+          isOpen={togglerMemory[groupObj.key][groupObj.otherMemberGeneration]}
+          index={groupObj.otherMemberGeneration}
+          setTogglerMemory={(groupKey, index) =>
+            storeTogglerMemory(groupKey, index)
+          }
+        />
+      );
     }
   });
 
