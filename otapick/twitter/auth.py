@@ -1,8 +1,11 @@
+from otapick.lib.utils import parse_json
 import oauth2 as oauth
 from otapick.lib.constants import TWITTER_CK_AUTH, TWITTER_CS_AUTH
 from urllib.parse import urljoin
 from urllib.parse import urlparse
 import traceback
+import sys
+
 
 request_token_url = 'https://twitter.com/oauth/request_token'
 access_token_url = 'https://twitter.com/oauth/access_token'
@@ -18,13 +21,23 @@ def get_request_token(scheme_host):
         # reqest_token を取得
         resp, content = client.request(
             '{}?&oauth_callback={}'.format(request_token_url, urljoin(scheme_host, callback_url_path)))
-        qsl = parse_qsl(content.decode('utf-8'))
+        url = content.decode('utf-8')
+
+        # エラー処理
+        url_json = parse_json(url)
+        if url_json is not None and 'errors' in url_json:
+            for error in url_json['errors']:
+                if 'code' in error and error['code'] == 135:
+                    raise Exception('サーバ時間にずれが生じています')
+            raise Exception('Twitter API auth error!!')
+
+        qsl = parse_qsl(url)
         if qsl is None:
             return
         request_token = dict(qsl)
         return request_token['oauth_token']
     except Exception as e:
-        traceback.print_stack()
+        traceback.print_exc()
         return
 
 

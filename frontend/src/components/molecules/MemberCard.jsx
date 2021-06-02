@@ -112,7 +112,7 @@ class MemberCard extends React.Component {
                     label: "ブログ一覧へ",
                     icon: faNewspaper,
                   },
-                  !this.props.graduate
+                  !this.props.graduate && !this.props.isOther
                     ? {
                         type: "ANCHOR",
                         href: this.props.officialUrl,

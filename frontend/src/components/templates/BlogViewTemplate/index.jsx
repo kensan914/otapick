@@ -7,7 +7,7 @@ import { LoaderScreen } from "~/components/molecules/Loader";
 import { NotFoundMessage } from "~/components/atoms/NotFound";
 import { BlogSearchListInfo } from "~/components/templates/BlogSearchListTemplate/organisms/BlogSearchListInfo";
 
-const BlogViewTemplate = (props) => {
+export const BlogViewTemplate = (props) => {
   const {
     mode,
     changeMode,
@@ -91,5 +91,3 @@ const BlogViewTemplate = (props) => {
     </div>
   );
 };
-
-export default BlogViewTemplate;

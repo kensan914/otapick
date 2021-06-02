@@ -39,7 +39,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
         if blogs_data is None:
             return
         elif len(blogs_data) == 0:
-            otapick.print_console("register unacquired　blog...")
+            otapick.print_console("register unacquired blog...")
             exe_registration(simultime_blogs, simultime_post_date,
                              group_id, all_check, tweet, console=True)
             otapick.print_console("finished!!")

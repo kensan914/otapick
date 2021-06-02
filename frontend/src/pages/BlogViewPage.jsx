@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { withCookies } from "react-cookie";
 
 import { useDomDispatch, useDomState } from "~/contexts/DomContext";
-import requestAxios, { useAxios } from "~/hooks/useAxios";
+import { useAxios, requestAxios } from "~/hooks/useAxios";
 import { useCacheRoute } from "~/hooks/useCacheRoute";
-import BlogViewTemplate from "~/components/templates/BlogViewTemplate";
+import { BlogViewTemplate } from "~/components/templates/BlogViewTemplate";
 import {
   useView,
   useViewMatchParams,
@@ -20,7 +20,6 @@ const BlogViewPage = (props) => {
   const csrftoken = cookies.get("csrftoken");
   const domState = useDomState();
   const domDispatch = useDomDispatch();
-  // const location = useLocation();
 
   const { groupId, blogCt, groupKey } = useViewMatchParams();
   const { blogApiUrl, blogUrlPath, geneImageApiUrl } = useViewUrl(
@@ -28,7 +27,6 @@ const BlogViewPage = (props) => {
     blogCt
   );
   const [mode, setMode] = useState("VIEW"); // "VIEW" | "DL"
-  // const [blogId] = useState(`${groupId}_${blogCt}_${location.key}`);
   const [accessedBlogId] = useState(`${groupId}_${blogCt}`);
 
   const { setMeta } = useMeta();

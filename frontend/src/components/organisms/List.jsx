@@ -93,7 +93,6 @@ export const useListState = () => {
   const [items, setItems] = useState([]);
   const appendItems = (newItems) => {
     setItems([...items, ...newItems]);
-    // setItems(items.concat(newItems));
   };
 
   const [status, setStatus] = useState("");

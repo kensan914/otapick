@@ -31,6 +31,7 @@ member_key_list = [
     'independence',
     'temporary',
     'generation',
+    'is_other',
 ]
 keys_with_int_as_value = [
     'group_id',
@@ -120,6 +121,7 @@ def init_member():
                 independence=member_csv['independence'],
                 temporary=member_csv['temporary'],
                 generation=member_csv['generation'],
+                is_other=member_csv['is_other'],
             )
             print_console('{} is registered!'.format(member_csv['full_kanji']))
 
@@ -142,9 +144,9 @@ def init_member():
 
 
 def init_member_keyword():
-    '''
+    """
     memberのDB情報をセットしている前提
-    '''
+    """
     fin = open('otapick/db/corpus/memberKeywordList.csv', 'rt', encoding='utf-8')
     member_keyword_csv_list = csv.DictReader(
         fin, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)

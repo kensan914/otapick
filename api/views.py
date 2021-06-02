@@ -12,31 +12,31 @@ from account.models import MAX_FAVORITE_IMAGES_NUM_UNLIMITED_SIGN
 import otapick
 
 
-# {'sakura': [[1期生], [2期生]], 'hinata': [[1期生], [2期生], [3期生]]} ☚今後、メンバーが増えてもこのクラスをいじる必要はない
 class MemberListAPIView(views.APIView):
+    """
+    {
+        "sakura": { "1": [1期生], "2": [2期生] },
+        "hinata": { "1": [1期生], "2": [2期生], "3": [3期生], "0": [その他メンバー] },
+    } ☚今後、メンバーが増えてもこのクラスをいじる必要はない
+    """
     # generate member list separated by its generation.
-    def generate_member_list(self, members):
-        member_dict = {}  # key is its generation.
+    def generate_member_collection(self, members):
+        member_collection = {}  # key is its generation.
         for member in members:
-            if not str(member.generation) in member_dict:
-                member_dict[str(member.generation)] = []
-            member_dict[str(member.generation)].append(member)
-        # [('1', [<石森>, <今泉>,...]), ('2', [<井上>, <遠藤>,...])]
-        sorted_members = sorted(member_dict.items())
-        # [[<石森>, <今泉>,...], [<井上>, <遠藤>,...]]
-        member_list = [member_tuple[1] for member_tuple in sorted_members]
-        return member_list
+            if not str(member.generation) in member_collection:
+                member_collection[str(member.generation)] = []
+            member_collection[str(member.generation)].append(member)
+        return member_collection
 
     def get(self, request, *args, **kwargs):
         data = {}
         for group in Group.objects.filter(is_active=True):
-            members_by_group = Member.objects.filter(
-                belonging_group=group).exclude(generation=0)
-            member_list_by_group = self.generate_member_list(members_by_group)
-            for i, target in enumerate(member_list_by_group):
-                member_list_by_group[i] = MemberSerializer(
-                    target, many=True).data
-            data[group.key] = member_list_by_group
+            members_by_group = Member.objects.filter(belonging_group=group)
+            member_collection_by_group = self.generate_member_collection(members_by_group)
+            for gene, member_list_by_gene in member_collection_by_group.items():
+                member_collection_by_group[gene] = MemberSerializer(
+                    member_list_by_gene, many=True).data
+            data[group.key] = member_collection_by_group
 
         return Response(data, status.HTTP_200_OK)
 
@@ -552,16 +552,16 @@ class SearchSuggestionsInitAPIView(views.APIView):
                     groups = [sakura_group.id if group_id ==
                               keyaki_group.id else group_id for group_id in groups]
                 base_members = Member.objects.filter(
-                    belonging_group_id__in=groups, temporary=False)
+                    belonging_group_id__in=groups, temporary=False, is_other=False)
             else:
-                base_members = Member.objects.filter(temporary=False)
+                base_members = Member.objects.filter(temporary=False, is_other=False)
 
             # この時点でbase_membersが存在しない場合(ex. groups=12,23)
             if not base_members.exists():
-                base_members = Member.objects.filter(temporary=False)
+                base_members = Member.objects.filter(temporary=False, is_other=False)
         else:
             base_blogs = Blog.objects.all()
-            base_members = Member.objects.filter(temporary=False)
+            base_members = Member.objects.filter(temporary=False, is_other=False)
 
         # popularity_blogs
         popularity_blogs = otapick.sort_blogs(

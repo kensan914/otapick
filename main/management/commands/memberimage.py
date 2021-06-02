@@ -24,7 +24,7 @@ class Command(BaseCommand):
         member_image_downloader = otapick.MemberImageDownloader()
         member_image_downloader_ex = otapick.MemberImageDownloaderEx()
 
-        members = Member.objects.filter(temporary=False)
+        members = Member.objects.filter(temporary=False, is_other=False)
         members = members if options['group'] is None else members.filter(belonging_group__group_id=options['group'])
         for member in members:
             if not member.image or (options['force'] and not member.graduate) or options['fforce']:
