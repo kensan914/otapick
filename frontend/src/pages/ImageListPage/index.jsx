@@ -1,6 +1,6 @@
 import React from "react";
 
-import ImageListTemplate from "~/components/templates/ImageListTemplate";
+import { ImageListTemplate } from "~/components/templates/ImageListTemplate";
 import { useImageListInfo } from "~/pages/ImageListPage/useImageListInfo";
 import {
   useListMatchParams,

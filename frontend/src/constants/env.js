@@ -103,6 +103,7 @@ export const GROUPS = {
     bookmarkAnimationData: bookmarkSakuraAnimationData,
     color: "#f9c1cf",
     deepColor: "#FF93AE",
+    otherMemberGeneration: 0, // その他メンバーの期
   },
   3: {
     id: 3,
@@ -116,6 +117,7 @@ export const GROUPS = {
     bookmarkAnimationData: bookmarkKeyakiAnimationData,
     color: "#4be057",
     deepColor: "#46E954",
+    otherMemberGeneration: 0, // その他メンバーの期
   },
   2: {
     id: 2,
@@ -131,6 +133,7 @@ export const GROUPS = {
     downloadAnimationData: downloadHinataAnimationData,
     color: "#5de7ff",
     deepColor: "#8EEEFF",
+    otherMemberGeneration: 0, // その他メンバーの期
   },
 };
 

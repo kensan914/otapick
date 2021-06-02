@@ -10,7 +10,7 @@ from tqdm import tqdm
 class Command(BaseCommand):
     help = '全てのImageをメンテナンス。↓メンテナンス内容' \
            '1. ファイル名が無いドットファイルにファイル名を与える。(.jpg⇒_.jpg)' \
-           '2. gifファイルを排除' \
+           '【廃止】2. gifファイルを排除' \
            '3. 不完全な画像ファイルの場合、そのブログの画像をDLしなおし圧縮も合わせて行う。(閲覧数などは変化しない)'
 
     def add_arguments(self, parser):
@@ -44,10 +44,11 @@ class Command(BaseCommand):
                       str(image.order), 'resolve .file!!')
 
             # gifファイルを排除
-            if os.path.splitext(str(image.picture))[1] == '.gif':
-                otapick.delete_image(image)
-                print(str(image.publisher.title) + '/' +
-                      str(image.order), 'resole gif file!!')
+            # 【廃止. デコメ絵文字を除外するため採用していたが, 公式がブログ画像としてgifファイルを配信しだしたため】 
+            # if os.path.splitext(str(image.picture))[1] == '.gif':
+            #     otapick.delete_image(image)
+            #     print(str(image.publisher.title) + '/' +
+            #           str(image.order), 'resole gif file!!')
 
             # 不完全な画像ファイルの場合、そのブログの画像をDLしなおし圧縮も合わせて行う。
             try:

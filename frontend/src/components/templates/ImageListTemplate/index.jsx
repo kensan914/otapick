@@ -1,12 +1,11 @@
 import React from "react";
-import queryString from "query-string";
 
 import ImageList from "~/components/templates/ImageListTemplate/organisms/ImageList";
 import Headline from "~/components/molecules/Headline";
 import { isMobile } from "~/utils";
 import { ImageListInfo } from "~/components/templates/ImageListTemplate/organisms/ImageListInfo";
 
-const ImageListTemplate = (props) => {
+export const ImageListTemplate = (props) => {
   const {
     groupId,
     ct,
@@ -49,16 +48,4 @@ const ImageListTemplate = (props) => {
       <ImageList />
     </div>
   );
-};
-
-export default ImageListTemplate;
-
-export const getImageUrlComposition = (props) => {
-  const groupID = props.match?.params ? props.match.params.groupID : null;
-  const ct = props.match?.params ? props.match.params.ct : null;
-
-  const qs = queryString.parse(props.location.search);
-  const orderFormat = typeof qs.sort == "undefined" ? "recommend" : qs.sort;
-
-  return { groupID, ct, orderFormat };
 };

@@ -64,10 +64,10 @@ export const scrollTop = () => {
   );
 };
 
-export const getGroup = (groupID) => {
+export const getGroup = (groupId) => {
   let group = "";
   Object.values(GROUPS).forEach((groupObj) => {
-    if (groupObj.id == groupID) group = groupObj.key;
+    if (groupObj.id == groupId) group = groupObj.key;
   });
   return group;
 };

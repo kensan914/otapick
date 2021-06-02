@@ -20,6 +20,7 @@ export const BlogSearchListTemplate = (props) => {
     searchStatus,
     searchType,
     wavesVals,
+    isLoadingRequestGetSearch,
   } = props;
 
   let itemsComponent;
@@ -91,7 +92,10 @@ export const BlogSearchListTemplate = (props) => {
   } else itemsComponent = null;
 
   let contents;
-  if (itemsComponent !== null && searchStatus === "success") {
+
+  if (isLoadingRequestGetSearch) {
+    contents = <LoaderScreen type="horizontal" />;
+  } else if (itemsComponent !== null && searchStatus === "success") {
     contents = (
       <div className="container">
         <div className="row mb-5" style={{ marginTop: "2rem" }}>

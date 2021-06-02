@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 
 import { getGroup, generateWavesVals, isMobile, URLJoin } from "~/utils";
 import { BASE_URL } from "~/constants/env";
-import { useAxios } from "~/hooks/useAxios";
 import { BlogSearchListTemplate } from "~/components/templates/BlogSearchListTemplate";
 import { useMeta } from "~/hooks/useMeta";
+import { useAxiosQuery } from "~/hooks/useAxiosQuery";
 
 const BlogSearchListPage = () => {
   const location = useLocation();
@@ -24,16 +24,15 @@ const BlogSearchListPage = () => {
   const [wavesVals, setWavesVals] = useState([]);
 
   const { setMeta } = useMeta();
-  const { request: requestGetSearch } = useAxios(
+  const { isLoading: isLoadingRequestGetSearch } = useAxiosQuery(
     URLJoin(
       BASE_URL,
       "search/",
       `?q=${encodeURIComponent(qs.q)}`,
       isMobile ? "?mobile=true" : void 0
     ),
-    "get",
     {
-      thenCallback: (res, resData) => {
+      thenCallback: (resData) => {
         if (resData["status"] === "success" && resData["type"] === "url") {
           // redirect to blog view
           if (resData["items"].length == 1) {
@@ -95,9 +94,9 @@ const BlogSearchListPage = () => {
     }
   );
 
-  useEffect(() => {
-    requestGetSearch();
-  }, [location.search]);
+  // useEffect(() => {
+  //   requestGetSearch();
+  // }, [location.search]);
 
   return (
     <BlogSearchListTemplate
@@ -110,6 +109,7 @@ const BlogSearchListPage = () => {
       searchStatus={searchStatus}
       searchType={searchType}
       wavesVals={wavesVals}
+      isLoadingRequestGetSearch={isLoadingRequestGetSearch}
     />
   );
 };

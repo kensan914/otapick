@@ -3,25 +3,25 @@ import React, { useState } from "react";
 import { URLJoin, getGroup, generateWavesVals } from "~/utils";
 import { BASE_URL, GROUPS, MEMBERS_DESCRIPTION } from "~/constants/env";
 import { useConstructor } from "~/hooks/useConstructor";
-import { useAxios } from "~/hooks/useAxios";
 import { MemberListTemplate } from "~/components/templates/MemberListTemplate/index";
 import { useMeta } from "~/hooks/useMeta";
+import { useAxiosQuery } from "~/hooks/useAxiosQuery";
 
 const MemberListPage = () => {
   const [initMembers] = useState({});
   const [initTogglerMemory] = useState({});
   useConstructor(() => {
     Object.values(GROUPS).forEach(
-      (groupObj) => (initMembers[groupObj.id] = [])
+      (groupObj) => (initMembers[groupObj.id] = {})
     );
     Object.values(GROUPS).forEach(
-      (groupObj) => (initTogglerMemory[groupObj.key] = [])
+      (groupObj) => (initTogglerMemory[groupObj.key] = {})
     );
   });
 
   const [groupKey, setGroupKey] = useState(Object.values(GROUPS)[0].key);
-  const [membersCollection, setMemberCollection] = useState(initMembers);
-  const [wavesVals, setWavesVals] = useState([]);
+  const [memberCollection, setMemberCollection] = useState(initMembers);
+  const [wavesVals] = useState(generateWavesVals());
   const [togglerMemory, setTogglerMemory] = useState(initTogglerMemory);
 
   const storeTogglerMemory = (group, index) => {
@@ -31,39 +31,33 @@ const MemberListPage = () => {
   };
 
   const { setMeta } = useMeta();
-  useAxios(URLJoin(BASE_URL, "members/"), "get", {
-    thenCallback: (res) => {
+  useAxiosQuery(URLJoin(BASE_URL, "members/"), {
+    thenCallback: (resData) => {
       const _membersCollection = { ...initMembers };
       const _togglerMemory = { ...initTogglerMemory };
       Object.values(GROUPS).forEach((groupObj) => {
         if (groupObj.isActive) {
-          _membersCollection[groupObj.id] = [];
-          for (const membersByGene of res.data[groupObj.key]) {
-            _membersCollection[groupObj.id].push(
-              membersByGene.map((member) => ({
-                image: member.image,
-                url: member.url,
-                officialUrl: member.official_url,
-                ct: member.ct,
-                lastKanji: member.last_kanji,
-                firstKanji: member.first_kanji,
-                lastKana: member.last_kana,
-                firstKana: member.first_kana,
-                belongingGroup: getGroup(member.belonging_group),
-                graduate: member.graduate,
-              }))
-            );
-          }
+          const memberCollectionByGroup = { ...resData[groupObj.key] };
+          _membersCollection[groupObj.id] = memberCollectionByGroup;
 
-          const _togglerMemory_by_group = new Array(
-            _membersCollection[groupObj.id].length
-          );
-          _togglerMemory_by_group.fill(true);
+          Object.keys(memberCollectionByGroup).forEach((generate) => {
+            _membersCollection[groupObj.id][generate] = memberCollectionByGroup[
+              generate
+            ].map((member) => {
+              const _member = { ...member };
+              _member.belongingGroup = getGroup(member.belongingGroup);
+              return _member;
+            });
+          });
+
+          const _togglerMemory_by_group = {};
+          Object.keys(memberCollectionByGroup).forEach((generate) => {
+            _togglerMemory_by_group[generate] = true;
+          });
           _togglerMemory[groupObj.key] = _togglerMemory_by_group;
         }
       });
       setMemberCollection(_membersCollection);
-      setWavesVals(generateWavesVals());
       setTogglerMemory(_togglerMemory);
 
       setMeta(
@@ -71,7 +65,6 @@ const MemberListPage = () => {
         MEMBERS_DESCRIPTION
       );
     },
-    shouldRequestDidMount: true,
   });
 
   const changeGroup = (_groupKey) => {
@@ -85,7 +78,7 @@ const MemberListPage = () => {
   return (
     <MemberListTemplate
       groupKey={groupKey}
-      membersCollection={membersCollection}
+      membersCollection={memberCollection}
       wavesVals={wavesVals}
       togglerMemory={togglerMemory}
       storeTogglerMemory={storeTogglerMemory}

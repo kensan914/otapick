@@ -1,7 +1,7 @@
 from config import settings
 
 ### Version ###
-VERSION = '4.3.13'
+VERSION = '4.3.14'
 
 ### URL ###
 OTAPICK_COM = 'otapick.com'
