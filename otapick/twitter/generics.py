@@ -53,8 +53,7 @@ class RankBot(TwitterBot, ABC):
             text += self.generate_link('もっと見る', self.otapick_link)
             text += '\n'
 
-        # attention
-        text += '※下記の画像は圧縮されているため、当サイトでの保存を推奨します。\n'
+        text += '#ヲタピック\n'
 
         return text
 
