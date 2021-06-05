@@ -30,11 +30,12 @@ const MemberListPage = () => {
   // groupKey
   const validateGroupKey = (_groupKey) => {
     // 初期状態は, 推しグループにより決定
-    const initGroupObj = sortGROUPSByFav(
-      profileState.profile.favGroups.filter(
-        (_favGroup) => _favGroup.key !== "keyaki" // 欅は除外
-      )
-    )[0];
+    const favGroupsExcludeKeyaki = profileState.profile.favGroups
+      ? profileState.profile.favGroups.filter(
+          (_favGroup) => _favGroup.key !== "keyaki" // 欅は除外
+        )
+      : profileState.profile.favGroups;
+    const initGroupObj = sortGROUPSByFav(favGroupsExcludeKeyaki)[0];
     if (_groupKey) {
       const groupObj = Object.values(GROUPS).find(
         (_groupObj) => _groupObj.key === _groupKey
