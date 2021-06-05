@@ -13,6 +13,7 @@ export const MemberListTemplate = (props) => {
     wavesVals,
     togglerMemory,
     storeTogglerMemory,
+    locationKey,
   } = props;
 
   let membersComponent = [];
@@ -72,7 +73,7 @@ export const MemberListTemplate = (props) => {
   return (
     <div className="container mt-3 text-muted">
       <Headline
-        key={groupKey}
+        key={locationKey}
         title="メンバーリスト"
         type="members"
         group={groupKey}

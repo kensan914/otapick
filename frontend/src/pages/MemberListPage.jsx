@@ -111,6 +111,7 @@ const MemberListPage = () => {
       wavesVals={wavesVals}
       togglerMemory={togglerMemory}
       storeTogglerMemory={storeTogglerMemory}
+      locationKey={location.key}
     />
   );
 };
