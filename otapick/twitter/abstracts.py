@@ -72,8 +72,6 @@ class TwitterBot(metaclass=ABCMeta):
     def set_group_id(self, group_id):
         self.group_id = group_id
         if group_id == 1:
-            self.group_emoji = emoji.emojize(
-                ':deciduous_tree:', use_aliases=True)
+            self.group_emoji = '🤍💗'
         elif group_id == 2:
-            self.group_emoji = emoji.emojize(
-                ':sun_with_face:', use_aliases=True)
+            self.group_emoji = '💙💜'

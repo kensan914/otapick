@@ -21,9 +21,9 @@ class UpdateBot(TwitterBot):
         text = ''
 
         # headline
-        text += self.group_emoji
+        text += '🔔'
         text += '坂道ブログ更新通知'
-        text += emoji.emojize(':rainbow:', use_aliases=True)
+        text += self.group_emoji
         text += '\n\n'
 
         # blog title
@@ -39,16 +39,14 @@ class UpdateBot(TwitterBot):
             blog.writer.belonging_group.name, max_length=10))
 
         # official link
-        text += self.generate_link('公式', generate_official_url(blog=blog))
+        text += self.generate_link('公式ブログで読む', generate_official_url(blog=blog))
 
         # otapick link
-        text += self.generate_link('もっと見る',
+        text += self.generate_link('ヲタピックで画像保存',
                                    urljoin(OTAPICK_URL, generate_url(blog=blog)))
         text += '\n'
 
-        # attention
-        if Image.objects.filter(publisher=blog).exists():
-            text += '※下記の画像は圧縮されているため、当サイトでの保存を推奨します。\n'
+        text += '#ヲタピック\n'
 
         return text
 

@@ -346,12 +346,17 @@ class Headline extends React.Component {
                 return (
                   <Button
                     key={groupObj.id}
-                    className={
-                      `rounded-pill mode-select-button ${groupObj.key} ` +
-                      (fixed ? "fixed " : " ") +
-                      (this.props.group === groupObj.key ? "active" : "")
-                    }
-                    onClick={() => this.props.changeGroup(groupObj.key)}
+                    className={`rounded-pill mode-select-button ${
+                      groupObj.key
+                    } ${fixed ? "fixed" : ""} ${
+                      this.props.group === groupObj.key ? "active" : ""
+                    }`}
+                    // to={`/members/?group=${groupObj.key}`}
+                    onClick={() => {
+                      this.props.history.push(
+                        `/members/?group=${groupObj.key}`
+                      );
+                    }}
                   >
                     <b>{groupObj.name}</b>
                   </Button>

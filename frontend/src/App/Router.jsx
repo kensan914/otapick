@@ -71,7 +71,6 @@ export const Router = () => {
             multiple={10}
           />
 
-          {/* <Route exact path="/images/" render={() => <ImageListPage />} /> */}
           <CacheRoute
             exact
             path="/images/"
