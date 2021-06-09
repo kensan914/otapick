@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 
 class Command(BaseCommand):
-    help = 'width・heightのいずれかが未設定の全ての画像にwidth・heightを設定'
+    help = "width・heightのいずれかが未設定の全ての画像にwidth・heightを設定"
 
     def handle(self, *args, **options):
         add_images = []
@@ -23,8 +23,10 @@ class Command(BaseCommand):
 
             if len(add_images) > 100:
                 Image.objects.bulk_update(
-                    add_images, fields=['width', 'height'], batch_size=10000)
+                    add_images, fields=["width", "height"], batch_size=10000
+                )
                 add_images = []
 
         Image.objects.bulk_update(
-            add_images, fields=['width', 'height'], batch_size=10000)
+            add_images, fields=["width", "height"], batch_size=10000
+        )

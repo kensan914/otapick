@@ -27,12 +27,18 @@ def shift_score(blogs=None, images=None, order=True):
                 obj.v1_per_day = 0
                 obj.changed = True
                 update_record.append(obj)
-                if len(update_record) > 500:  # 最後に一気にbulk_updateするとMySQLとの接続時間が長いと怒られるため対処
-                    model.objects.bulk_update(update_record,
-                                              fields=['v1_per_day', 'v2_per_day', 'v3_per_day', 'changed'])
+                if (
+                    len(update_record) > 500
+                ):  # 最後に一気にbulk_updateするとMySQLとの接続時間が長いと怒られるため対処
+                    model.objects.bulk_update(
+                        update_record,
+                        fields=["v1_per_day", "v2_per_day", "v3_per_day", "changed"],
+                    )
                     update_record = []
-            model.objects.bulk_update(update_record, fields=[
-                                      'v1_per_day', 'v2_per_day', 'v3_per_day', 'changed'])
+            model.objects.bulk_update(
+                update_record,
+                fields=["v1_per_day", "v2_per_day", "v3_per_day", "changed"],
+            )
         else:
             objects = objects.exclude(v2_per_day=0, v3_per_day=0)
             update_record = []
@@ -43,11 +49,15 @@ def shift_score(blogs=None, images=None, order=True):
                 obj.changed = True
                 update_record.append(obj)
                 if len(update_record) > 500:
-                    model.objects.bulk_update(update_record,
-                                              fields=['v1_per_day', 'v2_per_day', 'v3_per_day', 'changed'])
+                    model.objects.bulk_update(
+                        update_record,
+                        fields=["v1_per_day", "v2_per_day", "v3_per_day", "changed"],
+                    )
                     update_record = []
-            model.objects.bulk_update(update_record, fields=[
-                                      'v1_per_day', 'v2_per_day', 'v3_per_day', 'changed'])
+            model.objects.bulk_update(
+                update_record,
+                fields=["v1_per_day", "v2_per_day", "v3_per_day", "changed"],
+            )
     if images is not None:
         images = images.exclude(d1_per_day=0)
         update_record = []
@@ -55,8 +65,7 @@ def shift_score(blogs=None, images=None, order=True):
             image.d1_per_day = 0
             image.changed = True
             image.save()
-        model.objects.bulk_update(update_record, fields=[
-                                  'd1_per_day', 'changed'])
+        model.objects.bulk_update(update_record, fields=["d1_per_day", "changed"])
 
 
 def increment_num_of_views(blog=None, image=None, num=0):
@@ -79,7 +88,7 @@ def increment_num_of_downloads(images, blog, num):
     """
     引数にimage、またはそのリストとpublisherを渡す。numだけnum_of_downloadsを増やす
     """
-    if hasattr(images, '__iter__'):
+    if hasattr(images, "__iter__"):
         for image in images:
             image.num_of_downloads += num
             image.d1_per_day += num
@@ -102,6 +111,9 @@ def edit_num_of_most_downloads(blog):
     """
     blogのnum_of_most_downloadsを更新。
     """
-    blog.num_of_most_downloads = Image.objects.filter(
-        publisher=blog).order_by('-num_of_downloads')[0].num_of_downloads
+    blog.num_of_most_downloads = (
+        Image.objects.filter(publisher=blog)
+        .order_by("-num_of_downloads")[0]
+        .num_of_downloads
+    )
     blog.save()

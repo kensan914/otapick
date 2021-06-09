@@ -17,20 +17,34 @@ class RecommendScoreEvaluator:
         self.rate = [2, 2, 3, 3]
         self.high_score_members = high_score_members
         self.mode = mode
-        if mode == 'blog':
-            self.score_deviation = DeviationEvaluator(Blog.objects.exclude(
-                score=0).values_list('score', flat=True))  # valuesの登録。
-            self.downloads_deviation = DeviationEvaluator(Blog.objects.exclude(
-                num_of_most_downloads=0).values_list('num_of_most_downloads', flat=True))
-            self.views_deviation = DeviationEvaluator(Blog.objects.exclude(
-                num_of_views=0).values_list('num_of_views', flat=True))
-        elif mode == 'image':
-            self.score_deviation = DeviationEvaluator(Image.objects.exclude(
-                score=0).values_list('score', flat=True))  # valuesの登録。
-            self.downloads_deviation = DeviationEvaluator(Image.objects.exclude(
-                num_of_downloads=0).values_list('num_of_downloads', flat=True))
-            self.views_deviation = DeviationEvaluator(Image.objects.exclude(
-                num_of_views=0).values_list('num_of_views', flat=True))
+        if mode == "blog":
+            self.score_deviation = DeviationEvaluator(
+                Blog.objects.exclude(score=0).values_list("score", flat=True)
+            )  # valuesの登録。
+            self.downloads_deviation = DeviationEvaluator(
+                Blog.objects.exclude(num_of_most_downloads=0).values_list(
+                    "num_of_most_downloads", flat=True
+                )
+            )
+            self.views_deviation = DeviationEvaluator(
+                Blog.objects.exclude(num_of_views=0).values_list(
+                    "num_of_views", flat=True
+                )
+            )
+        elif mode == "image":
+            self.score_deviation = DeviationEvaluator(
+                Image.objects.exclude(score=0).values_list("score", flat=True)
+            )  # valuesの登録。
+            self.downloads_deviation = DeviationEvaluator(
+                Image.objects.exclude(num_of_downloads=0).values_list(
+                    "num_of_downloads", flat=True
+                )
+            )
+            self.views_deviation = DeviationEvaluator(
+                Image.objects.exclude(num_of_views=0).values_list(
+                    "num_of_views", flat=True
+                )
+            )
         self.current = datetime.date.today()
 
     def evaluate(self, record):
@@ -42,9 +56,9 @@ class RecommendScoreEvaluator:
 
         # 上位メンバーバイアス
         for high_score_members_by_G in self.high_score_members:
-            if self.mode == 'blog':
+            if self.mode == "blog":
                 writer = record.writer
-            elif self.mode == 'image':
+            elif self.mode == "image":
                 writer = record.publisher.writer
             else:
                 writer = None
@@ -60,9 +74,9 @@ class RecommendScoreEvaluator:
         scores.append(result * self.rate[2])
 
         # 閲覧数
-        if self.mode == 'blog':
+        if self.mode == "blog":
             value = record.num_of_most_downloads
-        elif self.mode == 'image':
+        elif self.mode == "image":
             value = record.num_of_downloads
         else:
             value = None
@@ -72,9 +86,9 @@ class RecommendScoreEvaluator:
         score = sum(scores)
 
         # 投稿1年以内ボーナス
-        if self.mode == 'blog':
+        if self.mode == "blog":
             record_post_date = record.post_date
-        elif self.mode == 'image':
+        elif self.mode == "image":
             record_post_date = record.publisher.post_date
         else:
             record_post_date = None
@@ -97,8 +111,9 @@ class RecommendScoreEvaluator:
     def add_bonus(self, score, diff_post):
         diff_score = 10 - score  # score=4.6のとき、diff_score=5.4
         diff_score_ceil = math.ceil(diff_score)  # 切り上げ。diff_score=6
-        diff_score_decimal = diff_score - \
-            math.floor(diff_score)  # 小数部分 diff_score_decimal=0.4
+        diff_score_decimal = diff_score - math.floor(
+            diff_score
+        )  # 小数部分 diff_score_decimal=0.4
 
         if diff_score_ceil > 0:
             # ボーナスの選択肢。bonus_choice=[0, 1, 2, 3, 4, 5]
@@ -118,7 +133,11 @@ class RecommendScoreEvaluator:
 
     def add_bonus_the_day(self, score, post_date):
         # 当日ボーナス
-        if post_date.day == self.current.day and post_date.month == self.current.month and post_date.year == self.current.year:
+        if (
+            post_date.day == self.current.day
+            and post_date.month == self.current.month
+            and post_date.year == self.current.year
+        ):
             return self.add_bonus(score, 0)
         else:
             return score

@@ -17,16 +17,18 @@ class MemberImageCrawler(ImageCrawler):
         str: 指定したメンバーの個人アー写のURL(success)
         None: (failed)
     """
-    keyaki_url = ['https://www.keyakizaka46.com/s/k46o/artist/',
-                  Code.CT, '?ima=0000']
+
+    keyaki_url = ["https://www.keyakizaka46.com/s/k46o/artist/", Code.CT, "?ima=0000"]
     hinata_url = [
-        'https://www.hinatazaka46.com/s/official/artist/', Code.CT, '?ima=0000']
-    sakura_url = ['https://sakurazaka46.com/s/s46/artist/',
-                  Code.CT, '?ima=0000']
+        "https://www.hinatazaka46.com/s/official/artist/",
+        Code.CT,
+        "?ima=0000",
+    ]
+    sakura_url = ["https://sakurazaka46.com/s/s46/artist/", Code.CT, "?ima=0000"]
     ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_member_image_tag(kwargs['group_key'], soup)
+        return parsers.get_member_image_tag(kwargs["group_key"], soup)
 
     def crawl(self, group_key, ct):
         return super().crawl(group_key=group_key, ct=ct)
@@ -44,13 +46,16 @@ class MemberImageCrawlerEx(ImageCrawler):
         str: 指定したメンバーの個人アー写のURL(success)
         None: (failed)
     """
-    other_url = ['https://48pedia.org/',  Code.MEMBER_NAME]
+
+    other_url = ["https://48pedia.org/", Code.MEMBER_NAME]
 
     def get_tag(self, soup, **kwargs):
         return parsers.get_member_image_tag_ex(soup)
 
     def crawl(self, member_name):
-        return super().crawl(member_name=member_name, image_base_url='https://48pedia.org/')
+        return super().crawl(
+            member_name=member_name, image_base_url="https://48pedia.org/"
+        )
 
 
 class BlogImageCrawler(ImagesCrawler):
@@ -66,16 +71,26 @@ class BlogImageCrawler(ImagesCrawler):
         list: 指定したブログに含まれる画像のURLリスト(success)
         None: (failed)
     """
-    keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=member']
-    hinata_url = ['https://www.hinatazaka46.com/s/official/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=member']
-    sakura_url = ['https://sakurazaka46.com/s/s46/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=blog']
+
+    keyaki_url = [
+        "https://www.keyakizaka46.com/s/k46o/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=member",
+    ]
+    hinata_url = [
+        "https://www.hinatazaka46.com/s/official/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=member",
+    ]
+    sakura_url = [
+        "https://sakurazaka46.com/s/s46/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=blog",
+    ]
     ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_blog_image_tags(kwargs['group_key'], soup)
+        return parsers.get_blog_image_tags(kwargs["group_key"], soup)
 
     def crawl(self, group_key, blog_ct):
         return super().crawl(group_key=group_key, blog_ct=blog_ct)
@@ -101,24 +116,35 @@ class BlogListCrawler(BlogCrawler):
         }, ...]
         None: (failed)
     """
+
     keyaki_url = [
-        'https://www.keyakizaka46.com/s/k46o/diary/member/list?ima=0000&page=', Code.PAGE]
+        "https://www.keyakizaka46.com/s/k46o/diary/member/list?ima=0000&page=",
+        Code.PAGE,
+    ]
     hinata_url = [
-        'https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000&page=', Code.PAGE]
+        "https://www.hinatazaka46.com/s/official/diary/member/list?ima=0000&page=",
+        Code.PAGE,
+    ]
     sakura_url = [
-        'https://sakurazaka46.com/s/s46/diary/blog/list?ima=0000&page=', Code.PAGE]
+        "https://sakurazaka46.com/s/s46/diary/blog/list?ima=0000&page=",
+        Code.PAGE,
+    ]
     ### Edit ###
 
     # ブログ一覧ページでblog_ctを取得できないため、モバイルのブログ一覧でブログ情報を取得する
-    access_as_mobile_group_keys = ['sakura', ]
+    access_as_mobile_group_keys = [
+        "sakura",
+    ]
     ### Edit ###
 
     # ブログ一覧ページでは情報が不足しているため、ブログごとに詳細ページにとび情報を取得する
-    haveto_access_detail_group_keys = ['sakura', ]
+    haveto_access_detail_group_keys = [
+        "sakura",
+    ]
     ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_blog_tags(kwargs['group_key'], soup)
+        return parsers.get_blog_tags(kwargs["group_key"], soup)
 
     def crawl(self, group_key, page):
         if group_key in self.access_as_mobile_group_keys:
@@ -134,11 +160,13 @@ class BlogListCrawler(BlogCrawler):
         for blog_tag in blog_tags:
             if group_key in self.haveto_access_detail_group_keys:
                 blog_info = self.parse_blog_by_detail(
-                    group_key, blog_tag, blog_detail_crawler)
+                    group_key, blog_tag, blog_detail_crawler
+                )
                 sleep(0.5)
             else:
                 blog_info = self.parse_blog(
-                    group_key, blog_tag, image_base_url=self.image_base_url)
+                    group_key, blog_tag, image_base_url=self.image_base_url
+                )
             if blog_info is None:
                 return
             else:
@@ -159,16 +187,26 @@ class BlogDetailCrawler(BlogCrawler):
         dict: 指定したページに含まれるブログの情報(BlogListCrawlerと同一フォーマット)
         None: (failed)
     """
-    keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=member']
-    hinata_url = ['https://www.hinatazaka46.com/s/official/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=member']
-    sakura_url = ['https://sakurazaka46.com/s/s46/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=blog']
+
+    keyaki_url = [
+        "https://www.keyakizaka46.com/s/k46o/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=member",
+    ]
+    hinata_url = [
+        "https://www.hinatazaka46.com/s/official/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=member",
+    ]
+    sakura_url = [
+        "https://sakurazaka46.com/s/s46/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=blog",
+    ]
     ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_blog_tag(kwargs['group_key'], soup)
+        return parsers.get_blog_tag(kwargs["group_key"], soup)
 
     def crawl(self, group_key, blog_ct):
         blog_tag = super().crawl(group_key=group_key, blog_ct=blog_ct)
@@ -177,7 +215,8 @@ class BlogDetailCrawler(BlogCrawler):
             return 404
 
         blog_info = self.parse_blog(
-            group_key, blog_tag, blog_ct=blog_ct, image_base_url=self.image_base_url)
+            group_key, blog_tag, blog_ct=blog_ct, image_base_url=self.image_base_url
+        )
         if blog_info is None:
             return
         else:
@@ -197,16 +236,26 @@ class TextCrawler(Crawler):
         str: 本文DOM
         None: (failed)
     """
-    keyaki_url = ['https://www.keyakizaka46.com/s/k46o/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=member']
-    hinata_url = ['https://www.hinatazaka46.com/s/official/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=member']
-    sakura_url = ['https://sakurazaka46.com/s/s46/diary/detail/',
-                  Code.BLOG_CT, '?ima=0000&cd=blog']
+
+    keyaki_url = [
+        "https://www.keyakizaka46.com/s/k46o/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=member",
+    ]
+    hinata_url = [
+        "https://www.hinatazaka46.com/s/official/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=member",
+    ]
+    sakura_url = [
+        "https://sakurazaka46.com/s/s46/diary/detail/",
+        Code.BLOG_CT,
+        "?ima=0000&cd=blog",
+    ]
     ### Edit ###
 
     def get_tag(self, soup, **kwargs):
-        return parsers.get_article_tag(kwargs['group_key'], soup)
+        return parsers.get_article_tag(kwargs["group_key"], soup)
 
     def crawl(self, group_key, blog_ct):
         tag = super().crawl(group_key=group_key, blog_ct=blog_ct)

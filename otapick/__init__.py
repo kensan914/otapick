@@ -26,8 +26,11 @@ from .extensions.views_ex import *
 from .crawlers.implements import *
 
 # downloaders
-from .downloaders.implements import MemberImageDownloader, MemberImageDownloaderEx, BlogImageDownloader
-from .downloaders.modules import *
+from .downloaders.implements import (
+    MemberImageDownloader,
+    MemberImageDownloaderEx,
+    BlogImageDownloader,
+)
 
 # twitter
 from .twitter.implements import *

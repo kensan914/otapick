@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class MainConfig(AppConfig):
-    name = 'main'
-    verbose_name = 'otapick~メイン~'
+    name = "main"
+    verbose_name = "otapick~メイン~"

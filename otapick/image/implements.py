@@ -6,14 +6,14 @@ class ImageCompressor(ImageEditor):
     """
     引数widthで指定した幅に圧縮（比率固定）
     """
+
     resize_width = 500
 
     def exe_edit(self, img):
         img_width, img_height = img.size
         resize_height = self.resize_width / img_width * img_height
 
-        img.thumbnail((int(self.resize_width), int(
-            resize_height)), Image.ANTIALIAS)
+        img.thumbnail((int(self.resize_width), int(resize_height)), Image.ANTIALIAS)
         return img
 
     def edit(self, img_path, width=500):
@@ -25,10 +25,11 @@ class ImageTrimmer(ImageEditor):
     """
     正方形にトリミング。その時、範囲は画像上部に合わせる。（メンバー画像の編集に）
     """
-    trim_type = 'square_up'
+
+    trim_type = "square_up"
 
     def exe_edit(self, img):
-        if self.trim_type == 'square_up':
+        if self.trim_type == "square_up":
             img_width, img_height = img.size
             square_side = min(img_width, img_height)
 
@@ -46,6 +47,6 @@ class ImageTrimmer(ImageEditor):
                 bottom = square_side
             return img.crop((left, top, right, bottom))
 
-    def edit(self, img_path, trim_type='square_up'):
+    def edit(self, img_path, trim_type="square_up"):
         self.trim_type = trim_type
         super().edit(img_path=img_path)
