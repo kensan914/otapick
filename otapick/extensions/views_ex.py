@@ -1,13 +1,14 @@
 import math
+from otapick import sort_blogs
 from otapick.lib.constants import (
     OTAPICK_TWITTER_URL,
     TWITTER_ADS_HEIGHT,
     TWITTER_ADS_WIDTH,
+    TWITTER_ADS_URLS,
 )
 import random
 import numpy as np
 from django.db.models import Q
-import otapick
 from api.serializers import ImageSerializer, BlogSerializer, MemberSerializer
 from image.models import Image
 from otapick.db import blog
@@ -350,7 +351,7 @@ def get_additional_data(random_seed, request, filter_group_ids=None):
         # blogs
         blogs = Blog.objects.filter(writer__belonging_group=group)
         most_view_per_day_blogs = blogs.exclude(v1_per_day=0).order_by("-v1_per_day")
-        newest_blogs = otapick.sort_blogs(blogs, "newer_post")
+        newest_blogs = sort_blogs(blogs, "newer_post")
         most_popular_blogs = blogs.exclude(score=0).order_by("-score")
 
         blogs_data = []
@@ -418,7 +419,7 @@ def get_additional_data(random_seed, request, filter_group_ids=None):
             data.append(member_data)
 
     # twitter ads
-    for TWITTER_ADS_URL in otapick.TWITTER_ADS_URLS:
+    for TWITTER_ADS_URL in TWITTER_ADS_URLS:
         data.append(
             {
                 "type": "twitter",

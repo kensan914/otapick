@@ -112,7 +112,7 @@ class Blog(models.Model):
     v2_per_day = models.IntegerField(verbose_name="閲覧数(2日目)", default=0)
     v3_per_day = models.IntegerField(verbose_name="閲覧数(3日目)", default=0)
     score = models.FloatField(verbose_name="スコア(人気順)", default=0)
-    changed = models.BooleanField(verbose_name="変更有(スコア計算用)", default=0)
+    changed = models.BooleanField(verbose_name="変更有(スコア計算用)", default=False)
     recommend_score = models.FloatField(verbose_name="スコア(おすすめ順）", default=0)
 
     def __str__(self):

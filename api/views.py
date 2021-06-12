@@ -10,6 +10,15 @@ from image.models import Favorite
 from main.models import Member, Blog, Group
 from account.models import MAX_FAVORITE_IMAGES_NUM_UNLIMITED_SIGN
 import otapick
+from otapick.extensions.views_ex import (
+    convert_querystring_to_list,
+    get_additional_data,
+    generate_images_data,
+    sort_images_by_related,
+    sort_by_recommend_score,
+    BlogListInfo,
+    ImageListInfo,
+)
 
 
 class MemberListAPIView(views.APIView):
@@ -208,7 +217,7 @@ class BlogListAPIView(views.APIView):
             random_seed_str = self.request.GET.get("random_seed", "0")
             random_seed = int(random_seed_str) if random_seed_str.isdecimal() else 0
             groups_str = self.request.GET.get("groups", "")  # ex) '1,2,   3'
-            groups = otapick.convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
+            groups = convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
 
             base_images = otapick.get_filtered_images_group_ids(groups)
 
@@ -216,7 +225,7 @@ class BlogListAPIView(views.APIView):
                 "publisher__id", flat=True
             )
             blogs = Blog.objects.filter(id__in=blog_ids)
-            blogs_id_list = otapick.sort_by_recommend_score(
+            blogs_id_list = sort_by_recommend_score(
                 blogs, page, random_seed, self.paginate_by
             )
             blogs = [blogs.get(id=pk) for pk in blogs_id_list]
@@ -238,7 +247,7 @@ class BlogListInfoAPIView(views.APIView):
         narrowing_post = self.request.GET.get("post")
 
         return Response(
-            otapick.BlogListInfo(
+            BlogListInfo(
                 group_id, ct, order_format, narrowing_keyword, narrowing_post
             ).get_result(),
             status.HTTP_200_OK,
@@ -352,7 +361,7 @@ class ImageListAPIView(views.APIView):
         else:
             # groups query parameterはrecommendの時のみ有効
             groups_str = self.request.GET.get("groups", "")  # ex) '1,2,   3'
-            groups = otapick.convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
+            groups = convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
 
             images = otapick.get_filtered_images_group_ids(groups)
 
@@ -371,14 +380,12 @@ class ImageListAPIView(views.APIView):
 
         # hove to sort by recommend
         else:
-            images_id_list = otapick.sort_by_recommend_score(
+            images_id_list = sort_by_recommend_score(
                 images, page, random_seed, self.paginate_by
             )
             images = [images.get(id=pk) for pk in images_id_list]
 
-        return Response(
-            otapick.generate_images_data(images, request), status.HTTP_200_OK
-        )
+        return Response(generate_images_data(images, request), status.HTTP_200_OK)
 
 
 imageListAPIView = ImageListAPIView.as_view()
@@ -391,7 +398,7 @@ class ImageListInfoAPIView(views.APIView):
         )
         order_format = self.request.GET.get("sort")
         return Response(
-            otapick.ImageListInfo(group_id, ct, order_format).get_result(),
+            ImageListInfo(group_id, ct, order_format).get_result(),
             status.HTTP_200_OK,
         )
 
@@ -414,13 +421,11 @@ class RelatedImageListAPIView(ImageListAPIView):
             blogs.exists()
             and Image.objects.filter(publisher=blogs.first(), order=order).exists()
         ):
-            images_id_list = otapick.sort_images_by_related(
+            images_id_list = sort_images_by_related(
                 blogs.first(), order, page, self.paginate_by
             )
             images = [Image.objects.get(id=pk) for pk in images_id_list]
-            return Response(
-                otapick.generate_images_data(images, request), status.HTTP_200_OK
-            )
+            return Response(generate_images_data(images, request), status.HTTP_200_OK)
         else:
             return Response({"status": "image_not_found"}, status.HTTP_200_OK)
 
@@ -435,18 +440,16 @@ class HomeAPIView(ImageListAPIView):
         page_str = self.request.GET.get("page", "1")
         page = int(page_str) if page_str.isdecimal() else 1
         groups_str = self.request.GET.get("groups", "")  # ex) '1,2,   3'
-        groups = otapick.convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
+        groups = convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
 
         images = otapick.get_filtered_images_group_ids(groups)
 
-        images_id_list = otapick.sort_by_recommend_score(
+        images_id_list = sort_by_recommend_score(
             images, page, random_seed, self.paginate_by
         )
         images = [images.get(id=pk) for pk in images_id_list]
 
-        return Response(
-            otapick.generate_images_data(images, request), status.HTTP_200_OK
-        )
+        return Response(generate_images_data(images, request), status.HTTP_200_OK)
 
 
 homeAPIView = HomeAPIView.as_view()
@@ -457,10 +460,10 @@ class HomeAdditionalAPIView(views.APIView):
         random_seed_str = self.request.GET.get("random_seed", "0")
         random_seed = int(random_seed_str) if random_seed_str.isdecimal() else 0
         groups_str = self.request.GET.get("groups", "")  # ex) '1,2,   3'
-        groups = otapick.convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
+        groups = convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
 
         return Response(
-            otapick.get_additional_data(random_seed, request, filter_group_ids=groups),
+            get_additional_data(random_seed, request, filter_group_ids=groups),
             status.HTTP_200_OK,
         )
 
@@ -627,7 +630,7 @@ class SearchSuggestionsInitAPIView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         groups_str = self.request.GET.get("groups", "")  # ex) '1,2,   3'
-        groups = otapick.convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
+        groups = convert_querystring_to_list(groups_str)  # ex) [1, 2, 3]
 
         if groups and all([type(g) is int for g in groups]):
             base_blogs = Blog.objects.filter(publishing_group__group_id__in=groups)
@@ -666,9 +669,9 @@ class SearchSuggestionsInitAPIView(views.APIView):
         blogs_data = BlogSerializerVerSS(popularity_blogs, many=True).data
         blogs_data.append(otapick.generate_watch_more("/blogs/"))
 
-        # rondom members
-        rondom_members = base_members.order_by("?")[: self.num_of_get]
-        members_data = MemberSerializerVerSS(rondom_members, many=True).data
+        # random members
+        random_members = base_members.order_by("?")[: self.num_of_get]
+        members_data = MemberSerializerVerSS(random_members, many=True).data
         members_data.append(otapick.generate_watch_more("/members/"))
 
         return Response(
@@ -752,9 +755,7 @@ class FavoriteListAPIView(views.APIView):
         favorites = Favorite.objects.filter(user=request.user)
         favorites = favorites[self.paginate_by * (page - 1) : self.paginate_by * page]
         images = [favorite.image for favorite in favorites]
-        return Response(
-            otapick.generate_images_data(images, request), status.HTTP_200_OK
-        )
+        return Response(generate_images_data(images, request), status.HTTP_200_OK)
 
 
 favoriteListAPIView = FavoriteListAPIView.as_view()

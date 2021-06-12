@@ -1,5 +1,10 @@
-from otapick.lib.constants import IMAGE_NOT_FOUND_HEIGHT, IMAGE_NOT_FOUND_WIDTH
-import otapick
+from otapick.image.modules import compress_blog_image
+from otapick.lib.constants import (
+    IMAGE_NOT_FOUND_HEIGHT,
+    IMAGE_NOT_FOUND_WIDTH,
+    OTAPICK_LOGO,
+    IMAGE_NOT_FOUND_URL,
+)
 from image.models import Image
 from main.models import Member, Group
 
@@ -50,7 +55,7 @@ def generate_memberimage_url(member):
     if hasattr(member, "image"):
         if member.image:
             return member.image.url
-    return otapick.OTAPICK_LOGO
+    return OTAPICK_LOGO
 
 
 def get_thumbnail_wh(blog):
@@ -78,7 +83,7 @@ def generate_thumbnail_url(blog):
                 )
             )
         else:
-            otapick.compress_blog_image(thumbnail)
+            compress_blog_image(thumbnail)
             if bool(thumbnail.picture_250x) and bool(thumbnail.picture_500x):
                 return dict(
                     zip(
@@ -91,7 +96,7 @@ def generate_thumbnail_url(blog):
                     )
                 )
 
-    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(len(keys))]))
+    return dict(zip(keys, [IMAGE_NOT_FOUND_URL for i in range(len(keys))]))
 
 
 def generate_thumbnail_url_SS(blog):
@@ -99,7 +104,7 @@ def generate_thumbnail_url_SS(blog):
         thumbnail = Image.objects.get(publisher=blog, order=0)
         if bool(thumbnail.picture_250x):
             return thumbnail.picture_250x.url
-    return otapick.IMAGE_NOT_FOUND_URL
+    return IMAGE_NOT_FOUND_URL
 
 
 def generate_writer_name(member):
@@ -125,7 +130,7 @@ def generate_image_src(image):
                     )
                 )
             else:  # originalは存在するが圧縮されていない場合
-                otapick.compress_blog_image(image)
+                compress_blog_image(image)
                 if bool(image.picture_250x) and bool(image.picture_500x):
                     return dict(
                         zip(
@@ -137,4 +142,4 @@ def generate_image_src(image):
                             ],
                         )
                     )
-    return dict(zip(keys, [otapick.IMAGE_NOT_FOUND_URL for i in range(len(keys))]))
+    return dict(zip(keys, [IMAGE_NOT_FOUND_URL for i in range(len(keys))]))

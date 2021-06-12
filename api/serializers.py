@@ -1,8 +1,17 @@
-from django.db.models import fields
 from rest_framework import serializers
-import otapick
 from image.models import Image, Favorite
 from main.models import Group, Member, Blog
+from otapick.extensions.serializers_ex import (
+    generate_memberimage_url,
+    generate_url,
+    generate_official_url,
+    generate_writer_name,
+    generate_thumbnail_url,
+    get_thumbnail_wh,
+    generate_thumbnail_url_SS,
+    generate_image_src,
+)
+from otapick.lib.constants import VIEW_KEY, DOWNLOAD_KEY
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -20,7 +29,27 @@ class GroupSerializer(serializers.ModelSerializer):
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        exclude = ("id",)
+        fields = (
+            "ct",
+            "last_kanji",
+            "first_kanji",
+            "full_kanji",
+            "last_kana",
+            "first_kana",
+            "full_kana",
+            "last_eng",
+            "first_eng",
+            "full_eng",
+            "belonging_group",
+            "graduate",
+            "independence",
+            "temporary",
+            "is_other",
+            "generation",
+            "image",
+            "url",
+            "official_url",
+        )
 
     image = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -28,38 +57,38 @@ class MemberSerializer(serializers.ModelSerializer):
     belonging_group = serializers.IntegerField(source="belonging_group.group_id")
 
     def get_image(self, obj):
-        return otapick.generate_memberimage_url(member=obj)
+        return generate_memberimage_url(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj, needBlogs=True, needImages=True)
+        return generate_url(member=obj, needBlogs=True, needImages=True)
 
     def get_official_url(self, obj):
-        return otapick.generate_official_url(member=obj)
+        return generate_official_url(member=obj)
 
 
 class MemberSerializerMin(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ["name", "ct", "url", "official_url", "image", "graduate"]
+        fields = ("name", "ct", "url", "official_url", "image", "graduate")
 
     name = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     official_url = serializers.SerializerMethodField()
 
     def get_name(self, obj):
-        return otapick.generate_writer_name(member=obj)
+        return generate_writer_name(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj, needBlogs=True, needImages=True)
+        return generate_url(member=obj, needBlogs=True, needImages=True)
 
     def get_official_url(self, obj):
-        return otapick.generate_official_url(member=obj)
+        return generate_official_url(member=obj)
 
 
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = [
+        fields = (
             "group_id",
             "blog_ct",
             "title",
@@ -72,10 +101,11 @@ class BlogSerializer(serializers.ModelSerializer):
             "official_url",
             "thumbnail_width",
             "thumbnail_height",
-        ]
+        )
 
     group_id = serializers.IntegerField(source="publishing_group.group_id")
-    post_date = serializers.DateTimeField(format="%y/%m/%d")
+    # post_date = serializers.DateTimeField(format="%y/%m/%d")
+    post_date = serializers.SerializerMethodField()
     writer = MemberSerializerMin(read_only=True)
     thumbnail = serializers.SerializerMethodField()
     thumbnail_width = serializers.SerializerMethodField()
@@ -85,22 +115,25 @@ class BlogSerializer(serializers.ModelSerializer):
     thumbnail_width = serializers.SerializerMethodField()
     thumbnail_height = serializers.SerializerMethodField()
 
+    def get_post_date(self, obj):
+        return obj.post_date.strftime("%y/%m/%d")
+
     def get_thumbnail(self, obj):
-        return otapick.generate_thumbnail_url(blog=obj)
+        return generate_thumbnail_url(blog=obj)
 
     def get_thumbnail_width(self, obj):
-        w, h = otapick.get_thumbnail_wh(blog=obj)
+        w, h = get_thumbnail_wh(blog=obj)
         return w
 
     def get_thumbnail_height(self, obj):
-        w, h = otapick.get_thumbnail_wh(blog=obj)
+        w, h = get_thumbnail_wh(blog=obj)
         return h
 
     def get_url(self, obj):
-        return otapick.generate_url(blog=obj)
+        return generate_url(blog=obj)
 
     def get_official_url(self, obj):
-        return otapick.generate_official_url(blog=obj)
+        return generate_official_url(blog=obj)
 
 
 class BlogSerializerVerDetail(BlogSerializer):
@@ -128,7 +161,7 @@ class BlogSerializerVerDetail(BlogSerializer):
     download_key = serializers.SerializerMethodField()
 
     # def get_url(self, obj):
-    #     return otapick.generate_url(blog=obj)
+    #     return generate_url(blog=obj)
 
     def get_images(self, obj):
         images = Image.objects.filter(publisher=obj).order_by("order")
@@ -137,10 +170,10 @@ class BlogSerializerVerDetail(BlogSerializer):
         ).data
 
     def get_view_key(self, obj):
-        return otapick.VIEW_KEY
+        return VIEW_KEY
 
     def get_download_key(self, obj):
-        return otapick.DOWNLOAD_KEY
+        return DOWNLOAD_KEY
 
 
 class MemberSerializerVerSS(serializers.ModelSerializer):
@@ -153,10 +186,10 @@ class MemberSerializerVerSS(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     def get_background_image(self, obj):
-        return otapick.generate_memberimage_url(member=obj)
+        return generate_memberimage_url(member=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(member=obj, needBlogs=False, needImages=True)
+        return generate_url(member=obj, needBlogs=False, needImages=True)
 
 
 class BlogSerializerVerSS(serializers.ModelSerializer):
@@ -168,10 +201,10 @@ class BlogSerializerVerSS(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     def get_background_image(self, obj):
-        return otapick.generate_thumbnail_url_SS(blog=obj)
+        return generate_thumbnail_url_SS(blog=obj)
 
     def get_url(self, obj):
-        return otapick.generate_url(blog=obj)
+        return generate_url(blog=obj)
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -190,12 +223,16 @@ class ImageSerializer(serializers.ModelSerializer):
         ]
 
     src = serializers.SerializerMethodField()
-    upload_date = serializers.DateTimeField(format="%Y/%m/%d %H:%M")
+    # upload_date = serializers.DateTimeField(format="%Y/%m/%d %H:%M")
+    upload_date = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     is_favorite = serializers.SerializerMethodField()
 
     def get_src(self, obj):
-        return otapick.generate_image_src(obj)
+        return generate_image_src(obj)
+
+    def get_upload_date(self, obj):
+        return obj.upload_date.strftime("%Y/%m/%d %H:%M")
 
     def get_url(self, obj):
         return "/image/{}/{}/{}/".format(
