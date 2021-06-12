@@ -15,10 +15,10 @@ class Downloader(metaclass=ABCMeta):
 
     # デフォルトではそのままのファイル名(ドットファイルは対処有)
     def generate_filename(self, **kwargs):
-        file_name = os.path.basename(kwargs['url'])
+        file_name = os.path.basename(kwargs["url"])
         # ファイル名が無いドットファイルにファイル名を与える。(.jpg⇒_.jpg)
-        if file_name.startswith('.'):
-            file_name = '_' + file_name
+        if file_name.startswith("."):
+            file_name = "_" + file_name
         return file_name
 
     def generate_filepath(self, **kwargs):
@@ -37,11 +37,15 @@ class Downloader(metaclass=ABCMeta):
 
     def exe_download(self, url, path):
         try:
-            file = open(path, 'wb')
+            file = open(path, "wb")
             urllib3.disable_warnings(InsecureRequestWarning)
             response = requests.get(url, verify=False)
-            if response.headers['Content-Type'] == 'image/gif' and response.headers['Content-Length'].isdecimal() and int(response.headers['Content-Length']) < 10000:
-                return 'not_image'
+            if (
+                response.headers["Content-Type"] == "image/gif"
+                and response.headers["Content-Length"].isdecimal()
+                and int(response.headers["Content-Length"]) < 10000
+            ):
+                return "not_image"
             if response.status_code == 200:
                 data = response.content
                 file.write(data)
@@ -52,6 +56,7 @@ class Downloader(metaclass=ABCMeta):
             return result
         except:
             import traceback
+
             traceback.print_exc()
             return
 
@@ -64,11 +69,11 @@ class Downloader(metaclass=ABCMeta):
         success, path, media = self.generate_filepath(**kwargs)
         if not success:
             return
-        download_result = self.exe_download(kwargs['url'], path)
+        download_result = self.exe_download(kwargs["url"], path)
         if not download_result:
             return
-        elif download_result == 'not_image':
-            return 'not_image'
+        elif download_result == "not_image":
+            return "not_image"
         else:
             self.exe_edit(path)
             return media

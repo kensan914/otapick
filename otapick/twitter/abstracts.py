@@ -49,29 +49,28 @@ class TwitterBot(metaclass=ABCMeta):
     def shorten_text(self, txt, max_length):
         if len(txt) > max_length:
             txt = txt[:max_length]
-            txt += '…'
+            txt += "…"
         return txt
 
     def generate_link(self, title, link):
-        text = ''
-        arrow_double_down = emoji.emojize(
-            ':arrow_double_down:', use_aliases=True)
-        text += '{}{}{}\n'.format(arrow_double_down, title, arrow_double_down)
+        text = ""
+        arrow_double_down = emoji.emojize(":arrow_double_down:", use_aliases=True)
+        text += "{}{}{}\n".format(arrow_double_down, title, arrow_double_down)
         text += link
-        text += '\n'
+        text += "\n"
         return text
 
     def generate_medal_emoji(self, rank):
         if rank == 1:
-            return emoji.emojize(':1st_place_medal:', use_aliases=True)
+            return emoji.emojize(":1st_place_medal:", use_aliases=True)
         elif rank == 2:
-            return emoji.emojize(':2nd_place_medal:', use_aliases=True)
+            return emoji.emojize(":2nd_place_medal:", use_aliases=True)
         elif rank == 3:
-            return emoji.emojize(':3rd_place_medal:', use_aliases=True)
+            return emoji.emojize(":3rd_place_medal:", use_aliases=True)
 
     def set_group_id(self, group_id):
         self.group_id = group_id
         if group_id == 1:
-            self.group_emoji = '🤍💗'
+            self.group_emoji = "🤍💗"
         elif group_id == 2:
-            self.group_emoji = '💙💜'
+            self.group_emoji = "💙💜"

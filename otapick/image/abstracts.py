@@ -10,10 +10,10 @@ class ImageEditor:
 
     def edit(self, **kwargs):
         ImageFile.LOAD_TRUNCATED_IMAGES = True
-        img = Image.open(kwargs['img_path'])
+        img = Image.open(kwargs["img_path"])
 
         img = self.exe_edit(img)
 
-        root, ext = os.path.splitext(kwargs['img_path'])
+        root, ext = os.path.splitext(kwargs["img_path"])
         edited_img_path = "".join([root, ext])
         img.save(edited_img_path)

@@ -15,11 +15,12 @@ def compress_blog_image(image, is_bulk=False):
     :return:
     """
     base_dir_path = os.path.dirname(
-        str(image.picture.path))  # /www/var/otapick/media/blog_images/1_07/9244
+        str(image.picture.path)
+    )  # /www/var/otapick/media/blog_images/1_07/9244
     # /www/var/otapick/media/blog_images/1_07/9244/250x
-    dir_path_250x = os.path.join(base_dir_path, '250x')
+    dir_path_250x = os.path.join(base_dir_path, "250x")
     # /www/var/otapick/media/blog_images/1_07/9244/500x
-    dir_path_500x = os.path.join(base_dir_path, '500x')
+    dir_path_500x = os.path.join(base_dir_path, "500x")
     os.makedirs(dir_path_250x, exist_ok=True)
     os.makedirs(dir_path_500x, exist_ok=True)
 
@@ -39,10 +40,9 @@ def compress_blog_image(image, is_bulk=False):
     otapick.ImageCompressor().edit(path_500x, width=500)
 
     ### define media ###
-    base_dir_media = os.path.dirname(
-        str(image.picture))  # blog_images/1_07/9244/
-    dir_min_250x = os.path.join('250x', base_file_name)  # /250x/sample.jpg
-    dir_min_500x = os.path.join('500x', base_file_name)  # /500x/sample.jpg
+    base_dir_media = os.path.dirname(str(image.picture))  # blog_images/1_07/9244/
+    dir_min_250x = os.path.join("250x", base_file_name)  # /250x/sample.jpg
+    dir_min_500x = os.path.join("500x", base_file_name)  # /500x/sample.jpg
     # blog_images/1_07/9244/250x/sample.jpg
     media_250x = os.path.join(base_dir_media, dir_min_250x)
     # blog_images/1_07/9244/500x/sample.jpg
@@ -81,10 +81,10 @@ def compress_blog_images_by(*, member=None, group=None, console=True):
                 if not bool(image.picture_250x) or not bool(image.picture_500x):
                     compress_blog_image(image)
             if console:
-                otapick.console_with_blog_info(blog, 'compressed!!')
+                otapick.console_with_blog_info(blog, "compressed!!")
         else:
             if console:
-                otapick.console_with_blog_info(blog, 'image not found!!')
+                otapick.console_with_blog_info(blog, "image not found!!")
 
 
 def get_image_w_h(image):

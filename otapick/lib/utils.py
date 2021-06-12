@@ -7,9 +7,9 @@ import json
 
 
 def clean_text(text):
-    text = text.replace('\n', '')
-    text = text.replace(' ', '')
-    text = text.replace('\t', '')
+    text = text.replace("\n", "")
+    text = text.replace(" ", "")
+    text = text.replace("\t", "")
     return text
 
 
@@ -19,12 +19,13 @@ def extract_blog_ct(url):
 
 
 def print_console(text):
-    print('[', datetime.now().strftime("%Y/%m/%d %H:%M:%S"), '] ', end="")
+    print("[", datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "] ", end="")
     print(text)
 
 
 def console_with_blog_info(blog, message):
-    print('「{}」({}) {}'.format(blog.title, blog.writer.full_kanji, message))
+    print("「{}」({}) {}".format(blog.title, blog.writer.full_kanji, message))
+
 
 # When last time in loop, return value with True.
 
@@ -50,10 +51,10 @@ def shape_ct(group_id, ct):
     intCt = int(ct)
     if group_id == 1:
         if intCt < 10:
-            return group_id, '0' + str(intCt)
+            return group_id, "0" + str(intCt)
         return group_id, str(intCt)
     elif group_id == 2:
-        if intCt == 0: # ポカ
+        if intCt == 0:  # ポカ
             return group_id, ct
         else:
             return group_id, str(intCt)
@@ -63,9 +64,9 @@ def shape_ct(group_id, ct):
 
 def generate_watch_more(url):
     return {
-        'title': 'もっと見る>',
-        'background_image': otapick.WATCH_MORE_IMG_URL,
-        'url': url,
+        "title": "もっと見る>",
+        "background_image": otapick.WATCH_MORE_IMG_URL,
+        "url": url,
     }
 
 
@@ -74,21 +75,21 @@ def checkIsMaintaining(BASE_DIR):
     メンテナンス状況の取得
     :return: true(メンテナンス中) false(メンテナンスしていない)
     """
-    f = open('{}/config/maintenance_mode_state.txt'.format(BASE_DIR))
+    f = open("{}/config/maintenance_mode_state.txt".format(BASE_DIR))
     mode_state = otapick.clean_text(f.read())
     f.close()
-    return mode_state == '1'
+    return mode_state == "1"
 
 
 def genes_scheme_host_from_host(host):
-    '''
+    """
     constants/OTAPICK_URLはadmin.otapick.comに非対応なため
-    '''
+    """
     # otapick.com or admin.otapick.com
     if host.endswith(OTAPICK_COM):
-        return 'https://{}/'.format(host)
+        return "https://{}/".format(host)
     else:
-        return 'http://{}/'.format(host)
+        return "http://{}/".format(host)
 
 
 def parse_json(json_s):

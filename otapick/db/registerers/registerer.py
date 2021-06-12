@@ -5,7 +5,9 @@ from image.models import Image
 from .unregisterer import unregister
 
 
-def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tweet=False):
+def register_blogs(
+    group_id, up_limit=100, all_check=False, unregister_num=1, tweet=False
+):
     """
     グループごとにブログの登録を行う。以下、処理の流れ。
     最新から次々チェックしていき、保存済みのブログに当たったら終了。また、一番最後まで行ったら終了。これまでを仮にプロセスと呼ぶ。
@@ -25,6 +27,7 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
     Returns:
         True(success), None(failed)
     """
+
     sleep_time_pagetransition = 3
     simultime_blogs = []
     simultime_post_date = ""
@@ -40,38 +43,56 @@ def register_blogs(group_id, up_limit=100, all_check=False, unregister_num=1, tw
             return
         elif len(blogs_data) == 0:
             otapick.print_console("register unacquired blog...")
-            exe_registration(simultime_blogs, simultime_post_date,
-                             group_id, all_check, tweet, console=True)
+            exe_registration(
+                simultime_blogs,
+                simultime_post_date,
+                group_id,
+                all_check,
+                tweet,
+                console=True,
+            )
             otapick.print_console("finished!!")
             break
         if len(correct_cts_list) < unregister_num:
-            correct_cts = [blog_info['blog_ct'] for blog_info in blogs_data]
+            correct_cts = [blog_info["blog_ct"] for blog_info in blogs_data]
             correct_cts_list.append(correct_cts)
         for blog_info in blogs_data:
             # first time
             if not simultime_blogs and not simultime_post_date:
                 simultime_blogs.append(blog_info)
-                simultime_post_date = blog_info['post_date']
+                simultime_post_date = blog_info["post_date"]
             # When the post_date is same time as previous one,
-            elif simultime_post_date == blog_info['post_date']:
+            elif simultime_post_date == blog_info["post_date"]:
                 simultime_blogs.append(blog_info)
             # When the post_date isn't same time as previous one,
             else:
                 finished = exe_registration(
-                    simultime_blogs, simultime_post_date, group_id, all_check, tweet, console=True)
+                    simultime_blogs,
+                    simultime_post_date,
+                    group_id,
+                    all_check,
+                    tweet,
+                    console=True,
+                )
 
                 if finished:
                     unregister(correct_cts_list, group, unregister_num)
                     break
                 simultime_blogs = [blog_info]
-                simultime_post_date = blog_info['post_date']
+                simultime_post_date = blog_info["post_date"]
         else:
             if is_last:
-                exe_registration(simultime_blogs, simultime_post_date,
-                                 group_id, all_check, tweet, console=True)
+                exe_registration(
+                    simultime_blogs,
+                    simultime_post_date,
+                    group_id,
+                    all_check,
+                    tweet,
+                    console=True,
+                )
                 break
             time.sleep(sleep_time_pagetransition)
-            otapick.print_console('go next page.')
+            otapick.print_console("go next page.")
             continue
         break
     return True
@@ -96,30 +117,33 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
 
     for i, blog_info in enumerate(blog_info_list):
         # new blog
-        if not Blog.objects.filter(blog_ct=blog_info['blog_ct'], publishing_group__group_id=group_id).exists():
+        if not Blog.objects.filter(
+            blog_ct=blog_info["blog_ct"], publishing_group__group_id=group_id
+        ).exists():
             blog = Blog(
-                blog_ct=blog_info['blog_ct'],
-                title=blog_info['title'],
+                blog_ct=blog_info["blog_ct"],
+                title=blog_info["title"],
                 post_date=post_date,
                 order_for_simul=i,
-                writer=blog_info['member'],
-                publishing_group=Group.objects.filter(
-                    group_id=group_id).first(),
+                writer=blog_info["member"],
+                publishing_group=Group.objects.filter(group_id=group_id).first(),
             )
             blog_objects.append(blog)
             download_count += 1
         # already saved
         else:
             blog = Blog.objects.get(
-                blog_ct=blog_info['blog_ct'], publishing_group__group_id=group_id)
+                blog_ct=blog_info["blog_ct"], publishing_group__group_id=group_id
+            )
 
-        if len(blog_info['image_urls']) > 0:
+        if len(blog_info["image_urls"]) > 0:
             order = 0
-            for image_url in blog_info['image_urls']:
+            for image_url in blog_info["image_urls"]:
                 if not Image.objects.filter(publisher=blog).exists():
                     media = otapick.BlogImageDownloader().download(
-                        image_url, group_id, blog.blog_ct, blog.writer.ct)
-                    if media == 'not_image':  # exclude gif
+                        image_url, group_id, blog.blog_ct, blog.writer.ct
+                    )
+                    if media == "not_image":  # exclude gif
                         pass
                     elif media is not None:
                         image = Image(
@@ -137,6 +161,7 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
                         order += 1
                     else:
                         import traceback
+
                         traceback.print_exc()
 
         # change the order_for_simul of already saved blog with the same post_date
@@ -150,7 +175,11 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
         blog_object.save()
         if console:
             otapick.print_console(
-                'register 「' + blog_object.title + '」 written by ' + blog_object.writer.full_kanji)
+                "register 「"
+                + blog_object.title
+                + "」 written by "
+                + blog_object.writer.full_kanji
+            )
 
     # save new image
     for image_object in image_objects:
@@ -162,7 +191,9 @@ def exe_registration(blog_info_list, post_date, group_id, all_check, tweet, cons
         updateBot = otapick.UpdateBot()
         for blog_object in blog_objects:
             updateBot.tweet(
-                group_id=blog_object.publishing_group.group_id, blog_ct=blog_object.blog_ct)
+                group_id=blog_object.publishing_group.group_id,
+                blog_ct=blog_object.blog_ct,
+            )
 
     # When there is at least one already saved blog in blog_list and all_check is False
     if download_count != len(blog_info_list) and not all_check:

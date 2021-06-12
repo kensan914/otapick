@@ -23,20 +23,29 @@ from config.urls import default_urls
 # カスタム500エラー・slackへの通知
 handler500 = main.views.server_error
 
+
 urlpatterns = [
-    path('', include(default_urls)),
-    path('admin/', admin.site.urls if settings.DEBUG else main.views.maintenanceView),
+    path("", include(default_urls)),
+    path("admin/", admin.site.urls if settings.DEBUG else main.views.maintenanceView),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        path('maintenance-mode/', include('maintenance_mode.urls')),
+        path("maintenance-mode/", include("maintenance_mode.urls")),
     ]
 
 # catch all other URL
-urlpatterns += [ # for OGP
-    path('blog/<int:group_id>/<int:blog_ct>/', main.views.indexBlogDetailView, name='indexBlogDetailAPI'),
-    path('image/<int:group_id>/<int:blog_ct>/<int:order>/', main.views.indexImageDetailView, name='indexImageDetaillAPI'),
+urlpatterns += [  # for OGP
+    path(
+        "blog/<int:group_id>/<int:blog_ct>/",
+        main.views.indexBlogDetailView,
+        name="indexBlogDetailAPI",
+    ),
+    path(
+        "image/<int:group_id>/<int:blog_ct>/<int:order>/",
+        main.views.indexImageDetailView,
+        name="indexImageDetaillAPI",
+    ),
 ]
-urlpatterns += [re_path(r'^.*/$', main.views.indexView, name='indexView')]
-urlpatterns += [path('', main.views.indexView, name='indexView')]
+urlpatterns += [re_path(r"^.*/$", main.views.indexView, name="indexView")]
+urlpatterns += [path("", main.views.indexView, name="indexView")]
