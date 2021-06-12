@@ -179,15 +179,16 @@ def calc_recommend_score(high_score_members, divided_blogs=None, divided_images=
 
     # メモリリークが起こりMySQLがダウンするため対処 (チャンク分割)
     # https://stackoverflow.com/questions/4856882/limiting-memory-use-in-a-large-django-queryset
-    # paginator = Paginator(divided_records[2], 1000)
-    # for page_idx in range(1, paginator.num_pages + 1):
-    #     update_record = []
-    #     for record in paginator.page(page_idx).object_list:
-    #         update_record.append(recommend_score_evaluator.evaluate(record))
-    #     print('before execute bulk_update', 1, len(update_record))
-    #     Model.objects.bulk_update(update_record, fields=['recommend_score'], batch_size=1000)
+    paginator = Paginator(divided_records[2], 1000)
+    for page_idx in range(1, paginator.num_pages + 1):
+        update_record = []
+        for record in paginator.page(page_idx).object_list:
+            update_record.append(recommend_score_evaluator.evaluate(record))
+        Model.objects.bulk_update(
+            update_record, fields=["recommend_score"], batch_size=1000
+        )
 
-    # print('after execute bulk_update', 1)
+    print("after execute bulk_update", 1)
 
     random_upper_limit = divided_records[2].aggregate(Max("recommend_score"))[
         "recommend_score__max"
@@ -350,34 +351,44 @@ def calc_score(blogs=None, images=None):
             score = 閲覧数(1日目) * 3 + 閲覧数(2日目) * 2 + 閲覧数(3日目) + ダウンロード数(1日) * 3
     """
     if blogs is not None:
-        target_blogs = blogs.filter(changed=True)
-        for blog in target_blogs:
-            max_d1_per_day = 0
-            if Image.objects.filter(publisher=blog).exists():
-                max_d1_per_day = (
-                    Image.objects.filter(publisher=blog)
-                    .order_by("-d1_per_day")[0]
-                    .d1_per_day
+        paginator = Paginator(blogs.filter(changed=True), 1000)
+        for page_idx in range(1, paginator.num_pages + 1):
+            update_record = []
+            for _blog in paginator.page(page_idx).object_list:
+                max_d1_per_day = 0
+                if Image.objects.filter(publisher=_blog).exists():
+                    max_d1_per_day = (
+                        Image.objects.filter(publisher=_blog)
+                        .order_by("-d1_per_day")[0]
+                        .d1_per_day
+                    )
+                score = (
+                    _blog.v1_per_day * 3
+                    + _blog.v2_per_day * 2
+                    + _blog.v3_per_day
+                    + max_d1_per_day * 3
                 )
-            score = (
-                blog.v1_per_day * 3
-                + blog.v2_per_day * 2
-                + blog.v3_per_day
-                + max_d1_per_day * 3
+                _blog.score = score
+                _blog.changed = False
+                update_record.append(_blog)
+            Blog.objects.bulk_update(
+                update_record, fields=["score", "changed"], batch_size=1000
             )
-            blog.score = score
-            blog.changed = False
-            blog.save()
 
     elif images is not None:
-        target_images = images.filter(changed=True)
-        for image in target_images:
-            score = (
-                image.v1_per_day * 3
-                + image.v2_per_day * 2
-                + image.v3_per_day
-                + image.d1_per_day * 3
+        paginator = Paginator(images.filter(changed=True), 1000)
+        for page_idx in range(1, paginator.num_pages + 1):
+            update_record = []
+            for _blog in paginator.page(page_idx).object_list:
+                score = (
+                    _blog.v1_per_day * 3
+                    + _blog.v2_per_day * 2
+                    + _blog.v3_per_day
+                    + _blog.d1_per_day * 3
+                )
+                _blog.score = score
+                _blog.changed = False
+                update_record.append(_blog)
+            Image.objects.bulk_update(
+                update_record, fields=["score", "changed"], batch_size=1000
             )
-            image.score = score
-            image.changed = False
-            image.save()
