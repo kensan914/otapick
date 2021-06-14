@@ -52,10 +52,11 @@ INSTALLED_APPS = [
     "rest_auth.registration",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.twitter",
-    "main.apps.MainConfig",
-    "image.apps.ImageConfig",
-    "account.apps.AccountConfig",
-    "survey.apps.SurveyConfig",
+    "api.apps.ApiConfig",
+    "api.models.main.apps.MainConfig",
+    "api.models.image.apps.ImageConfig",
+    "api.models.account.apps.AccountConfig",
+    "api.models.survey.apps.SurveyConfig",
     "bootstrap4",
     "bootstrap_datepicker_plus",
     "maintenance_mode",
@@ -214,7 +215,7 @@ ADMIN_SHORTCUTS = [
                 "url": "/maintenance-mode/on/",
                 "title": "メンテナンス開始",
                 "icon": "toggle-on",
-                "count_new": "main.utils.geneMaintenanceMessage",
+                "count_new": "api.otapick.lib.helpers.geneMaintenanceMessage",
             },
             {
                 "url": "/maintenance-mode/off/",
@@ -240,7 +241,7 @@ JWT_AUTH = {
     "JWT_AUTH_HEADER_PREFIX": "JWT",
 }
 REST_AUTH_SERIALIZERS = {
-    "USER_DETAILS_SERIALIZER": "account.serializers.AuthSerializer",
+    "USER_DETAILS_SERIALIZER": "api.serializers.account_serializers.AuthSerializer",
 }
 
 # https://django-allauth.readthedocs.io/en/latest/configuration.html

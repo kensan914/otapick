@@ -15,18 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-import main.views
-import main.redirect
+import dist.views
 from config import settings
 from config.urls import default_urls
 
 # カスタム500エラー・slackへの通知
-handler500 = main.views.server_error
+handler500 = dist.views.server_error
 
 
 urlpatterns = [
     path("", include(default_urls)),
-    path("admin/", admin.site.urls if settings.DEBUG else main.views.maintenanceView),
+    path(
+        "admin/",
+        admin.site.urls if settings.DEBUG else dist.views.maintenanceView,
+    ),
 ]
 
 if settings.DEBUG:
@@ -38,14 +40,14 @@ if settings.DEBUG:
 urlpatterns += [  # for OGP
     path(
         "blog/<int:group_id>/<int:blog_ct>/",
-        main.views.indexBlogDetailView,
+        dist.views.indexBlogDetailView,
         name="indexBlogDetailAPI",
     ),
     path(
         "image/<int:group_id>/<int:blog_ct>/<int:order>/",
-        main.views.indexImageDetailView,
-        name="indexImageDetaillAPI",
+        dist.views.indexImageDetailView,
+        name="indexImageDetailAPI",
     ),
 ]
-urlpatterns += [re_path(r"^.*/$", main.views.indexView, name="indexView")]
-urlpatterns += [path("", main.views.indexView, name="indexView")]
+urlpatterns += [re_path(r"^.*/$", dist.views.indexView, name="indexView")]
+urlpatterns += [path("", dist.views.indexView, name="indexView")]
