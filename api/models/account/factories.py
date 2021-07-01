@@ -11,7 +11,7 @@ class AccountFactory(DjangoModelFactory):
     class Meta:
         model = Account
 
-    id = uuid.uuid4()
+    id = factory.LazyFunction(uuid.uuid4)
     username = factory.Sequence(lambda n: "%15d" % n)
     email = factory.Sequence(lambda n: "%15d@example.com" % n)
     name = FuzzyText(length=50)
@@ -33,4 +33,4 @@ class AccountFactory(DjangoModelFactory):
     is_active = True
     is_staff = False
     is_superuser = False
-    date_joined = timezone.now()
+    date_joined = factory.LazyFunction(timezone.now)

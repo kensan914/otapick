@@ -17,7 +17,7 @@ class ImageFactory(DjangoModelFactory):
     picture_500x = factory.django.ImageField()
     width = FuzzyInteger(low=0)
     height = FuzzyInteger(low=0)
-    upload_date = timezone.now()
+    upload_date = factory.LazyFunction(timezone.now)
     publisher = factory.SubFactory(BlogFactory)
     num_of_downloads = FuzzyInteger(low=0)
     d1_per_day = FuzzyInteger(low=0)
@@ -36,4 +36,4 @@ class FavoriteFactory(DjangoModelFactory):
 
     image = factory.SubFactory(ImageFactory)
     user = factory.SubFactory(AccountFactory)
-    created_at = timezone.now()
+    created_at = factory.LazyFunction(timezone.now)

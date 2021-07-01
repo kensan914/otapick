@@ -61,7 +61,7 @@ class BlogFactory(DjangoModelFactory):
     blog_ct = factory.Sequence(int)
     title = FuzzyText(length=1000)
     text = FuzzyText(length=1000000)
-    post_date = timezone.now()
+    post_date = factory.LazyFunction(timezone.now)
     order_for_simul = 0
     writer = factory.SubFactory(MemberFactory)
     publishing_group = factory.SubFactory(GroupFactory)

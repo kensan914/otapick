@@ -1,11 +1,11 @@
-from api.models.image import factories as image_factories
+from api.models.image.factories import ImageFactory
 from api.serializers.image_serializers import ImageSerializer
-from api.tests.serializers.test_main_serializers import SerializerTestCase
+from api.tests.serializers.helpers.SerializerTestCase import SerializerTestCase
 
 
 class TestImageSerializer(SerializerTestCase):
     def test_output_data(self):
-        image_factory = image_factories.ImageFactory.create()
+        image_factory = ImageFactory.create()
         serializer_data = ImageSerializer(image_factory).data
 
         expected_output_data = {

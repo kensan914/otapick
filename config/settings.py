@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     "maintenance_mode",
     "django_hosts",
+    "drf_yasg",
 ]
 
 SITE_ID = 1

@@ -1,32 +1,17 @@
-from django.test import TestCase
-
+from api.models.image.factories import ImageFactory
+from api.models.main.factories import GroupFactory, MemberFactory, BlogFactory
 from api.serializers.main_serializers import (
     GroupSerializer,
     MemberSerializer,
     BlogSerializer,
     MemberSerializerMin,
 )
-from api.models.main import factories as main_factories
-from api.models.image import factories as image_factories
-
-
-class SerializerTestCase(TestCase):
-    def assertSerializerData(self, serializer_data, expected_data):
-        self.assertCountEqual(
-            serializer_data.keys(), expected_data.keys(), msg="dictのkeyが正常である"
-        )
-        for expected_key in expected_data.keys():
-            with self.subTest(f"{expected_key}が正常である"):
-                self.assertEquals(
-                    serializer_data[expected_key],
-                    expected_data[expected_key],
-                    msg=f"{expected_key}が正常である",
-                )
+from api.tests.serializers.helpers.SerializerTestCase import SerializerTestCase
 
 
 class TestGroupSerializer(SerializerTestCase):
     def test_output_data(self):
-        group_factory = main_factories.GroupFactory.create()
+        group_factory = GroupFactory.create()
         serializer_data = GroupSerializer(group_factory).data
 
         expected_output_data = {
@@ -42,7 +27,7 @@ class TestGroupSerializer(SerializerTestCase):
 
 class TestMemberSerializer(SerializerTestCase):
     def test_output_data(self):
-        member_factory = main_factories.MemberFactory.create()
+        member_factory = MemberFactory.create()
         serializer_data = MemberSerializer(member_factory).data
 
         expected_output_data = {
@@ -77,8 +62,8 @@ class TestMemberSerializer(SerializerTestCase):
 
 class TestBlogSerializer(SerializerTestCase):
     def test_output_data(self):
-        blog_factory = main_factories.BlogFactory.create()
-        thumbnail = image_factories.ImageFactory.create(publisher=blog_factory, order=0)
+        blog_factory = BlogFactory.create()
+        thumbnail = ImageFactory.create(publisher=blog_factory, order=0)
         serializer_data = BlogSerializer(blog_factory).data
 
         expected_output_data = {
