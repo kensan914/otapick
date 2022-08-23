@@ -31,9 +31,15 @@ class Image(models.Model):
         ordering = ["-publisher__post_date", "publisher__order_for_simul", "order"]
 
     order = models.IntegerField(verbose_name="順番")
-    picture = models.ImageField(verbose_name="イメージ(original)", upload_to=get_upload_to)
-    picture_250x = models.ImageField(verbose_name="イメージ(250x)", null=True)
-    picture_500x = models.ImageField(verbose_name="イメージ(500x)", null=True)
+    picture = models.ImageField(
+        verbose_name="イメージ(original)", max_length=500, upload_to=get_upload_to
+    )
+    picture_250x = models.ImageField(
+        verbose_name="イメージ(250x)", max_length=500, null=True
+    )
+    picture_500x = models.ImageField(
+        verbose_name="イメージ(500x)", max_length=500, null=True
+    )
     width = models.IntegerField(verbose_name="width(px)", default=0)
     height = models.IntegerField(verbose_name="height(px)", default=0)
     upload_date = models.DateTimeField(verbose_name="アップロード日", auto_now_add=True)
