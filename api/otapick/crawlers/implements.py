@@ -168,7 +168,7 @@ class BlogListCrawler(BlogCrawler):
                     group_key, blog_tag, image_base_url=self.image_base_url
                 )
             if blog_info is None:
-                return
+                continue
             else:
                 blogs_data.append(blog_info)
         return blogs_data
