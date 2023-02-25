@@ -102,9 +102,11 @@ def get_blog_url(group_key, blog_tag):
         bottomli_tags = bottomul_tag.select("li")
         blog_url = bottomli_tags[1].find("a").get("href")
     elif group_key == "hinata":
-        blog_url = (
-            blog_tag.select_one("div.p-button__blog_detail").find("a").get("href")
-        )
+        # HACK: 以下URLの記事が記事一覧にてHTMLが壊れていた。そのため、blog_tag.select_one("div.p-button__blog_detail") が
+        # None となってエラーとなっていたので、一時的対処
+        # https://www.hinatazaka46.com/s/official/diary/detail/49312?ima=0000&cd=member
+        target_tag = blog_tag.select_one("div.p-button__blog_detail")
+        blog_url = target_tag.find("a").get("href") if target_tag is not None else None
     elif group_key == "sakura":
         blog_url = blog_tag.find("a").get("href")
     ### Edit ###
