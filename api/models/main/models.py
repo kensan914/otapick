@@ -97,8 +97,8 @@ class Blog(models.Model):
         ordering = ["post_date", "order_for_simul"]
 
     blog_ct = models.IntegerField(verbose_name="ブログID")
-    title = models.CharField(verbose_name="タイトル", max_length=1000)
-    text = models.TextField(verbose_name="本文", max_length=1000000, null=True)
+    title = models.CharField(verbose_name="タイトル", max_length=1000, blank=True)
+    text = models.TextField(verbose_name="本文", max_length=1000000, null=True, blank=True)
     post_date = models.DateTimeField(verbose_name="投稿日")
     order_for_simul = models.IntegerField(verbose_name="順番(同時投稿用)", default=0)
     writer = models.ForeignKey(Member, verbose_name="メンバー", on_delete=models.PROTECT)
