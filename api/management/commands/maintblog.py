@@ -10,7 +10,7 @@ class Command(BaseCommand):
     )
 
     # 独立した仮メンバーのCT↓
-    independent_temporary_cts = [(1, 1002), (2, 1000)]
+    independent_temporary_cts = [(1, 1002), (2, 1000), (1, 2000), (2, 2000)]
 
     def add_arguments(self, parser):
         pass
