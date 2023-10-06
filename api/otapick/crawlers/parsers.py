@@ -40,6 +40,7 @@ def get_member_image_tag(group_key, soup):
         otapick.print_console(
             "image_tag_wrapper not found. 指定したctのメンバーのプロフィールページが存在しない場合がございます。"
         )
+        return
     image_tag = image_tag.find("img")
     if image_tag is None:
         otapick.print_console("image_tag not found")
