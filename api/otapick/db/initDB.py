@@ -54,7 +54,7 @@ MEMBER_KEYWORD_SET_SPLIT_SIGN = "."
 
 
 def init_group():
-    fin = open("otapick/db/corpus/groupList.csv", "rt", encoding="utf-8")
+    fin = open("api/otapick/db/corpus/groupList.csv", "rt", encoding="utf-8")
     group_csv_list = csv.DictReader(
         fin,
         delimiter=",",
@@ -104,7 +104,7 @@ def init_group():
 
 
 def init_member():
-    fin = open("otapick/db/corpus/memberList.csv", "rt", encoding="utf-8")
+    fin = open("api/otapick/db/corpus/memberList.csv", "rt", encoding="utf-8")
     member_csv_list = csv.DictReader(
         fin,
         delimiter=",",
@@ -168,7 +168,7 @@ def init_member_keyword():
     """
     memberのDB情報をセットしている前提
     """
-    fin = open("otapick/db/corpus/memberKeywordList.csv", "rt", encoding="utf-8")
+    fin = open("api/otapick/db/corpus/memberKeywordList.csv", "rt", encoding="utf-8")
     member_keyword_csv_list = csv.DictReader(
         fin,
         delimiter=",",
