@@ -19,112 +19,114 @@ PROJECT_NAME = os.path.basename(BASE_DIR)
 
 # django-environ
 env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, '.env'))
+env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG')
-DEMO = env.bool('DEMO', default=False)
+DEBUG = env.bool("DEBUG")
+DEMO = env.bool("DEMO", default=False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 # Application definition
 INSTALLED_APPS = [
-    'admin_shortcuts',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.twitter',
-    'main.apps.MainConfig',
-    'image.apps.ImageConfig',
-    'account.apps.AccountConfig',
-    'survey.apps.SurveyConfig',
-    'bootstrap4',
-    'bootstrap_datepicker_plus',
-    'maintenance_mode',
-    'django_hosts',
+    "admin_shortcuts",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "rest_auth",
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+    "rest_auth.registration",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.twitter",
+    "api.apps.ApiConfig",
+    "api.models.main.apps.MainConfig",
+    "api.models.image.apps.ImageConfig",
+    "api.models.account.apps.AccountConfig",
+    "api.models.survey.apps.SurveyConfig",
+    "bootstrap4",
+    "bootstrap_datepicker_plus",
+    "maintenance_mode",
+    "django_hosts",
+    "drf_yasg",
 ]
 
 SITE_ID = 1
 
 MIDDLEWARE = [
-    'django_hosts.middleware.HostsRequestMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'maintenance_mode.middleware.MaintenanceModeMiddleware',
-    'django_hosts.middleware.HostsResponseMiddleware',
+    "django_hosts.middleware.HostsRequestMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "maintenance_mode.middleware.MaintenanceModeMiddleware",
+    "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
-ROOT_URLCONF = 'config.urls'
-ROOT_HOSTCONF = 'config.hosts'
-DEFAULT_HOST = 'default'
+ROOT_URLCONF = "config.urls"
+ROOT_HOSTCONF = "config.hosts"
+DEFAULT_HOST = "default"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',
-                'maintenance_mode.context_processors.maintenance_mode',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.media",
+                "maintenance_mode.context_processors.maintenance_mode",
             ],
-            'builtins':[
-                'bootstrap4.templatetags.bootstrap4',
+            "builtins": [
+                "bootstrap4.templatetags.bootstrap4",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = "config.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': env('DB_ENGINE'),
-        'CONN_MAX_AGE': env.int('DB_CONN_MAX_AGE'),
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env.int('DB_PORT'),
-        'ATOMIC_REQUESTS': env('DB_ATOMIC_REQUESTS'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
+    "default": {
+        "ENGINE": env("DB_ENGINE"),
+        "CONN_MAX_AGE": env.int("DB_CONN_MAX_AGE"),
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env.int("DB_PORT"),
+        "ATOMIC_REQUESTS": env("DB_ATOMIC_REQUESTS"),
+        "OPTIONS": {
+            "charset": "utf8mb4",
         },
     }
 }
 if DEMO:
-    DATABASES['default']['OPTIONS']['init_command'] = 'SET foreign_key_checks = 0;'
+    DATABASES["default"]["OPTIONS"]["init_command"] = "SET foreign_key_checks = 0;"
 
 
 # Password validation
@@ -132,16 +134,16 @@ if DEMO:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -149,9 +151,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'ja'
+LANGUAGE_CODE = "ja"
 
-TIME_ZONE = 'Asia/Tokyo'
+TIME_ZONE = "Asia/Tokyo"
 
 USE_I18N = True
 
@@ -163,65 +165,64 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/{}/static'.format(PROJECT_NAME)
+STATIC_URL = "/static/"
+STATIC_ROOT = "/var/www/{}/static".format(PROJECT_NAME)
 
 # media
-MEDIA_URL = '/media/'
-MEDIA_ROOT = env('MEDIA_ROOT')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = env("MEDIA_ROOT")
 
 # redis
-BROKER_URL = env('REDIS_URL')
+BROKER_URL = env("REDIS_URL")
 
 # rest_framework
-DEFAULT_RENDERER_CLASSES_val = ['rest_framework.renderers.JSONRenderer']
+DEFAULT_RENDERER_CLASSES_val = ["rest_framework.renderers.JSONRenderer"]
 if DEBUG:
-    DEFAULT_RENDERER_CLASSES_val.append(
-        'rest_framework.renderers.BrowsableAPIRenderer')
+    DEFAULT_RENDERER_CLASSES_val.append("rest_framework.renderers.BrowsableAPIRenderer")
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES_val,
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
+    "DEFAULT_RENDERER_CLASSES": DEFAULT_RENDERER_CLASSES_val,
+    "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.JSONParser",
     ],
     # JWT
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    "DEFAULT_AUTHENTICATION_CLASSES": (
         # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
     ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ]
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.AllowAny",
+    ],
 }
 
 # django-maintenance-mode
 MAINTENANCE_MODE = None
-MAINTENANCE_MODE_STATE_FILE_PATH = 'config/maintenance_mode_state.txt'
-MAINTENANCE_MODE_IGNORE_URLS = (r'^/admin/',)
+MAINTENANCE_MODE_STATE_FILE_PATH = "config/maintenance_mode_state.txt"
+MAINTENANCE_MODE_IGNORE_URLS = (r"^/admin/",)
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 # django-admin-shortcuts
 ADMIN_SHORTCUTS = [
     {
-        'shortcuts': [
+        "shortcuts": [
             {
-                'url': '/',
-                'open_new_window': True,
+                "url": "/",
+                "open_new_window": True,
             },
             {
-                'url_name': 'admin:logout',
-                'icon': 'sign-out-alt',
+                "url_name": "admin:logout",
+                "icon": "sign-out-alt",
             },
             {
-                'url': '/maintenance-mode/on/',
-                'title': 'メンテナンス開始',
-                'icon': 'toggle-on',
-                'count_new': 'main.utils.geneMaintenanceMessage',
+                "url": "/maintenance-mode/on/",
+                "title": "メンテナンス開始",
+                "icon": "toggle-on",
+                "count_new": "api.otapick.lib.helpers.geneMaintenanceMessage",
             },
             {
-                'url': '/maintenance-mode/off/',
-                'title': 'メンテナンス終了',
-                'icon': 'toggle-off',
-            }
+                "url": "/maintenance-mode/off/",
+                "title": "メンテナンス終了",
+                "icon": "toggle-off",
+            },
         ]
     },
 ]
@@ -230,31 +231,31 @@ ADMIN_SHORTCUTS = [
 ####################
 ## Authentication ##
 ####################
-AUTH_USER_MODEL = 'custom_account.Account'
+AUTH_USER_MODEL = "custom_account.Account"
 # https://django-rest-auth.readthedocs.io/en/latest/installation.html#jwt-support-optional
 REST_USE_JWT = True
 
 REST_SESSION_LOGIN = False
 CORS_ORIGIN_ALLOW_ALL = True
 JWT_AUTH = {
-    'JWT_VERIFY_EXPIRATION': False,
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    "JWT_VERIFY_EXPIRATION": False,
+    "JWT_AUTH_HEADER_PREFIX": "JWT",
 }
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'account.serializers.AuthSerializer',
+    "USER_DETAILS_SERIALIZER": "api.serializers.account_serializers.AuthSerializer",
 }
 
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'  # メール検証
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"  # メール検証
 ACCOUNT_EMAIL_REQUIRED = True  # signup時、email必須
 ACCOUNT_USERNAME_REQUIRED = False  # signup時、username不要
 # 使用するログイン方法を指定（='username'|'email'|'username_email'） emailの場合、ACCOUNT_EMAIL_REQUIRED==Trueの必要がある
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 # クライアント認証(Djangoからadmin.otapick.comにアクセス)
-CLIENT_SSL_CERT_PATH = env('CLIENT_SSL_CERT_PATH', default='')
-CLIENT_SSL_KEY_PATH = env('CLIENT_SSL_KEY_PATH', default='')
-CLIENT_SSL_PASSWORD = env('CLIENT_SSL_PASSWORD', default='')
+CLIENT_SSL_CERT_PATH = env("CLIENT_SSL_CERT_PATH", default="")
+CLIENT_SSL_KEY_PATH = env("CLIENT_SSL_KEY_PATH", default="")
+CLIENT_SSL_PASSWORD = env("CLIENT_SSL_PASSWORD", default="")
 
 # Slack webhooks URL (git管理するとリジェクトされて使用禁止になるため.envで管理)
-SLACK_WEBHOOKS_OTAPICK_BOT_URL = env('SLACK_WEBHOOKS_OTAPICK_BOT_URL', default='')
+SLACK_WEBHOOKS_OTAPICK_BOT_URL = env("SLACK_WEBHOOKS_OTAPICK_BOT_URL", default="")
