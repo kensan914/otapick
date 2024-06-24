@@ -36,7 +36,7 @@ export const Router = () => {
   return (
     <>
       <NavigationBar />
-      {isMobile && <BottomAnchorAdsOnlyMobile />}
+      <BottomAnchorAdsOnlyMobile />
 
       <Suspense fallback={() => <HorizontalLoader />}>
         <CacheSwitch>
