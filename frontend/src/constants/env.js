@@ -82,7 +82,7 @@ export const DATA_AD_SLOT_ANCHOR = "6762893244";
 export const ADS_INTERVAL = 50;
 export const ADS_INTERVAL_MORE = 100;
 export const ADS_INDEX = 8;
-export const BOTTOM_ANCHOR_ADS_HEIGHT = 58;
+export const BOTTOM_ANCHOR_ADS_HEIGHT = 90;
 
 import bookmarkSakuraAnimationData from "../static/lottie/bookmark_sakura.json";
 import bookmarkHinataAnimationData from "../static/lottie/bookmark_hinata.json";
