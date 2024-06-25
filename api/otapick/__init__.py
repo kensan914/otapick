@@ -4,7 +4,7 @@ from .db.blog import *
 from .db.search import search_blogs, search_members
 from .db.image import *
 from .db.registerers.registerer import register_blogs, register_text
-from .db.registerers.registerer_ex import *
+# from .db.registerers.registerer_ex import *
 from .db.scores.calculator import *
 from .db.scores.controller import *
 

@@ -5,7 +5,6 @@ import {
   TOTOP_BUTTON_DIAMETER,
   TOTOP_BUTTON_M,
 } from "~/constants/env";
-import { isMobile } from "~/utils";
 
 class ToTopButton extends React.Component {
   getScrolled = () => {
@@ -29,7 +28,7 @@ class ToTopButton extends React.Component {
       right: TOTOP_BUTTON_M,
     };
     Object.assign(totopButtonStyle, {
-      bottom: TOTOP_BUTTON_M + (isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0),
+      bottom: TOTOP_BUTTON_M + BOTTOM_ANCHOR_ADS_HEIGHT,
     });
 
     return (
