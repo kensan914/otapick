@@ -10,7 +10,6 @@ import {
   OTAPICK_TWITTER_URL,
   BOTTOM_ANCHOR_ADS_HEIGHT,
 } from "~/constants/env";
-import { isMobile } from "~/utils";
 
 class Footer extends React.Component {
   constructor(props) {
@@ -179,7 +178,7 @@ class Footer extends React.Component {
           <div
             className="col-12 text-center py-4 text-muted"
             id="copyright"
-            style={{ marginBottom: isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0 }}
+            style={{ marginBottom: BOTTOM_ANCHOR_ADS_HEIGHT }}
           >
             <p className="small m-0">
               Copyright &copy; otapick 2021 All rights reserved.

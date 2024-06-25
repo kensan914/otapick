@@ -4,7 +4,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import Masonry from "react-masonry-component";
 
 import { HorizontalLoader } from "~/components/molecules/Loader";
-import { URLJoin, generateRandomSeed, isMobile } from "~/utils";
+import { URLJoin, generateRandomSeed } from "~/utils";
 import { NotFoundMessage } from "~/components/atoms/NotFound";
 import { useDomDispatch } from "~/contexts/DomContext";
 import { BOTTOM_ANCHOR_ADS_HEIGHT } from "~/constants/env";
@@ -50,10 +50,7 @@ const List = withRouter((props) => {
         loadMore={requestGetItems}
         initialLoad={false}
         loader={
-          <div
-            key={0}
-            style={{ paddingBottom: isMobile ? BOTTOM_ANCHOR_ADS_HEIGHT : 0 }}
-          >
+          <div key={0} style={{ paddingBottom: BOTTOM_ANCHOR_ADS_HEIGHT }}>
             <HorizontalLoader />
           </div>
         }
